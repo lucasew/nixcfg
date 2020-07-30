@@ -9,5 +9,6 @@
 		./neovim
 		./tmux
 		./vscode.nix
+		./rofi.nix
 	];
 }

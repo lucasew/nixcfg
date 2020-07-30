@@ -13,6 +13,7 @@
 		pkgs.calibre
 		pkgs.tdesktop
 		pkgs.stremio
+		pkgs.neofetch
 	];
 
 	programs.command-not-found.enable = true;
@@ -20,9 +21,6 @@
 	programs.obs-studio = {
 		enable = true;
 		plugins = [];
-	};
-	programs.rofi = {
-		enable = true;
 	};
 # This value determines the Home Manager release that your
 # configuration is compatible with. This helps avoid breakage
