@@ -12,6 +12,30 @@
             pkgs.vscode-extensions.vscodevim.vim
         ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
             {
+                name = "bracket-pair-colorizer";
+                publisher = "CoenraadS";
+                version = "1.0.61";
+                sha256 = "0r3bfp8kvhf9zpbiil7acx7zain26grk133f0r0syxqgml12i652";
+            }
+            {
+                name = "prettier-vscode";
+                publisher = "esbenp";
+                version = "5.1.3";
+                sha256 = "03i66vxvlyb3msg7b8jy9x7fpxyph0kcgr9gpwrzbqj5s7vc32sr";
+            }
+            {
+                name = "githistory";
+                publisher = "donjayamanne";
+                version = "0.6.8";
+                sha256 = "0wc0wsnqwyg0pz0jrmw0038k6g1p564krqscrx3h8wpyfymcd68l";
+            }
+            {
+                name = "gitlens";
+                publisher = "eamodio";
+                version = "10.2.2";
+                sha256 = "00fp6pz9jqcr6j6zwr2wpvqazh1ssa48jnk1282gnj5k560vh8mb";
+            }
+            {
                 name = "file-icons";
                 publisher = "file-icons";
                 version = "1.0.25";
