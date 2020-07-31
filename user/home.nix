@@ -14,6 +14,8 @@
 		pkgs.tdesktop
 		pkgs.stremio
 		pkgs.neofetch
+		pkgs.file
+		pkgs.wine
 	];
 
 	programs.command-not-found.enable = true;
