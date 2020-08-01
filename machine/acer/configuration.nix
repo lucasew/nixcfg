@@ -10,8 +10,7 @@ in
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./adb.nix
-      ./desktopEnvironment
+      ./components
     ];
 
   nixpkgs.config.allowUnfree = true;
