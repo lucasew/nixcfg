@@ -8,4 +8,7 @@
             killtime = 24*60;
         };
     };
+    environment.systemPackages = [
+        pkgs.xfce.xfce4-xkb-plugin
+    ];
 }

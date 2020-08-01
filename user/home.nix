@@ -16,6 +16,7 @@
 		pkgs.neofetch
 		pkgs.file
 		pkgs.wine
+		pkgs.arduino
 	];
 
 	programs.command-not-found.enable = true;
