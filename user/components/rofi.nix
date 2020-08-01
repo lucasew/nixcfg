@@ -1,6 +1,4 @@
 {config, pkgs, ...}:
 {
-    programs.rofi = {
-		enable = true;
-	};
+	home.packages = [pkgs.my_rofi];
 }
