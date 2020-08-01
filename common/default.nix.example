@@ -1,0 +1,5 @@
+{
+    username = "%USERNAME%";
+    selectedDesktopEnvironment = "%DE%";
+    hostname = "%HOSTNAME%";
+}

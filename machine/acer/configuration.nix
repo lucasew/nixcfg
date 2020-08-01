@@ -3,13 +3,15 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }:
-
+let
+    common = import ./common;
+in
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      # desktop environment
-      ./xfce.nix
+      ./adb.nix
+      ./desktopEnvironment
     ];
 
   nixpkgs.config.allowUnfree = true;
@@ -29,7 +31,7 @@
     };
   };
 
-  networking.hostName = "acer-nix"; # Define your hostname.
+  networking.hostName = common.hostname; # Define your hostname.
   networking.networkmanager.enable = true;
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
@@ -63,11 +65,11 @@
   ];
 
   services.udev.packages = with pkgs; [
-	gnome3.gnome-settings-daemon
+  gnome3.gnome-settings-daemon
   ];
 
   programs.dconf.enable = true;
- services.dbus.packages = with pkgs; [gnome3.dconf];
+  services.dbus.packages = with pkgs; [gnome3.dconf];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -112,9 +114,9 @@
 
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.lucasew = {
-     isNormalUser = true;
-     extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
+  users.users.${common.username} = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
   };
 
   # This value determines the NixOS release from which the default

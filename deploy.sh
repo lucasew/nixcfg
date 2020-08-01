@@ -1,6 +1,8 @@
 #! /usr/bin/env bash
 
 export USERNAME=lucasew
+export SELECTED_DE=xfce
+export HOSTNAME=acer-nix
 
 export COMMAND=$1; shift
 
@@ -20,7 +22,14 @@ echo "Deploying ${USERNAME}@${MACHINE}..."
 mkdir -p $ROOTFS/home/$USERNAME/.config
 ln -sfn  $(pwd)/user/ $ROOTFS/home/$USERNAME/.config/nixpkgs
 ln -sfn $(pwd)/common/ $(pwd)/user/common
+ln -sfn $(pwd)/common/ $(pwd)/machine/$MACHINE/common
 sudo ln -sfn $(pwd)/machine/$MACHINE/ $ROOTFS/etc/nixos
+
+cat $(pwd)/common/default.nix.example | \
+    sed s/%USERNAME%/$USERNAME/ | \
+    sed s/%DE%/$SELECTED_DE/ | \
+    sed s/%HOSTNAME%/$HOSTNAME/ \
+    > $(pwd)/common/default.nix
 
 echo "The config files are where they should be. It's time to let nix do the rest"
 echo "All the configs are pointing to $(pwd)." 
