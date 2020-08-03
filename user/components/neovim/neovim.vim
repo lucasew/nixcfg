@@ -82,4 +82,7 @@ Plug 'Yggdroot/indentLine'
 " Commentary:
 Plug 'tpope/vim-commentary'
 
+" Nix:
+Plug 'LnL7/vim-nix'
+
 call plug#end()

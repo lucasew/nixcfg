@@ -10,15 +10,16 @@
 
     home.packages = with pkgs; [
         fortune
-            calibre
-            tdesktop
-            stremio
-            neofetch
-            file
-            wine
-            arduino
-            heroku
-            lazydocker
+        calibre
+        tdesktop
+        stremio
+        neofetch
+        file
+        wine
+        arduino
+        heroku
+        lazydocker
+        youtube-dl
     ];
 
     programs.command-not-found.enable = true;
