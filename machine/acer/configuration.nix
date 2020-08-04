@@ -4,11 +4,12 @@
 
 { config, pkgs, ... }:
 let
-    common = import ./common;
+  common = import ./common;
 in
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./components
     ];
@@ -16,7 +17,7 @@ in
   nixpkgs.config.allowUnfree = true;
 
   # Use the systemd-boot EFI boot loader.
-  boot.supportedFilesystems = ["ntfs"];
+  boot.supportedFilesystems = [ "ntfs" ];
   boot.loader = {
     efi = {
       canTouchEfiVariables = true;
@@ -57,18 +58,25 @@ in
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    wget vim neovim firefox # Base
-    vlc spotify #midia
-    rclone rclone-browser restic # cloud e backup
-    paper-icon-theme kde-gtk-config # Custom
+    wget
+    vim
+    neovim
+    firefox # Base
+    vlc
+    spotify #midia
+    rclone
+    rclone-browser
+    restic # cloud e backup
+    paper-icon-theme
+    kde-gtk-config # Custom
   ];
 
   services.udev.packages = with pkgs; [
-  gnome3.gnome-settings-daemon
+    gnome3.gnome-settings-daemon
   ];
 
   programs.dconf.enable = true;
-  services.dbus.packages = with pkgs; [gnome3.dconf];
+  services.dbus.packages = with pkgs; [ gnome3.dconf ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -127,11 +135,10 @@ in
   system.stateVersion = "20.03"; # Did you read the comment?
 
   # NUR
-    nixpkgs.config.packageOverrides = pkgs: {
-      nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") {
-        inherit pkgs;
-      };
+  nixpkgs.config.packageOverrides = pkgs: {
+    nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") {
+      inherit pkgs;
     };
-    environment.variables.EDITOR = "nvim";
+  };
+  environment.variables.EDITOR = "nvim";
 }
-

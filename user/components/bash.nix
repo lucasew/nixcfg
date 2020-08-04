@@ -1,11 +1,11 @@
-{config, pkgs, ...}:
+{ config, pkgs, ... }:
 
 {
-    programs.bash = {
-        enable = true;
-        initExtra = ''
-            export EDITOR="nvim"
-            export PS1="\u@\h \w \$?\\$ \[$(tput sgr0)\]"
-        '';
-    };
+  programs.bash = {
+    enable = true;
+    initExtra = ''
+      export EDITOR="nvim"
+      export PS1="\u@\h \w \$?\\$ \[$(tput sgr0)\]"
+    '';
+  };
 }

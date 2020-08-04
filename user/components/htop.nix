@@ -1,7 +1,7 @@
-{config, pkgs, ...}:
+{ config, pkgs, ... }:
 
 {
-    programs.htop.enable = true;
+  programs.htop.enable = true;
 }
 /*
 # Beware! This file is rewritten by htop when settings are changed in the interface.

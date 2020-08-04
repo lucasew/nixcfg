@@ -1,6 +1,5 @@
-{pkgs, ...}:
+{ pkgs, ... }:
 {
-    allowUnfree = true;
-    packageOverrides = import ./common/apps;
+  allowUnfree = true;
+  packageOverrides = import ./common/apps;
 }
-

@@ -1,4 +1,4 @@
-{config, pkgs, ...}:
+{ config, pkgs, ... }:
 {
-	home.packages = [pkgs.my_rofi];
+  home.packages = [ pkgs.my_rofi ];
 }

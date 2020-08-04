@@ -1,6 +1,6 @@
-{config, pkgs, ...}: {
-    imports = [
-        ./gui
-        ./adb.nix
-    ]
-}
+{ config, pkgs, ... }: {
+  imports = [
+    ./gui
+    ./adb.nix
+  ]
+    }
