@@ -10,5 +10,7 @@
     ./tmux
     ./vscode.nix
     ./rofi.nix
+    ./compression.nix
+    ./windows.nix
   ];
 }

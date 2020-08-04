@@ -18,6 +18,12 @@
         sha256 = "0r3bfp8kvhf9zpbiil7acx7zain26grk133f0r0syxqgml12i652";
       }
       {
+        name = "viml";
+        publisher = "xadillax";
+        version = "1.0.0";
+        sha256 = "0wxspvf0af66hnqk4vnfkifjznhfl5f7qhbyjigmqzdfwgz2g2q1";
+      }
+      {
         name = "prettier-vscode";
         publisher = "esbenp";
         version = "5.1.3";

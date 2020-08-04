@@ -15,11 +15,11 @@
     stremio
     neofetch
     file
-    wine
     arduino
     heroku
     lazydocker
     youtube-dl
+    nix-index
   ];
 
   programs.command-not-found.enable = true;
