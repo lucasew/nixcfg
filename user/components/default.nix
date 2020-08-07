@@ -8,9 +8,8 @@
     ./htop.nix
     ./neovim
     ./tmux
-    ./vscode.nix
+    ./vscode
     ./rofi.nix
     ./compression.nix
-    ./windows.nix
   ];
 }

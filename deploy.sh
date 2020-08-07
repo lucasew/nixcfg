@@ -3,6 +3,7 @@
 export USERNAME=lucasew
 export SELECTED_DE=xfce
 export HOSTNAME=acer-nix
+export EMAIL=lucas59356@gmail.com
 
 export COMMAND=$1; shift
 
@@ -29,6 +30,7 @@ cat $(pwd)/common/default.nix.example | \
     sed s/%USERNAME%/$USERNAME/ | \
     sed s/%DE%/$SELECTED_DE/ | \
     sed s/%HOSTNAME%/$HOSTNAME/ \
+    sed s/%EMAIL%/$EMAIL/ \
     > $(pwd)/common/default.nix
 
 echo "The config files are where they should be. It's time to let nix do the rest"

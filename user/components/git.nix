@@ -1,8 +1,11 @@
 { config, pkgs, ... }:
+let
+  commonConf = import ../common;
+in
 {
   programs.git = {
     enable = true;
-    userName = "lucasew";
-    userEmail = "lucas59356@gmail.com";
+    userName = commonConf.username;
+    userEmail = commonConf.email;
   };
 }

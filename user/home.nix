@@ -20,6 +20,9 @@
     lazydocker
     youtube-dl
     nix-index
+    scrcpy
+    sqlite
+    usb_tixati
   ];
 
   programs.command-not-found.enable = true;
