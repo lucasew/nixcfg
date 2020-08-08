@@ -1,8 +1,7 @@
 { config, pkgs, ... }:
 {
-  imports = [
-    # ./extensions.nix
-    # ./config.nix
+  home.packages = with pkgs; [
+    boringssl
   ];
   programs.vscode = {
     enable = true;
