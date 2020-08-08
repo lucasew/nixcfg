@@ -1,5 +1,5 @@
 { pkgs, ... }:
-let 
+let
   cfg = import ../config.nix;
 in
 {

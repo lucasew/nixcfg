@@ -1,5 +1,5 @@
-{pkgs, config}: {
-    pkgs.writeShellScriptBin "lockctl" ''
+{ pkgs, config }: {
+  pkgs.writeShellScriptBin "lockctl" ''
         export COMMAND=$1; shift
         case "$COMMAND" in
             "lock") 
@@ -8,4 +8,4 @@
             ;;
         esac
     ''
-}
+  }
