@@ -1,11 +1,11 @@
 { config, pkgs, ... }:
 let
-  commonConf = import ../common;
+  cfg = import ../../config.nix;
 in
 {
   programs.git = {
     enable = true;
-    userName = commonConf.username;
-    userEmail = commonConf.email;
+    userName = cfg.username;
+    userEmail = cfg.email;
   };
 }

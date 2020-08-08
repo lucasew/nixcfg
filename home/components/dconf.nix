@@ -3,7 +3,7 @@
   dconf.settings = {
     "org/gnome/desktop/background" = {
       picture-options = "zoom";
-      picture-uri = "file:///nix/store/aslnarw6322gcij310y3cww16sd9fjcf-gnome-backgrounds-3.34.0/share/backgrounds/gnome/Road.jpg";
+      picture-uri = "file:///${pkgs.gnome3.gnome-backgrounds}/share/backgrounds/gnome/Road.jpg";
       primary-color = "#ffffff";
       secondary-color = "#000000";
     };

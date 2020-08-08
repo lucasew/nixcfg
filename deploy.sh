@@ -21,9 +21,9 @@ deploy_file() {
     destination_dir=$1; shift
     destination_file=$1; shift
 
-    mkdir -p $destination_dir
+    sudo mkdir -p $destination_dir
     echo "let items = import $dotfile_dir; in items.$item" > /tmp/nixtemp
-    mv /tmp/nixtemp $ROOTFS/$destination_dir/$destination_file
+    sudo mv /tmp/nixtemp $ROOTFS$destination_dir/$destination_file
 }
 
 echo "Deploying ${USERNAME}@${MACHINE}..."
