@@ -11,5 +11,6 @@
     ./vscode
     ./rofi.nix
     ./compression.nix
+    ./rclone.nix
   ];
 }

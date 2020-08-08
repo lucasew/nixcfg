@@ -1,6 +1,0 @@
-{
-    username = "%USERNAME%";
-    selectedDesktopEnvironment = "%DE%";
-    hostname = "%HOSTNAME%";
-    email = "%EMAIL%;"
-}
