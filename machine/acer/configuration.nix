@@ -4,7 +4,7 @@
 
 { config, pkgs, ... }:
 let
-  cfg = import ../../config;
+  cfg = import ../../config.nix;
 in
 {
   imports =
@@ -14,7 +14,7 @@ in
       ./components
     ];
 
-  nixpkgs.config.allowUnfree = cfg.allowUnfree;
+  nixpkgs.config.allowUnfree = cfg "allowUnfree";
 
   # Use the systemd-boot EFI boot loader.
   boot.supportedFilesystems = [ "ntfs" ];
@@ -31,7 +31,7 @@ in
     };
   };
 
-  networking.hostName = cfg.hostname; # Define your hostname.
+  networking.hostName = cfg "hostname"; # Define your hostname.
   networking.networkmanager.enable = true;
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
@@ -64,8 +64,6 @@ in
     firefox # Base
     vlc
     spotify #midia
-    rclone
-    rclone-browser
     restic # cloud e backup
     paper-icon-theme
     kde-gtk-config # Custom
@@ -121,7 +119,7 @@ in
 
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${cfg.username} = {
+  users.users.${cfg "username"} = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
   };

@@ -1,9 +1,5 @@
-{ ... }:
-let
-  common = import ./../common;
-  selected = common.selectedDesktopEnvironment;
-  selectedPath = ./. + "/${selected}.nix";
-in
 {
-  imports = [ selectedPath ];
-}
+  xfce = import ./xfce.nix;
+  gnome = import ./gnome.nix;
+  kde = import ./kde.nix;
+}.${import ../../../../config.nix "selectedDesktopEnvironment"}

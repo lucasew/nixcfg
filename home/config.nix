@@ -3,6 +3,6 @@ let
   cfg = import ../config.nix;
 in
 {
-  allowUnfree = cfg.allowUnfree;
+  allowUnfree = cfg "allowUnfree";
   packageOverrides = import ../apps;
 }

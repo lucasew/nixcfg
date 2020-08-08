@@ -2,5 +2,5 @@
   imports = [
     ./gui
     ./adb.nix
-  ]
-    }
+  ];
+}
