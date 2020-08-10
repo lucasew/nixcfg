@@ -86,3 +86,5 @@ Plug 'tpope/vim-commentary'
 Plug 'LnL7/vim-nix'
 
 call plug#end()
+
+autocmd VimEnter * set conceallevel=0 " Tira esse role de ficar ocultando as aspas em formatos tipo json
