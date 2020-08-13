@@ -14,6 +14,7 @@ in
       ./components
     ];
 
+
   nixpkgs.config.allowUnfree = cfg "allowUnfree";
 
   # Use the systemd-boot EFI boot loader.
@@ -59,11 +60,8 @@ in
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     wget
-    vim
-    neovim
     firefox # Base
     vlc
-    spotify #midia
     restic # cloud e backup
     paper-icon-theme
     kde-gtk-config # Custom

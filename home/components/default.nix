@@ -12,5 +12,7 @@
     ./rofi.nix
     ./compression.nix
     ./rclone.nix
+    ./spotify.nix
+    ./stremio.nix
   ];
 }

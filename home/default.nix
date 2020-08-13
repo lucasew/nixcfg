@@ -7,12 +7,10 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-
   home.packages = with pkgs; [
     fortune
     calibre
     tdesktop
-    stremio
     neofetch
     file
     arduino
@@ -22,7 +20,7 @@
     nix-index
     scrcpy
     sqlite
-    usb_tixati
+    libnotify
   ];
 
   programs.command-not-found.enable = true;

@@ -1,4 +1,10 @@
 { config, pkgs, ... }:
+let
+  # Use the let-in clause to assign the derivation to a variable
+  rofiScript = pkgs.writeShellScriptBin "my-rofi" ''
+    ${pkgs.rofi}/bin/rofi -show combi -combi-modi window,drun -theme gruvbox-dark -show-icons
+  '';
+in
 {
-  home.packages = [ pkgs.my_rofi ];
+  home.packages = [ rofiScript ];
 }

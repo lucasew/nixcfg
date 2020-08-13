@@ -4,5 +4,4 @@ let
 in
 {
   allowUnfree = cfg "allowUnfree";
-  packageOverrides = import ../apps;
 }
