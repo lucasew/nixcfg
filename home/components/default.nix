@@ -3,18 +3,18 @@
 {
   imports = [
     ./bash.nix
+    ./compression.nix
     ./dconf.nix
     ./git.nix
     ./htop.nix
     ./neovim
-    ./tmux
-    ./vscode
-    ./rofi.nix
-    ./compression.nix
+    ./pinball.nix
     ./rclone.nix
+    ./rofi.nix
     ./spotify.nix
     ./stremio.nix
-    ./pinball.nix
+    ./tmux
     ./usb_tixati.nix
+    ./vscode
   ];
 }
