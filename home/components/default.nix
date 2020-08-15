@@ -7,6 +7,7 @@
     ./dconf.nix
     ./git.nix
     ./htop.nix
+    ./mspaint.nix
     ./neovim
     ./pinball.nix
     ./rclone.nix
