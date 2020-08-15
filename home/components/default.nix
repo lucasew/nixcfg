@@ -15,5 +15,6 @@
     ./spotify.nix
     ./stremio.nix
     ./pinball.nix
+    ./usb_tixati.nix
   ];
 }
