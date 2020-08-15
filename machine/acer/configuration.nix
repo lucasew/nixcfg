@@ -83,7 +83,6 @@ in
   #   pinentryFlavor = "gnome3";
   # };
 
-  virtualisation.anbox.enable = true;
   virtualisation.docker.enable = true;
 
   # List services that you want to enable:
