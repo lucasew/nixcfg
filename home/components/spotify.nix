@@ -1,7 +1,6 @@
 {config, pkgs, lib, ...}:
 with lib;
 let 
-    cfg = config.programs.spotify;
     adskipper = 
         pkgs.writeShellScriptBin "spotify-adskip" ''
             PLAYERCTL=${pkgs.playerctl}/bin/playerctl
@@ -20,11 +19,6 @@ let
             '';
     adskipperBinary = "${adskipper}/bin/spotify-adskip";
 in {
-    options = {
-        programs.spotify = {
-            enable = mkEnableOption "Enable adblock for spotify";
-        };
-    };
     config = {
         systemd.user.services.spotify-adblock = {
             Unit = {

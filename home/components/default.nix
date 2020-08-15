@@ -14,5 +14,6 @@
     ./rclone.nix
     ./spotify.nix
     ./stremio.nix
+    ./pinball.nix
   ];
 }
