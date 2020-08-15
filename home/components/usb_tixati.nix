@@ -1,5 +1,4 @@
-{ pkgs ? import <nixpkgs> {}
-, ... }:
+{ pkgs, ... }:
 let
   cfg = import ../../config.nix;
   bin = pkgs.writeShellScriptBin "usb_tixati" ''
