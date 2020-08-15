@@ -82,8 +82,11 @@ in
   #   enableSSHSupport = true;
   #   pinentryFlavor = "gnome3";
   # };
+  hardware.opengl.enable = true;
+  hardware.opengl.driSupport32Bit = true;
 
   virtualisation.docker.enable = true;
+  virtualisation.anbox.enable = true;
 
   # List services that you want to enable:
 

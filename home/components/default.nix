@@ -5,6 +5,7 @@
     ./bash.nix
     ./compression.nix
     ./dconf.nix
+    ./ets2.nix
     ./git.nix
     ./htop.nix
     ./mspaint.nix
