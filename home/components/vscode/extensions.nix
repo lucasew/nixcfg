@@ -62,4 +62,10 @@
     version = "0.24.1";
     sha256 = "07jfya2pfkz51m3zljjlvsb5lwl8kdmsn1j39n8k6q8hqsjn0zml";
     }
+    {
+        publisher = "mjmcloug";
+        name = "vscode-elixir";
+        version = "1.1.0";
+        sha256 = "0kj7wlhapkkikn1md8cknrffrimk0g0dbbhavasys6k3k7pk2khh";
+    }
 ]

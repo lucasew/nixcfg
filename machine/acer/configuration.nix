@@ -115,6 +115,9 @@ in
   # Enable touchpad support.
   services.xserver.libinput.enable = true;
 
+  # Tailscale
+  services.tailscale.enable = true;
+
   #themes
   programs.qt5ct.enable = true;
 
