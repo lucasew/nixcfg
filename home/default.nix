@@ -1,12 +1,9 @@
 { config, pkgs, ... }:
-
 {
   imports = [
     ./components
   ];
 
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
   home.packages = with pkgs; [
     fortune
     calibre

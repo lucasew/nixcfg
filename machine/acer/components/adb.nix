@@ -1,12 +1,11 @@
-{ config, pkgs, ... }:
-
+{ config, ... }:
 let
-  cfg = import ../../../config.nix;
+  pkgs = import <nixpkgs> {};
 in
 {
   programs.adb.enable = true;
-  users.users.${cfg "username"}.extraGroups = [ "adbusers" ];
   services.udev.packages = [
     pkgs.android-udev-rules
   ];
+  users.users.${pkgs.globalConfig.username}.extraGroups = [ "adbusers" ];
 }

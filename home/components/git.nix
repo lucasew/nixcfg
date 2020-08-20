@@ -1,11 +1,9 @@
 { config, pkgs, ... }:
-let
-  cfg = import ../../config.nix;
-in
+with pkgs.globalConfig;
 {
   programs.git = {
     enable = true;
-    userName = cfg "username";
-    userEmail = cfg "email";
+    userName = username;
+    userEmail = email;
   };
 }

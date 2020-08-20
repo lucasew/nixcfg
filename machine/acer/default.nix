@@ -2,9 +2,14 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, ... }:
 let
-  cfg = import ../../config.nix;
+  pkgs = import <nixpkgs> {};
+  home-manager = builtins.fetchGit {
+    url = "https://github.com/rycee/home-manager.git";
+    rev = "318bc0754ed6370cfcae13183a7f13f7aa4bc73f"; # CHANGEME 
+    ref = "release-20.03";
+  };
 in
 {
   imports =
@@ -12,10 +17,8 @@ in
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./components
+      (import "${home-manager}/nixos")
     ];
-
-
-  nixpkgs.config.allowUnfree = cfg "allowUnfree";
 
   # Use the systemd-boot EFI boot loader.
   boot.supportedFilesystems = [ "ntfs" ];
@@ -32,7 +35,7 @@ in
     };
   };
 
-  networking.hostName = cfg "hostname"; # Define your hostname.
+  networking.hostName = pkgs.globalConfig.hostname; # Define your hostname.
   networking.networkmanager.enable = true;
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
@@ -123,10 +126,11 @@ in
 
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${cfg "username"} = {
+  users.users.${pkgs.globalConfig.username} = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
   };
+  home-manager.users.${pkgs.globalConfig.username} = import ../../home;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
@@ -136,11 +140,5 @@ in
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "20.03"; # Did you read the comment?
 
-  # NUR
-  nixpkgs.config.packageOverrides = pkgs: {
-    nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") {
-      inherit pkgs;
-    };
-  };
   environment.variables.EDITOR = "nvim";
 }
