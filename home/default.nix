@@ -1,8 +1,6 @@
 { config, pkgs, ... }:
 {
-  imports = [
-    ./components
-  ];
+  imports = (import ../overlays/utils/lsName.nix) ./components;
 
   home.packages = with pkgs; [
     fortune

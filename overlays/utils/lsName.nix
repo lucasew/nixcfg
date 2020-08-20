@@ -6,4 +6,5 @@ let
     else
         abort("${path} not found");
     justKs = pkgs.lib.mapAttrsToList (k: v: k) kvs;
-in justKs
+    fn = k: path + "/${k}";
+in map fn justKs

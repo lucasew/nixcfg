@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, ... }:
+{config, ... }:
 let
   pkgs = import <nixpkgs> {};
   home-manager = builtins.fetchGit {
@@ -16,9 +16,8 @@ in
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./components
       (import "${home-manager}/nixos")
-    ];
+    ] ++ (import ../../overlays/utils/lsName.nix) ./components;
 
   # Use the systemd-boot EFI boot loader.
   boot.supportedFilesystems = [ "ntfs" ];
@@ -62,6 +61,7 @@ in
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    dotwrap #custom
     wget
     firefox # Base
     vlc
