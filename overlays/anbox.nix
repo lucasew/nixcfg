@@ -1,5 +1,5 @@
 self: super:
-with self;
+with super;
 let
   dbus-service = writeText "org.anbox.service" ''
     [D-BUS Service]

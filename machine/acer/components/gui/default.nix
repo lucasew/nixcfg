@@ -1,5 +1,5 @@
 let
-  pkgs = import <nixpkgs> {};
+  pkgs = import <dotfiles/pkgs.nix>;
 in
 {
   xfce = import ./xfce.nix;

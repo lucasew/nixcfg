@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs ? import <dotfiles/pkgs.nix>, ... }:
 {
   imports = (import ../overlays/utils/lsName.nix) ./components;
 

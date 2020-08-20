@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  pkgs = import <nixpkgs> {};
+  pkgs = import <dotfiles/pkgs.nix>;
 in
 {
   programs.adb.enable = true;

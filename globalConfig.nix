@@ -14,7 +14,7 @@ rec {
     setupScript = ''
     export NIXPKGS_ALLOW_UNFREE=1
     export NIXOS_CONFIG=$(pwd)/machine/${machine_name}
-    NIX_PATH=$NIX_PATH:nixpkgs-overlays=$(pwd)/overlays:nixpkgs=${nixpkgs}:nixos-config=$NIXOS_CONFIG
+    NIX_PATH=$NIX_PATH:nixpkgs-overlays=$(pwd)/overlays:nixpkgs=${nixpkgs}:nixos-config=$NIXOS_CONFIG:dotfiles=${dotfileRootPath}
 
     alias nixos-rebuild="sudo -E nixos-rebuild"
     alias nixos-install="sudo -E nixos-install --system $NIXOS_CONFIG"

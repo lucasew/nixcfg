@@ -4,12 +4,12 @@
 
 {config, ... }:
 let
-  pkgs = import <nixpkgs> {};
   home-manager = builtins.fetchGit {
     url = "https://github.com/rycee/home-manager.git";
     rev = "318bc0754ed6370cfcae13183a7f13f7aa4bc73f"; # CHANGEME 
     ref = "release-20.03";
   };
+  pkgs = import <dotfiles/pkgs.nix>;
 in
 {
   imports =
@@ -17,7 +17,7 @@ in
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
       (import "${home-manager}/nixos")
-    ] ++ (import ../../overlays/utils/lsName.nix) ./components;
+    ] ++ pkgs.utils.lsName ./components;
 
   # Use the systemd-boot EFI boot loader.
   boot.supportedFilesystems = [ "ntfs" ];

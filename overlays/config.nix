@@ -1,3 +1,3 @@
 self: super: {
-  globalConfig = import ../globalConfig.nix;
+  globalConfig = import <dotfiles/globalConfig.nix>;
 }
