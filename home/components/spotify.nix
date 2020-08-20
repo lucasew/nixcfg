@@ -29,6 +29,9 @@ in {
                 ExecStart = adskipperBinary;
                 Restart = "on-failure";
             };
+            Install = {
+              RequiredBy = "graphical.target";
+            };
         };
         home.packages = [pkgs.spotify];
     };

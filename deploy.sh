@@ -31,6 +31,7 @@ echo "Deploying ${USERNAME}@${MACHINE}..."
 deploy_file "$(pwd)" "home" "/home/$USERNAME/.config/nixpkgs" "home.nix"
 deploy_file "$(pwd)" "homeConfig" "/home/$USERNAME/.config/nixpkgs" "config.nix"
 deploy_file "$(pwd)" "machine" "/etc/nixos" "configuration.nix"
+ln -s "$(pwd)/overlays" "/home/$USERNAME/.config/nixpkgs"
 
 echo "The config files are where they should be. It's time to let nix do the rest"
 echo "All the configs are pointing to $(pwd)." 

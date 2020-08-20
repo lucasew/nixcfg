@@ -8,6 +8,7 @@
     ./ets2.nix
     ./git.nix
     ./htop.nix
+    ./kdeconnect.nix
     ./mspaint.nix
     ./neovim
     ./pinball.nix
