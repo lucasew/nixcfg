@@ -1,0 +1,28 @@
+{pkgs, ...}: {
+  programs.firefox = {
+    enable = true;
+    extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+      ublock-origin
+      darkreader
+    ];
+    profiles.main = {
+      name = "Lucas";
+      settings = {
+        "browser.search.region" = "BR";
+        "browser.search.isUS" = false;
+        "reader.color_scheme" = "dark";
+        "extensions.pocket.settings.premium_status" = 1;
+        "trailhead.firstrun.didSeeAboutWelcome" = true;
+        "app.normandy.first_run" = false;
+      };
+      isDefault = true;
+      userChrome = ''
+      '';
+      userContent = ''
+        /* Hide scrollbar in FF Quantum */
+        *{scrollbar-width:none !important}
+      '';
+    };
+    # enableAdobeFlash = true;
+  };
+}
