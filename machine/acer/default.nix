@@ -63,7 +63,6 @@ in
   environment.systemPackages = with pkgs; [
     dotwrap #custom
     wget
-    firefox # Base
     vlc
     restic # cloud e backup
     paper-icon-theme
