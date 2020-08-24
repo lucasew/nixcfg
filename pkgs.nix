@@ -1,3 +1,5 @@
 let
-    overlays = import <dotfiles/overlays/utils/importAllIn.nix> ./overlays;
-in import <nixpkgs> {overlays = overlays;}
+  globalConfig = import ./globalConfig.nix;
+  overlays = import <dotfiles/overlays/utils/importAllIn.nix> globalConfig.overlaysPath;
+  nixpkgs = import globalConfig.nixpkgs;
+in nixpkgs {overlays = overlays;}
