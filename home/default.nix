@@ -1,4 +1,7 @@
-{ config, pkgs ? import <dotfiles/pkgs.nix>, ... }:
+{ config, ... }:
+let
+  pkgs = import <dotfiles/pkgs.nix>;
+in
 {
   imports = (import ../overlays/utils/lsName.nix) ./components;
 
@@ -16,6 +19,8 @@
     scrcpy
     sqlite
     libnotify
+
+    pkgs.usb_tixati
   ];
 
   programs.command-not-found.enable = true;

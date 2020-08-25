@@ -2,7 +2,7 @@ rec {
     machine_name = "acer";
     username = "lucasew";
     email = "lucas59356@gmail.com";
-    selectedDesktopEnvironment = "xfce";
+    selectedDesktopEnvironment = "xfce_i3";
     hostname = "acer-nix";
     overlaysPath = ./overlays;
     dotfileRootPath = builtins.toPath (overlaysPath + "/.."); 

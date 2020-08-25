@@ -5,7 +5,7 @@ self: super: {
 
     [ "$1" == pushd ] && cd "${super.globalConfig.dotfileRootPath}" && shift
 
-    $*
+    eval "$*"
 
   '';
 }
