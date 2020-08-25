@@ -2,7 +2,7 @@
 {
   services.xserver = {
     enable = true;
-    displayManager.defaultSession = "xfce";
+    displayManager.defaultSession = "xfce+i3";
     desktopManager = {
       xterm.enable = false;
       xfce = {
