@@ -4,6 +4,8 @@ rec {
     email = "lucas59356@gmail.com";
     selectedDesktopEnvironment = "xfce_i3";
     hostname = "acer-nix";
+    wallpaper = builtins.fetchurl {url = "http://wallpaperswide.com/download/aurora_sky-wallpaper-1366x768.jpg";};
+
     overlaysPath = ./overlays;
     dotfileRootPath = builtins.toPath (overlaysPath + "/.."); 
 

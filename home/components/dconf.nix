@@ -1,9 +1,11 @@
 { config, pkgs, ... }:
+let
+  globalConfig = import <dotfiles/globalConfig.nix>;
+in
 {
   dconf.settings = {
     "org/gnome/desktop/background" = {
       picture-options = "zoom";
-      picture-uri = "file:///${pkgs.gnome3.gnome-backgrounds}/share/backgrounds/gnome/Road.jpg";
       primary-color = "#ffffff";
       secondary-color = "#000000";
     };
