@@ -4,8 +4,8 @@ rec {
     email = "lucas59356@gmail.com";
     selectedDesktopEnvironment = "xfce";
     hostname = "acer-nix";
-    dotfileRootPath = builtins.toString ./overlays/..; 
-    overlaysPath = "${dotfileRootPath}/overlays";
+    overlaysPath = ./overlays;
+    dotfileRootPath = builtins.toPath (overlaysPath + "/.."); 
 
     nixpkgs = builtins.fetchTarball {
         url = "https://github.com/NixOS/nixpkgs/archive/20.03.tar.gz";
@@ -17,7 +17,7 @@ rec {
     defaultPkgs = import nixpkgs {};
     setupScript = ''
     export NIXPKGS_ALLOW_UNFREE=1
-    export NIXOS_CONFIG=$(pwd)/machine/${machine_name}
+    export NIXOS_CONFIG=${dotfileRootPath}/machine/${machine_name}
     NIX_PATH=nixpkgs-overlays=${overlaysPath}:nixpkgs=${nixpkgs}:nixos-config=$NIXOS_CONFIG:dotfiles=${dotfileRootPath}
 
     alias nixos-rebuild="sudo -E nixos-rebuild"
