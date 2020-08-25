@@ -1,6 +1,6 @@
 self: super: 
-{
-  usb_tixati = super.pkgs.buildFHSUserEnv {
+let
+  fhs = super.pkgs.buildFHSUserEnv {
     name = "usb_tixati";
     targetPkgs = pkgs: with super.pkgs; [
       glib
@@ -14,4 +14,13 @@ self: super:
     ];
     runScript = "/run/media/lucasew/Dados/PortableApps/PROGRAMAS/Tixati_portable/tixati_Linux64bit";
   }; 
+  desktop = super.pkgs.makeDesktopItem {
+    name = "TixatiUSB";
+    desktopName = "Tixati (USB mode)";
+    type = "Application";
+    exec = "${fhs}/bin/usb_tixati";
+  };
+in 
+{
+  usb_tixati = desktop;
 }
