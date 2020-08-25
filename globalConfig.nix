@@ -11,6 +11,9 @@ rec {
         url = "https://github.com/NixOS/nixpkgs/archive/20.03.tar.gz";
         sha256 = "0182ys095dfx02vl2a20j1hz92dx3mfgz2a6fhn31bqlp1wa8hlq";
     };
+    latestNixpkgs = builtins.fetchTarball {
+      url = "https://github.com/NixOS/nixpkgs/archive/master.tar.gz";
+    };
     defaultPkgs = import nixpkgs {};
     setupScript = ''
     export NIXPKGS_ALLOW_UNFREE=1
