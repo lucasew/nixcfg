@@ -26,5 +26,10 @@ let
         ${super.wineStable}/bin/wine ${theDerivation}/mspaint.exe
     '';
 in {
-    mspaint = bin;
+    mspaint = pkgs.makeDesktopItem {
+        name = "paint";
+        desktopName = "Paint WindowsXP";
+        type = "Application";
+        exec = "${bin}/bin/mspaint $*";
+    };
 }

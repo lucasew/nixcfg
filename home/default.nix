@@ -20,7 +20,11 @@ in
     sqlite
     libnotify
 
-    pkgs.usb_tixati
+    usb_tixati
+    minecraft
+    ets2
+    mspaint
+    pinball
   ];
 
   programs.command-not-found.enable = true;

@@ -1,7 +1,7 @@
-{pkgs, ...}: 
+self: super:
+with super;
     # FIXME: Can't hear that lovely music and the sound effects
 let 
-    pkgs = import <nixpkgs> {};
     pinballSource = pkgs.stdenv.mkDerivation rec {
         name = "mspinball";
         version = "1.0";
@@ -23,5 +23,10 @@ let
     '';
 in
 {
-    home.packages = [bin];
+    pinball = pkgs.makeDesktopItem {
+        name = "Pinball";
+        desktopName = "Pinbal - Space Cadet";
+        type = "Application";
+        exec = "${bin}/bin/pinball";
+    };
 }

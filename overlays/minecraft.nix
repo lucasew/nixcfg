@@ -6,9 +6,7 @@ let
         sha1 = "61cb768106e6e449158ebb2608ad1327402d9fec";
         url = "https://teamshiginima.com/update/";
     };
-in
-{
-    minecraft = pkgs.stdenv.mkDerivation rec {
+    drv = pkgs.stdenv.mkDerivation rec {
         name = "minecraft";
         src = launcherZip;
         dontUnpack = true;
@@ -35,5 +33,13 @@ in
             # license = stdenv.licences.proprietary;
             platforms = stdenv.lib.platforms.unix;
         };
+    };
+in
+{
+    minecraft =  pkgs.makeDesktopItem {
+        name = "minecraft";
+        desktopName = "Shiginima Minecraft";
+        type = "Application";
+        exec = "${drv}/bin/minecraft $*";
     };
 }
