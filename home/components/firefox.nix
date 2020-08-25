@@ -4,6 +4,8 @@
     extensions = with pkgs.nur.repos.rycee.firefox-addons; [
       ublock-origin
       darkreader
+      i-dont-care-about-cookies
+      facebook-container
     ];
     profiles.main = {
       name = "Lucas";
