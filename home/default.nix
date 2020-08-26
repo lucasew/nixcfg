@@ -6,20 +6,24 @@ in
   imports = (import ../overlays/utils/lsName.nix) ./components;
 
   home.packages = with pkgs; [
+    # pacotes colados na master
+    latest.tdesktop
+    latest.youtube-dl
+
+    # pacotes padrão
     fortune
     calibre
-    tdesktop
     neofetch
     file
     arduino
     heroku
     lazydocker
-    youtube-dl
     nix-index
     scrcpy
     sqlite
     libnotify
 
+    # pacotes personalizados
     usb_tixati
     minecraft
     ets2

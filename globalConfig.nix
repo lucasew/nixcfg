@@ -6,8 +6,13 @@ rec {
     hostname = "acer-nix";
     wallpaper = builtins.fetchurl {url = "http://wallpaperswide.com/download/aurora_sky-wallpaper-1366x768.jpg";};
 
-    overlaysPath = ./overlays;
-    dotfileRootPath = builtins.toPath (overlaysPath + "/.."); 
+    dotfileRootPath = 
+    let
+      env = builtins.getEnv "DOTFILES";
+      envNotNull = assert (env != ""); env;
+      envExists = assert (builtins.pathExists envNotNull); envNotNull;
+    in envExists;
+    overlaysPath = "${dotfileRootPath}/overlays";
 
     nixpkgs = builtins.fetchTarball {
         url = "https://github.com/NixOS/nixpkgs/archive/20.03.tar.gz";
