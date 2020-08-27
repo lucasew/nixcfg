@@ -7,50 +7,18 @@ let
         url = "https://teamshiginima.com/update/";
     };
     envLibPath = with pkgs; stdenv.lib.makeLibraryPath [
+        alsaLib # needed for narrator
         curl
+        flite # needed for narrator
+        libGL 
+        libGLU 
         libpulseaudio
         systemd
-        alsaLib # needed for narrator
-        flite # needed for narrator
-        xorg.libXxf86vm # needed only for versions <1.13
         xorg.libX11
-        libGLU libGL xorg.libXpm xorg.libXext alsaLib
+        xorg.libXext 
+        xorg.libXpm 
+        xorg.libXxf86vm # needed only for versions <1.13
     ];
-    libPath = stdenv.lib.makeLibraryPath (with pkgs;[
-        alsaLib
-        atk
-        cairo
-        cups
-        dbus
-        expat
-        fontconfig
-        freetype
-        gdk-pixbuf
-        glib
-        gnome2.GConf
-        gnome2.pango
-        gtk3-x11
-        gtk2-x11
-        nspr
-        nss
-        stdenv.cc.cc
-        zlib
-        libuuid
-  ] ++
-  (with xorg; [
-    libX11
-    libxcb
-    libXcomposite
-    libXcursor
-    libXdamage
-    libXext
-    libXfixes
-    libXi
-    libXrandr
-    libXrender
-    libXtst
-    libXScrnSaver
-  ]));
     drv = pkgs.stdenv.mkDerivation rec {
         name = "minecraft";
         src = launcherZip;

@@ -2,31 +2,32 @@ self: super:
 with super;
     # FIXME: Can't hear that lovely music and the sound effects
 let 
-    pinballSource = pkgs.stdenv.mkDerivation rec {
+    pinball = pkgs.stdenv.mkDerivation rec {
         name = "mspinball";
         version = "1.0";
         src = pkgs.fetchurl {
             url = "https://archive.org/download/SpaceCadet_Plus95/Space_Cadet.rar";
             sha256 = "3cc5dfd914c2ac41b03f006c7ccbb59d6f9e4c32ecfd1906e718c8e47f130f4a";
         };
+        nativeBuildInputs = with pkgs; [
+            makeWrapper
+        ];
         unpackPhase = ''
-        mkdir -p $out
-        cd $out && ${pkgs.unrar}/bin/unrar x ${src}
+        mkdir -p $out/share/mspinball
+        cd $out/share/mspinball && ${pkgs.unrar}/bin/unrar x ${src}
         '';
         installPhase = ''
-        cp -r $src $out
+            makeWrapper ${pkgs.wineWowPackages.stable}/bin/wine $out/bin/pinball \
+            --add-flags "$out/share/mspinball/PINBALL.exe" \
+            # sed -i 's/WaveOutDevice=0/WaveOutDevice=1/' $out/share/mspinball/WAVEMIX.INF
         '';
-        enablePatchElf = false;
     };
-    bin = pkgs.writeShellScriptBin "pinball" ''
-    cd "${pinballSource}"; ${pkgs.wine}/bin/wine "${pinballSource}/PINBALL.exe"
-    '';
 in
 {
     pinball = pkgs.makeDesktopItem {
         name = "Pinball";
         desktopName = "Pinbal - Space Cadet";
         type = "Application";
-        exec = "${bin}/bin/pinball";
+        exec = "${pinball}/bin/pinball";
     };
 }
