@@ -1,5 +1,6 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 let
+  pkgs = import <dotfiles/pkgs.nix>;
   mod = "Mod4";
   pactl = "${pkgs.pulseaudio}/bin/pactl";
   playerctl = "${pkgs.playerctl}/bin/playerctl";

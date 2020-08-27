@@ -29,6 +29,7 @@ in
     ets2
     mspaint
     pinball
+    documentNode
   ];
 
   programs.command-not-found.enable = true;

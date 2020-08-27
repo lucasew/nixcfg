@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   programs.firefox = {
     enable = true;
+    package = pkgs.latest.firefox;
     extensions = with pkgs.nur.repos.rycee.firefox-addons; [
       ublock-origin
       darkreader

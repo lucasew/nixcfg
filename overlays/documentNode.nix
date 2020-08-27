@@ -18,8 +18,13 @@ let
   bin = pkgs.writeShellScriptBin "DocumentNode" ''
     ${pkgs.appimage-run}/bin/appimage-run ${app} $*
   '';
-
+  desktop = pkgs.makeDesktopItem {
+    name = "DocumentNode";
+    desktopName = "Document Node";
+    type = "Application";
+    exec = "${bin}/bin/DocumentNode";
+  };
 in
 {
-  documentNode = bin;
+  documentNode = desktop;
 }
