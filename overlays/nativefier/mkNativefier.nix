@@ -30,4 +30,18 @@ let
   binary = pkgs.writeShellScriptBin name ''
     ${electron}/bin/electron ${drv}/share/${name}-nativefier/lib/main.js
   '';
-in binary
+  desktop = pkgs.makeDesktopItem {
+    name = name;
+    desktopName = "${name}";
+    type = "Application";
+    exec = "${binary}/bin/${name}";
+  };
+in pkgs.stdenv.mkDerivation {
+  name = "nativefier-${name}-entrypoint";
+  dontUnpack = true;
+  installPhase = ''
+    mkdir -p $out
+    cp -r ${desktop}/* $out
+    cp -r ${binary}/* $out
+  '';
+}
