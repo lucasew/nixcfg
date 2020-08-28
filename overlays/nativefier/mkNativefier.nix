@@ -4,7 +4,7 @@ in
   {
     name, 
     url, 
-    electron ? pkgs.electron_8, 
+    electron ? pkgs.electron, 
     props ? {}
   }:
 let
