@@ -15,11 +15,16 @@ let
   };
   remnote = pkgs.stdenv.mkNativefier {
     name = "RemNote";
+    electron = pkgs.latest.electron_9;
     url = "https://www.remnote.io/";
   };
   notion = pkgs.stdenv.mkNativefier {
     name = "NotionSo";
     url = "https://notion.so";
+  };
+  duolingo = pkgs.stdenv.mkNativefier {
+    name = "Duolingo";
+    url = "https://duolingo.com";
   };
 in
 {
@@ -27,5 +32,6 @@ in
       whatsapp
       remnote
       notion
+      duolingo
     ];
 }

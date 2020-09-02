@@ -2,7 +2,8 @@ rec {
     machine_name = "acer";
     username = "lucasew";
     email = "lucas59356@gmail.com";
-    selectedDesktopEnvironment = "xfce_i3";
+    # selectedDesktopEnvironment = "xfce_i3";
+    selectedDesktopEnvironment = "gnome";
     hostname = "acer-nix";
     wallpaper = builtins.fetchurl {url = "http://wallpaperswide.com/download/aurora_sky-wallpaper-1366x768.jpg";};
 

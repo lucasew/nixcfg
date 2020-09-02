@@ -1,6 +1,7 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let
   globalConfig = import <dotfiles/globalConfig.nix>;
+  tuple = lib.hm.gvariant.mkTuple;
 in
 {
   dconf.settings = {
@@ -11,7 +12,7 @@ in
     };
     "org/gnome/desktop/input-sources" = {
       current = "uint32 0";
-      sources = ''[("xkb", "br"), ("xkb", "us")]'';
+      sources = [(tuple ["xkb" "br"]) (tuple ["xkb" "us"])];
       xkb-options = [ "terminate:ctrl_alt_bksp" ];
     };
     "org/gnome/desktop/interface" = {
@@ -26,14 +27,11 @@ in
       disable-microphone = true;
       report-technical-problems = false;
     };
-    "org/gnome/desktop/screensaver" = {
-      picture-options = "zoom";
-      picture-uri = "file:///${pkgs.gnome3.gnome-backgrounds}/share/backgrounds/gnome/Road.jpg";
-      primary-color = "#ffffff";
-      secondary-color = "#000000";
-    };
     "org/gnome/system/location" = {
       enabled = false;
+    };
+    "org/gnome/desktop/periphereals/touchpad" = {
+      tap-to-click = true;
     };
   };
 }
