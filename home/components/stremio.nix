@@ -1,4 +1,4 @@
-{ pkgs ? import <dotfiles/pkgs.nix>
+{ pkgs ? import <nixpkgs>
 , ...
 }:
 

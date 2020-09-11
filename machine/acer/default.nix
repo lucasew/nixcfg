@@ -2,22 +2,20 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{config, ... }:
+{pkgs, config, ... }:
 let
-  home-manager = builtins.fetchGit {
-    url = "https://github.com/rycee/home-manager.git";
-    rev = "318bc0754ed6370cfcae13183a7f13f7aa4bc73f"; # CHANGEME 
-    ref = "release-20.03";
-  };
-  pkgs = import <dotfiles/pkgs.nix>;
+  lsName = import <dotfiles/overlays/utils/lsName.nix>;
+  components = lsName ./components;
+  globalConfig = import <dotfiles/globalConfig.nix>;
+  home-manager = globalConfig.home-manager;
 in
 {
   imports =
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      (import "${home-manager}/nixos")
-    ] ++ pkgs.utils.lsName ./components;
+      "${home-manager}/nixos"
+    ] ++ components;
 
   # Use the systemd-boot EFI boot loader.
   boot.supportedFilesystems = [ "ntfs" ];
@@ -34,7 +32,7 @@ in
     };
   };
 
-  networking.hostName = pkgs.globalConfig.hostname; # Define your hostname.
+  networking.hostName = globalConfig.hostname; # Define your hostname.
   networking.networkmanager.enable = true;
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
@@ -61,7 +59,6 @@ in
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    dotwrap #custom
     wget
     vlc
     restic # cloud e backup
@@ -87,8 +84,11 @@ in
   hardware.opengl.enable = true;
   hardware.opengl.driSupport32Bit = true;
 
-  virtualisation.docker.enable = true;
-  virtualisation.anbox.enable = true;
+  virtualisation = {
+    docker.enable = true;
+    anbox.enable = true;
+    virtualbox.host.enable = true;
+  };
 
   # List services that you want to enable:
 
@@ -125,11 +125,15 @@ in
 
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${pkgs.globalConfig.username} = {
+  users.users.${globalConfig.username} = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
   };
-  home-manager.users.${pkgs.globalConfig.username} = import ../../home;
+  home-manager = {
+    users.${globalConfig.username} = import ../../home;
+    useUserPackages = true;
+#    useGlobalPkgs = true;
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

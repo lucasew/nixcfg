@@ -1,6 +1,7 @@
 let
     global = import ./globalConfig.nix;
-in global.defaultPkgs.mkShell {
+    pkgs = import global.nixpkgs {};
+in pkgs.mkShell {
     shellHook = ''
     export DOTFILES=$(pwd)
     ${global.setupScript}

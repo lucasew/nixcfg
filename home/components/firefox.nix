@@ -1,7 +1,16 @@
-{pkgs, ...}: {
+{pkgs, ...}: 
+let 
+  globalConfig = import <dotfiles/globalConfig.nix>;
+in
+{
   programs.firefox = {
     enable = true;
-    package = pkgs.latest.firefox;
+    package = 
+      if globalConfig.selectedDesktopEnvironment == "gnome"
+      then
+        pkgs.firefox-wayland
+      else
+        pkgs.firefox-bin;
     extensions = with pkgs.nur.repos.rycee.firefox-addons; [
       ublock-origin
       darkreader

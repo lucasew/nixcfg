@@ -1,3 +1,3 @@
 let
-  pkgs = import <dotfiles/pkgs.nix>;
-in import (../gui + "/${pkgs.globalConfig.selectedDesktopEnvironment}.nix")
+  globalConfig = import <dotfiles/globalConfig.nix>;
+in import (../gui + "/${globalConfig.selectedDesktopEnvironment}.nix")

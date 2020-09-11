@@ -33,6 +33,8 @@ in {
               RequiredBy = "graphical.target";
             };
         };
-        home.packages = [pkgs.latest.spotify];
+        home.packages = [
+          pkgs.spotify # .latest.spotify
+        ];
     };
 }

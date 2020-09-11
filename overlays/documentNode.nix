@@ -1,4 +1,4 @@
-self: super: 
+self: super:
 with super;
 let
   version = "1.3.18";

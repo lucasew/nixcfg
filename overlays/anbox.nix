@@ -51,7 +51,7 @@ let
 
     ];
 
-    buildInputs = [];
+    buildInputs = [ ];
 
     NIX_CFLAGS_COMPILE = "-Wno-error=missing-field-initializers";
 
@@ -91,9 +91,10 @@ let
       --subst-var out
     '';
 
-    passthru.image = let
-      imgroot = "https://build.anbox.io/android-images";
-    in
+    passthru.image =
+      let
+        imgroot = "https://build.anbox.io/android-images";
+      in
       with super;
       {
         armv7l-linux = fetchurl {

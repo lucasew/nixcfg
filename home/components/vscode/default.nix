@@ -5,7 +5,7 @@
   ];
   programs.vscode = {
     enable = true;
-    package = pkgs.latest.vscode;
+    package = pkgs.vscode; #.latest.vscode;
     extensions = (import ./extensions.nix) pkgs;
     userSettings = import ./userSettings.nix;
   };

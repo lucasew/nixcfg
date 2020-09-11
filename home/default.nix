@@ -1,42 +1,48 @@
-{ config, ... }:
-let
-  pkgs = import <dotfiles/pkgs.nix>;
-in
+{ pkgs, config, ... }:
 {
-  imports = (import ../overlays/utils/lsName.nix) ./components;
+  imports = import <dotfiles/overlays/utils/lsName.nix> ./components;
 
-  home.packages = with pkgs; [
-    # pacotes colados na master
-    latest.tdesktop
-    latest.youtube-dl
+  manual.manpages.enable = false;
 
-    # pacotes padrão
-    fortune
-    calibre
-    neofetch
-    file
-    arduino
-    heroku
-    lazydocker
-    nix-index
-    scrcpy
-    sqlite
-    libnotify
+  home.packages =
+    let
+      defaultPackages =
+        with pkgs; [
+          fortune
+          calibre
+          neofetch
+          file
+          arduino
+          heroku
+          lazydocker
+          nix-index
+          scrcpy
+          sqlite
+          libnotify
+        ];
+      customPackages =
+        with pkgs; [
+          usb_tixati
+          minecraft
+          ets2
+          mspaint
+          pinball
+          documentNode
+        ];
+      masterPackages =
+        with pkgs; [
+          tdesktop
+          youtube-dl
+        ];
+    in
+    defaultPackages ++ customPackages ++ masterPackages;
 
-    # pacotes personalizados
-    usb_tixati
-    minecraft
-    ets2
-    mspaint
-    pinball
-    documentNode
-  ];
-
-  programs.command-not-found.enable = true;
-  programs.jq.enable = true;
-  programs.obs-studio = {
-    enable = true;
-    plugins = [];
+  programs = {
+    command-not-found.enable = true;
+    jq.enable = true;
+    obs-studio = {
+      enable = true;
+    };
   };
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
@@ -56,5 +62,4 @@ in
   };
 
   home.stateVersion = "20.03";
-
 }

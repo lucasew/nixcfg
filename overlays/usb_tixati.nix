@@ -1,4 +1,4 @@
-self: super: 
+self: super:
 let
   fhs = super.pkgs.buildFHSUserEnv {
     name = "usb_tixati";
@@ -13,14 +13,14 @@ let
       pango
     ];
     runScript = "/run/media/lucasew/Dados/PortableApps/PROGRAMAS/Tixati_portable/tixati_Linux64bit";
-  }; 
+  };
   desktop = super.pkgs.makeDesktopItem {
     name = "TixatiUSB";
     desktopName = "Tixati (USB mode)";
     type = "Application";
     exec = "${fhs}/bin/usb_tixati";
   };
-in 
+in
 {
   usb_tixati = desktop;
 }
