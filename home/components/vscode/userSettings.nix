@@ -1,3 +1,6 @@
+let
+  pkgs = import <nixpkgs> {};
+in
 {
   "workbench.iconTheme" = "file-icons";
   "workbench.colorTheme" = "One Dark Pro";
@@ -11,4 +14,5 @@
     "editor.defaultFormatter" = "esbenp.prettier-vscode";
   };
   "rest-client.enableTelemetry" = false;
+  "rust-client.disableRustup" = true;
 }

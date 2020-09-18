@@ -3,6 +3,12 @@
     pkgs.vscode-extensions.vscodevim.vim
 ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
     {
+      name = "nix-env-selector";
+      publisher = "arrterian";
+      version = "0.1.2";
+      sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
+    }
+    {
     name = "bracket-pair-colorizer";
     publisher = "CoenraadS";
     version = "1.0.61";
@@ -63,9 +69,15 @@
     sha256 = "07jfya2pfkz51m3zljjlvsb5lwl8kdmsn1j39n8k6q8hqsjn0zml";
     }
     {
-        publisher = "mjmcloug";
-        name = "vscode-elixir";
-        version = "1.1.0";
-        sha256 = "0kj7wlhapkkikn1md8cknrffrimk0g0dbbhavasys6k3k7pk2khh";
+    publisher = "mjmcloug";
+    name = "vscode-elixir";
+    version = "1.1.0";
+    sha256 = "0kj7wlhapkkikn1md8cknrffrimk0g0dbbhavasys6k3k7pk2khh";
+    }
+    {
+      publisher = "rust-lang";
+      name = "rust";
+      version = "0.7.8";
+      sha256 = "039ns854v1k4jb9xqknrjkj8lf62nfcpfn0716ancmjc4f0xlzb3";
     }
 ]
