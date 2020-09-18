@@ -23,6 +23,7 @@ in {
         systemd.user.services.spotify-adblock = {
             Unit = {
                 Description = "Spotify ad skipper";
+                PartOf = [ "graphical-session.target" ];
             };
             Service = {
                 Type = "exec";
@@ -30,11 +31,13 @@ in {
                 Restart = "on-failure";
             };
             Install = {
-              RequiredBy = "graphical.target";
+              WantedBy = [
+                "default.target"
+              ];
             };
         };
         home.packages = [
-          pkgs.spotify # .latest.spotify
+          pkgs.spotify
         ];
     };
 }
