@@ -27,7 +27,6 @@ in
       efiSupport = true;
       #efiInstallAsRemovable = true; # in case canTouchEfiVariables doesn't work for your system
       device = "nodev";
-      backgroundColor = "#000000";
       useOSProber = true;
     };
   };
