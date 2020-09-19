@@ -17,6 +17,7 @@ let
   desktop = super.pkgs.makeDesktopItem {
     name = "TixatiUSB";
     desktopName = "Tixati (USB mode)";
+    icon = "tixati";
     type = "Application";
     exec = "${fhs}/bin/usb_tixati";
   };

@@ -22,6 +22,7 @@ let
     name = "DocumentNode";
     desktopName = "Document Node";
     type = "Application";
+    icon = pkgs.fetch "https://documentnode.io/images/documentnode_simple.svg";
     exec = "${bin}/bin/DocumentNode";
   };
 in

@@ -27,6 +27,7 @@ in
   pinball = pkgs.makeDesktopItem {
     name = "Pinball";
     desktopName = "Pinbal - Space Cadet";
+    icon = pkgs.fetch "https://www.chip.de/ii/1/8/8/0/2/9/2/3/028c4582789e6c07.jpg";
     type = "Application";
     exec = "${pinball}/bin/pinball";
   };

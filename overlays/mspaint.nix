@@ -30,6 +30,7 @@ in
   mspaint = pkgs.makeDesktopItem {
     name = "paint";
     desktopName = "Paint WindowsXP";
+    icon = pkgs.fetch "http://vignette3.wikia.nocookie.net/logopedia/images/4/45/Ms_paint_windows_xp_logo.png/revision/latest?cb=20160414044336";
     type = "Application";
     exec = "${bin}/bin/mspaint $*";
   };

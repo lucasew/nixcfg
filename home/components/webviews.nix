@@ -1,7 +1,7 @@
 {pkgs, config, ...}:
 let
   globalConfig = import <dotfiles/globalConfig.nix>;
-  fetch = url: builtins.fetchurl {url = url;};
+  fetch = pkgs.fetch;
 in
 let
   whatsapp = pkgs.stdenv.mkNativefier {

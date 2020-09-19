@@ -56,6 +56,7 @@ in
     name = "minecraft";
     desktopName = "Shiginima Minecraft";
     type = "Application";
+    icon = pkgs.fetch "https://icons.iconarchive.com/icons/blackvariant/button-ui-requests-2/1024/Minecraft-2-icon.png";
     exec = "${drv}/bin/minecraft $*";
   };
 }
