@@ -1,6 +1,5 @@
-{ pkgs ? import <nixpkgs>
-, ...
-}:
+self: super:
+with super;
 
 with pkgs;
 with builtins;
@@ -52,18 +51,18 @@ let
       make -f release.makefile install PREFIX="$out/"
       mkdir -p "$out/bin"
       ln -s "$out/opt/stremio/stremio" "$out/bin/stremio"
-      mkdir -p "$out/share/applications"
-      ln -s "$out/opt/stremio/smartcode-stremio.desktop" "$out/share/applications"
+      # mkdir -p "$out/share/applications"
+      # ln -s "$out/opt/stremio/smartcode-stremio.desktop" "$out/share/applications"
     '';
-
-    stremioItem = makeDesktopItem {
+  };
+  stremioItem = makeDesktopItem {
       name = "Stremio";
-      exec = "stremio %U";
+      exec = "${pkg}/bin/stremio %U";
+      icon = pkgs.fetch "https://www.stremio.com/website/stremio-logo-small.png";
       comment = "Torrent movies and TV series";
       desktopName = "Stremio";
       genericName = "Movies and TV Series";
-    };
   };
 in {
-  home.packages = [pkg];
+  stremio = stremioItem;
 }

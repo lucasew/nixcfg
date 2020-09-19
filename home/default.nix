@@ -28,6 +28,7 @@
           mspaint
           pinball
           documentNode
+          stremio
         ];
       masterPackages =
         with pkgs; [
