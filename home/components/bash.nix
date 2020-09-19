@@ -9,6 +9,7 @@ in
       export EDITOR="nvim"
       export PS1="\u@\h \w \$?\\$ \[$(tput sgr0)\]"
       source ~/.dotfilerc
+      alias la="ls -a"
     '';
   };
 }
