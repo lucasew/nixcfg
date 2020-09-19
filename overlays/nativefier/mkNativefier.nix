@@ -4,6 +4,7 @@ in
   {
     name, 
     url, 
+    icon ? null,
     electron ? pkgs.electron, 
     props ? {}
   }:
@@ -33,6 +34,7 @@ let
   desktop = pkgs.makeDesktopItem {
     name = name;
     desktopName = "${name}";
+    icon = icon;
     type = "Application";
     exec = "${binary}/bin/${name}";
   };
