@@ -10,6 +10,7 @@ in
       export PS1="\u@\h \w \$?\\$ \[$(tput sgr0)\]"
       source ~/.dotfilerc
       alias la="ls -a"
+      alias ncdu="rclone ncdu . 2> /dev/null"
     '';
   };
 }
