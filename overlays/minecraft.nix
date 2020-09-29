@@ -38,7 +38,6 @@ let
       do
           cat "$file" > $out/share/java/minecraft.jar
       done
-      # makeWrapper ${pkgs.oraclejre}/bin/java $out/bin/minecraft \
       makeWrapper ${pkgs.jre8}/bin/java $out/bin/minecraft \
           --add-flags "-jar $out/share/java/minecraft.jar" \
                 --prefix LD_LIBRARY_PATH : ${envLibPath}

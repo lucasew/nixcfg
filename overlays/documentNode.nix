@@ -22,7 +22,10 @@ let
     name = "DocumentNode";
     desktopName = "Document Node";
     type = "Application";
-    icon = pkgs.fetch "https://documentnode.io/images/documentnode_simple.svg";
+    icon = builtins.fetchurl {
+      url = "https://documentnode.io/images/documentnode_simple.svg";
+      sha256 = "14rlby0d4bvq0760k51gibjlwshgmxnsf8f5f86ap2sadcn7c3q7";
+    };
     exec = "${bin}/bin/DocumentNode";
   };
 in
