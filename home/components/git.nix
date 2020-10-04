@@ -6,4 +6,7 @@ with pkgs.globalConfig;
     userName = username;
     userEmail = email;
   };
+  home.packages = [
+    pkgs.haskellPackages.git-annex
+  ];
 }
