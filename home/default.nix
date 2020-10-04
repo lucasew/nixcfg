@@ -22,6 +22,7 @@
         ];
       customPackages =
         with pkgs; [
+          amongUs
           usb_tixati
           minecraft
           ets2
