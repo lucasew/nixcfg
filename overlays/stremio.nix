@@ -58,7 +58,10 @@ let
   stremioItem = makeDesktopItem {
       name = "Stremio";
       exec = "${pkg}/bin/stremio %U";
-      icon = pkgs.fetch "https://www.stremio.com/website/stremio-logo-small.png";
+      icon = builtins.fetchurl {
+        url = "https://www.stremio.com/website/stremio-logo-small.png";
+        sha256 = "15zs8h7f8fsdkpxiqhx7wfw4aadw4a7y190v7kvay0yagsq239l6";
+      };
       comment = "Torrent movies and TV series";
       desktopName = "Stremio";
       genericName = "Movies and TV Series";
