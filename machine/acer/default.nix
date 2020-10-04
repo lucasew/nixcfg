@@ -85,7 +85,6 @@ in
 
   virtualisation = {
     docker.enable = true;
-    anbox.enable = true;
     virtualbox.host.enable = true;
   };
 
