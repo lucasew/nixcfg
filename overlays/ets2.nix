@@ -3,8 +3,6 @@ with super;
 let
   version = "1.28.0.10";
   game = "/run/media/lucasew/Dados/DADOS/Jogos/Euro.Truck.Simulator.2.v1.28.0.10.Inclu.ALL.DLC";
-  bin = pkgs.writeShellScriptBin "ets2" ''
-    '';
 in
 {
   ets2 = pkgs.makeDesktopItem {
