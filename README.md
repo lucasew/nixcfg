@@ -1,6 +1,6 @@
 # Dotfiles and Nix/NixOS settings
 
-- home-manager: Dotfile manager, runs as a configuration.nix extension
+- home-manager: dotfile manager, runs as a configuration.nix extension
 
 - the way it is organized its not necessary to place the nix files in the default locations like
 
@@ -13,7 +13,7 @@
     - i3 + xfce: working nice, unable to skip music locked (workaround using kdeconnect xD), the bar is still the default
     - gnome: now is what I am using, working nice, also in unstable there is a new lockscreen (GDM) that I think is better than the old
     - xfce: working nice too
-    - kde: Works but I haven't played much yet
+    - kde: works but I haven't played much yet
 
 - modular fashion: home modules are searched when the config files loads, you just create a file in home directory using home-manager 
 module structure and nix imports it automagically, same for `machine/acer`
@@ -34,7 +34,7 @@ module structure and nix imports it automagically, same for `machine/acer`
     - let's learn together :smile:
 
 - NixOS > Arch
-    - Change my mind
+    - change my mind
     - (yes, I have used arch btw for around 1 year, it's a good distro but NixOS is better)
     - `nix-shell` rocks
     - the possibility of rollback at any time in a simple way, even if the distro fails to boot, is like magic
