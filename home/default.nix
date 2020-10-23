@@ -19,6 +19,7 @@
           scrcpy
           sqlite
           libnotify
+          manix
         ];
       customPackages =
         with pkgs; [
