@@ -11,6 +11,7 @@ in
       source ~/.dotfilerc
       alias la="ls -a"
       alias ncdu="rclone ncdu . 2> /dev/null"
+      alias sqlite3="${pkgs.rlwrap}/bin/rlwrap sqlite3"
     '';
   };
 }
