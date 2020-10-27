@@ -25,7 +25,7 @@
         with pkgs; [
           amongUs
           usb_tixati
-          minecraft
+          # minecraft
           ets2
           mspaint
           pinball

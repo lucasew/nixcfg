@@ -86,7 +86,6 @@ in
 
   virtualisation = {
     docker.enable = true;
-    virtualbox.host.enable = true;
   };
 
   # List services that you want to enable:
@@ -143,4 +142,7 @@ in
   system.stateVersion = "20.03"; # Did you read the comment?
 
   environment.variables.EDITOR = "nvim";
+
+  nix.maxJobs = 3;
+  boot.kernelPackages = pkgs.linuxPackages_5_8;
 }
