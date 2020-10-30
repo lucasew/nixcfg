@@ -80,4 +80,10 @@
       version = "0.7.8";
       sha256 = "039ns854v1k4jb9xqknrjkj8lf62nfcpfn0716ancmjc4f0xlzb3";
     }
+    {
+      publisher = "octref";
+      name = "vetur";
+      version = "0.28.0";
+      sha256 = "01r14f6ynv4pwvi8i9g7hprwhsx6kxjxzs5pqvd9flcvd7kxaks3";
+    }
 ]
