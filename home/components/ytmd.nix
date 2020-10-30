@@ -11,6 +11,11 @@ let
                     echo Pulando ad...
                     $PLAYERCTL next -p youtubemusic
                 fi
+                if [[ $($PLAYERCTL metadata -p youtubemusic mpris:length) =~ 30000000 ]]; then
+                  echo Ad com timeout de 5s
+                  sleep 5
+                  $PLAYERCTL next -p youtubemusic
+                fi
             }
             $PLAYERCTL metadata -p youtubemusic --format "{{mpris:artUrl}}" -F 2> /dev/null \
             | while read line; do \
