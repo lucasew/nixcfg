@@ -31,6 +31,7 @@
           pinball
           documentNode
           stremio
+          nodePackages.vercel
         ];
       masterPackages =
         with pkgs; [
