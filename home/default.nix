@@ -32,7 +32,6 @@
           documentNode
           stremio
           nodePackages.vercel
-          ytmd
         ];
       masterPackages =
         with pkgs; [
