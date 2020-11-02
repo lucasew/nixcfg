@@ -84,9 +84,7 @@ in
   hardware.opengl.enable = true;
   hardware.opengl.driSupport32Bit = true;
 
-  virtualisation = {
-    docker.enable = true;
-  };
+  virtualisation.docker.enable = true;
 
   # List services that you want to enable:
 
