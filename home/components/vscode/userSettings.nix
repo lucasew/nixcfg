@@ -15,4 +15,5 @@ in
   };
   "rest-client.enableTelemetry" = false;
   "rust-client.disableRustup" = true;
+  "go.useLanguageServer" = true;
 }

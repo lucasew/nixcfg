@@ -86,4 +86,10 @@
       version = "0.28.0";
       sha256 = "01r14f6ynv4pwvi8i9g7hprwhsx6kxjxzs5pqvd9flcvd7kxaks3";
     }
+    {
+      publisher = "golang";
+      name = "go";
+      version = "0.18.0";
+      sha256 = "0g9s9jc5786vj7v01c76k5n1f8blvz606z4sjhc91zqljwajgicd";
+    }
 ]
