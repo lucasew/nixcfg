@@ -14,15 +14,16 @@ let
     vimAlias = true;
     configure = {
       plug.plugins = with pkgs.vimPlugins; [
-        onedark-vim
-       lightline-vim
+        LanguageClient-neovim
+        auto-pairs
         echodoc
-        vim-startify
         indentLine
+        lightline-vim
+        onedark-vim
+        pluginNocapsquit
         vim-commentary
         vim-nix
-        pluginNocapsquit
-        LanguageClient-neovim
+        vim-startify
       ];
       customRC = ''
       let g:LanguageClient_serverCommands = ${builtins.toJSON (import ./langservers.nix {inherit pkgs;})}

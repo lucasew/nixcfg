@@ -10,4 +10,6 @@ in
   rust = ["rls"];
   python = ["python-language-server"];
   nix = pkgbin "rnix-lsp";
+  c = pkgbin "ccls";
+  cpp = pkgbin "ccls";
 }
