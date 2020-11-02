@@ -4,9 +4,9 @@
 
 {pkgs, config, ... }:
 let
-  lsName = import <dotfiles/overlays/utils/lsName.nix>;
-  components = lsName ./components;
   globalConfig = import <dotfiles/globalConfig.nix>;
+  lsName = import <dotfiles/lib/lsName.nix>;
+  components = lsName ./components;
   home-manager = globalConfig.home-manager;
 in
 {
@@ -121,12 +121,16 @@ in
 
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${globalConfig.username} = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
+  users.users = {
+    ${globalConfig.username} = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
+    };
   };
   home-manager = {
-    users.${globalConfig.username} = import ../../home;
+    users = {
+      ${globalConfig.username} = import ../../home;
+    };
     useUserPackages = true;
 #    useGlobalPkgs = true;
   };

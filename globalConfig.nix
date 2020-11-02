@@ -6,6 +6,11 @@ let
       # selectedDesktopEnvironment = "xfce_i3";
       selectedDesktopEnvironment = "gnome";
       hostname = "acer-nix";
+      channels = ''
+https://github.com/rycee/home-manager/archive/master.tar.gz home-manager
+https://nixos.org/channels/nixos-unstable nixos-unstable
+https://github.com/nix-community/NUR/archive/master.tar.gz nur
+      '';
       wallpaper = builtins.fetchurl {
         url = "http://wallpaperswide.com/download/armenia_syunik_khustup_hayk_k13-wallpaper-1366x768.jpg";
         sha256 = "1z2439f0d8hpqwjp07xhwkcp7svzvbhljayhdfssmvi619chlc0p";

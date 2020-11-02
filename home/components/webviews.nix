@@ -1,7 +1,7 @@
 {pkgs, config, ...}:
 let
   globalConfig = import <dotfiles/globalConfig.nix>;
-  fetch = pkgs.fetch;
+  fetch = import <dotfiles/lib/fetch.nix>;
 in
 let
   whatsapp = pkgs.stdenv.mkNativefier {

@@ -1,11 +1,11 @@
 { pkgs, ...}:
 let
   globalConfig = import <dotfiles/globalConfig.nix>;
-  generator = import ./gen.nix globalConfig;
+  generator = import <dotfiles/lib/generateDotfilerc.nix>;
 in
 {
   home.file.".dotfilerc".text = ''
     #!/usr/bin/env bash
-    ${generator}
+    ${generator globalConfig}
   '';
 }

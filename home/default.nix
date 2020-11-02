@@ -1,6 +1,6 @@
 { pkgs, config, ... }:
 {
-  imports = import <dotfiles/overlays/utils/lsName.nix> ./components;
+  imports = import <dotfiles/lib/lsName.nix> ./components;
 
   manual.manpages.enable = false;
 
@@ -12,14 +12,31 @@
           calibre
           neofetch
           file
-          arduino
-          heroku
           lazydocker
           nix-index
           scrcpy
           sqlite
           libnotify
           manix
+          youtube-dl
+          #browser
+          google-chrome
+          # compression
+          xarchiver
+          unzip
+          p7zip
+          # cloud
+          rclone
+          rclone-browser
+          # social
+          discord
+          tdesktop
+          # midia
+          pkgs.kdeApplications.kdenlive
+          pkgs.gimp
+          # jetbrains
+          # pkgs.jetbrains.clion
+
         ];
       customPackages =
         with pkgs; [
@@ -35,8 +52,6 @@
         ];
       masterPackages =
         with pkgs; [
-          tdesktop
-          youtube-dl
         ];
     in
     defaultPackages ++ customPackages ++ masterPackages;
