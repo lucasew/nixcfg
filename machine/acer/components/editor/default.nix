@@ -25,6 +25,8 @@ let
         LanguageClient-neovim
       ];
       customRC = ''
+      let g:LanguageClient_serverCommands = ${builtins.toJSON (import ./langservers.nix {inherit pkgs;})}
+      set completefunc=LanguageClient#compltete
       ${builtins.readFile ./rc.vim}
       '';
     };
