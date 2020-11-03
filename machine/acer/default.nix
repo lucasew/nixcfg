@@ -6,6 +6,7 @@
 let
   globalConfig = import <dotfiles/globalConfig.nix>;
   lsName = import <dotfiles/lib/lsName.nix>;
+  pathIfExists = import <dotfiles/lib/pathListIfExist.nix>;
   components = lsName ./components;
   home-manager = globalConfig.home-manager;
 in
@@ -15,7 +16,10 @@ in
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
       "${home-manager}/nixos"
-    ] ++ components;
+    ]
+    ++ components
+    ++ pathIfExists /etc/nixos/cachix.nix
+  ;
 
   # Use the systemd-boot EFI boot loader.
   boot.supportedFilesystems = [ "ntfs" ];
