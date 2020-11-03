@@ -60,10 +60,9 @@ in
   environment.systemPackages = with pkgs; [
     wget
     gparted
-    vlc
-    restic # cloud e backup
     paper-icon-theme
     kde-gtk-config # Custom
+    cachix
   ];
 
   services.udev.packages = with pkgs; [

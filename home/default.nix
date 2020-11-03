@@ -8,35 +8,36 @@
     let
       defaultPackages =
         with pkgs; [
-          fortune
           calibre
-          neofetch
           file
+          fortune
           lazydocker
+          libnotify
+          manix
+          neofetch
           nix-index
           scrcpy
           sqlite
-          libnotify
-          manix
-          youtube-dl
           #browser
           google-chrome
           # compression
-          xarchiver
-          unzip
           p7zip
+          unzip
+          xarchiver
           # cloud
           rclone
           rclone-browser
+          restic
           # social
           discord
           tdesktop
           # midia
-          pkgs.kdeApplications.kdenlive
-          pkgs.gimp
+          gimp
+          kdeApplications.kdenlive
+          vlc
+          youtube-dl
           # jetbrains
           # pkgs.jetbrains.clion
-
         ];
       customPackages =
         with pkgs; [
