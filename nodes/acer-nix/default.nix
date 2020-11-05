@@ -17,7 +17,6 @@ in
     ++ import <dotfiles/lib/listModules.nix> "system"
   ;
 
-  # nixpkgs.overlays = map import (import <dotfiles/lib/listModules.nix> "overlay");
   # Use the systemd-boot EFI boot loader.
   boot.supportedFilesystems = [ "ntfs" ];
   boot.loader = {
@@ -63,7 +62,6 @@ in
     gparted
     paper-icon-theme
     kde-gtk-config # Custom
-    cachix
   ];
 
   services.udev.packages = with pkgs; [

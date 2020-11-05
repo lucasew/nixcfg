@@ -3,13 +3,14 @@
 items:
 component:
 let
-  pathListIfExist = import <dotfiles/lib/pathListIfExist.nix>;
-  normalizedComponent = "/" + component;
-  suffixifyItem = item: item + normalizedComponent + ".nix";
-  suffixedItems = map suffixifyItem items;
-  filterExistentItems = items: if (builtins.length items == 0) 
-    then [] 
-    else 
-      pathListIfExist (builtins.head items) ++ (filterExistentItems (builtins.tail items));
-  filteredItems = filterExistentItems suffixedItems;
-in filteredItems
+  filter = import <dotfiles/lib/filter.nix>;
+  tail = import <dotfiles/lib/tail.nix>;
+  modulePath = <dotfiles/modules>;
+  getModuleName = item: tail (builtins.split "/" (builtins.toString item));
+  suffixifyItem = item:
+    let
+      suffix = "/" + item + "/" + component + ".nix";
+    in <dotfiles/modules> + suffix;
+  suffixedItems = map suffixifyItem (map getModuleName items);
+  filteredItems = filter builtins.pathExists suffixedItems;
+in map builtins.toPath filteredItems

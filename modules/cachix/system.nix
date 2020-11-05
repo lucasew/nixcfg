@@ -4,4 +4,7 @@ let
 in
 {
   imports = pathIfExists /etc/nixos/cachix.nix;
+  environment.systemPackages = with pkgs; [
+    cachix
+  ];
 }
