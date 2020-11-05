@@ -1,4 +1,7 @@
 {config, pkgs, lib, ...}:
+let
+  systemdUserService = import <dotfiles/lib/systemdUserService.nix>;
+in
 with lib;
 let 
     adskipper = 
@@ -24,21 +27,9 @@ let
             '';
 in {
     config = {
-        systemd.user.services.ytmd-adblock = {
-            Unit = {
-                Description = "Youtube music ad skipper";
-                PartOf = [ "graphical-session.target" ];
-            };
-            Service = {
-                Type = "exec";
-                ExecStart = "${adskipper}/bin/ytmd-adskip";
-                Restart = "on-failure";
-            };
-            Install = {
-              WantedBy = [
-                "default.target"
-              ];
-            };
+      systemd.user.services.ytmd-adblock = systemdUserService {
+          description = "Youtube music ad skipper";
+          command = "${adskipper}/bin/ytmd-adskip";
         };
         home.packages = [
           pkgs.ytmd

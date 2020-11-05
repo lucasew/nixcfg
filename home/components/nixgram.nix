@@ -5,24 +5,13 @@ let
     echo "Iniciando..."
     ${pkgs.dotenv}/bin/dotenv @${../../secrets/nixgram.env} -- ${pkgs.nixgram}/bin/nixgram
   '';
+  systemdUserService = import <dotfiles/lib/systemdUserService.nix>;
 in
 {
   config = {
-    systemd.user.services.nixgram = {
-      Unit = {
-        Description = "Command bot for telegram";
-        PartOf = ["graphical-session.target"];
-      };
-      Service = {
-        Type = "exec";
-        ExecStart = "${bin}/bin/nixgram";
-        Restart = "on-failure";
-      };
-      Install = {
-        WantedBy = [
-          "default.target"
-        ];
-      };
+    systemd.user.services.nixgram = systemdUserService {
+        description = "Command bot for telegram";
+        command = "${bin}/bin/nixgram";
     };
     home.packages = [pkgs.nixgram];
   };
