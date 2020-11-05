@@ -1,7 +1,11 @@
 { config, pkgs, ... }:
 {
   services.xserver = {
-    desktopManager.xfce.enable = true;
+    enable = true;
+    desktopManager = {
+      xfce.enable = true;
+      xterm.enable = false;
+    };
     xautolock = {
       enable = true;
       time = 10;

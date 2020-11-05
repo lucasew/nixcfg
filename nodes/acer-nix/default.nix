@@ -104,10 +104,7 @@ in
   sound.enable = true;
   hardware.pulseaudio.enable = true;
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  services.xserver.desktopManager.xterm.enable = false;
-  # services.xserver.layout = "us";
+    # services.xserver.layout = "us";
   # services.xserver.xkbOptions = "eurosign:e";
 
   # Enable touchpad support.
