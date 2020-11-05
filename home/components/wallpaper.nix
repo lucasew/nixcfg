@@ -1,13 +1,15 @@
 {...}:
 let
     globalConfig = import <dotfiles/globalConfig.nix>;
-in {
+in
+with globalConfig;
+{
     dconf.settings = {
         "org/gnome/desktop/background" = {
-            picture-uri = "file:///${globalConfig.wallpaper}";
+            picture-uri = "file:///${wallpaper}";
         };
         "org/gnome/desktop/screensaver" = {
-          picture-uri = "file:///${globalConfig.wallpaper}";
+          picture-uri = "file:///${wallpaper}";
           picture-options="zoom";
           primary-color="#ffffff";
           secondary-color="#000000";

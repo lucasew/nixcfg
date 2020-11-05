@@ -13,6 +13,8 @@ in
         description = "Command bot for telegram";
         command = "${bin}/bin/nixgram";
     };
-    home.packages = [pkgs.nixgram];
+    home.packages = [
+      pkgs.nixgram
+    ];
   };
 }

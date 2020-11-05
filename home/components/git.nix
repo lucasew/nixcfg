@@ -1,12 +1,15 @@
-{ config, pkgs, ... }:
-with pkgs.globalConfig;
+{ pkgs, ... }:
+let
+  globalConfig = import <dotfiles/globalConfig.nix>;
+in
+with globalConfig;
 {
   programs.git = {
     enable = true;
     userName = username;
     userEmail = email;
   };
-  home.packages = [
-    pkgs.haskellPackages.git-annex
+  home.packages = with pkgs; [
+    haskellPackages.git-annex
   ];
 }

@@ -1,7 +1,4 @@
 { config, pkgs, ... }:
-let
-  globalConfig = import <dotfiles/globalConfig.nix>;
-in
 {
   programs.bash = {
     enable = true;

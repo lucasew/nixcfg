@@ -1,6 +1,5 @@
 { config, lib, pkgs, ... }:
 let
-  globalConfig = import <dotfiles/globalConfig.nix>;
   tuple = lib.hm.gvariant.mkTuple;
 in
 {

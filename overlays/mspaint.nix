@@ -1,8 +1,8 @@
 self: super:
+with super;
 let
-  pkgs = import <nixpkgs> { };
   fetch = import <dotfiles/lib/fetch.nix>;
-  paint = super.fetchzip {
+  paint = fetchzip {
     url = "https://archive.org/download/MSPaintWinXP/mspaint%20WinXP%20English.zip";
     sha256 = "119c7304szbky9n0d7761qvl09fmg9wh4ilna7fzcj691igly562";
   };
@@ -10,7 +10,7 @@ let
     url = "https://www.dlldump.com/dllfiles/M/mfc42u.dll";
     sha256 = "12mi28j78p8350pn38iqkmcxxz69xmbz7k9ws76i7xv825siv8gi";
   };
-  theDerivation = super.stdenv.mkDerivation {
+  theDerivation = stdenv.mkDerivation {
     name = "mspaint-xp-base";
     version = "1.0";
 
@@ -23,8 +23,8 @@ let
     '';
     enablePatchelf = false;
   };
-  bin = super.writeShellScriptBin "mspaint" ''
-    ${super.wineStable}/bin/wine ${theDerivation}/mspaint.exe
+  bin = writeShellScriptBin "mspaint" ''
+    ${wineStable}/bin/wine ${theDerivation}/mspaint.exe
   '';
 in
 {

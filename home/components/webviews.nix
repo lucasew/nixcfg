@@ -2,9 +2,10 @@
 let
   globalConfig = import <dotfiles/globalConfig.nix>;
   fetch = import <dotfiles/lib/fetch.nix>;
+  mkNativefier = import <dotfiles/lib/mkNativefier> pkgs;
 in
 let
-  whatsapp = pkgs.stdenv.mkNativefier {
+  whatsapp = mkNativefier {
     name = "WhatsApp";
     url = "https://web.whatsapp.com";
     electron = pkgs.electron_9;
@@ -18,7 +19,7 @@ let
       # tray = true;
     };
   };
-  todoist = pkgs.stdenv.mkNativefier {
+  todoist = mkNativefier {
     name = "Todoist";
     url = "https://todoist.com";
     electron = pkgs.electron_9;
@@ -30,7 +31,7 @@ let
       singleInstance = true;
     };
   };
-  remnote = pkgs.stdenv.mkNativefier {
+  remnote = mkNativefier {
     name = "RemNote";
     electron = pkgs.electron_9;
     url = "https://www.remnote.io/";
@@ -39,7 +40,7 @@ let
       sha256 = "032bvkzdwysb7fd10w2xa4dgyf08jvvz1gjfgbj33mhd7zc9ry9y";
     };
   };
-  notion = pkgs.stdenv.mkNativefier {
+  notion = mkNativefier {
     name = "NotionSo";
     url = "https://notion.so";
     icon = builtins.fetchurl {
@@ -47,7 +48,7 @@ let
       sha256 = "16vw52kca3pglykn9q184qgzshys3d2knzy631rp2slkbr301zxf";
     };
   };
-  duolingo = pkgs.stdenv.mkNativefier {
+  duolingo = mkNativefier {
     name = "Duolingo";
     url = "https://duolingo.com";
     icon = builtins.fetchurl {
@@ -55,7 +56,7 @@ let
       sha256 = "1059lfaij0lmm1jsywfmnin9z8jalqh8yar9r8sj0qzk4nmjniss";
     };
   };
-  geforcenow = pkgs.stdenv.mkNativefier {
+  geforcenow = mkNativefier {
     name = "GeforceNow";
     url = "https://play.geforcenow.com/";
     electron = pkgs.electron_9;

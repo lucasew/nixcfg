@@ -5,5 +5,7 @@ let
   '';
 in
 {
-  home.packages = [ rofiScript ];
+  home.packages = [
+    rofiScript
+  ];
 }

@@ -1,6 +1,6 @@
 self: super:
+with super;
 let
-  pkgs = super.pkgs;
   globalConfig = import <dotfiles/globalConfig.nix>;
   nurRepo = globalConfig.nur;
 in

@@ -28,7 +28,7 @@ let
       sha256 = "0innqp5mbgk28kzr1fiyirj9pp7ib9f4xqfsvcj16xdq7i41m91c";
     };
 
-    nativeBuildInputs = with super; [
+    nativeBuildInputs = [
       makeWrapper
       cmake
       pkgconfig
@@ -48,7 +48,6 @@ let
       python
       libGL
       glm
-
     ];
 
     buildInputs = [ ];
@@ -77,7 +76,7 @@ let
       set(GTEST_BOTH_LIBRARIES ''${GTEST_LIBRARIES} ''${GTEST_MAIN_LIBRARIES})
       EOF
     '';
-    postInstall = with super; ''
+    postInstall = ''
       wrapProgram $out/bin/anbox \
       --prefix LD_LIBRARY_PATH : ${stdenv.lib.makeLibraryPath [ libGL libglvnd ]} \
       --prefix PATH : ${git}/bin

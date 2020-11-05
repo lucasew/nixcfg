@@ -1,11 +1,8 @@
 self: super:
 with super;
-
 with pkgs;
-with builtins;
-
 let
-  serverJS = fetchurl {
+  serverJS = builtins.fetchurl {
     url = "https://s3-eu-west-1.amazonaws.com/stremio-artifacts/four/master/server.js";
     sha256 = "03isaygbqnkhzqpbhfdw42fnir8aav81fdyqx9vrnb03iannmwv0";
   };

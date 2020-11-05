@@ -4,59 +4,49 @@
 
   manual.manpages.enable = false;
 
-  home.packages =
-    let
-      defaultPackages =
-        with pkgs; [
-          calibre
-          file
-          fortune
-          lazydocker
-          libnotify
-          manix
-          neofetch
-          nix-index
-          scrcpy
-          sqlite
-          #browser
-          google-chrome
-          # compression
-          p7zip
-          unzip
-          xarchiver
-          # cloud
-          rclone
-          rclone-browser
-          restic
-          # social
-          discord
-          tdesktop
-          # midia
-          gimp
-          kdeApplications.kdenlive
-          vlc
-          youtube-dl
-          # jetbrains
-          # pkgs.jetbrains.clion
-        ];
-      customPackages =
-        with pkgs; [
-          amongUs
-          usb_tixati
-          # minecraft
-          ets2
-          mspaint
-          pinball
-          documentNode
-          stremio
-          nodePackages.vercel
-        ];
-      masterPackages =
-        with pkgs; [
-        ];
-    in
-    defaultPackages ++ customPackages ++ masterPackages;
-
+  home.packages = with pkgs; [
+    # ------------ pacotes do nixpkgs ---------------
+    calibre
+    file
+    fortune
+    lazydocker
+    libnotify
+    manix
+    neofetch
+    nix-index
+    scrcpy
+    sqlite
+    #browser
+    google-chrome
+    # compression
+    p7zip
+    unzip
+    xarchiver
+    # cloud
+    rclone
+    rclone-browser
+    restic
+    # social
+    discord
+    tdesktop
+    # midia
+    gimp
+    kdeApplications.kdenlive
+    vlc
+    youtube-dl
+    # jetbrains
+    # pkgs.jetbrains.clion
+    # -------------------- pacotes custom -----------
+    amongUs
+    usb_tixati
+    # minecraft
+    ets2
+    mspaint
+    pinball
+    documentNode
+    stremio
+    nodePackages.vercel
+  ];
   programs = {
     command-not-found.enable = true;
     jq.enable = true;

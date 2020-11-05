@@ -1,7 +1,4 @@
-let
-  pkgs = import <nixpkgs> {};
-in
-  {
+pkgs: {
     name, 
     url, 
     icon ? null,
