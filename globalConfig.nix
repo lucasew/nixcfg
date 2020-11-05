@@ -1,6 +1,6 @@
 let
   cfg = rec {
-      machine_name = "acer";
+      machine_name = "acer-nix";
       username = "lucasew";
       email = "lucas59356@gmail.com";
       # selectedDesktopEnvironment = "xfce_i3";
@@ -32,6 +32,6 @@ https://github.com/nix-community/NUR/archive/master.tar.gz nur
       home-manager = "${builtins.getEnv "HOME"}/.nix-defexpr/channels/home-manager";
       nur = "${builtins.getEnv "HOME"}/.nix-defexpr/channels/nur";
       pkgs = "${dotfileRootPath}/pkgs.nix";
-      setupScript = import ./home/components/dotfiles/gen.nix cfg;
+      setupScript = import ./lib/generateDotfilerc.nix cfg;
   };
 in cfg
