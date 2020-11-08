@@ -24,6 +24,7 @@ let
         vim-commentary
         vim-nix
         vim-startify
+        zig-vim
       ];
       customRC = ''
       let g:LanguageClient_serverCommands = ${builtins.toJSON (import ./langservers.nix {inherit pkgs;})}

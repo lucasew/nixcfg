@@ -9,4 +9,5 @@ in
   nix = [(pkgbin "rnix-lsp")];
   c = [(pkgbin "ccls")];
   cpp = [(pkgbin "ccls")];
+  zig = ["zls"];
 }
