@@ -18,6 +18,7 @@
     nix-index
     scrcpy
     sqlite
+    typora
     #browser
     google-chrome
     # jetbrains
