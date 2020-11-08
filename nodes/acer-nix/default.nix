@@ -120,6 +120,7 @@ in
     ${globalConfig.username} = {
       isNormalUser = true;
       extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
+      description = "Lucas Eduardo";
     };
   };
   home-manager = {
