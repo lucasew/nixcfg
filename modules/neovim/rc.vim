@@ -64,3 +64,6 @@ let g:echodoc#type = "virtual"
 " IndentLines:
 " Commentary:
 " Nix:
+
+" Disable conceallevel
+autocmd VimEnter * set conceallevel=0
