@@ -1,3 +1,4 @@
+# TODO: what happens if a enabled unit fails at boot?
 {
   description,
   command,
@@ -6,7 +7,6 @@
 {
   Unit = {
     Description = description;
-    PartOf = ["graphical-session.target"];
   };
   Service = {
     Type = "exec";
