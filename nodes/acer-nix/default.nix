@@ -5,7 +5,7 @@
 {pkgs, config, ... }:
 let
   globalConfig = import <dotfiles/globalConfig.nix>;
-  home-manager = globalConfig.home-manager;
+  home-manager = globalConfig.repos.home-manager;
 in
 {
   imports =

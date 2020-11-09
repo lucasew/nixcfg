@@ -1,7 +1,7 @@
 {pkgs, ...}:
 let
   globalConfig = import <dotfiles/globalConfig.nix>;
-  nurRepo = globalConfig.nur;
+  nurRepo = globalConfig.repos.nur;
 in import nurRepo {
   inherit pkgs;
 }

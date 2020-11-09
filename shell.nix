@@ -1,6 +1,6 @@
 let
     global = import ./globalConfig.nix;
-    pkgs = import global.nixpkgs {};
+    pkgs = import global.repos.nixpkgs {};
 in pkgs.mkShell {
     shellHook = ''
     export DOTFILES=$(pwd)
