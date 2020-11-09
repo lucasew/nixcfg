@@ -1,4 +1,8 @@
-{description, command}:
+{
+  description,
+  command,
+  enable ? true
+}:
 {
   Unit = {
     Description = description;
@@ -10,8 +14,8 @@
     Restart = "on-failure";
   };
   Install = {
-    WantedBy = [
+    WantedBy = if enable then [
       "default.target"
-    ];
+    ] else [];
   };
 }
