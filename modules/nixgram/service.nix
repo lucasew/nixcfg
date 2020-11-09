@@ -1,14 +1,11 @@
 {pkgs, ...}: 
 let
-  dotenv = import ../dotenv/package.nix;
-  nixgram = import ./package.nix;
-  bin = pkgs.writeShellScriptBin "nixgram" ''
-    # export PATH=${builtins.getEnv "PATH"}
+  bin = pkgs.writeShellScript "nixgram-service" ''
     echo "Iniciando..."
-    ${dotenv}/bin/dotenv @${../../secrets/nixgram.env} -- ${nixgram}/bin/nixgram
+    ${pkgs.dotenv}/bin/dotenv @${../../secrets/nixgram.env} -- ${pkgs.nixgram}/bin/nixgram
   '';
   systemdUserService = import <dotfiles/lib/systemdUserService.nix>;
 in systemdUserService {
   description = "Command bot for telegram";
-  command = "${bin}/bin/nixgram";
+  command = "${bin}";
 }
