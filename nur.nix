@@ -1,5 +1,4 @@
 {pkgs ? import <nixpkgs> {}, ...}:
-let
 {
   hmModules = {
     compression = ./modules/compression/home.nix;
