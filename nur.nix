@@ -1,7 +1,7 @@
 {pkgs ? import <nixpkgs> {}, ...}:
 let
 {
-  home-manager = {
+  hmModules = {
     compression = ./modules/compression/home.nix;
     customRofi = ./modules/custom_rofi/home.nix;
     htop = ./modules/htop/home.nix;
@@ -11,7 +11,7 @@ let
     youtubemusic-adskip = ./modules/youtube/home.nix;
     tmux = ./modules/tmux/home.nix;
   };
-  nixos = {
+  modules = {
     cachix = ./modules/cachix/system.nix;
     keybase = ./modules/keybase/system.nix;
     neovim = ./modules/neovim/system.nix;
