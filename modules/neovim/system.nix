@@ -9,6 +9,15 @@ let
         sha256 = "1jwwiq321b86bh1z3shcprgh2xs5n1xjy9s364zxlxy8qhwfsryq";
     };
   };
+  pluginEmbark = pkgs.vimUtils.buildVimPlugin {
+    name = "embark-theme";
+    src = pkgs.fetchFromGitHub {
+      owner = "embark-theme";
+      repo = "vim";
+      rev = "cce94a2cc9f0395ed156930bf6a2d1e3198daa4f";
+      sha256 = "02wxjg8ygx7viirphdjlpqr26mdbzcpajnijlchjafy1gms0gryc";
+    };
+  };
   customNeovim = pkgs.neovim.override {
     viAlias = true;
     vimAlias = true;
@@ -25,6 +34,8 @@ let
         vim-nix
         vim-startify
         zig-vim
+        emmet-vim
+        pluginEmbark
       ];
       customRC = ''
       let g:LanguageClient_serverCommands = ${builtins.toJSON (import ./langservers.nix {inherit pkgs;})}

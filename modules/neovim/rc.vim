@@ -50,10 +50,13 @@ syntax on " Ativa syntax highlight
 filetype plugin on " Plugins necessitam disso
 tab ball " Deixa menos bagunçado colocando um arquivo por aba
 
-let g:lightline.colorscheme = 'wombat'
 
 " Colorscheme:
-autocmd VimEnter * colorscheme onedark
+" autocmd VimEnter * colorscheme onedark
+" let g:lightline.colorscheme = 'wombat'
+autocmd VimEnter * colorscheme embark
+let g:lightline.colorscheme = 'embark'
+
 
 " Echodoc: 
 let g:echodoc#enable_at_startup=1
