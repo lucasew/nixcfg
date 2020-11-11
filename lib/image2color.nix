@@ -1,6 +1,8 @@
-image:
+{
+  image,
+  pkgs ? import <nixpkgs> {}
+}:
 let
-    pkgs = import <dotfiles/pkgs.nix>;
     convert = "${pkgs.imagemagick}/bin/convert";
     runCommand = pkgs.runCommand;
     pixelFile = runCommand "img2pixel" {} ''
