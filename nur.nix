@@ -17,6 +17,7 @@
     virt-manager = ./modules/virt-manager/system.nix;
   };
   packages = {
+    a22020 = pkgs.callPackage ./modules/node_clis/package_22120.nix;
     dotenv = pkgs.callPackage ./modules/dotenv/package.nix;
     minecraft-shiginima = pkgs.callPackage ./modules/minecraft/package.nix;
     mspaint-xp = pkgs.callPackage ./modules/mspaint/package.nix;
