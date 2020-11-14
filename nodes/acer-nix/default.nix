@@ -62,6 +62,7 @@ in
     gparted
     paper-icon-theme
     kde-gtk-config # Custom
+    dasel # manipulação de json, toml, yaml, xml, csv e tal
   ];
 
   services.udev.packages = with pkgs; [
