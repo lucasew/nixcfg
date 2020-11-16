@@ -11,7 +11,7 @@ in
     ./modules/firefox/home.nix
     ./modules/usb_tixati/home.nix
     ./modules/webviews/home.nix
-    "${builtins.fetchGit { url = "https://github.com/lucasew/nixgram"; rev = "5e04df76b43d580420e0302d8964ee73db7dbeb7";}}/hmModule.nix"
+    "${builtins.fetchGit { url = "https://github.com/lucasew/nixgram"; rev = "1b2c48fae75f9a2dbebff1930d3b8c34a74a4580";}}/hmModule.nix"
   ]
   ++ import <dotfiles/lib/listModules.nix> "home";
 
@@ -111,6 +111,7 @@ in
   # nixgram
   services.nixgram = {
     enable = true;
+    dotenvFile = ../../secrets/nixgram.env;
     customCommands = {
       echo = "echo $*";
       speak = ''
