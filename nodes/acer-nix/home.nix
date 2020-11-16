@@ -11,6 +11,7 @@ in
     ./modules/firefox/home.nix
     ./modules/usb_tixati/home.nix
     ./modules/webviews/home.nix
+    "${builtins.fetchGit { url = "https://github.com/lucasew/nixgram"; rev = "5e04df76b43d580420e0302d8964ee73db7dbeb7";}}/hmModule.nix"
   ]
   ++ import <dotfiles/lib/listModules.nix> "home";
 
