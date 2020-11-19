@@ -4,7 +4,7 @@ let
       username = "lucasew";
       email = "lucas59356@gmail.com";
       # selectedDesktopEnvironment = "xfce_i3";
-      selectedDesktopEnvironment = "gnome";
+      selectedDesktopEnvironment = "xfce_i3";
       hostname = "acer-nix";
       dotfileRootPath = 
       let
