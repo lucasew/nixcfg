@@ -25,5 +25,5 @@ jobs:
         with:
           name: lucasew-personal
           authToken: '${{ secrets.CACHIX_TOKEN }}'
-      - run: nix-build build.nix --show-trace
+      - run: nix-build build.nix --show-trace -I dotfiles=$(pwd)
 
