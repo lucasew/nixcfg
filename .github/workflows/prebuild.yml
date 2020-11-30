@@ -25,5 +25,5 @@ jobs:
         with:
           name: poc
           authToken: '${{ secrets.CACHIX_TOKEN }}'
-      - run: nix-shell --run 'nix-build build.nix --show-trace'
+      - run: DOTFILES=$(pwd) nix-shell --run 'nix-build build.nix --show-trace'
 
