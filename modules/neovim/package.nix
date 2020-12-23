@@ -47,6 +47,7 @@ in pkgs.neovim.override {
       pluginEmbark
       vim-markdown
       themeStarrynight
+      vim-jsx-typescript
     ];
     customRC = ''
     let g:LanguageClient_serverCommands = ${builtins.toJSON (import ./langservers.nix {inherit pkgs;})}
