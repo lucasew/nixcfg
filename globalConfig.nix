@@ -1,7 +1,6 @@
-{
-    machine_name = "acer-nix";
+rec {
     username = "lucasew";
     email = "lucas59356@gmail.com";
     selectedDesktopEnvironment = "xfce_i3";
-    hostname = "acer-nix";
+    rootPath = "/home/${username}/.dotfiles";
 }
