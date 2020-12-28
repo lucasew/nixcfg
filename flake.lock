@@ -147,6 +147,22 @@
         "type": "github"
       }
     },
+    "pocket2kindle": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1609156448,
+        "narHash": "sha256-LnkAjTC1gZx01XNWUxSiTy2ibMkxJPkuf00sqKjX7Dc=",
+        "owner": "lucasew",
+        "repo": "pocket2kindle",
+        "rev": "9f23dffaabe47da8b911fda336c88437d3c4695c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lucasew",
+        "repo": "pocket2kindle",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "dotenv": "dotenv",
@@ -155,7 +171,8 @@
         "nixgram": "nixgram",
         "nixpkgs": "nixpkgs_3",
         "nixpkgsLatest": "nixpkgsLatest",
-        "nur": "nur"
+        "nur": "nur",
+        "pocket2kindle": "pocket2kindle"
       }
     },
     "utils": {
