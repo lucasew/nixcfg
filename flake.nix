@@ -36,8 +36,7 @@
 
   '';
     overlays = [
-      # dotenv
-      (import ./modules/node_clis/overlay.nix)
+      # (import ./modules/node_clis/overlay.nix)
       (import ./modules/zig/overlay.nix)
       (import ./overlay.nix)
     ];
@@ -78,6 +77,7 @@
         ./nodes/acer-nix/default.nix
       ];
     };
+    packages = pkgs;
     devShell = pkgs.mkShell {
       name = "nixcfg-shell";
       buildInputs = [];
