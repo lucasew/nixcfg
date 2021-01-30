@@ -5,6 +5,7 @@ in
 {
   imports = [
     <nixpkgs/nixos/modules/virtualisation/google-compute-image.nix>
+    ../../modules/cachix/system.nix
   ];
   nixpkgs.config.allowUnfree = true;
   nix = {
@@ -15,8 +16,8 @@ in
       options = "--delete-older-than 15d";
     };
     extraOptions = ''
-      min-free = ${toString 1 * 1024*1024*1024}
-      max-free = ${toString 1 * 1024*1024*1024}
+      min-free = ${toString (1  * 1024*1024*1024)}
+      max-free = ${toString (10 * 1024*1024*1024)}
       experimental-features = nix-command flakes
     '';
   };
@@ -66,11 +67,11 @@ in
       description = "Ademir";
     };
   };
-  virtualisation.docker.enable = true;
-  services.irqbalance.enable = true;
+  # virtualisation.docker.enable = true;
+  # services.irqbalance.enable = true;
 
   cachix.enable = true;
 
-  boot.kernelPackages = pkgs.linuxPackages_5_10;
+  boot.kernelPackages = pkgs.linuxPackages_5_4;
   system.stateVersion = "20.03";
 }
