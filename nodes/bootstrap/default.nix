@@ -14,6 +14,7 @@ with import ../../globalConfig.nix;
       experimental-features = nix-command flakes
     '';
   };
+  nixpkgs.config.allowUnfree = true;
   boot.cleanTmpDir = true;
   i18n.defaultLocale = "pt_BR.UTF-8";
   time.timeZone = "America/Sao_Paulo";
