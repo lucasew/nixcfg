@@ -26,6 +26,7 @@ with import ../../globalConfig.nix;
   environment.variables.EDITOR = "nvim";
   services.openssh = {
     enable = true;
+    passwordAuthentication = true;
   };
   services.zerotierone = {
     port = 6969;
