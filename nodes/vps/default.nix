@@ -3,11 +3,11 @@ with import ../../globalConfig.nix;
 let
   randomtube = "${pkgs.callPackage "${builtins.fetchGit {
     url = "ssh://git@github.com/lucasew/randomtube.git";
-    rev = "aef9da27c9b1fc9ca71a86718bb27d30bc3c898f";
+    rev = "9bdb25e489685f27ec99bfafab37e183480d2a7b";
   }}" {}}/bin/randomtube";
   wrappedRandomtube = "${pkgs.wrapDotenv "randomtube.env" ''
     PATH=$PATH:${pkgs.ffmpeg}/bin
-    ${randomtube} -ms 120
+    ${randomtube} -ms 60
   ''}";
 in
 {
