@@ -6,6 +6,7 @@ with import ../../globalConfig.nix;
      "${flake.inputs.nixpkgs}/nixos/modules/virtualisation/google-compute-image.nix"
     ../../modules/cachix/system.nix
     ../../modules/randomtube/system.nix
+    ../../modules/vercel-ddns/system.nix
   ];
 
   swapDevices = [
@@ -32,7 +33,6 @@ with import ../../globalConfig.nix;
       6969 6970 6971 6972 6973 6974 6975 6976 6977 6978 6979 6980
     ];
   };
-  services.zerotierone.enable = true;
   users.users = {
     ${username} = {
       description = "Ademir";
@@ -40,11 +40,18 @@ with import ../../globalConfig.nix;
   };
   virtualisation.docker.enable = true;
   services = {
+    zerotierone.enable = true;
     irqbalance.enable = true;
     randomtube = {
       enable = false;
       extraParameters = "-ms 120";
       secretsDotenv = "${rootPath}/secrets/randomtube.env";
+    };
+    vercel-ddns = {
+      enable = true;
+      vercelTokenFile = "${rootPath}/secrets/vercel.env";
+      domain = "biglucas.tk";
+      name = "vps";
     };
   };
 

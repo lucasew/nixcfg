@@ -10,7 +10,7 @@ case $TARGET in
     vps)
         case $COMMAND in
             build)
-                nixos-rebuild build --flake .#vps
+                nixos-rebuild build --flake .#vps || exit 1
             ;;
             switch)
                 $0 vps build
