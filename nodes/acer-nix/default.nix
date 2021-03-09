@@ -28,7 +28,6 @@ in
   ;
 
   programs.steam.enable = true;
-
   home-manager = {
     sharedModules = [
       ./modules/dummy_module.nix
