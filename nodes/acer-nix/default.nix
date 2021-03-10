@@ -13,7 +13,7 @@ in
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ../bootstrap/default.nix
+      ../common/default.nix
       (import "${flake.inputs.home-manager}/nixos" {
         inherit config;
         inherit pkgs;
@@ -21,7 +21,6 @@ in
         inherit utils;
       })
       "${flake.inputs.nix-ld}/modules/nix-ld.nix"
-      ../../modules/cachix/system.nix
       ../../modules/gui/system.nix
       ../../modules/polybar/system.nix
     ]
@@ -47,7 +46,6 @@ in
 
   nixpkgs = {
     config = {
-      allowUnfree = true;
       android_sdk.accept_license = true;
     };
   };
@@ -91,7 +89,7 @@ in
     paper-icon-theme
     kde-gtk-config # Custom
     # dasel # manipulação de json, toml, yaml, xml, csv e tal
-    rclone-browser # cloud storage
+    rclone-browser rclone restic # cloud storage
     p7zip unzip xarchiver # archiving
     virt-manager
     # Extra
@@ -144,9 +142,6 @@ in
   # Enable touchpad support.
   services.xserver.libinput.enable = true;
 
-  # Zerotier
-  services.zerotierone.enable = true;
-
   # Themes
   programs.qt5ct.enable = true;
 
@@ -177,12 +172,6 @@ in
     keybase.enable = true;
     kbfs.enable = true;
   };
-
-  # cachix
-  cachix.enable = true;
-
-  # singularity
-  programs.singularity.enable = true;
 
   # não deixar explodir
   nix.maxJobs = 3;
