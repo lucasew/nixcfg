@@ -18,4 +18,12 @@ let
     echo $URL
     ${chrome} --app="$URL"
   '';
-in pkgs.writeShellScriptBin "webapp" script
+  scriptDrv = pkgs.writeShellScript "webapp" script;
+  desktop = pkgs.makeDesktopItem {
+    name = "chrome-applauncher";
+    desktopName = "Lançar site em janela borderless";
+    type = "Application";
+    icon = "applications-internet";
+    exec = scriptDrv;
+  };
+in desktop
