@@ -33,7 +33,7 @@ let
     desktopName = "Lançar site em janela borderless";
     type = "Application";
     icon = "applications-internet";
-    exec = "${scriptBin}";
+    exec = "${scriptBin}/bin/webapp";
   };
   joined = pkgs.symlinkJoin {
     name = "webapp";
