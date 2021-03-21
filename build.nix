@@ -11,4 +11,3 @@ with packages;
   stremio
   ets2
 ]
-++ (map (s: s) (builtins.attrValues nixosConfigurations))
