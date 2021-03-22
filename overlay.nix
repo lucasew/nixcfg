@@ -37,6 +37,7 @@ in composeOverlay [
     comby = cp ./packages/comby.nix;
     custom_rofi = cp ./packages/custom_rofi.nix;
     ets2 = cp ./packages/ets2.nix;
+    custom_ncdu = cp ./packages/custom_ncdu.nix;
     minecraft = cp ./packages/minecraft.nix;
     mspaint = cp ./packages/mspaint.nix;
     onlyoffice = cp ./packages/onlyoffice.nix;
