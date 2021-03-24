@@ -9,12 +9,12 @@ in pkgs.wrapWine {
   name = "tora-lp";
   wineFlags = "explorer /desktop=name,1024x768";
   setupScript = ''
-    cp ${source} /tmp/tora.exe
+    cp ${source} $WINEPREFIX/tora.exe
   '';
   tricks = [
     "vb6run"
     "comdlg32.ocx"
     "msflxgrd"
   ];
-  executable = "/tmp/tora.exe";
+  executable = "$WINEPREFIX/tora.exe";
 }
