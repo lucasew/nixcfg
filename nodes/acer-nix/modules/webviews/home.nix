@@ -43,6 +43,14 @@ let
       sha256 = "1059lfaij0lmm1jsywfmnin9z8jalqh8yar9r8sj0qzk4nmjniss";
     };
   };
+  youtube-music = mkNativefier {
+    name = "YoutubeMusic";
+    url = "music.youtube.com";
+    icon = builtins.fetchurl {
+      url = "https://vancedapp.com/static/media/logo.40712559.svg";
+      sha256 = "1xd28aikklqdi11wam97wcp276f8gx9d7f235h8wsqcixndbrm0y";
+    };
+  };
   # geforcenow = mkNativefier {
   #   name = "GeforceNow";
   #   url = "https://play.geforcenow.com/";
@@ -57,6 +65,7 @@ in
       notion
       duolingo
       todoist
+      youtube-music
       # geforcenow
     ];
 }
