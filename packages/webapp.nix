@@ -17,7 +17,7 @@ let
     fi
     if [[ "$URL" =~ ^~ ]]
     then
-      URL=$(echo $URL | sed s:^~\/::)
+      URL=$(echo $URL | sed -E s:^~\/?::)
       URL="file://$HOME/$URL"
     fi
     if [[ "$URL" =~ ^\/ ]]
