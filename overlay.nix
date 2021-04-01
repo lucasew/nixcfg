@@ -54,10 +54,8 @@ in reduceJoin [
     wrapWine = cp ./packages/wrapWine.nix;
     tora_lp = cp ./packages/tora.nix;
     preload = cp ./packages/preload.nix;
-    python3Packages = super.python3Packages
-    // cp ./packages/python3Packages.nix;
-    nodePackages = super.nodePackages
-    // cp ./modules/node_clis/package_data/default.nix;
+    python3Packages = cp ./packages/python3Packages.nix;
+    nodePackages = cp ./modules/node_clis/package_data/default.nix;
     inherit dotenv;
     inherit wrapDotenv;
     nur = import flake.inputs.nur {
