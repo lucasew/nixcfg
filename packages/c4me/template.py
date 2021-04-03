@@ -476,6 +476,13 @@ def meu_ip():
     with urlopen("http://ifconfig.me") as response:
         return IP(response.read().decode('utf-8'))
 
+def benchmark(iters, fn, *args):
+    assert type(iters) == int
+    from timeit import timeit
+    def call(fn, *args):
+        return lambda: fn(*args)
+    return timeit(call(fn, *args), number=iters)
+
 
 def frac(*args):
     from fractions import Fraction
