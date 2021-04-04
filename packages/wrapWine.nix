@@ -19,8 +19,8 @@ let
     PATH=$PATH:${wine}/bin:${pkgs.winetricks}/bin
     HOME="$(echo ~)"
     WINE_NIX="$HOME/.wine-nix"
-    EXECUTABLE="${executable}"
     export WINEPREFIX="$WINE_NIX/${name}"
+    EXECUTABLE="${executable}"
     mkdir -p "$WINE_NIX"
     ${setupScript}
     if [ ! -d "$WINEPREFIX" ]
