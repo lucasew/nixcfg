@@ -57,7 +57,7 @@ echo "$(bold "$0"): Convenient wrapper around nix-env
       ;;
       uninstall)
           if [ $# == 0 ]; then
-            error no package to uninstall
+            pkg uninstall $(pkg list | dmenu) || error no package to uninstall
           fi
           nix-env --uninstall "$@"
       ;;
