@@ -2,6 +2,17 @@
 
 set -eu -o pipefail
 
+function help {
+    echo "$0 [...packages] -- command [...arguments]"
+    exit 1
+}
+
+function exitHandler {
+    [ "0" != "$?" ] && help
+}
+
+trap 'exitHandler' exit
+
 packages=""
 while [ ! "$1" == "--" ]
 do
@@ -16,6 +27,7 @@ fhsname="fhsctl-$RANDOM"
 
 echo $tempfile
 
+trap - ERR
 
 echo 'with import <nixpkgs> {};' >> $tempfile
 echo 'buildFHSUserEnv {' >> $tempfile
