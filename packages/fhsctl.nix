@@ -1,5 +1,8 @@
-#! /usr/bin/env bash
-
+{pkgs ? import <nixpkgs> {}}:
+let
+  script = "''\"$cmd\" \"\$@\"''";
+in
+pkgs.writeShellScriptBin "fhsctl" ''
 set -eu -o pipefail
 
 function help {
@@ -35,9 +38,10 @@ echo "name = \"$fhsname\";" >> $tempfile
 echo "targetPkgs = pkgs: with pkgs; [" >> $tempfile
 echo "$packages" >> $tempfile
 echo "];" >> $tempfile
-echo "runScript = ''\"$cmd\" \"\$@\"'';" >> $tempfile
+echo "runScript = ${script};" >> $tempfile
 echo "}" >> $tempfile
 
 out=$(nix-store -r $(nix-instantiate $tempfile))
 
 $out/bin/$fhsname "$@"
+''
