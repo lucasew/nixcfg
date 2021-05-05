@@ -1,0 +1,37 @@
+#! /usr/bin/env bash
+
+set -eu -o pipefail
+
+COMMAND="$1";shift
+NAME="$1";shift
+
+FHSDIR="$HOME/.fhs_nix/$NAME"
+PACKAGES_TXT="$FHSDIR/packages.txt"
+DEF_NIX="$FHSDIR/def.nix"
+
+echo $FHSDIR
+
+case "$COMMAND" in
+    new)
+        mkdir -p "$FHSDIR"
+        echo "$@" >> "$PACKAGES_TXT"
+        $0 generate_def $NAME && $0 build $NAME
+    ;;
+    generate_def)
+        echo '{pkgs ? import <nixpkgs> {}}:' > "$DEF_NIX"
+        echo 'pkgs.buildFHSUserEnv {' >> "$DEF_NIX"
+        echo "name = \"fhsctl-$NAME\";" >> "$DEF_NIX"
+        echo "targetPkgs = pkgs: with pkgs; [" >> $DEF_NIX
+        cat $PACKAGES_TXT >> $DEF_NIX
+        echo '];' >> $DEF_NIX
+        echo 'runScript = "\"$@\"";' >> $DEF_NIX
+        echo "}" >> $DEF_NIX
+    ;;
+    build)
+        pushd "$FHSDIR"
+        nix-build def.nix
+    ;;
+    run)
+        "$FHSDIR/result/bin/fhsctl-$NAME" "$@"
+    ;;
+esac
