@@ -2,36 +2,30 @@
 
 set -eu -o pipefail
 
-COMMAND="$1";shift
-NAME="$1";shift
+packages=""
+while [ ! "$1" == "--" ]
+do
+    packages="$packages $1"
+    shift
+done
+shift # ignore --
 
-FHSDIR="$HOME/.fhs_nix/$NAME"
-PACKAGES_TXT="$FHSDIR/packages.txt"
-DEF_NIX="$FHSDIR/def.nix"
+tempfile=$(mktemp /tmp/fhsctl-XXXXXX.nix)
+cmd="$(readlink $(which $1) -m)";shift
+fhsname="fhsctl-$RANDOM"
 
-echo $FHSDIR
+echo $tempfile
 
-case "$COMMAND" in
-    new)
-        mkdir -p "$FHSDIR"
-        echo "$@" >> "$PACKAGES_TXT"
-        $0 generate_def $NAME && $0 build $NAME
-    ;;
-    generate_def)
-        echo '{pkgs ? import <nixpkgs> {}}:' > "$DEF_NIX"
-        echo 'pkgs.buildFHSUserEnv {' >> "$DEF_NIX"
-        echo "name = \"fhsctl-$NAME\";" >> "$DEF_NIX"
-        echo "targetPkgs = pkgs: with pkgs; [" >> $DEF_NIX
-        cat $PACKAGES_TXT >> $DEF_NIX
-        echo '];' >> $DEF_NIX
-        echo 'runScript = "\"$@\"";' >> $DEF_NIX
-        echo "}" >> $DEF_NIX
-    ;;
-    build)
-        pushd "$FHSDIR"
-        nix-build def.nix
-    ;;
-    run)
-        "$FHSDIR/result/bin/fhsctl-$NAME" "$@"
-    ;;
-esac
+
+echo 'with import <nixpkgs> {};' >> $tempfile
+echo 'buildFHSUserEnv {' >> $tempfile
+echo "name = \"$fhsname\";" >> $tempfile
+echo "targetPkgs = pkgs: with pkgs; [" >> $tempfile
+echo "$packages" >> $tempfile
+echo "];" >> $tempfile
+echo "runScript = ''\"$cmd\" \"\$@\"'';" >> $tempfile
+echo "}" >> $tempfile
+
+out=$(nix-store -r $(nix-instantiate $tempfile))
+
+$out/bin/$fhsname "$@"
