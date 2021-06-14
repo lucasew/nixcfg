@@ -50,7 +50,10 @@
       };
     };
     revModule = ({pkgs, ...}: {
-      system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) (builtins.trace self.rev self.rev);
+      system.configurationRevision = if (self ? rev) then 
+        builtins.trace "detected flake hash: ${self.rev}" self.rev
+      else
+        builtins.trace "flake hash not detected!" null;
     });
   in {
     inherit overlays;
