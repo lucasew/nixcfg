@@ -1,5 +1,6 @@
-{pkgs, ...}:
+{pkgs, lib, ...} @ args:
 with import ../../globalConfig.nix;
+# builtins.trace "${builtins.toJSON (builtins.attrNames args)}"
 {
   imports = [
     ../bootstrap/default.nix

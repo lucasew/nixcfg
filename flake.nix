@@ -49,6 +49,9 @@
       allowUnfree = true;
       };
     };
+    revModule = ({pkgs, ...}: {
+      system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+    });
   in {
     inherit overlays;
     inherit environmentShell;
@@ -57,6 +60,7 @@
       inherit system;
       modules = [
         ./nodes/vps/default.nix
+        revModule
       ];
     };
     nixosConfigurations.acer-nix = nixpkgs.lib.nixosSystem {
@@ -65,6 +69,7 @@
       modules = [
         ./nodes/acer-nix/default.nix
         "${home-manager}/nixos"
+        revModule
       ];
     };
     nixosConfigurations.bootstrap = nixpkgs.lib.nixosSystem {
@@ -72,6 +77,7 @@
       inherit system;
       modules = [
         ./nodes/bootstrap/default.nix
+        revModule
       ];
     };
     packages = pkgs;
