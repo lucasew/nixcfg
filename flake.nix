@@ -50,7 +50,7 @@
       };
     };
     revModule = ({pkgs, ...}: {
-      system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+      system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) (builtins.trace self.rev self.rev);
     });
   in {
     inherit overlays;
