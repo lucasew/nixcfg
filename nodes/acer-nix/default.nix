@@ -185,10 +185,4 @@ in
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "20.03"; # Did you read the comment?
 
-  # facul
-  services.httpd = {
-    enablePHP = true;
-    enable = true;
-    adminAddr = "lucas59356+apache@gmail.com";
-  };
 }
