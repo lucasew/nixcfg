@@ -46,6 +46,10 @@ with (import ../../globalConfig.nix);
           trigger = from;
           replace = "${to} ";
         };
+        replaceSequence = from: to: {
+          trigger = from;
+          replace = to;
+        };
         replaceWord = from: to: {
           trigger = from;
           replace = to;
@@ -84,6 +88,7 @@ with (import ../../globalConfig.nix);
         (replaceDate ":hoje" "%d/%m/%Y")
         (replaceDate ":ot" "#datetime/%Y/%m/%e/%H/%M")
         (replaceDate ":od" "#datetime/%Y/%m/%e")
+        (replaceSequence "°" "\\") # Alt+E, Alt+Q outputs /
 
         # code
         (justReplace ":<html>" ''
@@ -193,6 +198,7 @@ with (import ../../globalConfig.nix);
         (replaceWord "dont" "don't")
         (replaceWord "didnt" "didn't")
         (replaceWord "arent" "aren't")
+        (replaceWord "youre" "you're")
       ];
     };
   };
