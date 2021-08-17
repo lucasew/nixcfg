@@ -192,6 +192,7 @@ with (import ../../globalConfig.nix);
         (replaceWord "its" "it's")
         (replaceWord "dont" "don't")
         (replaceWord "didnt" "didn't")
+        (replaceWord "arent" "aren't")
       ];
     };
   };
