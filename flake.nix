@@ -53,7 +53,14 @@
     let
       evalConfig = import "${nixpkgs}/nixos/lib/eval-config.nix" config;
       options = pkgs.nixosOptionsDoc { options = evalConfig.options; };
-    in options;
+      strAsFile = str: pkgs.runCommandLocal "out" {inherit str; } "cp $str $out";
+    in {
+      asciidoc = strAsFile options.optionsAsciiDoc;
+      # docbook is broken
+      json = options.optionsJSON;
+      md = strAsFile options.optionsMDDoc;
+      nix = options.optionsNix;
+    };
     nixosConf = {mainModule, extraModules ? []}: 
     let
       config = {
