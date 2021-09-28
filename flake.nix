@@ -49,14 +49,23 @@
     '';
 
     hmConf = home-manager.lib.homeManagerConfiguration;
-    nixosConf = {mainModule, extraModules ? []}: nixpkgs.lib.nixosSystem {
-      inherit pkgs;
-      inherit system;
-      modules = [
-        revModule
-        (mainModule)
-      ] ++ extraModules;
-    };
+    docConfig = config: # it's a mess, i might fix it later
+    let
+      evalConfig = import "${nixpkgs}/nixos/lib/eval-config.nix" config;
+      options = pkgs.nixosOptionsDoc { options = evalConfig.options; };
+    in options;
+    nixosConf = {mainModule, extraModules ? []}: 
+    let
+      config = {
+        inherit pkgs;
+        inherit system;
+        modules = [
+          revModule
+          (mainModule)
+        ] ++ extraModules;
+      };
+    in
+    (nixpkgs.lib.nixosSystem config) // {doc = docConfig config;};
     overlays = [
       (import ./overlay.nix)
       (import "${home-manager}/overlay.nix")
