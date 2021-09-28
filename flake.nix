@@ -48,20 +48,24 @@
       export NIX_PATH=nixpkgs=${nixpkgs}:nixpkgs-overlays=${builtins.toString rootPath}/compat/overlay.nix:nixpkgsLatest=${nixpkgsLatest}:home-manager=${home-manager}:nur=${nur}:nixos-config=${(builtins.toString rootPath) + "/nodes/$HOSTNAME/default.nix"}
     '';
 
-    hmConf = home-manager.lib.homeManagerConfiguration;
-    docConfig = config: # it's a mess, i might fix it later
+    hmConf = {...}@allConfig:
     let
-      evalConfig = import "${nixpkgs}/nixos/lib/eval-config.nix" config;
-      options = pkgs.nixosOptionsDoc { options = evalConfig.options; };
+      hmstuff = home-manager.lib.homeManagerConfiguration allConfig;
+      doc = docConfig hmstuff;
+    in hmstuff // { inherit doc; };
+
+    docConfig = {options, ...}: # it's a mess, i might fix it later
+    let
+      optionsDoc = pkgs.nixosOptionsDoc { inherit options; };
       strAsFile = str: pkgs.runCommandLocal "out" {inherit str; } "cp $str $out";
     in {
-      asciidoc = strAsFile options.optionsAsciiDoc;
+      asciidoc = strAsFile optionsDoc.optionsAsciiDoc;
       # docbook is broken
-      json = options.optionsJSON;
-      md = strAsFile options.optionsMDDoc;
-      nix = options.optionsNix;
+      json = optionsDoc.optionsJSON;
+      md = strAsFile optionsDoc.optionsMDDoc;
+      nix = optionsDoc.optionsNix;
     };
-    nixosConf = {mainModule, extraModules ? []}: 
+    nixosConf = {mainModule, extraModules ? []}:
     let
       config = {
         inherit pkgs;
@@ -71,8 +75,9 @@
           (mainModule)
         ] ++ extraModules;
       };
+      evalConfig = import "${nixpkgs}/nixos/lib/eval-config.nix" config;
     in
-    (nixpkgs.lib.nixosSystem config) // {doc = docConfig config;};
+    (nixpkgs.lib.nixosSystem config) // {doc = docConfig evalConfig;};
     overlays = [
       (import ./overlay.nix)
       (import "${home-manager}/overlay.nix")
