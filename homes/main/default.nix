@@ -33,6 +33,7 @@ with cfg;
     libnotify
     neofetch
     aerc # terminal email
+    croc # file transfer
     comma # like nix-shell but more convenient
     calibre
     wineApps.wine7zip
