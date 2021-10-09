@@ -44,6 +44,9 @@ in
   };
 
   services.xserver.displayManager.lightdm.background = cfg.wallpaper;
+  services.xserver.deviceSection = ''
+    Option "VirtualHeads" "1"
+  '';
 
   services.auto-cpufreq.enable = true;
   # text expander in rust
@@ -156,7 +159,7 @@ in
   # não deixar explodir
   nix.maxJobs = 3;
   # kernel
-  boot.kernelPackages = pkgs.linuxPackages_5_10;
+  boot.kernelPackages = pkgs.linuxPackages_5_14;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
