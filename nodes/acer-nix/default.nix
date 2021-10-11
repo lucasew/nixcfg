@@ -5,7 +5,6 @@
 {self, cfg, pkgs, config, lib, ... }:
 let
   hostname = "acer-nix";
-  send2kindle = pkgs.writeShellScriptBin "send2kindle" (pkgs.wrapDotenv "send2kindle.env" ''${pkgs.send2kindle}/bin/send2kindle "$@"'');
 in
 {
   imports =
@@ -78,7 +77,7 @@ in
     p7zip unzip # archiving
     virt-manager
     # Extra
-    send2kindle
+    custom.send2kindle
   ];
 
   programs.dconf.enable = true;

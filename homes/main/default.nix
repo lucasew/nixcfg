@@ -8,22 +8,20 @@ with cfg;
     ./modules/dlna.nix
     ./modules/firefox/home.nix
     ./modules/dunst.nix
-    ./modules/dummy_module.nix
     ./modules/i3.nix
     # ./modules/webapps.nix
     # ./modules/wallpaper.nix
     ./modules/espanso.nix
     ../../modules/polybar/home.nix
-    ../../modules/spotify/home.nix
+    # ../../modules/spotify/home.nix
     ../../modules/tmux/home.nix
-    ../../modules/vscode/home.nix
   ]
   ;
 
   home.packages = with pkgs; [
    # ------------ pacotes do nixpkgs ---------------
     # minecraft  # custom (excluded)
-    usb_tixati custom_rofi # custom
+    custom.tixati custom.rofi # custom
     tdesktop # communication
     obsidian
     vlc youtube-dl # media
@@ -49,7 +47,7 @@ with cfg;
     ${self.outputs.environmentShell}
   '';
 
-  programs.hello-world.enable = true;
+  # programs.hello-world.enable = true;
   services.espanso = {
     enable = true;
     config = 
@@ -329,7 +327,7 @@ with cfg;
       if [ -n "$TESTING" ]; then
           exit 0
       fi
-      ${p2k}/bin/p2k -k $KINDLE_EMAIL -c $AMOUNT -t 30 $EXTRA_PARAMS
+      ${p2k}/bin/p2k -a -k $KINDLE_EMAIL -c $AMOUNT -t 30 $EXTRA_PARAMS
       '';
       letsgo = ''
         echo "let's gou"

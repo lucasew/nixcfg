@@ -1,4 +1,4 @@
-{pkgs, ...}: [
+{pkgs ? import <nixpkgs> {}, ...}: [
     pkgs.vscode-extensions.bbenoist.Nix
     pkgs.vscode-extensions.vscodevim.vim
 ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [

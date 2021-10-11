@@ -36,7 +36,6 @@ in reduceJoin [
     send2kindle = cp flake.inputs.send2kindle;
     comma = cp flake.inputs.comma;
     discord = cp "${flake.inputs.nixpkgsLatest}/pkgs/applications/networking/instant-messengers/discord/default.nix";
-    onlyoffice-bin = cp "${flake.inputs.nixpkgsLatest}/pkgs/applications/office/onlyoffice-bin/default.nix";
     dart = cp "${flake.inputs.nixpkgsLatest}/pkgs/development/interpreters/dart/default.nix";
     hugo = cp "${flake.inputs.nixpkgsLatest}/pkgs/applications/misc/hugo/default.nix";
     flutter = (cp "${flake.inputs.nixpkgsLatest}/pkgs/development/compilers/flutter/default.nix").stable;
@@ -49,8 +48,6 @@ in reduceJoin [
     xplr = cp ./packages/xplr.nix;
     personal-utils = cp ./packages/personal-utils.nix;
     nixwrap = cp ./packages/nixwrap.nix;
-    cisco-packet-tracer7 = cp ./packages/cisco-packet-tracer7.nix;
-    cisco-packet-tracer8 = cp ./packages/cisco-packet-tracer8.nix;
     custom_neovim = cp ./packages/neovim/package.nix;
     wineApps = {
       wine7zip = cp ./packages/wineApps/7zip.nix;
@@ -70,13 +67,18 @@ in reduceJoin [
     };
     fhsctl = cp ./packages/fhsctl.nix;
     comby = cp ./packages/comby.nix;
-    custom_rofi = cp ./packages/custom_rofi.nix;
-    custom_ncdu = cp ./packages/custom_ncdu.nix;
+    custom = {
+      ncdu = cp ./packages/custom/ncdu.nix;
+      neovim = cp ./packages/custom/neovim;
+      rofi = cp ./packages/custom/rofi.nix;
+      tixati = cp ./packages/custom/tixati.nix;
+      vscode = cp ./packages/custom/vscode;
+      send2kindle = cp ./packages/custom/send2kindle.nix;
+    };
     minecraft = cp ./packages/minecraft.nix;
     peazip = cp ./packages/peazip.nix;
     pkg = cp ./packages/pkg.nix;
     stremio = cp ./packages/stremio.nix;
-    usb_tixati = cp ./packages/usb_tixati.nix;
     wrapWine = cp ./packages/wrapWine.nix;
     preload = cp ./packages/preload.nix;
     python3Packages = cp ./packages/python3Packages.nix;

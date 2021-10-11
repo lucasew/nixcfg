@@ -1,6 +1,4 @@
-let
-  pkgs = import <nixpkgs> {};
-in
+{pkgs ? import <nixpkgs> {}}:
 {
   "workbench.iconTheme" = "file-icons";
   "workbench.colorTheme" = "One Dark Pro";

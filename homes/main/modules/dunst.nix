@@ -6,7 +6,7 @@
   };
   home.packages = with pkgs; [
     dunst
-    custom_rofi
+    custom.rofi
   ];
   xdg.configFile."dunst/dunstrc" = {
     text = ''
@@ -28,7 +28,7 @@ idle_threshold = 120
 font = rissole 8
 line_height = 4
 markup = full
-dmenu = ${pkgs.custom_rofi}/bin/dmenu
+dmenu = ${pkgs.custom.rofi}/bin/dmenu
 format = %s %p\n%b
 alignment = left
 show_age_threshold = 60
