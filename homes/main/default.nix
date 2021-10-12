@@ -230,26 +230,24 @@ with cfg;
       };
     };
     tmux.enable = true;
-    vscode.enable = true;
-  };
-
-  # Git
-  programs.git = {
+    git = {
         enable = true;
         userName = username;
         userEmail = email;
+    };
   };
 
   # KDE connect
-  services.kdeconnect = {
-    enable = true;
-    indicator = true;
+  services = {
+    kdeconnect = {
+      enable = true;
+      indicator = true;
+    };
+    polybar.enable = true;
+    flameshot.enable = true;
   };
 
-  # Polybar
-  services.polybar.enable = true;
   xsession.windowManager.i3.enable = true;
-
   # Dconf
   dconf.settings = {
     "org/gnome/desktop/background" = {
@@ -334,7 +332,6 @@ with cfg;
       '';
     };
   };
-  services.flameshot.enable = true;
 
 #   # wallpaper
 #   wallpaper = {
