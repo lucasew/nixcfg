@@ -1,19 +1,40 @@
 {pkgs ? import <nixpkgs> {}, ...}: [
-    pkgs.vscode-extensions.bbenoist.Nix
-    pkgs.vscode-extensions.vscodevim.vim
-] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-    {
-      publisher = "arrterian";
-      name = "nix-env-selector";
-      version = "0.1.2";
-      sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
-    }
-    {
-      publisher = "CoenraadS";
-      name = "bracket-pair-colorizer";
-      version = "1.0.61";
-      sha256 = "0r3bfp8kvhf9zpbiil7acx7zain26grk133f0r0syxqgml12i652";
-    }
+  {
+    publisher = "vscodevim";
+    name = "vim";
+    version = "1.21.8";
+    sha256 = "sha256-cxAfLc1RtkvPEjw+SzN7eqBXPQQgadewKVzd+jJr8LU=";
+  }
+  {
+    publisher = "bbenoist";
+    name = "Nix";
+    version = "1.0.1";
+    sha256 = "sha256-qwxqOGublQeVP2qrLF94ndX/Be9oZOn+ZMCFX1yyoH0=";
+  }
+  {
+    publisher = "MS-CEINTL";
+    name = "vscode-language-pack-pt-BR";
+    version = "1.61.4";
+    sha256 = "sha256-qR7UD5SZBfW3Ihly0eP9ZHYMrKgxR4iaperP+jpI82s=";
+  }
+  {
+    publisher = "zhuangtongfa";
+    name = "Material-theme";
+    version = "3.13.1";
+    sha256 = "sha256-7AvsSRwYWopzbeSs0kXrNpY9MDl9QwLET+tQAtdgKrw=";
+  }
+  {
+    publisher = "arrterian";
+    name = "nix-env-selector";
+    version = "0.1.2";
+    sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
+  }
+  {
+    publisher = "CoenraadS";
+    name = "bracket-pair-colorizer";
+    version = "1.0.61";
+    sha256 = "0r3bfp8kvhf9zpbiil7acx7zain26grk133f0r0syxqgml12i652";
+  }
     # {
     #   publisher = "xadillax";
     #   name = "viml";
@@ -68,28 +89,16 @@
       version = "0.24.1";
       sha256 = "07jfya2pfkz51m3zljjlvsb5lwl8kdmsn1j39n8k6q8hqsjn0zml";
     }
-    # {
-    #   publisher = "mjmcloug";
-    #   name = "vscode-elixir";
-    #   version = "1.1.0";
-    #   sha256 = "0kj7wlhapkkikn1md8cknrffrimk0g0dbbhavasys6k3k7pk2khh";
-    # }
     {
-        publisher = "rust-lang";
-        name = "rust";
-        version = "0.7.8";
-        sha256 = "039ns854v1k4jb9xqknrjkj8lf62nfcpfn0716ancmjc4f0xlzb3";
+      publisher = "rust-lang";
+      name = "rust";
+      version = "0.7.8";
+      sha256 = "039ns854v1k4jb9xqknrjkj8lf62nfcpfn0716ancmjc4f0xlzb3";
     }
-    # {
-    #     publisher = "octref";
-    #     name = "vetur";
-    #     version = "0.28.0";
-    #     sha256 = "01r14f6ynv4pwvi8i9g7hprwhsx6kxjxzs5pqvd9flcvd7kxaks3";
-    # }
     {
-        publisher = "golang";
-        name = "go";
-        version = "0.18.0";
-        sha256 = "0g9s9jc5786vj7v01c76k5n1f8blvz606z4sjhc91zqljwajgicd";
+      publisher = "golang";
+      name = "go";
+      version = "0.18.0";
+      sha256 = "0g9s9jc5786vj7v01c76k5n1f8blvz606z4sjhc91zqljwajgicd";
     }
-]
+  ]
