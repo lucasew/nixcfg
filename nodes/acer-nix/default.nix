@@ -149,12 +149,6 @@ in
     libvirtd.enable = true;
   };
 
-  # keybase
-  services = {
-    keybase.enable = true;
-    kbfs.enable = true;
-  };
-
   # não deixar explodir
   nix.maxJobs = 3;
   # kernel
