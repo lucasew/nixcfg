@@ -149,7 +149,7 @@
         builtins.trace "flake hash not detected!" null;
       });
     in {
-      inherit overlays;
+      # inherit overlays;
       inherit (cfg) environmentShell;
       homeConfigurations = {
         main = hmConf {
@@ -198,5 +198,9 @@
         };
       };
       inherit extraArgs;
+      templates = {
+        # Does not work!
+        hello = import ./templates/hello.nix;
+      };
     };
   }
