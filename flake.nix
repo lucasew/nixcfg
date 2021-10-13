@@ -52,9 +52,13 @@
       url = "github:Shopify/comma";
       flake = false;
     };
+    nix-vscode = {
+      url = "github:lucasew/nix-vscode";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgsLatest, nixgram, nix-ld, home-manager, dotenv, nur, pocket2kindle, redial_proxy, nixos-hardware, borderless-browser, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgsLatest, nixgram, nix-ld, home-manager, dotenv, nur, pocket2kindle, redial_proxy, nixos-hardware, borderless-browser, nix-vscode, ... }@inputs:
   let
     cfg = rec {
         username = "lucasew";

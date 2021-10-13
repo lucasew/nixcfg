@@ -35,6 +35,7 @@ in reduceJoin [
     redial_proxy = cp flake.inputs.redial_proxy;
     send2kindle = cp flake.inputs.send2kindle;
     comma = cp flake.inputs.comma;
+    wrapVSCode = args: import flake.inputs.nix-vscode (args // {pkgs = super;});
     discord = cp "${flake.inputs.nixpkgsLatest}/pkgs/applications/networking/instant-messengers/discord/default.nix";
     dart = cp "${flake.inputs.nixpkgsLatest}/pkgs/development/interpreters/dart/default.nix";
     hugo = cp "${flake.inputs.nixpkgsLatest}/pkgs/applications/misc/hugo/default.nix";

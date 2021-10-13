@@ -109,6 +109,22 @@
         "type": "github"
       }
     },
+    "nix-vscode": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1634086531,
+        "narHash": "sha256-JuCyNHBybEorHZRgeO4YhlEZKuIFA7lrKufPsj7nCZI=",
+        "owner": "lucasew",
+        "repo": "nix-vscode",
+        "rev": "99aba2c7186df6d50a248999afefb096d6c9818a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lucasew",
+        "repo": "nix-vscode",
+        "type": "github"
+      }
+    },
     "nixgram": {
       "flake": false,
       "locked": {
@@ -229,6 +245,7 @@
         "home-manager": "home-manager",
         "impermanence": "impermanence",
         "nix-ld": "nix-ld",
+        "nix-vscode": "nix-vscode",
         "nixgram": "nixgram",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
