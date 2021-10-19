@@ -1,5 +1,10 @@
-{pkgs, ...}:
 let
+  self = builtins.getFlake (builtins.toString ../../..);
+in
+{ pkgs
+, ... }:
+let
+  machNix = import "${self.inputs.mach-nix}" {inherit pkgs;};
   pluginNocapsquit = pkgs.vimUtils.buildVimPlugin {
     name = "nocapsquit";
     src = pkgs.fetchFromGitHub {
@@ -16,6 +21,19 @@ let
       repo = "vim";
       rev = "cce94a2cc9f0395ed156930bf6a2d1e3198daa4f";
       sha256 = "02wxjg8ygx7viirphdjlpqr26mdbzcpajnijlchjafy1gms0gryc";
+    };
+  };
+  pluginCoq = pkgs.vimUtils.buildVimPluginFrom2Nix {
+    # based on https://github.com/cideM/coq-nvim-nix/blob/main/flake.nix
+    name = "coq-nvim";
+    patches = [
+      ./coq.patch
+    ];
+    src = pkgs.fetchFromGitHub {
+      owner = "ms-jpq";
+      repo = "coq_nvim";
+      sha256 = "sha256-UBlB6M8t1i47MzRG97NmlCZzMnQBusUJDuYEWTDs8YI=";
+      rev = "9718da5b621a15709dca342d311a1ee8553f7955";
     };
   };
   themeStarrynight = pkgs.vimUtils.buildVimPlugin {
@@ -36,6 +54,15 @@ let
       sha256 = "CEPT2LtDc5hKnA7wrdEX6nzik29o6ewUgGvif5j5l+c=";
     };
   };
+  themePreto = pkgs.vimUtils.buildVimPlugin {
+    name = "vim-preto";
+    src = pkgs.fetchFromGitHub {
+      owner = "ewilazarus";
+      repo = "preto";
+      rev = "b9200d9a0ff09c4bc8b1cf054f61f12f49438454";
+      sha256 = "sha256-N7GLBVxO9FbLqo9FKJJndnHRnekunxwVAjcgu4l8jLw=";
+    };
+  };
   neovimAltered = pkgs.neovim-unwrapped.overrideAttrs (old: rec {
     version = "0.5.0";
 
@@ -51,33 +78,47 @@ let
     buildInputs = old.buildInputs ++ (with pkgs;[
       tree-sitter
     ]);
-  });
+});
 in pkgs.wrapNeovim neovimAltered {
+  withPython3 = true;
+  extraPython3Packages = b:
+    with b; with pkgs.callPackage ./python.nix b b b; [
+    std2
+    pynvim-pp
+    # pynvim
+    PyYAML
+  ];
   configure = {
     plug.plugins = with pkgs.vimPlugins; [
-      LanguageClient-neovim
+      # builtin
+      # LanguageClient-neovim
       auto-pairs
+      dart-vim-plugin
       echodoc
+      emmet-vim
       indentLine
+      nvim-lspconfig
       onedark-vim
-      pluginNocapsquit
+      plantuml-syntax
+      plenary-nvim # dep of telescope
+      popup-nvim # dep of telescope
+      telescope-nvim
       vim-commentary
       vim-nix
       vim-startify
-      zig-vim
-      emmet-vim
+      # custom
+      pluginCoq
       pluginEmbark
-      vim-markdown
-      themeStarrynight
+      pluginNocapsquit
       themePaper
-      vim-jsx-typescript
-      dart-vim-plugin
-      plantuml-syntax
+      themePreto
+      themeStarrynight
     ];
     customRC = ''
-    let g:LanguageClient_serverCommands = ${builtins.toJSON (import ./langservers.nix {inherit pkgs;})}
-    set completefunc=LanguageClient#compltete
     ${builtins.readFile ./rc.vim}
+    lua << EOF
+    ${builtins.readFile ./init.lua}
+    EOF
     '';
   };
 }
