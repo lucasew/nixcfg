@@ -56,6 +56,10 @@
       url = "github:lucasew/nix-vscode";
       flake = false;
     };
+    mach-nix = {
+      url = "github:DavHau/mach-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, nixpkgsLatest, nixgram, nix-ld, home-manager, dotenv, nur, pocket2kindle, redial_proxy, nixos-hardware, borderless-browser, nix-vscode, ... }@inputs:
@@ -103,7 +107,7 @@
       json = optionsJSON;
       # md = write "doc.md" optionsMDDoc;
       mdText = optionsMDDoc;
-      # nix = optionsNix;
+      nix = optionsNix;
     };
     overlays = [
       (import ./overlay.nix self)
@@ -123,9 +127,13 @@
         extraSpecialArgs = extraArgs;
         inherit pkgs;
       };
-      hmstuff = home-manager.lib.homeManagerConfiguration config;
-      doc = docConfig hmstuff;
-    in hmstuff // { inherit doc; source = config; };
+      evalConfig = home-manager.lib.homeManagerConfiguration config;
+      doc = docConfig evalConfig;
+    in evalConfig // {
+      inherit doc;
+      source = config;
+      evaluated = evalConfig;
+    };
 
     nixosConf = {mainModule, extraModules ? []}:
     let
@@ -140,7 +148,11 @@
       };
       evalConfig = import "${nixpkgs}/nixos/lib/eval-config.nix" config;
     in
-    (nixpkgs.lib.nixosSystem config) // {doc = docConfig evalConfig; source = config; };
+    (nixpkgs.lib.nixosSystem config) // {
+      evaluated = evalConfig;
+      doc = docConfig evalConfig;
+      source = config;
+    };
 
     revModule = ({pkgs, ...}: {
       system.configurationRevision = if (self ? rev) then 
