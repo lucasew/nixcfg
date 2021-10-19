@@ -78,6 +78,7 @@ in
     virt-manager
     # Extra
     custom.send2kindle
+    intel-compute-runtime # OpenCL
   ];
 
   programs.dconf.enable = true;
