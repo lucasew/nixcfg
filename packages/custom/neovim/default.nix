@@ -36,6 +36,15 @@ let
       rev = "9718da5b621a15709dca342d311a1ee8553f7955";
     };
   };
+  pluginCoqArtifacts = pkgs.vimUtils.buildVimPlugin {
+    name = "coq.artifacts";
+    src = pkgs.fetchFromGitHub {
+      owner = "ms-jpq";
+      repo = "coq.artifacts";
+      rev = "254ad1d7974f4f2b984e2b9dd4cc3cdc39b7e361";
+      sha256 = "sha256-rZjesUv1Irx4jSUEuONIWiWVwMSeB3PcNEwlSQyM1UA=";
+    };
+  };
   themeStarrynight = pkgs.vimUtils.buildVimPlugin {
     name = "starrynight";
     src = pkgs.fetchFromGitHub {
@@ -92,12 +101,13 @@ in pkgs.wrapNeovim neovimAltered {
     plug.plugins = with pkgs.vimPlugins; [
       # builtin
       # LanguageClient-neovim
-      auto-pairs
+      # auto-pairs
       dart-vim-plugin
       echodoc
       emmet-vim
       indentLine
       nvim-lspconfig
+      nvim-web-devicons
       onedark-vim
       plantuml-syntax
       plenary-nvim # dep of telescope
@@ -108,6 +118,7 @@ in pkgs.wrapNeovim neovimAltered {
       vim-startify
       # custom
       pluginCoq
+      pluginCoqArtifacts
       pluginEmbark
       pluginNocapsquit
       themePaper

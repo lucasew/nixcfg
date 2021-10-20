@@ -1,14 +1,15 @@
 local lspconfig = require'lspconfig'
 local coq = require'coq'
+local icons = require'nvim-web-devicons'
 
-for name, value in ipairs({
-    arduino_language_server = {},
+local lspSettings = {
+    -- arduino_language_server = {},
     bashls = {},
     ccls = {}, -- c/c++
     cmake = {},
     dockerls = {},
     dotls = {}, -- dot/graphviz
-    emmet_ls = {},
+    -- emmet_ls = {},
     gopls = {}, -- golang
     graphql = {},
     hls = {}, -- haskell
@@ -21,8 +22,19 @@ for name, value in ipairs({
     yamlls = {}, -- yaml
     zls = {}, -- zig
     svelte = {} -- svelte
-}) do
-    print("Setting up language server " .. name .. "...")
-    local coqed = coq.lsp_ensure_capatibilities(value)
-    lspconfig[name].setup(coqed)
+}
+
+for server, _ in pairs(lspSettings) do
+    -- print("Setting up language server " .. server .. "...")
+    local coqed = coq.lsp_ensure_capabilities(lspSettings[server] or {})
+    if (lspconfig[server]) then
+        lspconfig[server].setup(coqed)
+    else
+        error("Language server definition " .. server .. " not found")
+    end
 end
+
+vim.cmd [[
+    nmap <C-p> :Telescope<CR>
+    nmap <C-.> :Telescope lsp_code_actions<CR>
+]]
