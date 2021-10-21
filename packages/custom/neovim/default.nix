@@ -116,6 +116,7 @@ in pkgs.wrapNeovim neovimAltered {
       vim-commentary
       vim-nix
       vim-startify
+      vim-fetch # support for stacktrace paths
       # custom
       pluginCoq
       pluginCoqArtifacts
@@ -126,10 +127,10 @@ in pkgs.wrapNeovim neovimAltered {
       themeStarrynight
     ];
     customRC = ''
-    ${builtins.readFile ./rc.vim}
     lua << EOF
     ${builtins.readFile ./init.lua}
     EOF
+    ${builtins.readFile ./rc.vim}
     '';
   };
 }
