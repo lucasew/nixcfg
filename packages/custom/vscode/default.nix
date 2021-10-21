@@ -1,7 +1,8 @@
 { pkgs ? import <nixpkgs> {} }:
 let
-in pkgs.vscode-utils.vscodeEnv {
-  nixExtensions = [
+in pkgs.wrapVSCode {
+  identifier = "main";
+  extensions = [
     {
       publisher = "vscodevim";
       name = "vim";
@@ -109,6 +110,4 @@ in pkgs.vscode-utils.vscodeEnv {
     "rust-client.disableRustup" = true;
     "go.useLanguageServer" = true;
   };
-  mutableExtensionsFile = "/tmp/code/state";
-  user-data-dir = "/tmp/code/user-data-dir";
 }
