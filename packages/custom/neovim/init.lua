@@ -15,6 +15,7 @@ local lspSettings = {
     dockerls = {},
     dotls = {}, -- dot/graphviz
     -- emmet_ls = {},
+    -- fsautocomplete = {}, -- keep disabled for ionide-vim
     gopls = {}, -- golang
     graphql = {},
     hls = {}, -- haskell
