@@ -15,4 +15,5 @@ in builtins.attrValues {
     wine7zip
     pinball
   ;
+  polybar = pkgs.callPackage ./modules/polybar/customPolybar.nix {};
 }

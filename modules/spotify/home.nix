@@ -1,6 +1,7 @@
 {config, pkgs, lib, ...}:
-with lib;
- {
+let
+  inherit (lib) mkEnableOption mkIf;
+in {
    options = {
      programs.adskipped-spotify = {
        enable = mkEnableOption "enable spotify with adskipper";

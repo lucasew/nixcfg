@@ -20,6 +20,10 @@ in
     ]
   ;
 
+  services.xserver.modules = with pkgs.xorg; [
+    xf86inputjoystick
+  ];
+
   # programs.steam.enable = true;
 
   nixpkgs = {
