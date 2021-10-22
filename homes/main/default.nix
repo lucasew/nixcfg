@@ -1,10 +1,16 @@
 { cfg, pkgs, config, lib, self, ... }:
-with cfg;
-{
+let 
+  inherit (cfg) username email rootPath;
+  inherit (builtins) fetchurl;
+  inherit (self) inputs outputs;
+  inherit (outputs) environmentShell;
+  inherit (pkgs) writeShellScript espeak wrapDotenv p2k;
+  inherit (lib.hm.gvariant) mkTuple;
+in {
   imports = [
-    "${self.inputs.nixgram}/hmModule.nix"
-    "${self.inputs.redial_proxy}/hmModule.nix"
-    "${self.inputs.borderless-browser}/home-manager.nix"
+    "${inputs.nixgram}/hmModule.nix"
+    "${inputs.redial_proxy}/hmModule.nix"
+    "${inputs.borderless-browser}/home-manager.nix"
     ./modules/dlna.nix
     ./modules/firefox/home.nix
     ./modules/dunst.nix
@@ -44,7 +50,7 @@ with cfg;
 
   home.file.".dotfilerc".text = ''
     #!/usr/bin/env bash
-    ${self.outputs.environmentShell}
+    ${environmentShell}
   '';
 
   # programs.hello-world.enable = true;
@@ -84,7 +90,7 @@ with cfg;
             name = "output";
             type = "shell";
             params = {
-              cmd = pkgs.writeShellScript "espanso-script" command;
+              cmd = writeShellScript "espanso-script" command;
             };
           }];
         };
@@ -255,13 +261,9 @@ with cfg;
       primary-color = "#ffffff";
       secondary-color = "#000000";
     };
-    "org/gnome/desktop/input-sources" = 
-      let
-        tuple = lib.hm.gvariant.mkTuple;
-      in 
-    {
+    "org/gnome/desktop/input-sources" = {
       current = "uint32 0";
-      sources = [(tuple ["xkb" "br"]) (tuple ["xkb" "us"])];
+      sources = [(mkTuple ["xkb" "br"]) (mkTuple ["xkb" "us"])];
       xkb-options = [ "terminate:ctrl_alt_bksp" ];
     };
     "org/gnome/desktop/interface" = {
@@ -285,7 +287,7 @@ with cfg;
   };
 
   # nixgram
-  services.nixgram = with pkgs; {
+  services.nixgram = {
     enable = true;
     dotenvFile = rootPath + "/secrets/nixgram.env";
     customCommands = {
@@ -366,7 +368,7 @@ with cfg;
     whatsapp = {
       desktopName = "WhatsApp";
       url = "web.whatsapp.com";
-      icon = builtins.fetchurl {
+      icon = fetchurl {
         url = "https://raw.githubusercontent.com/jiahaog/nativefier-icons/gh-pages/files/whatsapp.png";
         sha256 = "1f5bwficjkqxjzanw89yj0rz66zz10k7zhrirq349x9qy9yp3bmc";
       };
@@ -374,7 +376,7 @@ with cfg;
     notion = {
       desktopName = "Notion";
       url = "notion.so";
-      icon = builtins.fetchurl {
+      icon = fetchurl {
         url = "https://logos-download.com/wp-content/uploads/2019/06/Notion_App_Logo.png";
         sha256 = "16vw52kca3pglykn9q184qgzshys3d2knzy631rp2slkbr301zxf";
       };
@@ -382,7 +384,7 @@ with cfg;
     duolingo = {
       desktopName = "Duolingo";
       url = "duolingo.com";
-      icon = builtins.fetchurl {
+      icon = fetchurl {
         url = "https://logos-download.com/wp-content/uploads/2016/10/Duolingo_logo_owl.png";
         sha256 = "1059lfaij0lmm1jsywfmnin9z8jalqh8yar9r8sj0qzk4nmjniss";
       };
@@ -390,7 +392,7 @@ with cfg;
     youtube-music =  {
       desktopName = "Youtube Music";
       url = "music.youtube.com";
-      icon = builtins.fetchurl {
+      icon = fetchurl {
         url = "https://vancedapp.com/static/media/logo.866a4e0b.svg";
         sha256 = "1axznpmfgmfqjgnq7z7vdjwmdsrk0qpc1rdlv9yyrcxfkyzqmvdv";
       };
@@ -398,7 +400,7 @@ with cfg;
     planttext =  {
       desktopName = "PlantText";
       url = "https://www.planttext.com/";
-      icon = builtins.fetchurl {
+      icon = fetchurl {
         url = "https://www.planttext.com/images/blue_gray.png";
         sha256 = "0n1p8g7gjxdp06fh36yqb10jvcbhxfc129xpvi1b10k1qb1vlj1h";
       };
@@ -411,7 +413,7 @@ with cfg;
     gmail =  {
       desktopName = "GMail";
       url = "gmail.com";
-      icon = builtins.fetchurl {
+      icon = fetchurl {
         url = "https://icons.iconarchive.com/icons/dtafalonso/android-lollipop/256/Gmail-icon.png";
         sha256 = "1cldc9k30rlvchh7ng00hmn0prbh632z8h9fqclj466y8bgdp15j";
       };
@@ -419,7 +421,7 @@ with cfg;
     keymash =  {
       desktopName = "keyma.sh: Keyboard typing train";
       url = "https://keyma.sh/learn";
-      icon = builtins.fetchurl {
+      icon = fetchurl {
         url = "https://keyma.sh/static/media/logo_svg.ead5cacb.svg";
         sha256 = "1i6py2gnpmf548zwakh9gscnk5ggsd1j98z80yb6mr0fm84bgizy";
       };
@@ -450,5 +452,4 @@ with cfg;
       url = "trello.com";
     };
   };
-
 }

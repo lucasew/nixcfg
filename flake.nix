@@ -130,13 +130,15 @@
     ];
 
     hmConf = allConfig:
-    rec {
+    let
       source = allConfig // {
         extraSpecialArgs = extraArgs;
         inherit pkgs;
       };
       evaluated = homeManagerConfiguration source;
       doc = docConfig evaluated;
+    in evaluated // {
+      inherit source doc;
     };
 
     nixosConf = {mainModule, extraModules ? []}:
@@ -147,7 +149,6 @@
         else
           trace "flake hash not detected!" null;
       };
-    in rec {
       source = {
         inherit pkgs;
         inherit (cfg) system;
@@ -159,6 +160,8 @@
       };
       evaluated = import "${nixpkgs}/nixos/lib/eval-config.nix" source;
       doc = docConfig evaluated;
+    in evaluated // {
+      inherit source doc;
     };
   in {
     # inherit overlays;
@@ -219,6 +222,6 @@
         hello = import ./templates/hello.nix;
       };
 
-      inherit pkgs;
+      inherit pkgs extraArgs;
     };
 }
