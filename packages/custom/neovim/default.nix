@@ -170,7 +170,7 @@ in wrapNeovim neovimAltered {
       pluginEmbark
       pluginNocapsquit
       pluginLspSignature
-      (trace "${pluginIonideVim}" pluginIonideVim)
+      pluginIonideVim
       themePaper
       themePreto
       themeStarrynight
