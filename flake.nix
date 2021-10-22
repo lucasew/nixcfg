@@ -62,8 +62,22 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgsLatest, nixgram, nix-ld, home-manager, dotenv, nur, pocket2kindle, redial_proxy, nixos-hardware, borderless-browser, nix-vscode, ... }@inputs:
+  outputs = { self, ... }@inputs:
   let
+    inherit (inputs) nixpkgs nixpkgsLatest nixgram nix-ld home-manager dotenv nur pocket2kindle redial_proxy nixos-hardware borderless-browser nix-vscode;
+    inherit (pkgs) nixosOptionsDoc;
+    inherit (pkgs.lib) nixosSystem;
+    inherit (builtins) replaceStrings toFile trace;
+    inherit (home-manager.lib) homeManagerConfiguration;
+
+    pkgs = import nixpkgs {
+      inherit overlays;
+      inherit (cfg) system;
+      config = {
+        allowUnfree = true;
+      };
+    };
+
     cfg = rec {
         username = "lucasew";
         email = "lucas59356@gmail.com";
@@ -80,28 +94,27 @@
         '';
       system = "x86_64-linux";
     };
+
     extraArgs = {
       inherit self;
       inherit cfg;
     };
+
     docConfig = {options, ...}: # it's a mess, i might fix it later
-    with pkgs.nixosOptionsDoc { inherit options; };
     let
-      normalizeString = content: builtins.replaceStrings [".drv" "!bin!" "/nix"] ["" "" "//nix"] content;
+      inherit (nixosOptionsDoc { inherit options; })
+        optionsAsciiDoc
+        optionsJSON
+        optionsMDDoc
+        optionsNix
+      ;
+      normalizeString = content: 
+        replaceStrings [".drv" "!bin!" "/nix"] ["" "" "//nix"] content;
       write = file: content:
-      let
-        normalizedContent = normalizeString content;
-        # filename = builtins.toFile file normalizedContent;
-        filename = builtins.toFile file content;
-      in filename;
-      # in filename;
-      # in "${filename}";
-      # in pkgs.runCommandLocal file {} "cp ${filename} $out";
-    in
-    {
+        toFile file (normalizeString content);
+    in {
       # How to export
       # NIXPKGS_ALLOW_BROKEN=1 nix-instantiate --eval -E 'with import <nixpkgs>; (builtins.getFlake "/home/lucasew/.dotfiles").nixosConfigurations.acer-nix.doc.mdText' --json | jq -r > options.md
-      ret = normalizeString "!bin!/eoq/trabson.drv.drv.drv";
       asciidocText = optionsAsciiDoc;
       # docbook is broken # cant export these as verbatim
       json = optionsJSON;
@@ -109,35 +122,33 @@
       mdText = optionsMDDoc;
       nix = optionsNix;
     };
+
     overlays = [
       (import ./overlay.nix self)
       (import "${home-manager}/overlay.nix")
       (borderless-browser.overlay)
     ];
-    pkgs = import nixpkgs {
-      inherit overlays;
-      inherit (cfg) system;
-      config = {
-        allowUnfree = true;
-      };
-    };
-    hmConf = {...}@allConfig:
-    let
-      config = allConfig // {
+
+    hmConf = allConfig:
+    rec {
+      source = allConfig // {
         extraSpecialArgs = extraArgs;
         inherit pkgs;
       };
-      evalConfig = home-manager.lib.homeManagerConfiguration config;
-      doc = docConfig evalConfig;
-    in evalConfig // {
-      inherit doc;
-      source = config;
-      evaluated = evalConfig;
+      evaluated = homeManagerConfiguration source;
+      doc = docConfig evaluated;
     };
 
     nixosConf = {mainModule, extraModules ? []}:
     let
-      config = {
+      revModule = {pkgs, ...}: {
+        system.configurationRevision = if (self ? rev) then 
+          trace "detected flake hash: ${self.rev}" self.rev
+        else
+          trace "flake hash not detected!" null;
+      };
+    in rec {
+      source = {
         inherit pkgs;
         inherit (cfg) system;
         modules = [
@@ -146,23 +157,14 @@
         ] ++ extraModules;
         specialArgs = extraArgs;
       };
-      evalConfig = import "${nixpkgs}/nixos/lib/eval-config.nix" config;
-    in
-    (nixpkgs.lib.nixosSystem config) // {
-      evaluated = evalConfig;
-      doc = docConfig evalConfig;
-      source = config;
+      evaluated = import "${nixpkgs}/nixos/lib/eval-config.nix" source;
+      doc = docConfig evaluated;
     };
+  in {
+    # inherit overlays;
 
-    revModule = ({pkgs, ...}: {
-      system.configurationRevision = if (self ? rev) then 
-        builtins.trace "detected flake hash: ${self.rev}" self.rev
-      else
-        builtins.trace "flake hash not detected!" null;
-      });
-    in {
-      # inherit overlays;
       inherit (cfg) environmentShell;
+
       homeConfigurations = {
         main = hmConf {
           configuration = import ./homes/main/default.nix;
@@ -170,6 +172,7 @@
           inherit (cfg) system username;
         };
       };
+
       nixosConfigurations = {
         vps = nixosConf {
           mainModule = ./nodes/vps/default.nix;
@@ -181,7 +184,7 @@
           mainModule = ./nodes/bootstrap/default.nix;
         };
       };
-      inherit pkgs;
+
       devShell.x86_64-linux = pkgs.mkShell {
         name = "nixcfg-shell";
         buildInputs = [];
@@ -191,6 +194,7 @@
         echo Shell setup complete!
         '';
       };
+
       apps."${cfg.system}" = {
         pkg = {
           type = "app";
@@ -209,10 +213,10 @@
           program = "${pkgs.wineApps.wine7zip}/bin/7zip";
         };
       };
-      inherit extraArgs;
+
       templates = {
         # Does not work!
         hello = import ./templates/hello.nix;
       };
     };
-  }
+}

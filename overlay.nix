@@ -1,25 +1,32 @@
 flake: self: super:
 let
-  cfg = flake.outputs.extraArgs.cfg;
-  recursiveUpdate = super.lib.recursiveUpdate;
-  cp = f: (super.callPackage f) {};
-  dotenv = cp flake.inputs.dotenv;
+  inherit (flake) inputs;
+  inherit (flake.outputs.extraArgs) cfg;
+  inherit (cfg) rootPath;
+  inherit (super) lib callPackage writeShellScript;
+  inherit (lib) recursiveUpdate;
+  inherit (builtins) toString length head tail;
+  inherit (flake.inputs) nixpkgsLatest;
+in
+let
+  cp = f: (callPackage f) {};
+  dotenv = cp inputs.dotenv;
   wrapDotenv = (file: script:
     let
-      dotenvFile = ((toString cfg.rootPath) + "/secrets/" + (toString file));
-      command = super.writeShellScript "dotenv-wrapper" script;
+      dotenvFile = ((toString rootPath) + "/secrets/" + (toString file));
+      command = writeShellScript "dotenv-wrapper" script;
     in ''
       ${dotenv}/bin/dotenv "@${toString dotenvFile}" -- ${command} "$@"
     '');
 
   reduceJoin = items:
-    if (builtins.length items) > 0 then
-      (recursiveUpdate (builtins.head items) (reduceJoin (builtins.tail items)))
+    if (length items) > 0 then
+      (recursiveUpdate (head items) (reduceJoin (tail items)))
     else
     {};
 in reduceJoin [
   super
-  rec {
+  {
     # gambeta, mudar depois
     electron_13 = super.electron;
 
@@ -28,21 +35,21 @@ in reduceJoin [
 
     lib = {
       inherit reduceJoin;
-      maintainers = import "${flake.inputs.nixpkgsLatest}/maintainers/maintainer-list.nix";
+      maintainers = import "${nixpkgsLatest}/maintainers/maintainer-list.nix";
     };
-    latest = import flake.inputs.nixpkgsLatest {};
-    p2k = cp flake.inputs.pocket2kindle;
-    redial_proxy = cp flake.inputs.redial_proxy;
-    send2kindle = cp flake.inputs.send2kindle;
-    comma = cp flake.inputs.comma;
-    wrapVSCode = args: import flake.inputs.nix-vscode (args // {pkgs = super;});
-    discord = cp "${flake.inputs.nixpkgsLatest}/pkgs/applications/networking/instant-messengers/discord/default.nix";
-    dart = cp "${flake.inputs.nixpkgsLatest}/pkgs/development/interpreters/dart/default.nix";
-    hugo = cp "${flake.inputs.nixpkgsLatest}/pkgs/applications/misc/hugo/default.nix";
-    flutter = (cp "${flake.inputs.nixpkgsLatest}/pkgs/development/compilers/flutter/default.nix").stable;
-    tor-browser-bundle-bin = (cp "${flake.inputs.nixpkgsLatest}/pkgs/applications/networking/browsers/tor-browser-bundle-bin/default.nix");
-    obsidian = (cp "${flake.inputs.nixpkgsLatest}/pkgs/applications/misc/obsidian/default.nix");
-    ventoy-bin = cp "${flake.inputs.nixpkgsLatest}/pkgs/tools/cd-dvd/ventoy-bin/default.nix";
+    latest = import nixpkgsLatest {};
+    p2k = cp inputs.pocket2kindle;
+    redial_proxy = cp inputs.redial_proxy;
+    send2kindle = cp inputs.send2kindle;
+    comma = cp inputs.comma;
+    wrapVSCode = args: import inputs.nix-vscode (args // {pkgs = super;});
+    discord = cp "${nixpkgsLatest}/pkgs/applications/networking/instant-messengers/discord/default.nix";
+    dart = cp "${nixpkgsLatest}/pkgs/development/interpreters/dart/default.nix";
+    hugo = cp "${nixpkgsLatest}/pkgs/applications/misc/hugo/default.nix";
+    flutter = (cp "${nixpkgsLatest}/pkgs/development/compilers/flutter/default.nix").stable;
+    tor-browser-bundle-bin = (cp "${nixpkgsLatest}/pkgs/applications/networking/browsers/tor-browser-bundle-bin/default.nix");
+    obsidian = (cp "${nixpkgsLatest}/pkgs/applications/misc/obsidian/default.nix");
+    ventoy-bin = cp "${nixpkgsLatest}/pkgs/tools/cd-dvd/ventoy-bin/default.nix";
     arcan = cp ./packages/arcan.nix;
     c4me = cp ./packages/c4me;
     encore = cp ./packages/encore.nix;
@@ -75,6 +82,7 @@ in reduceJoin [
       tixati = cp ./packages/custom/tixati.nix;
       vscode = cp ./packages/custom/vscode;
       send2kindle = cp ./packages/custom/send2kindle.nix;
+      retroarch = cp ./packages/custom/retroarch.nix;
     };
     minecraft = cp ./packages/minecraft.nix;
     peazip = cp ./packages/peazip.nix;
