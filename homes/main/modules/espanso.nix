@@ -1,6 +1,6 @@
 {pkgs, config, lib, ...}:
 let
-  inherit (lib) mkOption mkEnableOption;
+  inherit (lib) mkOption mkEnableOption mkIf;
   inherit (pkgs) espanso xclip;
   cfg = config.services.espanso;
   systemdUserService = import ../../../lib/systemdUserService.nix;

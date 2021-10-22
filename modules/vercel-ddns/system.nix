@@ -1,6 +1,6 @@
 {pkgs, lib, config, ...}:
 let
-  inherit (lib) mkEnableOption types mkOption;
+  inherit (lib) mkEnableOption types mkOption mkIf;
   inherit (builtins) concatStringsSep;
   inherit (pkgs) writeShellScript curl;
 

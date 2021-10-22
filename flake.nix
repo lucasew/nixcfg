@@ -98,6 +98,7 @@
     extraArgs = {
       inherit self;
       inherit global;
+      cfg = throw "your past self made a trap for non compliant code after a migration you did, now follow the stacktrace and go fix it";
     };
 
     docConfig = {options, ...}: # it's a mess, i might fix it later
