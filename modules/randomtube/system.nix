@@ -3,6 +3,7 @@ let
   inherit (lib) mkOption mkEnableOption mkIf types literalExample;
   inherit (pkgs) callPackage writeShellScript ffmpeg dotenv;
   inherit (builtins) fetchGit;
+
   cfg = config.services.randomtube;
 in
 {

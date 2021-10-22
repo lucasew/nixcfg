@@ -1,7 +1,7 @@
-{cfg, pkgs, ...}:
+{global, pkgs, ...}:
 let
   inherit (pkgs) neovim nixFlakes writeText;
-  inherit (cfg) username;
+  inherit (global) username;
 in {
   nix = {
     trustedUsers = [username "@wheel"];

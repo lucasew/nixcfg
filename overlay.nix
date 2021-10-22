@@ -1,8 +1,8 @@
 flake: self: super:
 let
   inherit (flake) inputs;
-  inherit (flake.outputs.extraArgs) cfg;
-  inherit (cfg) rootPath;
+  inherit (flake.outputs.extraArgs) global;
+  inherit (global) rootPath;
   inherit (super) lib callPackage writeShellScript;
   inherit (lib) recursiveUpdate;
   inherit (builtins) toString length head tail;

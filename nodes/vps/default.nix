@@ -1,8 +1,8 @@
-{pkgs, lib, cfg, ...}:
+{pkgs, lib, global, ...}:
 let
   inherit (flake) inputs;
   inherit (pkgs) dotenv;
-  inherit (cfg) username rootPath;
+  inherit (global) username rootPath;
   inherit (lib) mkOverride;
 in {
   imports = [

@@ -1,6 +1,6 @@
-{ cfg, pkgs, config, lib, self, ... }:
+{ global, pkgs, config, lib, self, ... }:
 let 
-  inherit (cfg) username email rootPath;
+  inherit (global) username email rootPath;
   inherit (builtins) fetchurl;
   inherit (self) inputs outputs;
   inherit (outputs) environmentShell;

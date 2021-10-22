@@ -2,9 +2,10 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{self, cfg, pkgs, config, lib, ... }:
+{self, global, pkgs, config, lib, ... }:
 let
   inherit (self) inputs;
+  inherit (global) wallpaper username;
   hostname = "acer-nix";
 in
 {
@@ -47,7 +48,7 @@ in
     };
   };
 
-  services.xserver.displayManager.lightdm.background = cfg.wallpaper;
+  services.xserver.displayManager.lightdm.background = wallpaper;
 
   services.auto-cpufreq.enable = true;
   # text expander in rust
@@ -132,7 +133,7 @@ in
 
   # Users
   users.users = {
-    ${cfg.username} = {
+    ${username} = {
       extraGroups = [
         "adbusers"
       ]; 

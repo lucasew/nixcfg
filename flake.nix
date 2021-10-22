@@ -72,13 +72,13 @@
 
     pkgs = import nixpkgs {
       inherit overlays;
-      inherit (cfg) system;
+      inherit (global) system;
       config = {
         allowUnfree = true;
       };
     };
 
-    cfg = rec {
+    global = rec {
         username = "lucasew";
         email = "lucas59356@gmail.com";
         selectedDesktopEnvironment = "xfce_i3";
@@ -87,17 +87,17 @@
         wallpaper = rootPath + "/wall.jpg";
         environmentShell = ''
           function nix-repl {
-            nix repl "${cfg.rootPath}/repl.nix" "$@"
+            nix repl "${rootPath}/repl.nix" "$@"
           }
           export NIXPKGS_ALLOW_UNFREE=1
-          export NIX_PATH=nixpkgs=${nixpkgs}:nixpkgs-overlays=${builtins.toString cfg.rootPath}/compat/overlay.nix:nixpkgsLatest=${nixpkgsLatest}:home-manager=${home-manager}:nur=${nur}:nixos-config=${(builtins.toString cfg.rootPath) + "/nodes/$HOSTNAME/default.nix"}
+          export NIX_PATH=nixpkgs=${nixpkgs}:nixpkgs-overlays=${builtins.toString rootPath}/compat/overlay.nix:nixpkgsLatest=${nixpkgsLatest}:home-manager=${home-manager}:nur=${nur}:nixos-config=${(builtins.toString rootPath) + "/nodes/$HOSTNAME/default.nix"}
         '';
       system = "x86_64-linux";
     };
 
     extraArgs = {
       inherit self;
-      inherit cfg;
+      inherit global;
     };
 
     docConfig = {options, ...}: # it's a mess, i might fix it later
@@ -151,7 +151,7 @@
       };
       source = {
         inherit pkgs;
-        inherit (cfg) system;
+        inherit (global) system;
         modules = [
           revModule
           (mainModule)
@@ -166,13 +166,13 @@
   in {
     # inherit overlays;
 
-      inherit (cfg) environmentShell;
+      inherit (global) environmentShell;
 
       homeConfigurations = {
         main = hmConf {
           configuration = import ./homes/main/default.nix;
-          homeDirectory = "/home/${cfg.username}";
-          inherit (cfg) system username;
+          homeDirectory = "/home/${global.username}";
+          inherit (global) system username;
         };
       };
 
@@ -192,13 +192,13 @@
         name = "nixcfg-shell";
         buildInputs = [];
         shellHook = ''
-        ${cfg.environmentShell}
-        echo '${cfg.environmentShell}'
+        ${global.environmentShell}
+        echo '${global.environmentShell}'
         echo Shell setup complete!
         '';
       };
 
-      apps."${cfg.system}" = {
+      apps."${global.system}" = {
         pkg = {
           type = "app";
           program = "${pkgs.pkg}/bin/pkg";
