@@ -218,5 +218,7 @@
         # Does not work!
         hello = import ./templates/hello.nix;
       };
+
+      inherit pkgs;
     };
 }
