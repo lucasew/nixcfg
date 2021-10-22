@@ -1,6 +1,11 @@
 local lspconfig = require'lspconfig'
 local coq = require'coq'
 local icons = require'nvim-web-devicons'
+local lsp_signature = require 'lsp_signature'
+
+lsp_signature.setup{
+    bind = true
+}
 
 local lspSettings = {
     -- arduino_language_server = {},

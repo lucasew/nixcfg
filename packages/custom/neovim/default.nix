@@ -45,6 +45,12 @@ let
       sha256 = "sha256-rZjesUv1Irx4jSUEuONIWiWVwMSeB3PcNEwlSQyM1UA=";
     };
   };
+  pluginLspSignature = pkgs.vimPlugins.lsp_signature-nvim.overrideAttrs (old: old // {
+    src = builtins.fetchurl {
+      url = "https://github.com/ray-x/lsp_signature.nvim/archive/refs/tags/v0.1.1.tar.gz";
+      sha256 = "1dk7sdpxhbvmnwiy811n7jd675mqlsgkjb046f7m6cr7z12gxcnq";
+    };
+  });
   themeStarrynight = pkgs.vimUtils.buildVimPlugin {
     name = "starrynight";
     src = pkgs.fetchFromGitHub {
@@ -122,6 +128,7 @@ in pkgs.wrapNeovim neovimAltered {
       pluginCoqArtifacts
       pluginEmbark
       pluginNocapsquit
+      pluginLspSignature
       themePaper
       themePreto
       themeStarrynight
