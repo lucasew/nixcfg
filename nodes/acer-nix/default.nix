@@ -4,6 +4,7 @@
 
 {self, cfg, pkgs, config, lib, ... }:
 let
+  inherit (self) inputs;
   hostname = "acer-nix";
 in
 {
@@ -14,9 +15,9 @@ in
       ./hardware-configuration.nix
       ../../modules/gui/system.nix
       ../../modules/polybar/system.nix
-      self.inputs.nix-ld.nixosModules.nix-ld
-      self.inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-      self.inputs.nixos-hardware.nixosModules.common-cpu-intel-kaby-lake
+      inputs.nix-ld.nixosModules.nix-ld
+      inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
+      inputs.nixos-hardware.nixosModules.common-cpu-intel-kaby-lake
     ]
   ;
 
@@ -47,9 +48,6 @@ in
   };
 
   services.xserver.displayManager.lightdm.background = cfg.wallpaper;
-  services.xserver.deviceSection = ''
-    Option "VirtualHeads" "1"
-  '';
 
   services.auto-cpufreq.enable = true;
   # text expander in rust
