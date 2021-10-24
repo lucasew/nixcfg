@@ -105,61 +105,6 @@ in {
         (replaceDate ":ot" "#datetime/%Y/%m/%e/%H/%M")
         (replaceDate ":od" "#datetime/%Y/%m/%e")
         (replaceSequence "°" "\\") # Alt+E, Alt+Q outputs /
-
-        # code
-        (justReplace ":<html>" ''
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-          <meta charset="UTF-8">
-          <meta http-equiv="X-UA-Compatible" content="IE=edge">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Document</title>
-          </head>
-          <body>
-          $|$
-          </body>
-          </html>
-        '')
-        (justReplace ":import React" ''
-          import React from 'react';
-
-          interface ComponentProps {
-            children: React.ReactNode
-          }
-
-          export default function Component(props: ComponentProps) {
-            return (
-              <>
-                $|$
-              </>
-            )
-          }
-        '')
-        (justReplace ":#include" ''
-          #include <stdio.h>
-          #include <stdlib.h>
-          #include <unistd.h>
-
-          int main(int argc, char **argv) {
-            $|$
-          }
-        '')
-        (justReplace ":package" ''
-          package main
-
-          import (
-            "fmt"
-            "github.com/davecgh/go-spew/spew"
-          )
-
-          func init() {
-          }
-
-          func main() {
-            $|$
-          }
-        '')
         (justReplace ":#!/usr/bin/env bash" ''
           #!/usr/bin/env bash
           set -eu -o pipefail
@@ -209,7 +154,6 @@ in {
         (replaceWord "lenght" "length")
         (replaceWord "ther" "there")
         (replaceWord "automacao" "automação")
-        (replaceWord "nixos" "NixOS")
         (replaceWord "its" "it's")
         (replaceWord "dont" "don't")
         (replaceWord "didnt" "didn't")
