@@ -64,9 +64,9 @@ let
       # ${wineBin} cmd /c dir > /dev/null 2> /dev/null # initialize prefix
       wineserver -w
       ${tricksHook}
-      ${firstrunScript}
       rm "$WINEPREFIX/drive_c/users/$USER" -rf
       ln -s "$HOME" "$WINEPREFIX/drive_c/users/$USER"
+      ${firstrunScript}
     fi
     ${if chdir != null 
       then ''cd "${chdir}"'' 
