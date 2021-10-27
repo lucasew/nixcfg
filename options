@@ -10,9 +10,30 @@ let
 in
 ' > $TEMPFILE
 
+function usage {
+    echo "
+$(tput bold)options$(tput sgr0) [my flags] [option] [nixos-option flags]
+
+$(tput bold)my flags$(tput sgr0)
+    --flake: which flake with configuration to inspect
+        Example: .#nixosConfigurations.main
+    -h, --help: show this help message
+
+$(tput bold)option$(tput sgr0)
+    --flake: which flake with configuration to inspect
+    the option to be inspected in the same format as is in nixos-option
+
+$(tput bold)nixos-option flags$(tput sgr0)
+    Same as nixos-option (8)
+    "
+}
 
 while true; do
     case "$1" in
+        --help | -h)
+            usage
+            exit 0
+        ;;
         --flake)
             shift
             IFS='#' read -a FLAKE_PARTS <<< "$1"
