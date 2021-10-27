@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+TEMPFILE=`mktemp`.nix
+
+echo '
+let
+    flake-compat = builtins.fetchTarball {
+        url = "https://github.com/edolstra/flake-compat/archive/master.tar.gz";
+    };
+in
+' > $TEMPFILE
+
+
+while true; do
+    case "$1" in
+        --flake)
+            shift
+            IFS='#' read -a FLAKE_PARTS <<< "$1"
+            shift
+            echo "$FLAKE_PARTS"
+            if [[ "${FLAKE_PARTS[0]}" =~ ^[./] ]]; then
+                DIR=`cd "${FLAKE_PARTS[0]}"; pwd`
+                echo "(import flake-compat {src = \"$DIR\";}).defaultNix.${FLAKE_PARTS[1]}" >> $TEMPFILE
+            else
+                echo "(import flake-compat {src = \"${FLAKE_PARTS[0]}\";}).defaultNix.${FLAKE_PARTS[1]}" >> $TEMPFILE
+            fi
+        ;;
+        *)
+            break
+        ;;
+    esac
+done
+
+nixos-option --config_expr "(import $TEMPFILE).config" --options_expr "(import "$TEMPFILE").options" "$@"
