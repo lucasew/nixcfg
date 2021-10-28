@@ -2,64 +2,22 @@
   description = "nixcfg";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.05";
-    nixpkgsLatest.url = "github:NixOS/nixpkgs/master";
-    impermanence = {
-      url = "github:nix-community/impermanence";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    home-manager = {
-      url = "github:nix-community/home-manager/release-21.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    borderless-browser = {
-      url = "github:lucasew/borderless-browser.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-ld = {
-      url = "github:Mic92/nix-ld";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nur = {
-      url = "github:nix-community/NUR/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    pocket2kindle = {
-      url = "github:lucasew/pocket2kindle";
-      flake = false;
-    };
-    send2kindle = {
-      url = "github:lucasew/send2kindle";
-      flake = false;
-    };
-    nixgram = {
-      url = "github:lucasew/nixgram/master";
-      flake = false;
-    };
-    dotenv = {
-      url = "github:lucasew/dotenv";
-      flake = false;
-    };
-    redial_proxy = {
-      url = "github:lucasew/redial_proxy";
-      flake = false;
-    };
-    nixos-hardware = {
-      url = "github:NixOS/nixos-hardware";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    comma = {
-      url = "github:Shopify/comma";
-      flake = false;
-    };
-    nix-vscode = {
-      url = "github:lucasew/nix-vscode";
-      flake = false;
-    };
-    mach-nix = {
-      url = "github:DavHau/mach-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    borderless-browser = {url =  "github:lucasew/borderless-browser.nix";           inputs.nixpkgs.follows = "nixpkgs"; };
+    comma =              {url =  "github:Shopify/comma";                            flake = false;                      };
+    dotenv =             {url =  "github:lucasew/dotenv";                           flake = false;                      };
+    home-manager =       {url =  "github:nix-community/home-manager/release-21.05"; inputs.nixpkgs.follows = "nixpkgs"; };
+    impermanence =       {url =  "github:nix-community/impermanence";               inputs.nixpkgs.follows = "nixpkgs"; };
+    mach-nix =           {url =  "github:DavHau/mach-nix";                          inputs.nixpkgs.follows = "nixpkgs"; };
+    nix-ld =             {url =  "github:Mic92/nix-ld";                             inputs.nixpkgs.follows = "nixpkgs"; };
+    nix-vscode =         {url =  "github:lucasew/nix-vscode";                       flake = false;                      };
+    nixgram =            {url =  "github:lucasew/nixgram/master";                   flake = false;                      };
+    nixos-hardware =     {url =  "github:NixOS/nixos-hardware";                     inputs.nixpkgs.follows = "nixpkgs"; };
+    nixpkgs =            {url =  "github:NixOS/nixpkgs/nixos-21.05";                                                    };
+    nixpkgsLatest =      {url =  "github:NixOS/nixpkgs/master";                                                         };
+    nur =                {url =  "github:nix-community/NUR/master";                 inputs.nixpkgs.follows = "nixpkgs"; };
+    pocket2kindle =      {url =  "github:lucasew/pocket2kindle";                    flake = false;                      };
+    redial_proxy =       {url =  "github:lucasew/redial_proxy";                     flake = false;                      };
+    send2kindle =        {url =  "github:lucasew/send2kindle";                      flake = false;                      };
   };
 
   outputs = { self, ... }@inputs:
