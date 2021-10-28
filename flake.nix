@@ -22,7 +22,20 @@
 
   outputs = { self, ... }@inputs:
   let
-    inherit (inputs) nixpkgs nixpkgsLatest nixgram nix-ld home-manager dotenv nur pocket2kindle redial_proxy nixos-hardware borderless-browser nix-vscode;
+    inherit (inputs)
+      borderless-browser
+      dotenv
+      home-manager
+      nix-ld
+      nix-vscode
+      nixgram
+      nixos-hardware
+      nixpkgs
+      nixpkgsLatest
+      nur
+      pocket2kindle
+      redial_proxy
+    ;
     inherit (pkgs) nixosOptionsDoc;
     inherit (pkgs.lib) nixosSystem;
     inherit (builtins) replaceStrings toFile trace;
