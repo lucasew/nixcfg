@@ -235,6 +235,7 @@ in {
     dotenvFile = rootPath + "/secrets/nixgram.env";
     customCommands = {
       echo = "echo $*";
+      uptime = "uptime";
       wait = ''
         sleep $1
         echo Waited for $1 seconds!
