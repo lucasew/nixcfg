@@ -42,7 +42,6 @@ in {
     calibre
     wineApps.wine7zip
     libreoffice
-    mendeley
     stremio
     typora
     fzf

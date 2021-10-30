@@ -50,13 +50,11 @@ in reduceJoin [
     tor-browser-bundle-bin = (cp "${nixpkgsLatest}/pkgs/applications/networking/browsers/tor-browser-bundle-bin/default.nix");
     obsidian = (cp "${nixpkgsLatest}/pkgs/applications/misc/obsidian/default.nix");
     ventoy-bin = cp "${nixpkgsLatest}/pkgs/tools/cd-dvd/ventoy-bin/default.nix";
-    arcan = cp ./packages/arcan.nix;
     c4me = cp ./packages/c4me;
     encore = cp ./packages/encore.nix;
     xplr = cp ./packages/xplr.nix;
     personal-utils = cp ./packages/personal-utils.nix;
     nixwrap = cp ./packages/nixwrap.nix;
-    custom_neovim = cp ./packages/neovim/package.nix;
     wineApps = {
       wine7zip = cp ./packages/wineApps/7zip.nix;
       cs_extreme = cp ./packages/wineApps/cs_extreme.nix;
@@ -90,7 +88,7 @@ in reduceJoin [
     stremio = cp ./packages/stremio.nix;
     wrapWine = cp ./packages/wrapWine.nix;
     preload = cp ./packages/preload.nix;
-    python3Packages = cp ./packages/python3Packages.nix;
+    # python3Packages = cp ./packages/python3Packages.nix;
     nodePackages = cp ./modules/node_clis/package_data/default.nix;
 
     nur = import flake.inputs.nur {
