@@ -22,10 +22,6 @@ in
     ]
   ;
 
-  services.xserver.modules = with pkgs.xorg; [
-    xf86inputjoystick
-  ];
-
   # programs.steam.enable = true;
 
   nixpkgs = {
@@ -34,7 +30,6 @@ in
     };
   };
 
-  # Use the systemd-boot EFI boot loader.
   boot.supportedFilesystems = [ "ntfs" ];
   boot.loader = {
     efi = {
