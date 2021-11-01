@@ -57,11 +57,11 @@
         rootPathNix = "${rootPath}";
         wallpaper = rootPath + "/wall.jpg";
         environmentShell = ''
-          function nix-repl {
-            nix repl "${rootPath}/repl.nix" "$@"
-          }
           export NIXPKGS_ALLOW_UNFREE=1
           export NIXCFG_ROOT_PATH="/home/$USER/.dotfiles"
+          function nix-repl {
+            nix repl "$NIXCFG_ROOT_PATH/repl.nix" "$@"
+          }
           export NIX_PATH=nixpkgs=${nixpkgs}:nixpkgs-overlays=$NIXCFG_ROOT_PATH/compat/overlay.nix:nixpkgsLatest=${nixpkgsLatest}:home-manager=${home-manager}:nur=${nur}:nixos-config=$NIXCFG_ROOT_PATH/nodes/$HOSTNAME/default.nix
         '';
       system = "x86_64-linux";
