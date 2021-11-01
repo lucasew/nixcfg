@@ -38,7 +38,7 @@
     ;
     inherit (pkgs) nixosOptionsDoc;
     inherit (pkgs.lib) nixosSystem;
-    inherit (builtins) replaceStrings toFile trace;
+    inherit (builtins) replaceStrings toFile trace readFile;
     inherit (home-manager.lib) homeManagerConfiguration;
 
     pkgs = import nixpkgs {
@@ -61,7 +61,8 @@
             nix repl "${rootPath}/repl.nix" "$@"
           }
           export NIXPKGS_ALLOW_UNFREE=1
-          export NIX_PATH=nixpkgs=${nixpkgs}:nixpkgs-overlays=${builtins.toString rootPath}/compat/overlay.nix:nixpkgsLatest=${nixpkgsLatest}:home-manager=${home-manager}:nur=${nur}:nixos-config=${(builtins.toString rootPath) + "/nodes/$HOSTNAME/default.nix"}
+          export NIXCFG_ROOT_PATH="/home/$USER/.dotfiles"
+          export NIX_PATH=nixpkgs=${nixpkgs}:nixpkgs-overlays=$NIXCFG_ROOT_PATH/compat/overlay.nix:nixpkgsLatest=${nixpkgsLatest}:home-manager=${home-manager}:nur=${nur}:nixos-config=$NIXCFG_ROOT_PATH/nodes/$HOSTNAME/default.nix
         '';
       system = "x86_64-linux";
     };
