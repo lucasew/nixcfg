@@ -150,6 +150,16 @@ in
 
   # não deixar explodir
   nix.maxJobs = 3;
+  nix.distributedBuilds = true;
+  nix.buildMachines = [
+    {
+      hostName = "mtpc.local";
+      system = "x86_64-linux";
+      maxJobs = 3;
+      speedFactor = 2;
+      supportedFeatures = [ "big-parallel" "kvm" ];
+    }
+  ];
   # kernel
   boot.kernelPackages = pkgs.linuxPackages_5_14;
 
