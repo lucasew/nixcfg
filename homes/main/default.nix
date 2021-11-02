@@ -29,7 +29,6 @@ in {
     # minecraft  # custom (excluded)
     custom.tixati custom.rofi # custom
     tdesktop # communication
-    obsidian
     vlc youtube-dl # media
     chromium
     file
@@ -43,7 +42,6 @@ in {
     wineApps.wine7zip
     libreoffice
     stremio
-    typora
     fzf
   ] ;
 

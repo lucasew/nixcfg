@@ -16,4 +16,11 @@ in builtins.attrValues {
     pinball
   ;
   polybar = pkgs.callPackage ./modules/polybar/customPolybar.nix {};
+  inherit (flake.outputs.nixosConfigurations)
+    acer-nix
+    vps
+  ;
+  inherit (flake.outputs.homeConfigurations)
+    main
+  ;
 }

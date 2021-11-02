@@ -29,8 +29,5 @@ jobs:
           name: lucasew-personal
           authToken: '${{ secrets.CACHIX_TOKEN }}'
       - run: nix-build build.nix | cachix push lucasew-personal
-      - run: nix build .#nixosConfigurations.acer-nix.config.system.build.toplevel | cachix push lucasew-personal
-      - run: nix build .#nixosConfigurations.vps.config.system.build.toplevel | cachix push lucasew-personal
-      - run: nix build .#homeConfigurations.main.activationPackage
 
 
