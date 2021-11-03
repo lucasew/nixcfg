@@ -195,6 +195,42 @@
         "type": "github"
       }
     },
+    "nixlib": {
+      "locked": {
+        "lastModified": 1624753224,
+        "narHash": "sha256-ZUEcPzgU1w8ZYeEgfcpzeciYcZShQZbEfRN2tV+K2yQ=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "7b4dc08734c5c4703b22b9c780417042e1c8f020",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
+    "nixos-generators": {
+      "inputs": {
+        "nixlib": "nixlib",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1635867875,
+        "narHash": "sha256-8NydhVbptXn7gMHYyZMPrXwdxC2yUvg76TYt2dFFnKo=",
+        "owner": "nix-community",
+        "repo": "nixos-generators",
+        "rev": "d8fa9dc9adbaf12ac501cf578f10e52752fc6d56",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixos-generators",
+        "type": "github"
+      }
+    },
     "nixos-hardware": {
       "locked": {
         "lastModified": 1635449388,
@@ -318,6 +354,7 @@
         "nix-option": "nix-option",
         "nix-vscode": "nix-vscode",
         "nixgram": "nixgram",
+        "nixos-generators": "nixos-generators",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nixpkgsLatest": "nixpkgsLatest",

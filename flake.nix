@@ -13,6 +13,7 @@
     nix-option =         {url =  "github:lucasew/nix-option";                       flake = false;                      };
     nixgram =            {url =  "github:lucasew/nixgram/master";                   flake = false;                      };
     nixos-hardware =     {url =  "github:NixOS/nixos-hardware";                     inputs.nixpkgs.follows = "nixpkgs"; };
+    nixos-generators =   {url =  "github:nix-community/nixos-generators";           inputs.nixpkgs.follows = "nixpkgs"; };
     nixpkgs =            {url =  "github:NixOS/nixpkgs/nixos-21.05";                                                    };
     nixpkgsLatest =      {url =  "github:NixOS/nixpkgs/master";                                                         };
     nur =                {url =  "github:nix-community/NUR/master";                 inputs.nixpkgs.follows = "nixpkgs"; };
@@ -56,7 +57,7 @@
         selectedDesktopEnvironment = "xfce_i3";
         rootPath = "/home/${username}/.dotfiles";
         rootPathNix = "${rootPath}";
-        wallpaper = rootPath + "/wall.jpg";
+        wallpaper = ./wall.jpg;
         environmentShell = ''
           export NIXPKGS_ALLOW_UNFREE=1
           export NIXCFG_ROOT_PATH="/home/$USER/.dotfiles"
@@ -132,11 +133,17 @@
         ] ++ extraModules;
         specialArgs = extraArgs;
       };
-      evaluated = import "${nixpkgs}/nixos/lib/eval-config.nix" source;
-      doc = docConfig evaluated;
-    in evaluated // {
-      inherit source doc;
-    };
+      eval = import "${nixpkgs}/nixos/lib/eval-config.nix";
+      override = mySource: fn: let
+        sourceProcessed = mySource // (fn mySource);
+        evaluated = eval sourceProcessed;
+        doc = docConfig evaluated;
+      in evaluated // {
+        source = sourceProcessed;
+        inherit doc;
+        override = override sourceProcessed;
+      };
+    in override source (v: {});
   in {
     # inherit overlays;
 

@@ -6,6 +6,7 @@
 let
   inherit (self) inputs;
   inherit (global) wallpaper username;
+  inherit (builtins) storePath;
   hostname = "acer-nix";
 in
 {
@@ -43,7 +44,13 @@ in
     };
   };
 
-  services.xserver.displayManager.lightdm.background = wallpaper;
+  services.xserver.displayManager.lightdm = {
+    background = wallpaper;
+    greeters.enso = {
+      enable = true;
+      blur = true;
+    };
+  };
 
   services.auto-cpufreq.enable = true;
   # text expander in rust
@@ -51,6 +58,10 @@ in
 
   networking.hostName = hostname; # Define your hostname.
   networking.networkmanager.enable = true;
+  systemd.extraConfig = ''
+  DefaultTimeoutStartSec=10s
+  '';
+  systemd.services.NetworkManager-wait-online.enable = false;
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
   # Per-interface useDHCP will be mandatory in the future, so this generated config
@@ -76,6 +87,7 @@ in
     virt-manager
     # Extra
     custom.send2kindle
+    custom.rofi
     intel-compute-runtime # OpenCL
   ];
 
@@ -163,7 +175,8 @@ in
     ${username} = {
       extraGroups = [
         "adbusers"
-      ]; 
+      ];
+      initialPassword = "123"; # for VM
       description = "Lucas Eduardo";
     };
   };

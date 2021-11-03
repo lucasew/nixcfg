@@ -29,6 +29,7 @@ in reduceJoin [
   {
     inherit dotenv;
     inherit wrapDotenv;
+    inherit (inputs.nixos-generators.packages."${global.system}") nixos-generators;
 
     lib = {
       inherit reduceJoin;
