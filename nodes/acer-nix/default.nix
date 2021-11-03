@@ -98,7 +98,12 @@ in
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
-  programs.ssh.startAgent = true;
+  programs.ssh = {
+    startAgent = true;
+    extraConfig = ''
+      ConnectTimeout=5
+    '';
+  };
   programs.gnupg.agent = {
     enable = true;
     # enableSSHSupport = true;
@@ -199,6 +204,7 @@ in
   nix.buildMachines = [
     {
       hostName = "mtpc.local";
+      sshUser = "lucas59356";
       system = "x86_64-linux";
       maxJobs = 3;
       speedFactor = 2;
