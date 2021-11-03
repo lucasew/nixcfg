@@ -10,6 +10,7 @@
     mach-nix =           {url =  "github:DavHau/mach-nix";                          inputs.nixpkgs.follows = "nixpkgs"; };
     nix-ld =             {url =  "github:Mic92/nix-ld";                             inputs.nixpkgs.follows = "nixpkgs"; };
     nix-vscode =         {url =  "github:lucasew/nix-vscode";                       flake = false;                      };
+    nix-option =         {url =  "github:lucasew/nix-option";                       flake = false;                      };
     nixgram =            {url =  "github:lucasew/nixgram/master";                   flake = false;                      };
     nixos-hardware =     {url =  "github:NixOS/nixos-hardware";                     inputs.nixpkgs.follows = "nixpkgs"; };
     nixpkgs =            {url =  "github:NixOS/nixpkgs/nixos-21.05";                                                    };

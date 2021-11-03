@@ -6,7 +6,7 @@ let
   inherit (super) lib callPackage writeShellScript;
   inherit (lib) recursiveUpdate;
   inherit (builtins) toString length head tail;
-  inherit (flake.inputs) nixpkgsLatest;
+  inherit (flake.inputs) nixpkgsLatest nix-option nixpkgs;
 in
 let
   cp = f: (callPackage f) {};
@@ -52,6 +52,13 @@ in reduceJoin [
     xplr = cp ./packages/xplr.nix;
     personal-utils = cp ./packages/personal-utils.nix;
     nixwrap = cp ./packages/nixwrap.nix;
+    nix-option = callPackage "${nix-option}" {
+      nixos-option = (callPackage "${nixpkgs}/nixos/modules/installer/tools/nixos-option" {}).overrideAttrs (attrs: attrs // {
+        meta = attrs.meta // {
+          platforms = lib.platforms.all;
+        };
+      });
+    };
     wineApps = {
       wine7zip = cp ./packages/wineApps/7zip.nix;
       cs_extreme = cp ./packages/wineApps/cs_extreme.nix;

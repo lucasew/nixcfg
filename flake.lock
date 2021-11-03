@@ -146,6 +146,22 @@
         "type": "github"
       }
     },
+    "nix-option": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1635712059,
+        "narHash": "sha256-psivvcVMDxlBjM8fgy+IJJLgYOCJZWfVA+qqzrXgus4=",
+        "owner": "lucasew",
+        "repo": "nix-option",
+        "rev": "90a8f980e4e24e2bc8371427921ad79df44ca6d0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lucasew",
+        "repo": "nix-option",
+        "type": "github"
+      }
+    },
     "nix-vscode": {
       "flake": false,
       "locked": {
@@ -299,6 +315,7 @@
         "impermanence": "impermanence",
         "mach-nix": "mach-nix",
         "nix-ld": "nix-ld",
+        "nix-option": "nix-option",
         "nix-vscode": "nix-vscode",
         "nixgram": "nixgram",
         "nixos-hardware": "nixos-hardware",
