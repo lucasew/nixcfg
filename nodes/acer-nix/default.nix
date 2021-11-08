@@ -186,6 +186,15 @@ in
     };
   };
 
+  gc-hold.paths = with pkgs; [
+    go
+    gopls
+    python3
+    custom.neovim
+    clang
+    ccls
+  ];
+
   # ADB
   programs.adb.enable = true;
   services.udev.packages = with pkgs; [
