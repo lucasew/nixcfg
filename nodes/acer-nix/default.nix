@@ -207,6 +207,10 @@ in
     libvirtd.enable = true;
   };
 
+  boot.plymouth = {
+    enable = true;
+  };
+
   # não deixar explodir
   nix.maxJobs = 3;
   nix.distributedBuilds = true;
