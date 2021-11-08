@@ -3,10 +3,10 @@
   identifier = pkgs.lib.mkDefault "common";
   extensions = [
     {
-      publisher = "MS-CEINTL";
-      name = "vscode-language-pack-pt-BR";
-      version = "1.61.4";
-      sha256 = "sha256-qR7UD5SZBfW3Ihly0eP9ZHYMrKgxR4iaperP+jpI82s=";
+      publisher = "ms-ceintl";
+      name = "vscode-language-pack-pt-br";
+      version = "1.62.2";
+      sha256 = "sha256-Hqb26MubmIuollhfAQdjMCQqeNe3ffMgihPlRSz59lY=";
     }
     {
       publisher = "arrterian";
@@ -32,9 +32,16 @@
       version = "1.0.25";
       sha256 = "0s6lr7s1a0alkknazmch5k2m0r16p5gnlzn3yyan9wl8k3579c25";
     }
+    {
+      publisher = "zhuangtongfa";
+      name = "Material-theme";
+      version = "3.13.2";
+      sha256 = "sha256-HuoO2v7uUcDf7IMBapy8o4zt7mr83E5oiIIMVFs3ad0=";
+    }
   ];
   settings = {
     "workbench.iconTheme" = "file-icons";
     "workbench.colorTheme" = "One Dark Pro";
+    "locale" = "pt-BR";
   };
 }
