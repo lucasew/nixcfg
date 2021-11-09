@@ -28,6 +28,9 @@ local lspSettings = {
     gopls = {}, -- golang
     graphql = {},
     hls = {}, -- haskell
+    java_language_server = { -- java
+        cmd = { "java-language-server" };
+    },
     rnix = {}, -- nix
     rust_analyzer = {}, -- rust
     terraformls = {}, -- terraform
