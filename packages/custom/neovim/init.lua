@@ -10,7 +10,16 @@ lsp_signature.setup{
 local lspSettings = {
     -- arduino_language_server = {},
     bashls = {},
-    ccls = {}, -- c/c++
+    ccls = {
+        init_options = {
+            cache = {
+                directory = "/tmp/.ccls-cache";
+            },
+            completion = {
+                detailedLabel = false;
+            }
+        }
+    }, -- c/c++
     cmake = {},
     dockerls = {},
     dotls = {}, -- dot/graphviz
