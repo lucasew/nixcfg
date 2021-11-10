@@ -90,7 +90,6 @@ in reduceJoin [
       retroarch = cp ./packages/custom/retroarch.nix;
     };
     minecraft = cp ./packages/minecraft.nix;
-    peazip = cp ./packages/peazip.nix;
     pkg = cp ./packages/pkg.nix;
     stremio = cp ./packages/stremio.nix;
     wrapWine = cp ./packages/wrapWine.nix;
