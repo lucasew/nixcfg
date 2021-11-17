@@ -125,6 +125,22 @@
         "type": "github"
       }
     },
+    "nix-emacs": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1637109628,
+        "narHash": "sha256-gJA7jcky0Cw1Kq+7KDGKkFBnHvV2ZFDCjq+hpCbpIqU=",
+        "owner": "lucasew",
+        "repo": "nix-emacs",
+        "rev": "50840c20cd684d4959d35aa22a518678d8302f91",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lucasew",
+        "repo": "nix-emacs",
+        "type": "github"
+      }
+    },
     "nix-ld": {
       "inputs": {
         "nixpkgs": [
@@ -350,6 +366,7 @@
         "home-manager": "home-manager",
         "impermanence": "impermanence",
         "mach-nix": "mach-nix",
+        "nix-emacs": "nix-emacs",
         "nix-ld": "nix-ld",
         "nix-option": "nix-option",
         "nix-vscode": "nix-vscode",

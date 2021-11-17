@@ -41,6 +41,7 @@ in reduceJoin [
     send2kindle = cp inputs.send2kindle;
     comma = cp inputs.comma;
     wrapVSCode = args: import inputs.nix-vscode (args // {pkgs = super;});
+    wrapEmacs = args: import inputs.nix-emacs (args // {pkgs = super;});
     discord = cp "${nixpkgsLatest}/pkgs/applications/networking/instant-messengers/discord/default.nix";
     dart = cp "${nixpkgsLatest}/pkgs/development/interpreters/dart/default.nix";
     hugo = cp "${nixpkgsLatest}/pkgs/applications/misc/hugo/default.nix";
@@ -83,6 +84,7 @@ in reduceJoin [
     custom = {
       ncdu = cp ./packages/custom/ncdu.nix;
       neovim = cp ./packages/custom/neovim;
+      emacs = cp ./packages/custom/emacs;
       rofi = cp ./packages/custom/rofi.nix;
       tixati = cp ./packages/custom/tixati.nix;
       vscode = cp ./packages/custom/vscode;
