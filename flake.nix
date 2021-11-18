@@ -24,7 +24,8 @@
     send2kindle =        {url =  "github:lucasew/send2kindle";                      flake = false;                      };
   };
 
-  outputs = { self, ... }@inputs:
+  outputs = { self, flake-utils, ... }@inputs:
+    flake-utils.lib.eachDefaultSystem (system: (
   let
     inherit (inputs)
       borderless-browser
@@ -51,8 +52,7 @@
       };
     };
 
-    mkPkgs = {system ? builtins.currentSystem or "x86_64-linux"}: 
-      import nixpkgs (pkgsArgs // {inherit system;});
+    pkgs = import nixpkgs (pkgsArgs // {inherit system;});
 
     global = rec {
         username = "lucasew";
@@ -61,6 +61,7 @@
         rootPath = "/home/${username}/.dotfiles";
         rootPathNix = "${rootPath}";
         wallpaper = ./wall.jpg;
+        system = throw "usa o system do flake!";
         environmentShell = ''
           export NIXPKGS_ALLOW_UNFREE=1
           export NIXCFG_ROOT_PATH="/home/$USER/.dotfiles"
@@ -77,7 +78,7 @@
       cfg = throw "your past self made a trap for non compliant code after a migration you did, now follow the stacktrace and go fix it";
     };
 
-    docConfig = {options, system ? "x86_64-linux", ...}: # it's a mess, i might fix it later
+    docConfig = {options, ...}: # it's a mess, i might fix it later
     let
       pkgs = import nixpkgs {config = {allowBroken = true; inherit system; };};
       inherit (pkgs.nixosOptionsDoc { inherit options; })
@@ -107,14 +108,11 @@
       (borderless-browser.overlay)
     ];
 
-    hmConf = {
-      system ? "x86_64-linux",
-      ...
-    }@allConfig:
+    hmConf = allConfig:
     let
       source = allConfig // {
         extraSpecialArgs = extraArgs;
-        pkgs = mkPkgs { inherit system; };
+        inherit pkgs;
       };
       evaluated = homeManagerConfiguration source;
       doc = docConfig evaluated;
@@ -125,7 +123,6 @@
     nixosConf = {
       mainModule,
       extraModules ? [],
-      system ? "x86_64-linux"
     }:
     let
       revModule = {pkgs, ...}: {
@@ -134,7 +131,6 @@
         else
           trace "flake hash not detected!" null;
       };
-      pkgs = mkPkgs { inherit system; };
       source = {
         inherit pkgs system;
         modules = [
@@ -176,7 +172,8 @@
           mainModule = ./nodes/bootstrap/default.nix;
         };
       };
-      devShell = flake-utils.lib.eachDefaultSystem (system: (mkPkgs { inherit system; }).mkShell {
+
+      devShell = pkgs.mkShell {
         name = "nixcfg-shell";
         buildInputs = [];
         shellHook = ''
@@ -184,12 +181,9 @@
         echo '${global.environmentShell}'
         echo Shell setup complete!
         '';
-      });
+      };
 
-      apps = flake-utils.lib.eachDefaultSystem (system: 
-      let
-        pkgs = mkPkgs { inherit system; };
-      in {
+      apps = {
         pkg = {
           type = "app";
           program = "${pkgs.pkg}/bin/pkg";
@@ -206,14 +200,12 @@
           type = "app";
           program = "${pkgs.wineApps.wine7zip}/bin/7zip";
         };
-      });
+      };
 
       templates = {
         # Does not work!
         hello = import ./templates/hello.nix;
       };
-      pkgs = mkPkgs {};
-      armPkgs = mkPkgs { system = "aarch64-linux"; };
-      inherit extraArgs;
-    };
+      inherit extraArgs pkgs;
+    }));
 }
