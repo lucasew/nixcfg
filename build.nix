@@ -3,24 +3,28 @@ let
   flake = getFlake "${toString ./.}";
   inherit (flake.outputs) pkgs;
 in builtins.attrValues {
-  inherit (pkgs)
+  inherit (pkgs.x86_64-linux)
     stremio
     minecraft
     discord
   ;
-  inherit (pkgs.python3Packages)
+  # inherit (pkgs.aarch64-linux.custom)
+  #   neovim
+  #   emacs
+  # ;
+  inherit (pkgs.x86_64-linux.python3Packages)
     scikitlearn
   ;
-  inherit (pkgs.wineApps)
+  inherit (pkgs.x86_64-linux.wineApps)
     wine7zip
     pinball
   ;
-  polybar = pkgs.callPackage ./modules/polybar/customPolybar.nix {};
-  inherit (flake.outputs.nixosConfigurations)
+  polybar = pkgs.x86_64-linux.callPackage ./modules/polybar/customPolybar.nix {};
+  inherit (flake.outputs.nixosConfigurations.x86_64-linux)
     acer-nix
     vps
   ;
-  inherit (flake.outputs.homeConfigurations)
+  inherit (flake.outputs.homeConfigurations.x86_64-linux)
     main
   ;
 }

@@ -3,9 +3,9 @@ let
   inherit (global) username email rootPath;
   inherit (builtins) fetchurl;
   inherit (self) inputs outputs;
-  inherit (outputs) environmentShell;
   inherit (pkgs) writeShellScript espeak wrapDotenv p2k;
   inherit (lib.hm.gvariant) mkTuple;
+  environmentShell = outputs.environmentShell.x86_64-linux;
 in {
   imports = [
     "${inputs.nixgram}/hmModule.nix"
