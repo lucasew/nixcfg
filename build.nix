@@ -13,11 +13,11 @@ builtins.attrValues {
     pinball
   ;
   polybar = pkgs.callPackage ./modules/polybar/customPolybar.nix {};
-  inherit (nixosConfigurations)
+  inherit (builtins.mapAttrs (k: v: v.config.system.build.toplevel) nixosConfigurations)
     acer-nix
     vps
   ;
-  inherit (homeConfigurations)
+  inherit (builtins.mapAttrs (k: v: v.activationPackage) homeConfigurations)
     main
   ;
 }
