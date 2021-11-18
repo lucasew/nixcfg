@@ -16,7 +16,7 @@
     nixgram =            {url =  "github:lucasew/nixgram/master";                   flake = false;                      };
     nixos-hardware =     {url =  "github:NixOS/nixos-hardware";                     inputs.nixpkgs.follows = "nixpkgs"; };
     nixos-generators =   {url =  "github:nix-community/nixos-generators";           inputs.nixpkgs.follows = "nixpkgs"; };
-    nixpkgs =            {url =  "github:NixOS/nixpkgs/nixos-21.05";                                                    };
+    nixpkgs =            {url =  "github:NixOS/nixpkgs/nixos-unstable";                                                 };
     nixpkgsLatest =      {url =  "github:NixOS/nixpkgs/master";                                                         };
     nur =                {url =  "github:nix-community/NUR/master";                 inputs.nixpkgs.follows = "nixpkgs"; };
     pocket2kindle =      {url =  "github:lucasew/pocket2kindle";                    flake = false;                      };
