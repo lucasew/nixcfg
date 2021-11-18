@@ -91,6 +91,12 @@ in reduceJoin [
       send2kindle = cp ./packages/custom/send2kindle.nix;
       retroarch = cp ./packages/custom/retroarch.nix;
     };
+    emacsPackages.org = super.emacsPackages.org.overrideAttrs (attrs: attrs // {
+      src = builtins.fetchTarball {
+        url = "https://orgmode.org/elpa/org-20210920.tar";
+        sha256 = "sha256:1y5n3hwrk9vq30vklbpjxp6m7xamlkdj2lw4bdi0kryf67g4s9zf";
+      };
+    });
     minecraft = cp ./packages/minecraft.nix;
     pkg = cp ./packages/pkg.nix;
     stremio = cp ./packages/stremio.nix;
