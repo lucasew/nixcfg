@@ -26,186 +26,188 @@
 
   outputs = { self, flake-utils, ... }@inputs:
     flake-utils.lib.eachDefaultSystem (system: (
-  let
-    inherit (inputs)
-      borderless-browser
-      dotenv
-      flake-utils
-      home-manager
-      nix-ld
-      nix-vscode
-      nixgram
-      nixos-hardware
-      nixpkgs
-      nixpkgsLatest
-      nur
-      pocket2kindle
-      redial_proxy
-    ;
-    inherit (builtins) replaceStrings toFile trace readFile;
-    inherit (home-manager.lib) homeManagerConfiguration;
+      let
+        inherit (inputs)
+        borderless-browser
+        dotenv
+        flake-utils
+        home-manager
+        nix-ld
+        nix-vscode
+        nixgram
+        nixos-hardware
+        nixpkgs
+        nixpkgsLatest
+        nur
+        pocket2kindle
+        redial_proxy
+        ;
+        inherit (builtins) replaceStrings toFile trace readFile;
+        inherit (home-manager.lib) homeManagerConfiguration;
 
-    pkgsArgs = {
-      inherit overlays;
-      config = {
-        allowUnfree = true;
+        pkgsArgs = {
+          inherit overlays;
+          config = {
+            allowUnfree = true;
+          };
+        };
+
+        pkgs = import nixpkgs (pkgsArgs // {inherit system;});
+
+        global = rec {
+          username = "lucasew";
+          email = "lucas59356@gmail.com";
+          selectedDesktopEnvironment = "xfce_i3";
+          rootPath = "/home/${username}/.dotfiles";
+          rootPathNix = "${rootPath}";
+          wallpaper = ./wall.jpg;
+          system = throw "usa o system do flake!";
+          environmentShell = ''
+            export NIXPKGS_ALLOW_UNFREE=1
+            export NIXCFG_ROOT_PATH="/home/$USER/.dotfiles"
+            function nix-repl {
+              nix repl "$NIXCFG_ROOT_PATH/repl.nix" "$@"
+            }
+            export NIX_PATH=nixpkgs=${nixpkgs}:nixpkgs-overlays=$NIXCFG_ROOT_PATH/compat/overlay.nix:nixpkgsLatest=${nixpkgsLatest}:home-manager=${home-manager}:nur=${nur}:nixos-config=$NIXCFG_ROOT_PATH/nodes/$HOSTNAME/default.nix
+          '';
+        };
+
+        extraArgs = {
+          inherit self;
+          inherit global;
+          cfg = throw "your past self made a trap for non compliant code after a migration you did, now follow the stacktrace and go fix it";
+        };
+
+        docConfig = {options, ...}: # it's a mess, i might fix it later
+        let
+          pkgs = import nixpkgs {config = {allowBroken = true; inherit system; };};
+          inherit (pkgs.nixosOptionsDoc { inherit options; })
+          optionsAsciiDoc
+          optionsJSON
+          optionsMDDoc
+          optionsNix
+          ;
+          normalizeString = content: 
+          replaceStrings [".drv" "!bin!" "/nix"] ["" "" "//nix"] content;
+          write = file: content:
+          toFile file (normalizeString content);
+        in {
+        # How to export
+        # NIXPKGS_ALLOW_BROKEN=1 nix-instantiate --eval -E 'with import <nixpkgs>; (builtins.getFlake "/home/lucasew/.dotfiles").nixosConfigurations.acer-nix.doc.mdText' --json | jq -r > options.md
+        asciidocText = optionsAsciiDoc;
+        # docbook is broken # cant export these as verbatim
+        json = optionsJSON;
+        # md = write "doc.md" optionsMDDoc;
+        mdText = optionsMDDoc;
+        nix = optionsNix;
       };
-    };
 
-    pkgs = import nixpkgs (pkgsArgs // {inherit system;});
+      overlays = [
+        (import ./overlay.nix self)
+        (import "${home-manager}/overlay.nix")
+        (borderless-browser.overlay)
+      ];
 
-    global = rec {
-        username = "lucasew";
-        email = "lucas59356@gmail.com";
-        selectedDesktopEnvironment = "xfce_i3";
-        rootPath = "/home/${username}/.dotfiles";
-        rootPathNix = "${rootPath}";
-        wallpaper = ./wall.jpg;
-        system = throw "usa o system do flake!";
-        environmentShell = ''
-          export NIXPKGS_ALLOW_UNFREE=1
-          export NIXCFG_ROOT_PATH="/home/$USER/.dotfiles"
-          function nix-repl {
-            nix repl "$NIXCFG_ROOT_PATH/repl.nix" "$@"
-          }
-          export NIX_PATH=nixpkgs=${nixpkgs}:nixpkgs-overlays=$NIXCFG_ROOT_PATH/compat/overlay.nix:nixpkgsLatest=${nixpkgsLatest}:home-manager=${home-manager}:nur=${nur}:nixos-config=$NIXCFG_ROOT_PATH/nodes/$HOSTNAME/default.nix
-        '';
-    };
-
-    extraArgs = {
-      inherit self;
-      inherit global;
-      cfg = throw "your past self made a trap for non compliant code after a migration you did, now follow the stacktrace and go fix it";
-    };
-
-    docConfig = {options, ...}: # it's a mess, i might fix it later
-    let
-      pkgs = import nixpkgs {config = {allowBroken = true; inherit system; };};
-      inherit (pkgs.nixosOptionsDoc { inherit options; })
-        optionsAsciiDoc
-        optionsJSON
-        optionsMDDoc
-        optionsNix
-      ;
-      normalizeString = content: 
-        replaceStrings [".drv" "!bin!" "/nix"] ["" "" "//nix"] content;
-      write = file: content:
-        toFile file (normalizeString content);
-    in {
-      # How to export
-      # NIXPKGS_ALLOW_BROKEN=1 nix-instantiate --eval -E 'with import <nixpkgs>; (builtins.getFlake "/home/lucasew/.dotfiles").nixosConfigurations.acer-nix.doc.mdText' --json | jq -r > options.md
-      asciidocText = optionsAsciiDoc;
-      # docbook is broken # cant export these as verbatim
-      json = optionsJSON;
-      # md = write "doc.md" optionsMDDoc;
-      mdText = optionsMDDoc;
-      nix = optionsNix;
-    };
-
-    overlays = [
-      (import ./overlay.nix self)
-      (import "${home-manager}/overlay.nix")
-      (borderless-browser.overlay)
-    ];
-
-    hmConf = allConfig:
-    let
-      source = allConfig // {
-        extraSpecialArgs = extraArgs;
-        inherit pkgs;
-      };
-      evaluated = homeManagerConfiguration source;
-      doc = docConfig evaluated;
-    in evaluated // {
-      inherit source doc;
-    };
-
-    nixosConf = {
-      mainModule,
-      extraModules ? [],
-    }:
-    let
-      revModule = {pkgs, ...}: {
-        system.configurationRevision = if (self ? rev) then 
-          trace "detected flake hash: ${self.rev}" self.rev
-        else
-          trace "flake hash not detected!" null;
-      };
-      source = {
-        inherit pkgs system;
-        modules = [
-          revModule
-          (mainModule)
-        ] ++ extraModules;
-        specialArgs = extraArgs;
-      };
-      eval = import "${nixpkgs}/nixos/lib/eval-config.nix";
-      override = mySource: fn: let
-        sourceProcessed = mySource // (fn mySource);
-        evaluated = eval sourceProcessed;
+      hmConf = allConfig:
+      let
+        source = allConfig // {
+          extraSpecialArgs = extraArgs;
+          inherit pkgs;
+        };
+        evaluated = homeManagerConfiguration source;
         doc = docConfig evaluated;
       in evaluated // {
-        source = sourceProcessed;
-        inherit doc;
-        override = override sourceProcessed;
-      };
-    in override source (v: {});
-  in {
-      inherit (global) environmentShell;
-
-      homeConfigurations = {
-        main = hmConf {
-          configuration = import ./homes/main/default.nix;
-          homeDirectory = "/home/${global.username}";
-          inherit (global) system username;
-        };
+        inherit source doc;
       };
 
-      nixosConfigurations = {
-        vps = nixosConf {
-          mainModule = ./nodes/vps/default.nix;
-        };
-        acer-nix = nixosConf {
-          mainModule = ./nodes/acer-nix/default.nix;
-        };
-        bootstrap = nixosConf {
-          mainModule = ./nodes/bootstrap/default.nix;
-        };
-      };
+      nixosConf = {
+        mainModule,
+        extraModules ? [],
+      }:
+      let
+        revModule = {pkgs, ...}: {
+          system.configurationRevision = if (self ? rev) then 
+          trace "detected flake hash: ${self.rev}" self.rev
+          else
+          trace "flake hash not detected!" null;
+          };
+          source = {
+          inherit pkgs system;
+          modules = [
+          revModule
+          (mainModule)
+          ] ++ extraModules;
+          specialArgs = extraArgs;
+          };
+          eval = import "${nixpkgs}/nixos/lib/eval-config.nix";
+          override = mySource: fn: let
+            sourceProcessed = mySource // (fn mySource);
+            evaluated = eval sourceProcessed;
+            doc = docConfig evaluated;
+          in evaluated // {
+            source = sourceProcessed;
+            inherit doc;
+            override = override sourceProcessed;
+          };
+      in override source (v: {});
 
-      devShell = pkgs.mkShell {
-        name = "nixcfg-shell";
-        buildInputs = [];
-        shellHook = ''
-        ${global.environmentShell}
-        echo '${global.environmentShell}'
-        echo Shell setup complete!
-        '';
-      };
+      in {
+        inherit (global) environmentShell;
 
-      apps = {
-        pkg = {
-          type = "app";
-          program = "${pkgs.pkg}/bin/pkg";
+        homeConfigurations = {
+          main = hmConf {
+            configuration = import ./homes/main/default.nix;
+            homeDirectory = "/home/${global.username}";
+            inherit (global) system username;
+          };
         };
-        webapp = {
-          type = "app";
-          program = "${pkgs.webapp}/bin/webapp";
-        };
-        pinball = {
-          type = "app";
-          program = "${pkgs.wineApps.pinball}/bin/pinball";
-        };
-        wine7zip = {
-          type = "app";
-          program = "${pkgs.wineApps.wine7zip}/bin/7zip";
-        };
-      };
 
-      templates = {
-        # Does not work!
-        hello = import ./templates/hello.nix;
-      };
-      inherit extraArgs pkgs;
-    }));
+        nixosConfigurations = {
+          vps = nixosConf {
+            mainModule = ./nodes/vps/default.nix;
+          };
+          acer-nix = nixosConf {
+            mainModule = ./nodes/acer-nix/default.nix;
+          };
+          bootstrap = nixosConf {
+            mainModule = ./nodes/bootstrap/default.nix;
+          };
+        };
+
+        devShell = pkgs.mkShell {
+          name = "nixcfg-shell";
+          buildInputs = [];
+          shellHook = ''
+            ${global.environmentShell}
+            echo '${global.environmentShell}'
+            echo Shell setup complete!
+          '';
+        };
+
+        apps = {
+          pkg = {
+            type = "app";
+            program = "${pkgs.pkg}/bin/pkg";
+          };
+          webapp = {
+            type = "app";
+            program = "${pkgs.webapp}/bin/webapp";
+          };
+          pinball = {
+            type = "app";
+            program = "${pkgs.wineApps.pinball}/bin/pinball";
+          };
+          wine7zip = {
+            type = "app";
+            program = "${pkgs.wineApps.wine7zip}/bin/7zip";
+          };
+        };
+
+        templates = {
+          # Does not work!
+          hello = import ./templates/hello.nix;
+        };
+        inherit extraArgs pkgs;
+      }
+    ));
 }
