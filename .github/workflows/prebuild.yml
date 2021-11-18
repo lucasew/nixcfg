@@ -28,6 +28,6 @@ jobs:
         with:
           name: lucasew-personal
           authToken: '${{ secrets.CACHIX_TOKEN }}'
-      - run: nix-build build.nix | cachix push lucasew-personal
+      - run: nix build -f build.nix | cachix push lucasew-personal
 
 
