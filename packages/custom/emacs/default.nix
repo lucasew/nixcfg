@@ -13,6 +13,6 @@ pkgs.wrapEmacs {
     markdown.enable = true;
   };
   org.enable = true;
-  nogui = true;
+  # nogui = true;
   themes.selected = "wombat";
 }

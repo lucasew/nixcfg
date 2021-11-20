@@ -178,6 +178,33 @@
         "type": "github"
       }
     },
+    "nix-on-droid": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "home-manager": [
+          "home-manager"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1637343663,
+        "narHash": "sha256-JLMg3ySm076Na1/WZra8ODyVACUOKwVCNfQqpfu9sNE=",
+        "owner": "lucasew",
+        "repo": "nix-on-droid",
+        "rev": "05e8645bc46d27dc00b69c9d9f8751049490b33d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lucasew",
+        "ref": "master",
+        "repo": "nix-on-droid",
+        "type": "github"
+      }
+    },
     "nix-option": {
       "flake": false,
       "locked": {
@@ -385,6 +412,7 @@
         "mach-nix": "mach-nix",
         "nix-emacs": "nix-emacs",
         "nix-ld": "nix-ld",
+        "nix-on-droid": "nix-on-droid",
         "nix-option": "nix-option",
         "nix-vscode": "nix-vscode",
         "nixgram": "nixgram",

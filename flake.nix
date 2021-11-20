@@ -13,6 +13,7 @@
     nix-vscode =         {url =  "github:lucasew/nix-vscode";                       flake = false;                      };
     nix-emacs =          {url =  "github:lucasew/nix-emacs";                        flake = false;                      };
     nix-option =         {url =  "github:lucasew/nix-option";                       flake = false;                      };
+    nix-on-droid =       {url =  "github:lucasew/nix-on-droid/master";              inputs.nixpkgs.follows = "nixpkgs"; inputs.flake-utils.follows = "flake-utils"; inputs.home-manager.follows = "home-manager"; };
     nixgram =            {url =  "github:lucasew/nixgram/master";                   flake = false;                      };
     nixos-hardware =     {url =  "github:NixOS/nixos-hardware";                     inputs.nixpkgs.follows = "nixpkgs"; };
     nixos-generators =   {url =  "github:nix-community/nixos-generators";           inputs.nixpkgs.follows = "nixpkgs"; };
@@ -36,6 +37,7 @@
         nix-vscode
         nixgram
         nixos-hardware
+        nix-on-droid
         nixpkgs
         nixpkgsLatest
         nur
@@ -51,8 +53,10 @@
             allowUnfree = true;
           };
         };
-
-        pkgs = import nixpkgs (pkgsArgs // {inherit system;});
+        mkPkgs = argfn: let
+          stdargs = pkgsArgs // {inherit system;};
+          in import nixpkgs (stdargs // (argfn stdargs));
+        pkgs = mkPkgs (v: {});
 
         global = rec {
           username = "lucasew";
@@ -107,6 +111,16 @@
         (import "${home-manager}/overlay.nix")
         (borderless-browser.overlay)
       ];
+
+      nixOnDroidConf = {mainModule}:
+        import "${nix-on-droid}/modules" {
+          config = mainModule;
+          pkgs = mkPkgs (super: {
+            overlays = super.overlays ++ (import "${nix-on-droid}/overlays");
+          });
+          home-manager = import home-manager {};
+          isFlake = true;
+        };
 
       hmConf = allConfig:
       let
@@ -174,6 +188,12 @@
           };
         };
 
+        nixOnDroidConfigurations = {
+          xiaomi = nixOnDroidConf {
+            mainModule = ./nodes/xiaomi/default.nix;
+          };
+        };
+
         devShell = pkgs.mkShell {
           name = "nixcfg-shell";
           buildInputs = [];
@@ -207,7 +227,7 @@
           # Does not work!
           hello = import ./templates/hello.nix;
         };
-        inherit extraArgs pkgs;
+        inherit extraArgs pkgs mkPkgs;
       }
     ));
 }
