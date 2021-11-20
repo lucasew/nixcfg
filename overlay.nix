@@ -93,6 +93,7 @@ in reduceJoin [
     };
     minecraft = cp ./packages/minecraft.nix;
     pkg = cp ./packages/pkg.nix;
+    pipedream-cli = cp ./packages/pipedream-cli.nix;
     stremio = cp ./packages/stremio.nix;
     wrapWine = cp ./packages/wrapWine.nix;
     preload = cp ./packages/preload.nix;
