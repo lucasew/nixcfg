@@ -68,7 +68,7 @@
           system = throw "usa o system do flake!";
           environmentShell = ''
             export NIXPKGS_ALLOW_UNFREE=1
-            export NIXCFG_ROOT_PATH="/home/$USER/.dotfiles"
+            export NIXCFG_ROOT_PATH="$(realpath ~)/.dotfiles"
             function nix-repl {
               nix repl "$NIXCFG_ROOT_PATH/repl.nix" "$@"
             }
