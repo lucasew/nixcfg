@@ -114,7 +114,14 @@
 
       nixOnDroidConf = {mainModule}:
         import "${nix-on-droid}/modules" {
-          config = mainModule;
+          config = {
+            home-manager.config._module.args = {
+              inherit self;
+            };
+            imports = [
+              mainModule
+            ];
+          };
           pkgs = mkPkgs (super: {
             overlays = super.overlays ++ (import "${nix-on-droid}/overlays");
           });
