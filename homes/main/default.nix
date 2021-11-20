@@ -8,6 +8,7 @@ let
   environmentShell = outputs.environmentShell.x86_64-linux;
 in {
   imports = [
+    ../base/default.nix
     "${inputs.nixgram}/hmModule.nix"
     "${inputs.redial_proxy}/hmModule.nix"
     "${inputs.borderless-browser}/home-manager.nix"
@@ -29,26 +30,17 @@ in {
     # minecraft  # custom (excluded)
     custom.tixati custom.rofi # custom
     tdesktop # communication
-    vlc youtube-dl # media
+    vlc # media
     chromium
-    file
     fortune
     libnotify
-    neofetch
     aerc # terminal email
     croc # file transfer
-    comma # like nix-shell but more convenient
     calibre
     wineApps.wine7zip
     libreoffice
     stremio
-    fzf
   ] ;
-
-  home.file.".dotfilerc".text = ''
-    #!/usr/bin/env bash
-    ${environmentShell}
-  '';
 
   # programs.hello-world.enable = true;
   services.espanso = {
@@ -284,14 +276,6 @@ in {
 #   };
 
 
-  # This value determines the Home Manager release that your
-  # configuration is compatible with. This helps avoid breakage
-  # when a new Home Manager release introduces backwards
-  # incompatible changes.
-  #
-  # You can update Home Manager without changing this value. See
-  # the Home Manager release notes for a list of state version
-  # changes in each release.
   gtk = {
     enable = true;
     theme.name = "Adwaita-dark";
@@ -300,7 +284,6 @@ in {
     enable = true;
     platformTheme = "gtk";
   };
-  # home.stateVersion = "20.03";
 
   borderless-browser.apps = {
     teste = {
