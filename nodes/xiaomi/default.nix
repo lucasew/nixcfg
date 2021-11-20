@@ -21,5 +21,14 @@
     git
     htop
     pkg
+    # some defaults on the default dotfile
+    hostname
+    gnugrep
+    gnused
+    gnutar
+    gzip
+    xz
+    zip
+    unzip
   ];
 }
