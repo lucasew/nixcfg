@@ -11,7 +11,7 @@
     mach-nix =           {url =  "github:DavHau/mach-nix";                          inputs.nixpkgs.follows = "nixpkgs"; };
     nix-ld =             {url =  "github:Mic92/nix-ld";                             inputs.nixpkgs.follows = "nixpkgs"; };
     nix-vscode =         {url =  "github:lucasew/nix-vscode";                       flake = false;                      };
-    nix-emacs =          {url =  "github:lucasew/nix-emacs";                        flake = false;                      };
+    nix-emacs =          {url =  "github:nixosbrasil/nix-emacs";                    flake = false;                      };
     nix-option =         {url =  "github:lucasew/nix-option";                       flake = false;                      };
     nix-on-droid =       {url =  "github:t184256/nix-on-droid/master";              inputs.nixpkgs.follows = "nixpkgs"; inputs.flake-utils.follows = "flake-utils"; inputs.home-manager.follows = "home-manager"; };
     nixgram =            {url =  "github:lucasew/nixgram/master";                   flake = false;                      };

@@ -144,15 +144,15 @@
     "nix-emacs": {
       "flake": false,
       "locked": {
-        "lastModified": 1637109628,
-        "narHash": "sha256-gJA7jcky0Cw1Kq+7KDGKkFBnHvV2ZFDCjq+hpCbpIqU=",
-        "owner": "lucasew",
+        "lastModified": 1637795497,
+        "narHash": "sha256-GVxw349N8LJRPSfYIlL5lj8XcfSKrM/hLAZkTMcZrAY=",
+        "owner": "nixosbrasil",
         "repo": "nix-emacs",
-        "rev": "50840c20cd684d4959d35aa22a518678d8302f91",
+        "rev": "d21c0fcacd6d15c22e0795bc8a026c7bf7e5f83a",
         "type": "github"
       },
       "original": {
-        "owner": "lucasew",
+        "owner": "nixosbrasil",
         "repo": "nix-emacs",
         "type": "github"
       }
