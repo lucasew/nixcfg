@@ -1,5 +1,8 @@
 {pkgs, config, options, ...}:
 {
+  imports = [
+    ../../modules/hold-gc
+  ];
   system.stateVersion = "21.05";
   time.timeZone = "America/Sao_Paulo";
   home-manager = {

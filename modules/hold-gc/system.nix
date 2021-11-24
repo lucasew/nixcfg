@@ -1,7 +1,7 @@
-{config, pkgs, lib, ...}:
+{config, pkgs, lib, self, ...}:
 let
   inherit (lib) mkOption types;
-  inherit (builtins) concatStringsSep;
+  inherit (builtins) concatStringsSep attrValues mapAttrs;
   cfg = config.gc-hold;
 in {
   options.gc-hold = {
@@ -13,5 +13,6 @@ in {
   };
   config = {
     environment.etc.nix-gchold.text = concatStringsSep "\n" cfg.paths;
+    gc-hold = attrValues (mapAttrs (k: v: v.outPath) self.inputs);
   };
 }
