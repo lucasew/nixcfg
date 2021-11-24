@@ -13,6 +13,6 @@ in {
   };
   config = {
     environment.etc.nix-gchold.text = concatStringsSep "\n" cfg.paths;
-    gc-hold = attrValues (mapAttrs (k: v: v.outPath) self.inputs);
+    gc-hold.paths = attrValues (mapAttrs (k: v: v.outPath) self.inputs);
   };
 }
