@@ -7,7 +7,6 @@
     nix-option
     custom.neovim
     custom.emacs
-    git
     htop
     pkg
     # some defaults on the default dotfile
