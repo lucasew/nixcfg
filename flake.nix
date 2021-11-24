@@ -115,6 +115,9 @@
       nixOnDroidConf = {mainModule}:
         import "${nix-on-droid}/modules" {
           config = {
+            _module.args = {
+              inherit self;
+            };
             home-manager.config._module.args = {
               inherit self;
             };
