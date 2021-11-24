@@ -168,12 +168,6 @@ in {
         treeView = true;
       };
     };
-    tmux.enable = true;
-    git = {
-        enable = true;
-        userName = username;
-        userEmail = email;
-    };
   };
 
   # KDE connect

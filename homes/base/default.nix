@@ -19,5 +19,13 @@ in
     #!/usr/bin/env bash
     ${environmentShell}
   '';
-
+  programs = {
+    tmux.enable = true;
+    git = {
+        enable = true;
+        userName = global.username;
+        userEmail = global.email;
+        package = mkDefault pkgs.gitMinimal;
+    };
+  };
 }

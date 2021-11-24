@@ -13,7 +13,7 @@
     nix-vscode =         {url =  "github:lucasew/nix-vscode";                       flake = false;                      };
     nix-emacs =          {url =  "github:lucasew/nix-emacs";                        flake = false;                      };
     nix-option =         {url =  "github:lucasew/nix-option";                       flake = false;                      };
-    nix-on-droid =       {url =  "github:lucasew/nix-on-droid/master";              inputs.nixpkgs.follows = "nixpkgs"; inputs.flake-utils.follows = "flake-utils"; inputs.home-manager.follows = "home-manager"; };
+    nix-on-droid =       {url =  "github:t184256/nix-on-droid/master";              inputs.nixpkgs.follows = "nixpkgs"; inputs.flake-utils.follows = "flake-utils"; inputs.home-manager.follows = "home-manager"; };
     nixgram =            {url =  "github:lucasew/nixgram/master";                   flake = false;                      };
     nixos-hardware =     {url =  "github:NixOS/nixos-hardware";                     inputs.nixpkgs.follows = "nixpkgs"; };
     nixos-generators =   {url =  "github:nix-community/nixos-generators";           inputs.nixpkgs.follows = "nixpkgs"; };
