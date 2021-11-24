@@ -1,6 +1,7 @@
 {pkgs, lib, ...}:
 pkgs.wrapEmacs {
   imports = [
+    ./startup-optimization-stuff.nix
     ./fix-evil-org-mode-evil-redirect-digit-argument.nix
   ];
   evil = {
