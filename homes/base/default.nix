@@ -11,6 +11,7 @@ in
     neofetch # system info, arch linux friendly
     comma # like nix-shell but more convenient
     fzf # file finder and terminal based dmenu
+    ffmpeg # video converter
   ];
 
   home.stateVersion = mkDefault "20.03";
