@@ -1,5 +1,8 @@
 {pkgs, lib, ...}:
 pkgs.wrapEmacs {
+  imports = [
+    ./helm.nix
+  ];
   magit.enable = true;
   evil = {
     enable = true;
