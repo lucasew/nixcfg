@@ -4,7 +4,7 @@ set -eu
 
 echo "Finding what must be compiled"
 
-if [ "$1" == "gen" ]; then
+if [ "$#" -gt "0" ] && [ "$1" == "gen" ]; then
     PATHS=`nix-build --dry-run build.nix 2> /dev/stdout | grep '\.drv$' | sed -e 's/^[ \t]*//'`
     rm .required-paths.txt || true
     for p in $PATHS; do
