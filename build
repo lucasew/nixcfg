@@ -1,8 +1,17 @@
 #!/usr/bin/env bash
-
 echo "Finding what must be compiled"
 
 PATHS=`nix-build --dry-run build.nix 2> /dev/stdout | grep '\.drv$' | sed -e 's/^[ \t]*//'`
+
+if [ "$1" == "gen" ]; then
+    rm .required-paths.txt || true
+    for p in $PATHS; do
+        echo "$p" >> .required-paths.txt
+    done
+    exit 0
+fi
+
+PATHS=`$(cat .required-paths.txt)`
 
 echo "The following paths with be build:"
 for p in $PATHS; do
