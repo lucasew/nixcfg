@@ -1,9 +1,20 @@
 #!/usr/bin/env bash
+
+echo "Finding what must be compiled"
+
 PATHS=`nix-build --dry-run build.nix 2> /dev/stdout | grep '\.drv$' | sed -e 's/^[ \t]*//'`
 
-nix-store --export $(
+echo "The following paths with be build:"
+echo $PATHS
+
+REALIZED=`
 for p in $PATHS; do
     nix-store --realize $p --verbose
 done
-) > out.nar
-echo "$PATHS"
+`
+
+echo "These are the paths's closures:"
+echo $REALIZED
+
+echo "Exporting..."
+nix-store --export $REALIZED > out.nar
