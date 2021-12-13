@@ -21,7 +21,7 @@ done
 
 REALIZED=`
 for p in $PATHS; do
-    nix-store --realize $p --verbose
+    nix-store --realize $p --verbose || true
 done
 `
 
