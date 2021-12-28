@@ -28,3 +28,10 @@
   (interactive "sURL: ")
   (browse-url (concat "https://articleparser.win/article?url=" (url-encode-url url))))
 
+(defun find-file-and-paste-its-relative-filepath ()
+  "Find some file and paste it's relative path in relation of the current file"
+  (interactive)
+  (let* (
+	(dir (expand-file-name (file-name-directory (or buffer-file-name "./"))))
+	(filename (helm-read-file-name dir)))
+    (insert (file-relative-name filename dir))))
