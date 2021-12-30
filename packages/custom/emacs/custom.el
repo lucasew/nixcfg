@@ -10,6 +10,10 @@
 
 (setq org-roam-v2-ack t)
 
+(setq org-roam-ui-update-on-save t)
+(setq org-roam-ui-follow t)
+(setq org-roam-ui-open-on-start nil)
+
 (defun buffer-animate-string (text)
   "Animate a string in a new buffer then close"
     (let (
