@@ -44,7 +44,7 @@
         pocket2kindle
         redial_proxy
         ;
-        inherit (builtins) replaceStrings toFile trace readFile;
+        inherit (builtins) replaceStrings toFile trace readFile concatStringsSep;
         inherit (home-manager.lib) homeManagerConfiguration;
 
         pkgsArgs = {
@@ -72,6 +72,11 @@
             function nix-repl {
               nix repl "$NIXCFG_ROOT_PATH/repl.nix" "$@"
             }
+            export LUA_PATH="${concatStringsSep ";" [
+              "${pkgs.fennel}/share/lua/5.4.3/?.lua"
+              "${toString rootPath}/scripts/?.lua"
+              "${toString rootPath}/scripts/?/index.lua"
+            ]}"
             export NIX_PATH=nixpkgs=${nixpkgs}:nixpkgs-overlays=$NIXCFG_ROOT_PATH/compat/overlay.nix:nixpkgsLatest=${nixpkgsLatest}:home-manager=${home-manager}:nur=${nur}:nixos-config=$NIXCFG_ROOT_PATH/nodes/$HOSTNAME/default.nix
           '';
         };
