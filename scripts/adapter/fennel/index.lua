@@ -12,5 +12,6 @@ end
 
 print(getScriptFile())
 
+error("not today")
 return require 'adapter'
 

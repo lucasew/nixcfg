@@ -74,9 +74,10 @@
             }
             export LUA_PATH="${concatStringsSep ";" [
               "${pkgs.fennel}/share/lua/5.4.3/?.lua"
-              "${toString rootPath}/scripts/?.lua"
-              "${toString rootPath}/scripts/?/index.lua"
+              "$NIXCFG_ROOT_PATH/scripts/?.lua"
+              "$NIXCFG_ROOT_PATH/scripts/?/index.lua"
             ]}"
+            export LUA_INIT="pcall(require, 'adapter.fennel')"
             export NIX_PATH=nixpkgs=${nixpkgs}:nixpkgs-overlays=$NIXCFG_ROOT_PATH/compat/overlay.nix:nixpkgsLatest=${nixpkgsLatest}:home-manager=${home-manager}:nur=${nur}:nixos-config=$NIXCFG_ROOT_PATH/nodes/$HOSTNAME/default.nix
           '';
         };
