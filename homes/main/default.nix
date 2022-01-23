@@ -389,6 +389,6 @@ in {
         url = "https://play.geforcenow.com/favicon.ico";
         sha256 = "1rpj1n39sgmwfbpayf2azsrx6h6vgipvv52pmkxwnr1i1xi32xqf";
       };
-    }
+    };
   };
 }
