@@ -382,5 +382,13 @@ in {
       desktopName = "Trello Dashboard";
       url = "trello.com";
     };
+    geforce-now = {
+      desktopName = "GeForce Now";
+      url = "play.geforcenow.com";
+      icon = fetchurl {
+        url = "https://play.geforcenow.com/favicon.ico";
+        sha256 = "1rpj1n39sgmwfbpayf2azsrx6h6vgipvv52pmkxwnr1i1xi32xqf";
+      };
+    }
   };
 }
