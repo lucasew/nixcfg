@@ -69,7 +69,7 @@ in {
     };
     irqbalance.enable = true;
     php-utils.enable = true;
-    vaultwarden.enable = true;
+    # vaultwarden.enable = true;
     postgresql = {
       enable = true;
       enableTCPIP = true;
@@ -83,7 +83,6 @@ in {
     #   extraParameters = "-ms 120";
     #   secretsDotenv = "${rootPath}/secrets/randomtube.env";
     # };
-    cloudflared.enable = true;
   };
 
   cachix.enable = true;

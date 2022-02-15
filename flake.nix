@@ -6,7 +6,7 @@
     comma =              {url =  "github:Shopify/comma";                            flake = false;                      };
     dotenv =             {url =  "github:lucasew/dotenv";                           flake = false;                      };
     flake-utils =        {url =  "github:numtide/flake-utils/master";                                                   };
-    home-manager =       {url =  "github:nix-community/home-manager/release-21.05"; inputs.nixpkgs.follows = "nixpkgs"; };
+    home-manager =       {url =  "github:nix-community/home-manager/release-21.11"; inputs.nixpkgs.follows = "nixpkgs"; };
     impermanence =       {url =  "github:nix-community/impermanence";               inputs.nixpkgs.follows = "nixpkgs"; };
     mach-nix =           {url =  "github:DavHau/mach-nix";                          inputs.nixpkgs.follows = "nixpkgs"; };
     nix-ld =             {url =  "github:Mic92/nix-ld";                             inputs.nixpkgs.follows = "nixpkgs"; };
@@ -18,7 +18,6 @@
     nixos-hardware =     {url =  "github:NixOS/nixos-hardware";                     inputs.nixpkgs.follows = "nixpkgs"; };
     nixos-generators =   {url =  "github:nix-community/nixos-generators";           inputs.nixpkgs.follows = "nixpkgs"; };
     nixpkgs =            {url =  "github:NixOS/nixpkgs/nixos-unstable";                                                 };
-    nixpkgsLatest =      {url =  "github:NixOS/nixpkgs/master";                                                         };
     nur =                {url =  "github:nix-community/NUR/master";                 inputs.nixpkgs.follows = "nixpkgs"; };
     pocket2kindle =      {url =  "github:lucasew/pocket2kindle";                    flake = false;                      };
     redial_proxy =       {url =  "github:lucasew/redial_proxy";                     flake = false;                      };
@@ -40,7 +39,6 @@
         nixos-hardware
         nix-on-droid
         nixpkgs
-        nixpkgsLatest
         nur
         pocket2kindle
         redial_proxy
@@ -79,7 +77,7 @@
               "$NIXCFG_ROOT_PATH/scripts/?/index.lua"
             ]}"
             export LUA_INIT="pcall(require, 'adapter.fennel')"
-            export NIX_PATH=nixpkgs=${nixpkgs}:nixpkgs-overlays=$NIXCFG_ROOT_PATH/compat/overlay.nix:nixpkgsLatest=${nixpkgsLatest}:home-manager=${home-manager}:nur=${nur}:nixos-config=$NIXCFG_ROOT_PATH/nodes/$HOSTNAME/default.nix
+            export NIX_PATH=nixpkgs=${nixpkgs}:nixpkgs-overlays=$NIXCFG_ROOT_PATH/compat/overlay.nix:home-manager=${home-manager}:nur=${nur}:nixos-config=$NIXCFG_ROOT_PATH/nodes/$HOSTNAME/default.nix
           '';
         };
 
@@ -113,11 +111,12 @@
         nix = optionsNix;
       };
 
-      overlays = [
-        (import ./overlay.nix self)
-        (import "${home-manager}/overlay.nix")
-        (borderless-browser.overlay)
-      ];
+      overlays = []
+      ++ [(import "${home-manager}/overlay.nix")]
+      ++ [(borderless-browser.overlay)]
+      ++ [(import ./overlay.nix self)]
+      ++ [inputs.rust-overlay.overlay]
+      ;
 
       nixOnDroidConf = {mainModule}:
         import "${nix-on-droid}/modules" {
@@ -180,6 +179,7 @@
 
       in {
         inherit (global) environmentShell;
+        inherit overlays;
 
         homeConfigurations = {
           main = hmConf {
