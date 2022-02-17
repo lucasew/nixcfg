@@ -88,9 +88,12 @@
               "$NIXCFG_ROOT_PATH/scripts/?.lua"
               "$NIXCFG_ROOT_PATH/scripts/?/index.lua"
             ]}"
-            export PATH=$PATH:$NIXCFG_ROOT_PATH/scripts/bin
+            export PATH="${concatStringsSep ":" [
+              "$PATH"
+              "$NIXCFG_ROOT_PATH/scripts/bin"
+            ]}"
             export LUA_INIT="pcall(require, 'adapter.fennel')"
-            export NIX_PATH=nixpkgs=${nixpkgs}:nixpkgs-overlays=$NIXCFG_ROOT_PATH/compat/overlay.nix:home-manager=${home-manager}:nur=${nur}:nixos-config=$NIXCFG_ROOT_PATH/nodes/$HOSTNAME/default.nix
+            export NIX_PATH=nixpkgs=${nixpkgs}:nixpkgs-overlays=$NIXCFG_ROOT_PATH/compat/overlay.nix:home-manager=${home-manager}:nur=${nur}
           '';
         };
 
@@ -225,7 +228,6 @@
           buildInputs = [];
           shellHook = ''
             ${global.environmentShell}
-            # echo '${global.environmentShell}'
             echo Shell setup complete!
           '';
         };
