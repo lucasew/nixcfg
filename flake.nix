@@ -59,7 +59,7 @@
         #   ];
         # };
 
-        mkPkgs = args: import "${nixpkgs}" (args // {
+        mkPkgs = args: import nixpkgs (args // {
           config = (args.config or {}) // {
             allowUnfree = true;
           };
@@ -126,7 +126,7 @@
       };
 
       overlays = []
-      ++ [(import "${home-manager}/overlay.nix")]
+      ++ [(import (home-manager + "/overlay.nix"))]
       ++ [(borderless-browser.overlay)]
       ++ [inputs.rust-overlay.overlay]
       ++ [inputs.blender-bin.overlay]
@@ -134,7 +134,7 @@
       ;
   in {
     inherit (global) environmentShell;
-        # inherit overlays;
+        inherit overlays;
         # packages = pkgs;
 
         homeConfigurations = let 
