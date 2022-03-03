@@ -133,8 +133,8 @@
       ++ [(import ./overlay.nix self)]
       ;
   in {
-    inherit (global) environmentShell;
-        inherit overlays;
+    inherit global;
+    inherit overlays;
         # packages = pkgs;
 
         homeConfigurations = let 
