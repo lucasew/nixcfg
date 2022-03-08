@@ -358,10 +358,10 @@ in {
     keymash =  {
       desktopName = "keyma.sh: Keyboard typing train";
       url = "https://keyma.sh/learn";
-      icon = fetchurl {
-        url = "https://keyma.sh/static/media/logo_svg.ead5cacb.svg";
-        sha256 = "1i6py2gnpmf548zwakh9gscnk5ggsd1j98z80yb6mr0fm84bgizy";
-      };
+      # icon = fetchurl {
+      #   url = "https://keyma.sh/static/media/logo_svg.ead5cacb.svg";
+      #   sha256 = "1i6py2gnpmf548zwakh9gscnk5ggsd1j98z80yb6mr0fm84bgizy";
+      # };
     };
     calendar =  {
       desktopName = "Calendário";

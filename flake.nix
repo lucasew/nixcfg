@@ -135,7 +135,7 @@
   in {
     inherit global;
     inherit overlays;
-        # packages = pkgs;
+    packages = pkgs;
 
         homeConfigurations = let 
           hmConf = allConfig:
@@ -194,6 +194,9 @@
           };
           acer-nix = nixosConf {
             mainModule = ./nodes/acer-nix/default.nix;
+          };
+          utf = nixosConf {
+            mainModule = ./nodes/utf/default.nix;
           };
           bootstrap = nixosConf {
             mainModule = ./nodes/bootstrap/default.nix;
