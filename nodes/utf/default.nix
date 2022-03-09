@@ -2,11 +2,13 @@
 let
   hostname = "genetsec";
   inherit (self) inputs;
+  inherit (global) wallpaper;
 in {
   imports = [
     ../common/default.nix
     ./hardware-configuration.nix
-    inputs.nixos-hardware.nixosModules.common-gpu-amd
+    ../../modules/gui/engine/xfce_i3.nix
+    inputs.nixos-hardware.nixosModules.common-gpu-amd-sea-islands
     inputs.nixos-hardware.nixosModules.common-pc-hdd
   ];
 
@@ -23,16 +25,23 @@ in {
     plymouth = {
       enable = true; #TODO: logo da utf
     };
-    kernelPackages = pkgs.linuxPackages_5_10;
+    kernelPackages = pkgs.linuxPackages_latest;
   };
 
   services.xserver = {
     enable = true;
     desktopManager = {
       xterm.enable = false;
-      gnome.enable = true;
+      # gnome.enable = true;
     };
-    displayManager.gdm.enable = true;
+    displayManager.lightdm = {
+      background = wallpaper;
+      greeters.enso = {
+        enable = true;
+        blur = true;
+      };
+    };
+    # displayManager.gdm.enable = true;
     libinput.enable = true;
   };
   environment.systemPackages = with pkgs; [
@@ -40,8 +49,8 @@ in {
     paper-icon-theme
     p7zip zip unzip rar
     pv
-    gnomeExtensions.appindicator
-    gnomeExtensions.sound-output-device-chooser
+    # gnomeExtensions.appindicator
+    # gnomeExtensions.sound-output-device-chooser
   ];
   fonts.fonts = with pkgs; [
     siji
@@ -96,6 +105,8 @@ users.users = {
     extraGroups = [
       "adbusers"
       "vboxusers"
+      "wheel"
+      "docker"
     ];
     description = "GENETSEC";
     isNormalUser = true;
