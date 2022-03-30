@@ -22,6 +22,12 @@ in
     ]
   ;
 
+  zramSwap = {
+    enable = true;
+    algorithm = "lzo-rle";
+    memoryPercent = 20;
+  };
+ 
   programs.steam.enable = true;
 
   nixpkgs = {
