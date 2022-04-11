@@ -70,6 +70,7 @@ in {
     ncdu = cp ./packages/custom/ncdu.nix;
     neovim = cp ./packages/custom/neovim;
     emacs = cp ./packages/custom/emacs;
+    firefox = cp ./packages/custom/firefox.nix;
     rofi = cp ./packages/custom/rofi.nix;
     tixati = cp ./packages/custom/tixati.nix;
     vscode = cp ./packages/custom/vscode;
@@ -101,9 +102,9 @@ in {
       "https://github.com/lucasew/nixcfg/releases/download/debureaucracyzzz/SRB5.0_linux64.zip"
     ];
   });
-  calibre = prev.calibre.override {
-    python3Packages = prev.python3Packages.overrideScope (orig: old: { # remove after #168071 is merged
-      apsw = old.apsw.overrideAttrs (old: {
+  calibre = prev.calibre.override { # remove after #168071 is merged
+  python3Packages = prev.python3Packages.overrideScope (orig: old: {
+    apsw = old.apsw.overridePythonAttrs (old: {
         version = "3.38.1-r1";
         sha256 = "sha256-pbb6wCu1T1mPlgoydB1Y1AKv+kToGkdVUjiom2vTqf4=";
         checkInputs = [];
