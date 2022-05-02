@@ -4,6 +4,7 @@
 , xvfb-run
 , lib
 }:
+# broken because of unity licensing workflow issue
 stdenv.mkDerivation {
   name = "Geographical-Adventures";
   version = "unstable-2022-5-2";
@@ -18,6 +19,7 @@ stdenv.mkDerivation {
     xvfb-run
   ];
   installPhase = ''
+    # echo "576562626572264761624c65526f7578" > /etc/machine-id
     xvfb-run unity-editor -quit -batchmode -projectPath "$(pwd)" -executeMethod UnityBuilderAction.Builder.BuildProject -customBuildPath $out -buildTarget LinuxStandalone -logfile /dev/stdout
   '';
 }
