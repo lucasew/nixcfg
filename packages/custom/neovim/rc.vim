@@ -95,4 +95,6 @@ autocmd VimEnter * set conceallevel=0
 " F-Sharp remapping
 autocmd BufNewFile,BufRead *.fs,*.fsx,*.fsi set filetype=fsharp
 
+" COQ
+let g:coq_settings_xdg = true
 COQnow --shut-up
