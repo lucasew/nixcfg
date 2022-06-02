@@ -96,5 +96,6 @@ autocmd VimEnter * set conceallevel=0
 autocmd BufNewFile,BufRead *.fs,*.fsx,*.fsi set filetype=fsharp
 
 " COQ
-let g:coq_settings_xdg = true
+let g:coq_settings = { 'xdg': v:true }
+
 COQnow --shut-up
