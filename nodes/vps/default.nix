@@ -48,8 +48,9 @@ in {
 
   nixpkgs.config.allowUnfree = true;
   networking.hostName = "cloudhead";
-  environment.systemPackages = [
+  environment.systemPackages = with pkgs; [
     dotenv
+    htop
   ];
   networking.firewall = {
     enable = true;
