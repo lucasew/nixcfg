@@ -52,6 +52,7 @@ in {
   environment.systemPackages = with pkgs; [
     dotenv
     htop
+    neofetch
   ];
   networking.firewall = {
     enable = true;
