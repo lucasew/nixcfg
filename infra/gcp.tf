@@ -1,3 +1,11 @@
+terraform {
+    cloud {
+        organization = "lucasew"
+        workspaces {
+            name = "infra"
+        }
+    }
+}
 
 variable "gcp_zone" {
     type = string
@@ -9,6 +17,12 @@ variable "gcp_project" {
     type = string
     default = "artimanhas-do-lucaum"
     description = "Projeto que tudo pertence"
+}
+
+variable "gcp_token" {
+    type = string
+    sensitive = true
+    description = "Token GCP"
 }
 
 resource "google_compute_instance" "vps" {
@@ -31,9 +45,14 @@ resource "google_compute_instance" "vps" {
 
   enable_display = true
   machine_type   = "e2-micro"
-  guest_accelerator {
-    type = "nvidia-tesla-k80"
-    count = 1
+  /* guest_accelerator { */
+  /*   type = "nvidia-tesla-k80" */
+  /*   count = 1 */
+  /* } */
+  scheduling {
+    preemptible = true
+    automatic_restart = false
+    provisioning_model  = "SPOT"
   }
 
   metadata = {
@@ -51,12 +70,6 @@ resource "google_compute_instance" "vps" {
 
   project = var.gcp_project
 
-  scheduling {
-    preemptible = true
-    automatic_restart = false
-    provisioning_model  = "SPOT"
-  }
-
   service_account {
     email = google_service_account.service_account.email
     scopes = [ 
@@ -71,6 +84,7 @@ resource "google_compute_instance" "vps" {
 provider "google" {
     project = var.gcp_project
     zone = var.gcp_zone
+    credentials = var.gcp_token
 }
 
 resource "google_service_account" "service_account" {
