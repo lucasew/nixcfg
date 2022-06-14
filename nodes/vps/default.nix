@@ -13,6 +13,8 @@ in {
     ./modules
   ];
 
+  services.openssh.forwardX11 = true;
+
   fileSystems = {
     "/persist" = {
       neededForBoot = true;
