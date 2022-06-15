@@ -12,6 +12,7 @@ in {
     ../../modules/cachix/system.nix
     ./modules
   ];
+  nix.settings.min-free = 64 * 1024 * 1024; # trigger do gc mais baixo
 
   services.openssh.forwardX11 = true;
 
@@ -46,7 +47,7 @@ in {
   };
 
   swapDevices = [
-    { device = "/swapfile"; }
+    { device = "/persist/swapfile"; }
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -55,10 +56,10 @@ in {
     dotenv
     htop
     neofetch
-    cudatoolkit
+    # cudatoolkit
   ];
   environment.variables = {
-    CUDA_PATH = "${pkgs.cudatoolkit}";
+    # CUDA_PATH = "${pkgs.cudatoolkit}";
   };
   networking.firewall = {
     enable = true;
