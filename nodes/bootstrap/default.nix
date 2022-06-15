@@ -6,8 +6,6 @@ in {
   nix = {
     settings = {
       trusted-users = [username "@wheel"];
-      min-free = lib.mkDefault 1  * 1024*1024*1024;
-      max-free = 10 * 1024*1024*1024;
       experimental-features = [
         "nix-command"
         "flakes"
