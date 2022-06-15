@@ -56,10 +56,10 @@ in {
     dotenv
     htop
     neofetch
-    # cudatoolkit
+    cudatoolkit
   ];
   environment.variables = {
-    # CUDA_PATH = "${pkgs.cudatoolkit}";
+    CUDA_PATH = "${pkgs.cudatoolkit}";
   };
   networking.firewall = {
     enable = true;
