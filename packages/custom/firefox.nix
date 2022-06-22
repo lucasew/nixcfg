@@ -20,6 +20,7 @@ wrapFirefox firefox-esr-91-unwrapped {
     sponsorblock
     tampermonkey
     ublock-origin
+    xbrowsersync
   ];
   extraPolicies = {
     DisableFirefoxStudies = true;
