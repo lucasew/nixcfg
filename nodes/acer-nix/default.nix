@@ -77,6 +77,7 @@ in
   ];
 
   services.auto-cpufreq.enable = true;
+  services.tlp.enable = true;
   # text expander in rust
   services.espanso.enable = true;
 
