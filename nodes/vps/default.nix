@@ -4,6 +4,7 @@ let
   inherit (pkgs) dotenv;
   inherit (global) username rootPath;
   inherit (lib) mkOverride;
+  our_cudatoolkit = pkgs.cudaPackages_10.cudatoolkit;
 in {
   imports = [
     ../common/default.nix
@@ -17,7 +18,7 @@ in {
   services.openssh.forwardX11 = true;
 
   hardware.nvidia = {
-    package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
+    package = config.boot.kernelPackages.nvidia_x11_legacy470;
     nvidiaPersistenced = true;
   };
 
@@ -63,10 +64,15 @@ in {
     dotenv
     htop
     neofetch
-    cudatoolkit
+    our_cudatoolkit
+    our_cudatoolkit.lib
   ];
   environment.variables = {
-    CUDA_PATH = "${pkgs.cudatoolkit}";
+    CUDA_PATH = "${our_cudatoolkit}";
+    CUDA_HOME = "${our_cudatoolkit}";
+    CUDA_VERSION = our_cudatoolkit.version;
+    EXTRA_LDFLAGS="-L/lib -L${config.hardware.nvidia.package}/lib";
+    EXTRA_CCFLAGS="-I/usr/include";
   };
   networking.firewall = {
     enable = true;
