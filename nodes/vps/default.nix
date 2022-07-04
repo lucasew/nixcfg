@@ -16,7 +16,10 @@ in {
 
   services.openssh.forwardX11 = true;
 
-  hardware.nvidia.nvidiaPersistenced = true;
+  hardware.nvidia = {
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
+    nvidiaPersistenced = true;
+  };
 
   services.xserver.videoDrivers = [ "nvidia" ];
 
