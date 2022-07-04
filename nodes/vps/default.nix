@@ -16,6 +16,8 @@ in {
 
   services.openssh.forwardX11 = true;
 
+  hardware.nvidia.nvidiaPersistenced = true;
+
   services.xserver.videoDrivers = [ "nvidia" ];
 
   fileSystems = {
