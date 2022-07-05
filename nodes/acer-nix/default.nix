@@ -28,7 +28,7 @@ in
     memoryPercent = 20;
   };
  
-  programs.steam.enable = true;
+  # programs.steam.enable = true;
 
   nix.settings = {
       min-free = 1  * 1024*1024*1024;
@@ -78,6 +78,9 @@ in
 
   gc-hold.paths = with pkgs; [
     go gopls
+    terraform
+    gnumake cmake
+    clang gdb ccls
     nodejs yarn
     openjdk11 maven ant
   ];
