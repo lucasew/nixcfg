@@ -23,5 +23,6 @@ in {
   environment.variables = {
     EDITOR = "nvim";
     PS1="\\u@\\h \\w \$?\\$ \\[$(tput sgr0)\\]";
+    NIX_SHELL_PRESERVE_PROMPT="1";
   };
 }
