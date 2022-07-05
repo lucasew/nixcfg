@@ -1,8 +1,11 @@
-{global, pkgs, lib, ...}:
+{global, pkgs, lib, self, ...}:
 let
   inherit (pkgs) vim nixFlakes writeText gitMinimal tmux xclip;
   inherit (global) username;
 in {
+  imports = [
+    ./flake-etc.nix
+  ];
   nix = {
     settings = {
       trusted-users = [username "@wheel"];
@@ -12,9 +15,7 @@ in {
       ];
     };
   };
-  nixpkgs.config = {
-    allowUnfree = true;
-  };
+  
   boot.cleanTmpDir = true;
   i18n.defaultLocale = "pt_BR.UTF-8";
   time.timeZone = "America/Sao_Paulo";
