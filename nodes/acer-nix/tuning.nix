@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
 
   zramSwap = {
     enable = true;

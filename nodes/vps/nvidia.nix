@@ -1,4 +1,4 @@
-{pkgs, ...}:
+{pkgs, config, ...}:
 let
   our_cudatoolkit = pkgs.cudatoolkit;
 in
