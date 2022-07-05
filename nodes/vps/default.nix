@@ -4,7 +4,8 @@ let
   inherit (pkgs) dotenv;
   inherit (global) username rootPath;
   inherit (lib) mkOverride;
-  our_cudatoolkit = pkgs.cudaPackages_10.cudatoolkit;
+  # our_cudatoolkit = pkgs.cudaPackages_10.cudatoolkit;
+  our_cudatoolkit = pkgs.cudatoolkit;
 in {
   imports = [
     ../common/default.nix
@@ -13,13 +14,14 @@ in {
     ../../modules/cachix/system.nix
     ./modules
   ];
+
   nix.settings.min-free = 64 * 1024 * 1024; # trigger do gc mais baixo
 
   services.openssh.forwardX11 = true;
 
   hardware.nvidia = {
     package = config.boot.kernelPackages.nvidia_x11_legacy470;
-    nvidiaPersistenced = true;
+    # nvidiaPersistenced = true;
   };
 
   services.xserver.videoDrivers = [ "nvidia" ];
