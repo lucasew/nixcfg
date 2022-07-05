@@ -20,6 +20,8 @@ in {
     tmux
     xclip
   ];
-  environment.variables.EDITOR = "nvim";
-
+  environment.variables = {
+    EDITOR = "nvim";
+    PS1="\\u@\\h \\w \$?\\$ \\[$(tput sgr0)\\]";
+  };
 }
