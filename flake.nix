@@ -98,30 +98,6 @@
           cfg = throw "your past self made a trap for non compliant code after a migration you did, now follow the stacktrace and go fix it";
         };
 
-        docConfig = {options, ...}: # it's a mess, i might fix it later
-        let
-          pkgs = import nixpkgs {config = {allowBroken = true; inherit system; };};
-          inherit (pkgs.nixosOptionsDoc { inherit options; })
-          optionsAsciiDoc
-          optionsJSON
-          optionsMDDoc
-          optionsNix
-          ;
-          normalizeString = content: 
-          replaceStrings [".drv" "!bin!" "/nix"] ["" "" "//nix"] content;
-          write = file: content:
-          toFile file (normalizeString content);
-        in {
-        # How to export
-        # NIXPKGS_ALLOW_BROKEN=1 nix-instantiate --eval -E 'with import <nixpkgs>; (builtins.getFlake "/home/lucasew/.dotfiles").nixosConfigurations.acer-nix.doc.mdText' --json | jq -r > options.md
-        asciidocText = optionsAsciiDoc;
-        # docbook is broken # cant export these as verbatim
-        json = optionsJSON;
-        # md = write "doc.md" optionsMDDoc;
-        mdText = optionsMDDoc;
-        nix = optionsNix;
-      };
-
       overlays = {
         home-manager = import (home-manager + "/overlay.nix");
         borderless-browser = borderless-browser.overlays.default;
@@ -141,17 +117,10 @@
         # packages = pkgs;
 
     homeConfigurations = let 
-      hmConf = allConfig:
-      let
-        source = allConfig // {
-          extraSpecialArgs = extraArgs;
-          inherit pkgs;
-        };
-        evaluated = homeManagerConfiguration source;
-        doc = docConfig evaluated;
-      in evaluated // {
-        inherit source doc;
-      };
+      hmConf = source: homeManagerConfiguration (source // {
+        extraSpecialArgs = extraArgs;
+        inherit pkgs;
+      });
     in {
       main = hmConf {
         configuration = import ./homes/main/default.nix;
@@ -188,10 +157,8 @@
         override = mySource: fn: let
           sourceProcessed = mySource // (fn mySource);
           evaluated = eval sourceProcessed;
-          doc = docConfig evaluated;
         in evaluated // {
           source = sourceProcessed;
-          inherit doc;
           override = override sourceProcessed;
         };
       in override source (v: {});
