@@ -10,6 +10,9 @@
       export PATH="$PATH:$HOME/.yarn/bin"
       mkcd(){ [ ! -z "$1" ] && mkdir -p "$1" && cd "$_"; }
       eval "$(direnv hook bash)"
+      if test -f /etc/set-environment; then
+        . /etc/set-environment
+      fi
     '';
   };
 }
