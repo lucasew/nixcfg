@@ -91,5 +91,5 @@ RPC.connect()
 cycled = cycle(LINHAS)
 
 while True:
-    RPC.update(state="Vida real", details = next(cycled))
+    RPC.update(state="You have been rickrolled", details = next(cycled))
     sleep(2)
