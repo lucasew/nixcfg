@@ -1,5 +1,6 @@
 #!/usr/bin/env nix-shell
 #!nix-shell -i python -p python3Packages.pypresence
+# vim:ft=python
 
 from pypresence import Presence
 from time import sleep, time
