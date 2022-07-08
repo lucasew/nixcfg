@@ -98,6 +98,7 @@
     {:silent true})
 ))
 
+(when (not ls.snippets) (tset ls :snippets {}))
 (tset ls.snippets :all [
   (ls.parser.parse_snippet :demo "* if this appears then it's working! *")
 ])
