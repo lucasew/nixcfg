@@ -114,10 +114,8 @@ in wrapNeovim pkgs.neovim-unwrapped {
     ];
     customRC = ''
     lua << EOF
-    ${readFile ./init.lua}
-    EOF
-    Fnl << EOF
-    ${readFile ./init.fnl}
+      local fnl = require('fennel-nvim')
+      fnl.dofile('${./init.fnl}')
     EOF
     ${readFile ./rc.vim}
     '';
