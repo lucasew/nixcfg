@@ -128,6 +128,7 @@ in wrapNeovim pkgs.neovim-unwrapped {
     ];
     customRC = ''
     lua << EOF
+      package.preload.fennel = function () return dofile('${pkgs.fennel}/share/lua/5.2/fennel.lua') end
       local fnl = require('fennel-nvim')
       fnl.dofile('${./init.fnl}')
     EOF
