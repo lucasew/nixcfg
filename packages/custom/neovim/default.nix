@@ -116,6 +116,9 @@ in wrapNeovim pkgs.neovim-unwrapped {
     lua << EOF
     ${readFile ./init.lua}
     EOF
+    Fnl << EOF
+    ${readFile ./init.fnl}
+    EOF
     ${readFile ./rc.vim}
     '';
   };
