@@ -25,8 +25,11 @@ in
       ./vbox.nix
       ./networking.nix
       ./plymouth.nix
+      ./simple-dashboard.nix
     ]
   ;
+
+  services.simple-dashboardd.enable = true;
  
   # programs.steam.enable = true;
   nixpkgs = {
