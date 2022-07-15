@@ -25,7 +25,7 @@ in
       ./vbox.nix
       ./networking.nix
       ./plymouth.nix
-      ./simple-dashboard.nix
+      "${inputs.simple-dashboard}/nixos-module.nix"
     ]
   ;
 
