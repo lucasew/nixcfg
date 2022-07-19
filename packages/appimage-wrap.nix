@@ -28,6 +28,7 @@ let
       fuse
       fuse3
       (writeShellScriptBin "sudo" "true") # suid wrappers messing with suff
+      pulseaudio
 
       desktop-file-utils
       xorg.libXcomposite
@@ -151,10 +152,15 @@ let
     "$@"
     '';
   };
-in writeShellScriptBin ''
+in writeShellScriptBin "appimage-wrap" ''
 PATH=$PATH:${fhs}/bin
 APPIMAGE="$1";shift
 ENV_NAME="$(basename "$APPIMAGE")"
 ENVDIR="/tmp/appimage-wrap/$ENV_NAME"
-mkdir 
+mkdir -p "$ENVDIR"
+if [ -z "$(ls -A $ENVDIR)" ]; then
+  echo "Mounting appimage"
+  sudo mount "$APPIMAGE" "$ENVDIR" -o "offset=$(appimage-env "$APPIMAGE" --appimage-offset | head -n 1)"
+fi
+appimage-env "$ENVDIR/AppRun" "$@"
 ''
