@@ -29,6 +29,10 @@ let
       fuse3
       (writeShellScriptBin "sudo" "true") # suid wrappers messing with suff
       pulseaudio
+      vulkan-loader
+      mesa
+      libglvnd
+      mesa_drivers
 
       desktop-file-utils
       xorg.libXcomposite
