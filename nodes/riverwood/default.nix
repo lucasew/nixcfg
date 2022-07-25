@@ -26,6 +26,7 @@ in
       ./plymouth.nix
       ./dns.nix
       ./git.nix
+      ./kvm.nix
     ]
   ;
 
