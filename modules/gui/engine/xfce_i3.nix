@@ -87,7 +87,7 @@ in
         bindsym $mod+9 workspace number 9
         bindsym $mod+Down focus down
         bindsym $mod+Left focus left
-        bindsym $mod+Return exec /nix/store/y25qrmbp9qgq8m1ik7m0ss33c8x0s4nf-xfce4-terminal-0.8.9.2/bin/xfce4-terminal
+        bindsym $mod+Return exec xfce4-terminal
         bindsym $mod+Right focus right
         bindsym $mod+Shift+0 move container to workspace number 10
         bindsym $mod+Shift+1 move container to workspace number 1
