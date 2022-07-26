@@ -1,6 +1,6 @@
 { global, config, pkgs, lib, ... }:
 let
-  inherit (pkgs) i3lock-color writeTextFile writeShellScript pulseaudio playerctl makeDesktopItem custom brightnessctl networkmanagerapplet feh blueberry dmenu xorg gawk dunst;
+  inherit (pkgs) i3lock-color writeTextFile writeShellScript pulseaudio playerctl makeDesktopItem custom brightnessctl networkmanagerapplet feh blueberry xorg gawk dunst;
   inherit (global) wallpaper;
   inherit (lib) mkForce;
 
@@ -506,7 +506,7 @@ alignment="left"
 always_run_script=yes
 browser="xdg-open"
 class="Dunst"
-dmenu="${dmenu}/bin/dmenu"
+dmenu="dmenu"
 follow="mouse"
 font="rissole 8"
 format="%s %p
