@@ -495,9 +495,9 @@ in
         fi
         polybar primary -r -c /run/user/`id -u`/polybarconfig
       '';
-      reload = ''
-        rm /run/user/`id -u`/polybarconfig
-      '';
+      # reload = ''
+      #   rm /run/user/`id -u`/polybarconfig
+      # '';
     };
 
     environment.etc."dunstconfig".text = ''
