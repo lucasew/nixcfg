@@ -19,6 +19,12 @@ let
         (pkgs.writeShellScriptBin "dmenu" ''
           ${pkgs.rofi}/bin/rofi -dmenu ${commonFlags}
         '')
+        (pkgs.writeShellScriptBin "xfwm4" ''
+          while true; do
+            sleep 1
+          done
+        '')
+
       ];
     };
 
