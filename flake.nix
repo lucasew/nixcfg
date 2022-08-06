@@ -69,7 +69,8 @@
           selectedDesktopEnvironment = "xfce_i3";
           rootPath = "/home/${username}/.dotfiles";
           rootPathNix = "${rootPath}";
-          wallpaper = ./wall.jpg;
+          # wallpaper = ./wall.jpg;
+          wallpaper = throw "aqui";
           system = throw "usa o system do flake!";
           environmentShell = with pkgs; ''
             export NIXPKGS_ALLOW_UNFREE=1
@@ -95,12 +96,10 @@
           '';
         };
 
-
         extraArgs = {
           inherit self;
           inherit global;
           cfg = throw "your past self made a trap for non compliant code after a migration you did, now follow the stacktrace and go fix it";
-          colors = nix-colors.colorSchemes.dracula;
         };
 
       overlays = {
@@ -119,7 +118,8 @@
   in {
     inherit global;
     inherit overlays;
-        # packages = pkgs;
+
+    colors = inputs.nix-colors.colorSchemes.dracula;
 
     homeConfigurations = let 
       hmConf = source: homeManagerConfiguration (source // {
