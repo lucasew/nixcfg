@@ -29,10 +29,6 @@ let
     i3Support = true;
   };
 
-  wallPng = pkgs.lib.jpg2png {
-    name = "wallpaper.jpg";
-    image = wallpaper;
-  };
   mod = "Mod4";
   pactl = "${pulseaudio}/bin/pactl";
   playerctl-bin = "${playerctl}/bin/playerctl";
@@ -148,7 +144,7 @@ in
           exec --no-startup-id ${feh}/bin/feh --bg-center ~/.background-image
           exec --no-startup-id ${blueberry}/bin/blueberry-tray
           exec_always systemctl restart --user polybar.service
-          exec_always ${feh}/bin/feh --bg-fill --no-xinerama --no-fehbg '/home/lucasew/.dotfiles/wall.jpg'
+          exec_always ${feh}/bin/feh --bg-fill --no-xinerama --no-fehbg '${wallpaper}'
 
           default_border pixel 2
           hide_edge_borders smart
@@ -571,7 +567,7 @@ timeout=10
     };
     programs.xss-lock = {
       enable = true;
-      lockerCommand = "${i3lock-color}/bin/i3lock-color -B 5 --image ${wallPng} --tiling --ignore-empty-password --show-failed-attempts --clock --pass-media-keys --pass-screen-keys --pass-volume-keys";
+      lockerCommand = "${i3lock-color}/bin/i3lock-color -B 5 --image ${wallpaper} --tiling --ignore-empty-password --show-failed-attempts --clock --pass-media-keys --pass-screen-keys --pass-volume-keys";
       extraOptions = [];
     };
     environment.systemPackages = [

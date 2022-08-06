@@ -69,9 +69,6 @@
           selectedDesktopEnvironment = "xfce_i3";
           rootPath = "/home/${username}/.dotfiles";
           rootPathNix = "${rootPath}";
-          # wallpaper = ./wall.jpg;
-          wallpaper = throw "aqui";
-          system = throw "usa o system do flake!";
           environmentShell = with pkgs; ''
             export NIXPKGS_ALLOW_UNFREE=1
             export NIXCFG_ROOT_PATH="$HOME/.dotfiles"
