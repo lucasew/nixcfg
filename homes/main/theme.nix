@@ -20,6 +20,10 @@ in
       package = pkgs.paper-icon-theme;
       name = "Paper";
     };
+    iconTheme = {
+      package = pkgs.paper-icon-theme;
+      name = "Paper";
+    };
   };
   programs.bash.bashrcExtra = ''
     ${shellThemeFromScheme {
