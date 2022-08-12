@@ -72,6 +72,7 @@ in {
   fhsctl = cp ./pkgs/fhsctl.nix;
   comby = cp ./pkgs/comby.nix;
   custom = rec {
+    colorpipe = cp ./pkgs/colorpipe.nix;
     ncdu = cp ./pkgs/custom/ncdu.nix;
     neovim = cp ./pkgs/custom/neovim;
     emacs = cp ./pkgs/custom/emacs;
