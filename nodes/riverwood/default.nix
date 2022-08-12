@@ -114,7 +114,7 @@ in
   # services.printing.enable = true;
   # Themes
   # this is crashing calibre
-  # programs.qt5ct.enable = true;
+  programs.qt5ct.enable = true;
 
   # Users
   users.users = {
