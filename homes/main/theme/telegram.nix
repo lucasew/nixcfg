@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  inherit (pkgs.custom) colors;
+  inherit (pkgs.custom) colors colorpipe;
   inherit (colors.colors) base00 base01 base02 base03 base04 base05 base06 base07 base08 base09 base0A base0B base0C base0D base0E base0F;
 in {
   home.file."Downloads/theme.tdesktop-theme" = {
@@ -10,43 +10,52 @@ in {
       nativeBuildInputs = with pkgs; [
         imagemagick
         zip
+        colorpipe
       ];
       dontUnpack = true;
+      buildPhase = ''
+        echo "$themeTemplate" | colorpipe > colors.tdesktop-theme
+        convert -size 1x1 xc:"#${base00}" background.png
+      '';
+      installPhase = ''
+        zip "$out" colors.tdesktop-theme background.png
+      '';
+
       themeTemplate = ''
-base00: #${base00};
-base01: #${base01};
-base02: #${base02};
-base03: #${base03};
-base04: #${base04};
-base05: #${base05};
-base06: #${base06};
-base07: #${base07};
-base08: #${base08};
-base09: #${base09};
-base0A: #${base0A};
-base0B: #${base0B};
-base0C: #${base0C};
-base0D: #${base0D};
-base0E: #${base0E};
-base0F: #${base0F};
+base00: #%base00%;
+base01: #%base01%;
+base02: #%base02%;
+base03: #%base03%;
+base04: #%base04%;
+base05: #%base05%;
+base06: #%base06%;
+base07: #%base07%;
+base08: #%base08%;
+base09: #%base09%;
+base0A: #%base0A%;
+base0B: #%base0B%;
+base0C: #%base0C%;
+base0D: #%base0D%;
+base0E: #%base0E%;
+base0F: #%base0F%;
 
 // base16 with transparency
-base00T: #${base00}cc;
-base01T: #${base01}cc;
-base02T: #${base02}cc;
-base03T: #${base03}cc;
-base04T: #${base04}cc;
-base05T: #${base05}cc;
-base06T: #${base06}cc;
-base07T: #${base07}cc;
-base08T: #${base08}cc;
-base09T: #${base09}cc;
-base0AT: #${base0A}cc;
-base0BT: #${base0B}cc;
-base0CT: #${base0C}cc;
-base0DT: #${base0D}cc;
-base0ET: #${base0E}cc;
-base0FT: #${base0F}cc;
+base00T: #%base00%cc;
+base01T: #%base01%cc;
+base02T: #%base02%cc;
+base03T: #%base03%cc;
+base04T: #%base04%cc;
+base05T: #%base05%cc;
+base06T: #%base06%cc;
+base07T: #%base07%cc;
+base08T: #%base08%cc;
+base09T: #%base09%cc;
+base0AT: #%base0A%cc;
+base0BT: #%base0B%cc;
+base0CT: #%base0C%cc;
+base0DT: #%base0D%cc;
+base0ET: #%base0E%cc;
+base0FT: #%base0F%cc;
 
 // Color Pallete
 pBg: base00;
@@ -77,7 +86,7 @@ windowBgRipple: rippleBgLight; // Ripple color (on hover colored items) [te]
 windowFgOver: windowFg; // Text color on hover
 windowSubTextFg: pComment; // Minor text and some labels (version number, last seen, etc.)
 windowSubTextFgOver: pPurple; // Hotkey hover text color?
-windowBoldFg: pYellow; // Bolded text (headers) [te]
+windowBoldFg: base04; // Bolded text (headers) [te]
 windowBoldFgOver: windowBoldFg; // windowBoldFg but on hover (idk where used)
 windowBgActive: pGreen; // Checked radio and checkbox color
 windowFgActive: pBg; // Button Text [te]
@@ -446,13 +455,6 @@ profileVerifiedCheckBg: pCyan; // [te]
 historyReplyIconFg: windowBgActive;
 historyToDownBg: base01; // [te]
 titleBgActive: pBg; //  [te]
-      '';
-      buildPhase = ''
-        echo "$themeTemplate" > colors.tdesktop-theme
-        convert -size 1x1 xc:"#${base00}" background.png
-      '';
-      installPhase = ''
-        zip "$out" colors.tdesktop-theme background.png
       '';
     };
   };
