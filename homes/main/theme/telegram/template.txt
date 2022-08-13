@@ -187,7 +187,7 @@ dialogsDraftFg: pRed; // Draft label color
 dialogsVerifiedIconBg: pCyan; // verified icon bg [te]
 dialogsVerifiedIconFg: pBg; // verified icon text color [te]
 dialogsSendingIconFg: %base05%; // ??? little clock icon on chat contact (the ones on left sidebar) when sending
-dialogsSentIconFg: pGreen;
+dialogsSentIconFg: base05;
 dialogsUnreadBg: pComment; // [te]
 dialogsUnreadBgMuted: pSelection; // [te]
 dialogsUnreadFg: pFg; // [te]
@@ -223,7 +223,7 @@ dialogsForwardBg: dialogsBgActive;
 dialogsForwardFg: base05; // [te]
 searchedBarBg: pBg; // Results & 'no msgs found' msg in search results [te]
 searchedBarBorder: cTransparent; // [te]
-searchedBarFg: pPink; // Text 'Search for messages' in search results. [te]
+searchedBarFg: base06; // Text 'Search for messages' in search results. [te]
 topBarBg: windowBg;
 emojiPanBg: windowBg; // Emoji window bg
 emojiPanCategories: emojiPanBg;
@@ -293,7 +293,7 @@ msgOutDateFg: base05; // Date in OUT msg (text color) [ie time sent] [te]
 msgOutDateFgSelected: base04; // msgOutDateFG but when msg is selected [te]
 msgServiceFg: base05; // [te]
 msgServiceBg: base02T; // Sticker reply, dates in chat history, bot buttons [te]
-msgServiceBgSelected: base0ET; // [te]
+msgServiceBgSelected: base01T; // [te]
 msgInReplyBarColor: activeLineFg;
 msgInReplyBarSelColor: activeLineFg;
 msgOutReplyBarColor: activeLineFg;
@@ -309,7 +309,7 @@ msgFileThumbLinkInFg: base05; // [te]
 msgFileThumbLinkInFgSelected: pComment; // [te]
 msgFileThumbLinkOutFg: base05; // [te]
 msgFileThumbLinkOutFgSelected: pComment; // [te]
-msgFileInBg: pPink; // [te]
+msgFileInBg: base00; // [te]
 msgFileInBgOver: pFg; // [te]
 msgFileInBgSelected: pComment; // [te]
 msgFileOutBg: base01; // [te]
@@ -349,7 +349,7 @@ mediaOutFgSelected: base05; // [te]
 youtubePlayIconBg: pRed;
 youtubePlayIconFg: pFg;
 videoPlayIconBg: pComment; // [te]
-videoPlayIconFg: pFg; // [te]
+videoPlayIconFg: base06; // [te]
 toastBg: pComment; // [te]
 toastFg: cWhite;
 reportSpamBg: emojiPanHeaderBg;
@@ -383,10 +383,10 @@ notificationSampleNameFg: base05; // [te]
 mainMenuBg: windowBg;
 mainMenuCoverBg: pSelection; // [te]
 mainMenuCoverFg:  pGreen; // [te]
-mediaPlayerBg:  pBg; //  [te]
-mediaPlayerActiveFg: pGreen; // [te]
-mediaPlayerInactiveFg: pComment; // [te]
-mediaPlayerDisabledFg: pSelection; // [te]
+mediaPlayerBg:  base01; //  [te]
+mediaPlayerActiveFg: base05; // [te]
+mediaPlayerInactiveFg: base04; // [te]
+mediaPlayerDisabledFg: base02; // [te]
 mediaviewFileBg: pSelection; //  [te]
 mediaviewFileNameFg: windowFg;
 mediaviewFileSizeFg: %base05%; //windowSubTextFg; [te]
@@ -408,13 +408,13 @@ mediaviewCaptionFg: cWhite;
 mediaviewTextLinkFg: pCyan; // [te]
 mediaviewSaveMsgBg: toastBg;
 mediaviewSaveMsgFg: toastFg;
-mediaviewPlaybackActive: pGreen; // [te]
+mediaviewPlaybackActive: base04; // [te]
 mediaviewPlaybackInactive: pSelection; //windowSubTextFg; [te]
-mediaviewPlaybackActiveOver: pGreen; // [te]
+mediaviewPlaybackActiveOver: base05; // [te]
 mediaviewPlaybackInactiveOver: pComment; //windowSubTextFgOver; [te]
 mediaviewPlaybackProgressFg: pFg; // [te]
-mediaviewPlaybackIconFg: pComment; // [te]
-mediaviewPlaybackIconFgOver: mediaviewPlaybackActiveOver;
+mediaviewPlaybackIconFg: base04; // [te]
+mediaviewPlaybackIconFgOver: base05;
 mediaviewTransparentBg: cBlack; // [te]
 mediaviewTransparentFg: base03; // [te]
 notificationBg: windowBg;
@@ -436,8 +436,8 @@ historyToDownBg: base01; // [te]
 titleBgActive: pBg; //  [te]
 
 sideBarBg: base00;
-sideBarActive: base01;
-sideBarRipple: base01;
+sideBarBgActive: base01;
+sideBarBgRipple: base01;
 sideBarTextFg: base05;
 sideBarTextFgActive: base06;
 sideBarIconFg: base05;
