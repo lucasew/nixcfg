@@ -8,6 +8,7 @@ in
   imports = [
     ./terminator.nix
     ./telegram
+    ./obsidian
     ./discord
   ];
   home.packages = with pkgs; [
