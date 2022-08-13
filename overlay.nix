@@ -79,6 +79,7 @@ in {
     firefox = cp ./pkgs/custom/firefox;
     tixati = cp ./pkgs/custom/tixati.nix;
     vscode = cp ./pkgs/custom/vscode;
+    rofi = cp ./pkgs/custom/rofi.nix;
     send2kindle = cp ./pkgs/custom/send2kindle.nix;
     retroarch = cp ./pkgs/custom/retroarch.nix;
     loader = cp ./pkgs/custom/loader/default.nix;
