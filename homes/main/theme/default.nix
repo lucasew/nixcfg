@@ -8,6 +8,7 @@ in
   imports = [
     ./terminator.nix
     ./telegram.nix
+    ./discord.nix
   ];
   home.packages = with pkgs; [
     lxappearance
