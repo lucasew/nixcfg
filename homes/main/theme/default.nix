@@ -7,7 +7,7 @@ in
 {
   imports = [
     ./terminator.nix
-    ./telegram.nix
+    ./telegram
     ./discord
   ];
   home.packages = with pkgs; [
