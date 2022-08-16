@@ -1,10 +1,13 @@
+PATH=$PATH:@fhs@/bin:@binutils@/bin
 if [ $# == 0 ]; then
     echo "No AppImage provided"
     exit 1
 fi
+if [[ -v REPL ]]; then
+    appimage-env
+fi
 
 APPIMAGE="$1"; shift
-PATH=$PATH:@fhs@/bin:@binutils@/bin
 OFFSET=$(LC_ALL=C readelf -h "$APPIMAGE" | awk 'NR==13{e_shoff=$5} NR==18{e_shentsize=$5} NR==19{e_shnum=$5} END{print e_shoff+e_shentsize*e_shnum}')
 LOOP=$(udisksctl loop-setup -f "$APPIMAGE" --offset "$OFFSET" | sed 's;[ \.];\n;g' | grep '/dev/loop')
 MOUNTPOINT=$(udisksctl mount -b $LOOP | sed 's;[ \.];\n;g' | grep '/media')

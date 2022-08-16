@@ -153,11 +153,19 @@ let
       at-spi2-core
     ];
 
+    extraBuildCommands = ''
+      ln -sf  $out/lib64 $out/usr/lib64/x86_64-linux-gnu
+    '';
+
     runScript = ''
 
     PATH=$(echo "$PATH" | sed 's;/run/wrappers/bin:;;g')
 
-    /lib32/ld*.so.2 "$@"
+    if [[ -v REPL ]]; then
+      bash
+    fi
+
+    /lib/ld*.so.2 "$@"
     '';
   };
 in stdenv.mkDerivation {
