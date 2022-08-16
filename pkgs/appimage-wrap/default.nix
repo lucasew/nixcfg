@@ -3,6 +3,7 @@
 , stdenv
 , copyDesktopItems
 , makeDesktopItem
+, binutils-unwrapped
 , ... }:
 let
   fhs = buildFHSUserEnv {
@@ -156,13 +157,16 @@ let
 
     PATH=$(echo "$PATH" | sed 's;/run/wrappers/bin:;;g')
 
-    exec "$@"
+    /lib32/ld*.so.2 "$@"
     '';
   };
 in stdenv.mkDerivation {
   name = "appimage-wrap";
   dontUnpack = true;
+
+  binutils = binutils-unwrapped;
   inherit fhs;
+
   nativeBuildInputs = [ fhs copyDesktopItems ];
   desktopItems = [
     (makeDesktopItem {
@@ -181,7 +185,8 @@ in stdenv.mkDerivation {
     runHook preInstall
     mkdir -p $out/bin
     substitute ${./entrypoint.sh} $out/bin/appimage-wrap \
-      --subst-var fhs
+      --subst-var fhs \
+      --subst-var binutils
     chmod +x $out/bin/appimage-wrap
     mkdir -p $out/share/mime/packages
     cp ${./xdg.xml} $out/share/mime/packages/application-appimage.xml
