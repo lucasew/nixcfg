@@ -1,5 +1,8 @@
 { buildFHSUserEnv
-, writeShellScriptBin
+, writeShellScript
+, stdenv
+, copyDesktopItems
+, makeDesktopItem
 , ... }:
 let
   fhs = buildFHSUserEnv {
@@ -153,32 +156,35 @@ let
 
     PATH=$(echo "$PATH" | sed 's;/run/wrappers/bin:;;g')
 
-    "$@"
+    exec "$@"
     '';
   };
-in writeShellScriptBin "appimage-wrap" ''
-PATH=$PATH:${fhs}/bin
-APPIMAGE="$1"; shift
-OFFSET="$(appimage-env "$APPIMAGE" --appimage-offset | head -n 1)"
-LOOP=$(udisksctl loop-setup -f "$APPIMAGE" --offset "$OFFSET" | sed 's;[ \.];\n;g' | grep '/dev/loop')
-MOUNTPOINT=$(udisksctl mount -b $LOOP | sed 's;[ \.];\n;g' | grep '/media')
-if [ ! -z "$MOUNTPOINT" ]; then
-  appimage-env "$MOUNTPOINT/AppRun" "$@"
-fi
-if [ ! -z "$LOOP" ]; then
-  notify-send "Trying to unmount the appimage"
-  while true; do
-    if [[ ! "$(udisksctl unmount -b "$LOOP" 2>&1 || true)" =~ "Error" ]]; then
-      break
-    fi
-    sleep 1
-  done
-  while true; do
-    udisksctl loop-delete -b "$LOOP" && break || true
-    sleep 1
-  done
-  notify-send "AppImage unmounted"
-else
-  notify-send "Can't mount the AppImage"
-fi
-''
+in stdenv.mkDerivation {
+  name = "appimage-wrap";
+  dontUnpack = true;
+  inherit fhs;
+  nativeBuildInputs = [ fhs copyDesktopItems ];
+  desktopItems = [
+    (makeDesktopItem {
+      name = "appimage-wrap";
+      desktopName = "AppImage launcher";
+      icon = "package-x-generic";
+      exec = "appimage-wrap %F";
+      mimeTypes = [
+        "application/appimage"
+        "application/x-iso9660-appimage"
+        "application/vnd.appimage"
+      ];
+    })
+  ];
+  installPhase = ''
+    runHook preInstall
+    mkdir -p $out/bin
+    substitute ${./entrypoint.sh} $out/bin/appimage-wrap \
+      --subst-var fhs
+    chmod +x $out/bin/appimage-wrap
+    mkdir -p $out/share/mime/packages
+    cp ${./xdg.xml} $out/share/mime/packages/application-appimage.xml
+    runHook postInstall
+  '';
+}
