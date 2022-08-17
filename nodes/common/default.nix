@@ -9,7 +9,7 @@ in
     ../../modules/hold-gc/system.nix
     ./tuning.nix
     ./tmux.nix
-    ./bash.nix
+    ./bash
     "${inputs.simple-dashboard}/nixos-module.nix"
   ];
 
