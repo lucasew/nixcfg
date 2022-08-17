@@ -71,7 +71,9 @@
           rootPathNix = "${rootPath}";
           environmentShell = with pkgs; ''
             export NIXPKGS_ALLOW_UNFREE=1
-            export NIXCFG_ROOT_PATH="$HOME/.dotfiles"
+            if [[ ! -v NIXCFG_ROOT_PATH ]]; then
+              NIXCFG_ROOT_PATH="$(pwd)"
+            fi
             export NIX_LD="$(cat "${stdenv.cc.outPath}/nix-support/dynamic-linker")"
             export NIX_LD_LIBRARY_PATH=${lib.makeLibraryPath [
               stdenv.cc.cc
