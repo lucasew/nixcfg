@@ -99,7 +99,7 @@
     inherit (builtins) replaceStrings toFile trace readFile concatStringsSep;
     inherit (home-manager.lib) homeManagerConfiguration;
 
-        mkPkgs = { 
+        mkPkgs = {
           nixpkgs ? inputs.nixpkgs
         , config ? {}
         , overlays ? []
@@ -122,13 +122,6 @@
             if [[ ! -v NIXCFG_ROOT_PATH ]]; then
               NIXCFG_ROOT_PATH="$(pwd)"
             fi
-            export NIX_LD="$(cat "${stdenv.cc.outPath}/nix-support/dynamic-linker")"
-            export NIX_LD_LIBRARY_PATH=${lib.makeLibraryPath [
-              stdenv.cc.cc
-            ]}
-            function nix-repl {
-              nix repl "$NIXCFG_ROOT_PATH/repl.nix" "$@"
-            }
             export LUA_PATH="${concatStringsSep ";" [
               ''$(realpath ${fennel}/share/lua/*)/?.lua''
               "$NIXCFG_ROOT_PATH/scripts/?.lua"
