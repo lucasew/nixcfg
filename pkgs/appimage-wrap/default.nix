@@ -165,17 +165,14 @@ let
       bash
     fi
 
-    /lib/ld*.so.2 "$@"
+    "$@"
     '';
   };
 in stdenv.mkDerivation {
   name = "appimage-wrap";
   dontUnpack = true;
 
-  binutils = binutils-unwrapped;
-  inherit fhs;
-
-  nativeBuildInputs = [ fhs copyDesktopItems ];
+  buildInputs = [ fhs binutils-unwrapped ];
   desktopItems = [
     (makeDesktopItem {
       name = "appimage-wrap";
@@ -192,12 +189,14 @@ in stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
     mkdir -p $out/bin
-    substitute ${./entrypoint.sh} $out/bin/appimage-wrap \
-      --subst-var fhs \
-      --subst-var binutils
+    install -m755 ${./entrypoint.sh} $out/bin/appimage-wrap
     chmod +x $out/bin/appimage-wrap
+    ln -s ${fhs}/bin/appimage-env $out/bin/appimage-env
     mkdir -p $out/share/mime/packages
     cp ${./xdg.xml} $out/share/mime/packages/application-appimage.xml
     runHook postInstall
   '';
+  passthru = {
+    inherit fhs;
+  };
 }
