@@ -43,12 +43,6 @@ in
         #efiInstallAsRemovable = true; # in case canTouchEfiVariables doesn't work for your system
         device = "nodev";
         useOSProber = true;
-        ipxe = {
-          netboot-xyz = ''
-            dhcp
-            chain --autofree https://boot.netboot.xyz
-          '';
-        };
       };
     };
   };
