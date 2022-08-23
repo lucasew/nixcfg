@@ -14,8 +14,9 @@ in
       ../gui-common
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
       inputs.nixos-hardware.nixosModules.common-cpu-intel-kaby-lake
+      inputs.nixos-hardware.nixosModules.common-gpu-intel
+      inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
 
       ./tuning.nix
       ./networking.nix
