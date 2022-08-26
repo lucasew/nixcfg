@@ -66,7 +66,7 @@ in
   nix.buildMachines = [
     {
       hostName = "192.168.100.52"; # pc dos testes
-      sshUser = "genetsec";
+      sshUser = "lucasew";
       system = "x86_64-linux";
       maxJobs = 4;
       speedFactor = 2;
