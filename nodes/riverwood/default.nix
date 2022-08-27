@@ -29,6 +29,8 @@ in
   services.xserver.xkbModel = "acer_laptop";
 
   services.simple-dashboardd.enable = true;
+
+  virtualisation.kvmgt.enable = false;
  
   # programs.steam.enable = true;
 
