@@ -22,8 +22,6 @@ in {
   DefaultTimeoutStartSec=10s
   '';
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
     gparted
     paper-icon-theme
@@ -58,6 +56,7 @@ in {
   users.users = {
     ${username} = {
       description = "Lucas Eduardo";
+      extraGroups = [ "kvm" "libvirtd" ];
     };
   };
 
