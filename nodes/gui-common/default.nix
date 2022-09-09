@@ -56,11 +56,8 @@ in {
   users.users = {
     ${username} = {
       description = "Lucas Eduardo";
-      extraGroups = [ "kvm" "libvirtd" ];
     };
   };
-
-  virtualisation.libvirtd.enable = true;
 
   hardware = {
     opengl = {
