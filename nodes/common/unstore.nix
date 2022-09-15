@@ -20,14 +20,18 @@ in {
   config = mkIf cfg.enable {
     systemd.services.unstore = {
       inherit (cfg) enable startAt;
-      path = [ pkgs.nix ];
+      path = with pkgs; [ nix coreutils ];
       description = "delete paths that contain a file pattern in the nix-store";
       script = let
         paths = builtins.concatStringsSep " " (map (path: "/nix/store/*/${builtins.replaceStrings [" "] ["\\ "] path}") cfg.paths);
       in ''
+        if [ $(cat /sys/class/power_supply/ACAD/online) == 0 ]; then
+          echo "On battery, skipping..."
+          exit 0
+        fi
         for p in ${paths} ; do
           echo "Removing '$p'"
-          nix-store --delete "$p" || true
+          nice -20 nix-store --delete "$p" || true
         done
       '';
     };
