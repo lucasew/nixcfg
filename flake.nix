@@ -8,6 +8,9 @@
     blender-bin.url =  "blender-bin";
     blender-bin.inputs.nixpkgs.follows = "nixpkgs";
 
+    climod.url = "github:nixosbrasil/climod";
+    climod.flake = false;
+
     comma.url =  "github:Shopify/comma";
     comma.flake = false;
 
