@@ -4,6 +4,7 @@ let
   masterAPIServerPort = 6443;
   api = "https://${masterIp}:${toString masterAPIServerPort}";
 in {
+  environment.variables.KUBECONFIG="/etc/kubernetes/cluster-admin.kubeconfig";
   networking.firewall.allowedTCPPorts = [ masterAPIServerPort ];
   services.kubernetes = {
     roles = [ "master" "node" ];
