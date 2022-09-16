@@ -2,13 +2,17 @@
 let
   masterIp = "192.168.69.1";
   masterAPIServerPort = 6443;
+  api = "https://${masterIp}:${toString masterAPIServerPort}";
 in {
   networking.firewall.allowedTCPPorts = [ masterAPIServerPort ];
   services.kubernetes = {
     roles = [ "master" "node" ];
     masterAddress = masterIp;
-    apiserverAddress = "https://${masterIp}:${toString masterAPIServerPort}";
-    kubelet.extraOpts = "--fail-swap-on=false";
+    apiserverAddress = api;
+    kubelet = {
+      extraOpts = "--fail-swap-on=false";
+      kubeconfig.server = api;
+    };
     apiserver = {
       securePort = masterAPIServerPort;
       advertiseAddress = masterIp;
