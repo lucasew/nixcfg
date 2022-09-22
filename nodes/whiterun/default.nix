@@ -12,6 +12,7 @@ in {
     # inputs.nixos-hardware.nixosModules.common-gpu-nvidia
     ./kubernetz.nix
     ./sshfs.nix
+    ./deluge.nix
   ];
   boot = {
     supportedFilesystems = [ "ntfs" ];
@@ -31,8 +32,6 @@ in {
   virtualisation.libvirtd.enable = true;
 
   services.openssh.forwardX11 = true;
-
-  services.deluge.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
