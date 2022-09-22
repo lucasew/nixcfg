@@ -5,6 +5,7 @@
     extraConfig = ''
 #domain-needed
 #bogus-priv
+#addn-hosts=/etc/extraHosts
     '';
   };
 }
