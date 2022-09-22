@@ -9,9 +9,9 @@
   };
   networking.firewall.trustedInterfaces = [ "ztppi77yi3" ];
   networking.extraHosts = ''
-    192.168.69.1 controlplane.local
-    192.168.69.1 whiterun.local
-    192.168.69.2 riverwood.local
-    192.168.69.4 xiaomi.local
+    192.168.69.1 controlplane.lucao.net
+    192.168.69.1 whiterun.lucao.net
+    192.168.69.2 riverwood.lucao.net
+    192.168.69.4 xiaomi.lucao.net
   '';
 }
