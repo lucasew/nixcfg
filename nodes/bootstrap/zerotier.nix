@@ -8,10 +8,10 @@
     ];
   };
   networking.firewall.trustedInterfaces = [ "ztppi77yi3" ];
-  networking.extraHosts = ''
-    192.168.69.1 controlplane.lucao.net
-    192.168.69.1 whiterun.lucao.net
-    192.168.69.2 riverwood.lucao.net
-    192.168.69.4 xiaomi.lucao.net
+  services.dnsmasq.extraConfig = ''
+address=/controlplane.lucao.net/192.168.69.1
+address=/whiterun.lucao.net/192.168.69.1
+address=/riverwood.lucao.net/192.168.69.2
+address=/xiaomi.lucao.net/192.168.69.4
   '';
 }
