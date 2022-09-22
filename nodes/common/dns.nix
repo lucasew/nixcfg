@@ -5,7 +5,7 @@
     extraConfig = ''
 domain-needed
 bogus-priv
-addn-hosts=/etc/extraHosts
+hostsdir=/etc/extraHosts
     '';
   };
 }
