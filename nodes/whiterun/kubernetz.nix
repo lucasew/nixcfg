@@ -12,6 +12,7 @@ in {
     kubelet = {
       extraOpts = "--fail-swap-on=false";
       kubeconfig.server = api;
+      hostname = config.networking.hostName;
     };
     apiserver = {
       securePort = masterAPIServerPort;
