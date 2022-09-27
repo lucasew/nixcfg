@@ -27,4 +27,14 @@ in {
     kubectl
     kubernetes
   ];
+  services.nginx = {
+    virtualHosts = {
+      "kubernetes.whiterun.lucao.net" = {
+        forceSSL = true;
+        locations."/" = {
+          proxyPass = "https://localhost:6443";
+        };
+      };
+    };
+  };
 }
