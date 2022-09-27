@@ -29,8 +29,8 @@ in {
   ];
   services.nginx = {
     virtualHosts = {
-      "kubernetes.whiterun.lucao.net" = {
-        forceSSL = true;
+      "kubernetes.${config.networking.hostName}.${config.networking.domain}" = {
+        # forceSSL = true;
         locations."/" = {
           proxyPass = "https://localhost:6443";
         };
