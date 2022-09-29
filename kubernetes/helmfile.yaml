@@ -5,6 +5,8 @@ repositories:
     url: https://helm.nginx.com/stable
   - name: kubernetes-dashboard
     url: https://kubernetes.github.io/dashboard
+  - name: weave-scope
+    url: https://dasmeta.github.io/helm/
 commonLabels:
   repo: github:lucasew/nixcfg
 releases:
@@ -31,38 +33,41 @@ releases:
     namespace: app-kubernetes-dashboard
     createNamespace: true
     values:
-      - ingress:
-          enabled: true
-          annotations:
-            kubernetes.io/ingress.class: nginx
-            # nginx.ingress.kubernetes.io/ssl-passthrough: "false"
-            # nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-            # nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
-          hosts:
-          - kubernetes-dashboard.whiterun.lucao.net
-    strategicMergePatches:
-      - apiVersion: apps/v1
-        kind: Deployment
-        # name: kubernetes-dashboard
-        # namespace: app-kubernetes-dashboard
-        metadata:
-          # namespace: app-kubernetes-dashboard
-          name: kubernetes-dashboard
-          # labels:
-          #   app.kubernetes.io/instance: kubernetes-dashboard
-        spec:
-          template:
-            spec:
-              containers:
-                - name: kubernetes-dashboard
-                  args:
-                  - --enable-insecure-login
-                  - --enable-skip-login
-                  - --namespace=app-kubernetes-dashboard
-                  - --disable-settings-authorizer
-                  - --insecure-bind-address=0.0.0.0
-                  - --port=6969
-                  - --insecure-port=8443
-                  livenessProbe:
-                    httpGet:
-                      scheme: HTTP
+      # ingress + http doesnt work at all
+      # - ingress:
+      #     enabled: true
+      #     annotations:
+      #       kubernetes.io/ingress.class: nginx
+      #     hosts:
+      #       - kubernetes-dashboard.whiterun.lucao.net
+    # strategicMergePatches:
+    #   - apiVersion: apps/v1
+    #     kind: Deployment
+    #     metadata:
+    #       name: kubernetes-dashboard
+    #     spec:
+    #       template:
+    #         spec:
+    #           containers:
+    #             - name: kubernetes-dashboard
+    #               args:
+    #               - --enable-insecure-login
+    #               - --enable-skip-login
+    #               - --namespace=app-kubernetes-dashboard
+    #               - --disable-settings-authorizer
+    #               - --insecure-bind-address=0.0.0.0
+    #               - --port=6969
+    #               - --insecure-port=8443
+    #               livenessProbe:
+    #                 httpGet:
+    #                   scheme: HTTP
+    #   - apiVersion: v1
+        # kind: Service
+        # metadata:
+        #   name: kubernetes-dashboard
+        # spec:
+        #   ports:
+        #   - name: http
+        #     port: 80
+        #     targetPort: 8443
+
