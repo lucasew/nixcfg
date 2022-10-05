@@ -9,9 +9,49 @@ repositories:
     url: https://dasmeta.github.io/helm/
   - name: jenkins-x
     url: https://jenkins-x-charts.github.io/v2/
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
 commonLabels:
   repo: github:lucasew/nixcfg
 releases:
+  - name: load-balancer
+    chart: bitnami/metallb
+    namespace: load-balancer
+    createNamespace: true
+    values:
+      - apiVersion: metallb.io/v1beta1
+        kind: IPAddressPool
+        metadata:
+          name: zerotier
+        spec:
+          addresses:
+            - 192.168.69.0/24
+      - apiVersion: metallb.io/v1beta1
+        kind: L2Advertisement
+        metadata:
+          name: zerotier
+        spec:
+          ipAddressPools:
+            - zerotier
+  - name: ingress
+    chart: nginx-stable/nginx-ingress
+    namespace: nginx-ingress
+    createNamespace: true
+    # set:
+    #   - name: controller.service.type
+    #     value: ClusterIP
+    # atomic: true
+    strategicMergePatches:
+      - apiVersion: v1
+        kind: Service
+        metadata:
+          namespace: nginx-ingress
+          name: ingress-nginx-ingress
+          annotations:
+            metallb.universe.tf/address-pool: zerotier
+        # spec:
+    #       clusterIP: 10.0.0.253
+
   - name: apache-ingress-test
     namespace: app-apache-test
     createNamespace: true
@@ -20,23 +60,6 @@ releases:
     namespace: app-traefik-test
     createNamespace: true
     chart: app-traefik-test
-  - name: ingress
-    chart: nginx-stable/nginx-ingress
-    namespace: nginx-ingress
-    createNamespace: true
-    set:
-      - name: controller.service.type
-        value: ClusterIP
-    atomic: true
-    strategicMergePatches:
-      - apiVersion: v1
-        kind: Service
-        # name: ingress-nginx-ingress
-        metadata:
-          namespace: nginx-ingress
-          name: ingress-nginx-ingress
-        spec:
-          clusterIP: 10.0.0.253
   - name: kubernetes-dashboard
     chart: kubernetes-dashboard/kubernetes-dashboard
     namespace: app-kubernetes-dashboard
