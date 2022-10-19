@@ -202,6 +202,7 @@ in stdenv.mkDerivation {
       --subst-var scriptPATH
     mkdir -p $out/share/mime/packages
     cp ${./xdg.xml} $out/share/mime/packages/application-appimage.xml
+    ln -s ${fhs}/bin/appimage-env $out/bin/appimage-env
     runHook postInstall
   '';
   passthru = {
