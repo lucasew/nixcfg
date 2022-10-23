@@ -14,7 +14,7 @@ wrapFirefox firefox-esr-102-unwrapped {
     ryceeExtensions = with nur.repos.rycee.firefox-addons;[
       darkreader
       facebook-container
-      grammarly
+      languagetool
       i-dont-care-about-cookies
       sponsorblock
       tampermonkey
