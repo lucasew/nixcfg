@@ -33,8 +33,9 @@ def bring(app: str, origin: Path):
     mkdirp(DEST_DIR)
     if origin.is_file():
         try:
-            copy2(origin, DEST_DIR)
+            run("git", "annex" "unlock", str(DEST_DIR), check = True)
             log(f"Copying '{origin}'")
+            copy2(origin, DEST_DIR)
         except SameFileError:
             pass
         return
