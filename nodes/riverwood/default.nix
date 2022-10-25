@@ -97,6 +97,8 @@ in
     # }
   ];
 
+  services.dotd."trab/nhaa".enable = true;
+
   # kernel
   boot.kernelPackages = pkgs.linuxPackages_5_15;
 
