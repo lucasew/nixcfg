@@ -41,6 +41,7 @@ in
   };
 
   virtualisation.kvmgt.enable = false;
+  virtualisation.spiceUSBRedirection.enable = true;
  
   # programs.steam.enable = true;
 
