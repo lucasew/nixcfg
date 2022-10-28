@@ -78,6 +78,7 @@ in
   # programs.mtr.enable = true;
  
   services.dotd."trab/nhaa".enable = true;
+  services.screenkey.enable = true;
 
   # kernel
   boot.kernelPackages = pkgs.linuxPackages_5_15;
