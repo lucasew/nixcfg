@@ -15,10 +15,10 @@ let
     fetchFromGitHub
     vimPlugins
     fetchurl
-    wrapNeovim
     callPackage
     fetchzip
   ;
+  wrapNeovim = pkgs.neovimUtils.legacyWrapper;
   inherit (pkgs.vimUtils)
     buildVimPlugin
     buildVimPluginFrom2Nix
@@ -97,7 +97,7 @@ let
 in wrapNeovim pkgs.neovim-unwrapped {
   withPython3 = true;
   configure = {
-    plug.plugins = with vimPlugins; [
+    packages.plugins.start = with vimPlugins; [
       # utils
       coq_nvim
       echodoc
