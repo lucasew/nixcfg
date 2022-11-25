@@ -56,9 +56,9 @@
     nixos-generators.url =  "github:nix-community/nixos-generators";
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
 
-    nixpkgs-stable.url =  "github:NixOS/nixpkgs/nixos-22.05";
+    nixpkgs-unstable.url =  "github:NixOS/nixpkgs/nixos-unstable";
 
-    nixpkgs.url =  "github:NixOS/nixpkgs/nixos-22.05";
+    nixpkgs.url =  "github:NixOS/nixpkgs/nixos-22.11";
 
     nur.url =  "nur";
     nur.inputs.nixpkgs.follows = "nixpkgs";
@@ -158,8 +158,8 @@
         pollymc = inputs.pollymc.overlay;
         this = import ./overlay.nix self;
         stable = final: prev: {
-          stable = mkPkgs {
-            nixpkgs = inputs.nixpkgs-stable;
+          unstable = mkPkgs {
+            nixpkgs = inputs.nixpkgs-unstable;
             inherit system;
           };
         };
