@@ -22,7 +22,7 @@
 
     flake-utils.url =  "flake-utils";
 
-    home-manager.url =  "home-manager/release-22.05";
+    home-manager.url =  "home-manager/release-22.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     impermanence.url =  "github:nix-community/impermanence";
