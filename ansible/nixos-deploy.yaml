@@ -1,0 +1,6 @@
+---
+- hosts: all
+  become: false
+  tasks:
+    - import_tasks: tasks/nixos-build.yaml
+      when: ansible_facts['os_family'] == "NixOS"
