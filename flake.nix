@@ -195,8 +195,10 @@
 
     nixosConfigurations = let
       nixosConf = {
-        mainModule,
-        extraModules ? [],
+          mainModule
+        , nixpkgs ? inputs.nixpkgs
+        , extraModules ? []
+        , system ? "x86_64-linux"
       }:
       let
         revModule = {pkgs, ...}: let
@@ -210,7 +212,10 @@
           system.nixos.label = "lucasew:nixcfg-${rev}";
         };
         source = {
-          inherit pkgs system;
+          pkgs = mkPkgs {
+            inherit nixpkgs system;
+          };
+          inherit system;
           modules = [
             revModule
             (mainModule)
@@ -228,6 +233,7 @@
       };
       whiterun = nixosConf {
         mainModule = ./nodes/whiterun/default.nix;
+        nixpkgs = inputs.nixpkgs-unstable;
       };
       demo = nixosConf {
         mainModule = ./nodes/demo/default.nix;
