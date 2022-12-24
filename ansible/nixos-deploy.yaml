@@ -2,6 +2,9 @@
 - hosts: all
   become: false
   tasks:
+    - name: Initializing
+      import_tasks: tasks/load-vars.yaml
+
     - import_tasks: tasks/nixos-build.yaml
       when: ansible_facts['os_family'] == "NixOS"
 

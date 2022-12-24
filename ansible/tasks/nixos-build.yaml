@@ -10,7 +10,7 @@
 
 - name: Build NixOS generation
   ansible.builtin.command:
-    cmd: nix build {{ playbook_dir }}#nixosConfigurations.{{ ansible_facts['hostname'] }}.config.system.build.toplevel -o {{ nixos_build_result.path }}/result
+    cmd: nix build .#nixosConfigurations.{{ ansible_facts['hostname'] }}.config.system.build.toplevel -o {{ nixos_build_result.path }}/result
   when: ansible_facts['os_family'] == "NixOS"
   delegate_to: 127.0.0.1
 
