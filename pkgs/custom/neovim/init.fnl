@@ -74,7 +74,9 @@
 (lsp :cmake) ;; CMake
 (lsp :dockerls) ;; Dockerfile
 (lsp :dotls) ;; GraphViz
-(lsp :elixirls) ;; Elixir
+(lsp :elixirls { ;; Elixir
+    :cmd [:elixir-ls]
+})
 (lsp :gopls) ;; Golang
 (lsp :graphql) ;; GraphQL
 (lsp :hls) ;; Haskell
