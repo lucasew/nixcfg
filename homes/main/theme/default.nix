@@ -31,9 +31,11 @@ in
       name = "Paper";
     };
   };
-  # programs.bash.bashrcExtra = ''
-  #   ${shellThemeFromScheme {
-  #     scheme = colors;
-  #   }}
-  # '';
+  programs.bash.bashrcExtra = ''
+    if [ ! -v SSH_CONNECTION ]; then
+      ${shellThemeFromScheme {
+        scheme = colors;
+      }}
+    fi
+  '';
 }
