@@ -267,6 +267,7 @@
       name = "nixcfg-shell";
       buildInputs = with pkgs; [
         ctl
+        ansible
       ];
       shellHook = ''
         ${global.environmentShell}
