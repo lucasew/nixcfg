@@ -32,10 +32,8 @@ in
     };
   };
   programs.bash.bashrcExtra = ''
-    if [ ! -v SSH_CONNECTION ]; then
-      ${shellThemeFromScheme {
-        scheme = colors;
-      }}
-    fi
+    ${shellThemeFromScheme {
+      scheme = colors;
+    }}
   '';
 }
