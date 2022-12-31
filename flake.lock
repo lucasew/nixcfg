@@ -236,11 +236,11 @@
     },
     "nbr": {
       "locked": {
-        "lastModified": 1672381263,
-        "narHash": "sha256-toI5e0vU1wjAzCEg5iUo7xebTkLaIlDYyCXIiTn/4bs=",
+        "lastModified": 1672467582,
+        "narHash": "sha256-0f2R5v5ZDhLELorsQ/ftYaaFUc7UwwhYA2IYv5bFvvQ=",
         "owner": "nixosbrasil",
         "repo": "nixpkgs-brasil",
-        "rev": "b66bf8a5a19336b59421d35383f6c4288fc04cf8",
+        "rev": "dd2d51f19d45a5ef969263302a102fff803780f7",
         "type": "github"
       },
       "original": {
