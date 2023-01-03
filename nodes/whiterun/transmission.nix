@@ -2,6 +2,7 @@
   services.transmission = {
     enable = true;
     openFirewall = true;
+    openPeerPorts = true;
     settings = {
       # incomplete-dir = "/tmp/transmission/incomplete";
     };
