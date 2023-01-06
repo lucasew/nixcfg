@@ -5,6 +5,7 @@ in
 {
   imports = [
     ./nginx.nix
+    ./cockpit-extra.nix
     ../bootstrap/default.nix
     ../../modules/cachix/system.nix
     ../../modules/hold-gc/system.nix
