@@ -1,4 +1,4 @@
-{global, pkgs, lib, self, ...}:
+{global, pkgs, lib, self, config, ...}:
 let
   inherit (pkgs) vim gitMinimal tmux xclip writeShellScriptBin;
   inherit (global) username;
@@ -18,7 +18,12 @@ in {
       sha256 = "0n66xqb2vlv97fcfd3s74qv3dh9yslnvhxhzx3p3rq0vmsq4i2ml";
     })
   ];
-  
+  services.nginx.virtualHosts."cockpit.${config.networking.hostName}.${config.networking.domain}" = lib.mkIf config.services.cockpit.enable {
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString config.services.cockpit.port}";
+    };
+  };
+
   boot.cleanTmpDir = true;
   i18n.defaultLocale = "pt_BR.UTF-8";
   time.timeZone = "America/Sao_Paulo";
