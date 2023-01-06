@@ -4,6 +4,7 @@ let
 in
 {
   imports = [
+    ./nginx.nix
     ../bootstrap/default.nix
     ../../modules/cachix/system.nix
     ../../modules/hold-gc/system.nix
