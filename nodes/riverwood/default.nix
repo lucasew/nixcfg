@@ -11,7 +11,6 @@ in
 {
   imports =
     [
-      (import /home/lucasew/WORKSPACE/nixpkgs/nixos/modules/services/monitoring/cockpit.nix args)
       ../gui-common
       # Include the results of the hardware scan.
       ./hardware-configuration.nix

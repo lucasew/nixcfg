@@ -5,7 +5,6 @@ let
   hostname = "whiterun";
 in {
   imports = [
-    (import /home/lucasew/WORKSPACE/nixpkgs/nixos/modules/services/monitoring/cockpit.nix args)
     ../gui-common
     ./hardware-configuration.nix
     inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
