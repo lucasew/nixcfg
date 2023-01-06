@@ -212,19 +212,19 @@
           system.configurationRevision = rev;
           system.nixos.label = "lucasew:nixcfg-${rev}";
         };
+        pkgs = mkPkgs {
+          inherit nixpkgs system;
+        };
         source = {
-          pkgs = mkPkgs {
-            inherit nixpkgs system;
-          };
-          inherit system;
+          inherit system pkgs;
+          inherit (pkgs) lib;
           modules = [
             revModule
             (mainModule)
           ] ++ extraModules;
           specialArgs = extraArgs;
         };
-      in
-        nixpkgs.lib.nixosSystem source;
+      in import "${nixpkgs}/nixos/lib/eval-config.nix" source;
     in {
       ivarstead = nixosConf {
         mainModule = ./nodes/ivarstead/default.nix;

@@ -29,7 +29,9 @@ in {
 
   nbr = import "${inputs.nbr}" { pkgs = final; };
 
-  lib = with inputs.nixpkgs-lib; rec {
+  lib = prev.lib.extend (final: prev: with final; with inputs.nixpkgs-lib.lib; {
+    nixos = "${inputs.nixpkgs}/nixos/lib" { lib = final; };
+
     jpg2png = cp ./lib/jpg2png.nix;
     buildDockerEnv = cp ./lib/buildDockerEnv.nix;
     mkWindowsApp = inputs.erosanix.lib."${prev.system}".mkWindowsApp;
@@ -41,8 +43,7 @@ in {
     mkPackageOptionMD = args: name: extra:
       let option = mkPackageOption args name extra;
       in option // { description = lib.mdDoc option.description; };
-
-  };
+  });
   appimage-wrap = final.nbr.appimage-wrap;
   ctl = cp ./pkgs/ctl;
   p2k = cp inputs.pocket2kindle;
