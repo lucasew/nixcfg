@@ -10,7 +10,7 @@ lib.mkIf config.services.cockpit.enable {
 
   services.cockpit.settings = {
     WebService = {
-      Origins = "http://cockpit.${config.networking.hostName}.${config.networking.domain}";
+      # Origins = "http://cockpit.${config.networking.hostName}.${config.networking.domain}";
     };
   };
 }
