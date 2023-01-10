@@ -103,7 +103,6 @@ in {
   };
   pkg = cp ./pkgs/pkg.nix;
   wrapWine = cp ./pkgs/wrapWine.nix;
-  null = prev.stdenv.mkDerivation { dontUnpack = true; installPhase = "mkdir $out"; };
   nur = import flake.inputs.nur {
     inherit (prev) pkgs;
     nurpkgs = prev.pkgs;
