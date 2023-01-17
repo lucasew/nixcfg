@@ -804,11 +804,11 @@
         "nixpkgs-stable": "nixpkgs-stable"
       },
       "locked": {
-        "lastModified": 1673961879,
-        "narHash": "sha256-JNfE62o4jy5YwdMbuEsC51NR28Uf2YephHHIXgo3dHo=",
+        "lastModified": 1673963752,
+        "narHash": "sha256-HUni6IejPeUv8vSO1sacZ6rkeAR3BJOrEhj+uDjgXFA=",
         "owner": "lucasew",
         "repo": "sops-nix",
-        "rev": "1dd6edf02d8f4a33671ea871992a77bb94ff4485",
+        "rev": "eb09a61dc95633924e2c54f420519dda0385dbba",
         "type": "github"
       },
       "original": {
