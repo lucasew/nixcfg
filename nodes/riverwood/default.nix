@@ -29,8 +29,6 @@ in
   ;
   networking.hostId = "dabd2d19";
 
-  services.dhtcrawler.enable = true;
-
   services.cockpit.enable = true;
   services.cockpit.package = pkgs.callPackage /home/lucasew/WORKSPACE/nixpkgs/pkgs/servers/monitoring/cockpit {};
 
