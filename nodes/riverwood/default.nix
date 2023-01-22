@@ -27,6 +27,7 @@ in
       ./remote-build.nix
     ]
   ;
+  networking.hostId = "dabd2d19";
 
   services.dhtcrawler.enable = true;
 
