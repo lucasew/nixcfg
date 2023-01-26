@@ -12,4 +12,5 @@
     enable = true;
     pools = [ "storage" "zroot" ];
   };
+  virtualisation.docker.storageDriver = "zfs";
 }
