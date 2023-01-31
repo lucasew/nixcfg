@@ -20,7 +20,7 @@ let
       mkDate input.sourceInfo.lastModifiedDate 0 1 2 3 "/" 4 5 "/" 6 7 " " 8 9 ":" 10 11 ":" 12 13 null
       else "unknown";
     fullRev = "${inputName}@${input.shortRev} (${revDate})";
-  in ''<span class="btn btn-dark"><b>${inputName}</b> <span class="hidden-part">${input.sourceInfo.lastModifiedDate or "unknown"}-${input.shortRev}</span></span>'';
+  in ''<span class="btn btn-light"><b>${inputName}</b> <span class="hidden-part">${input.sourceInfo.lastModifiedDate or "unknown"}-${input.shortRev}</span></span>'';
 
   template = ''
 <!DOCTYPE html>
@@ -71,14 +71,14 @@ let
         <h2>Nginx hosts</h2>
         ${concatStringsSep "\n" (attrValues (mapAttrs
           (k: v: ''
-            <a class="btn btn-dark" target="_blank" href="http://${k}">${k}</a>
+            <a class="btn btn-light" target="_blank" href="http://${k}">${k}</a>
           '') (config.services.nginx.virtualHosts)
         ))}
       </section>
 
       <section id="versions" class="my-1 flex">
         <h2>Inputs</h2>
-          <span class="btn btn-dark"><b>nixcfg</b> <span class="hidden-part">${self.shortRev}  (${mkDate self.sourceInfo.lastModifiedDate 0 1 2 3 "/" 4 5 "/" 6 7 " " 8 9 ":" 10 11 ":" 12 13 null})</span></span>
+          <span class="btn btn-light"><b>nixcfg</b> <span class="hidden-part">${self.shortRev}  (${mkDate self.sourceInfo.lastModifiedDate 0 1 2 3 "/" 4 5 "/" 6 7 " " 8 9 ":" 10 11 ":" 12 13 null})</span></span>
 
           ${builtins.concatStringsSep " " (map (mkInput) (builtins.sort (a: b: a < b)(builtins.attrNames self.inputs)))}
       </section>
