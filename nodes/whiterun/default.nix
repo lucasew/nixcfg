@@ -30,6 +30,7 @@ in {
     mediaDirs = {
       transmission = "/var/lib/transmission/Downloads";
       storage_movies = "/storage/downloads/filmes";
+      storage_series = "/storage/downloads/series";
     };
   };
 
