@@ -1,4 +1,6 @@
 { self, config, pkgs, lib, ... }:
+
+with pkgs.custom.colors.colors;
 let
   inherit (lib) concatStringsSep attrValues mapAttrs;
 
@@ -20,7 +22,7 @@ let
       mkDate input.sourceInfo.lastModifiedDate 0 1 2 3 "/" 4 5 "/" 6 7 " " 8 9 ":" 10 11 ":" 12 13 null
       else "unknown";
     fullRev = "${inputName}@${input.shortRev} (${revDate})";
-  in ''<span class="btn btn-light"><b>${inputName}</b> <span class="hidden-part">${input.sourceInfo.lastModifiedDate or "unknown"}-${input.shortRev}</span></span>'';
+  in ''<div><b>${inputName}</b> <span class="hidden-part">${input.sourceInfo.lastModifiedDate or "unknown"}-${input.shortRev}</span></div>'';
 
   template = ''
 <!DOCTYPE html>
@@ -29,60 +31,333 @@ let
       <meta charset="utf-8">
       <title>${config.networking.hostName}</title>
       <style>
-      :root {
-        ${concatStringsSep "\n" (attrValues (mapAttrs 
-          (k: v: ''
-            --var-${k}: #${v};
-          '') (pkgs.custom.colors.colors)
-          ))}
-          --bs-body-color: var(--base00);
-          --bs-body-bg: var(--base05);
-          --bs-secondary-color: var(--base01);
-          --bs-secondary-bg: var(--base06);
-          --bs-tertiary-color: var(--base02);
-          --bs-tertiary-bg: var(--base07);
-          --bs-emphasis-color: var(--base01);
-          --bs-border-color: var(--base04);
-          --bs-primary: var(--base00);
-          --bs-primary-bg-subtle: var(--base0D);
-          --bs-primary-border-subtle: var(--base0C);
-          --bs-primary-text: var(--base00);
-          --bs-success-bg-subtle: var(--base0B);
-          --bs-danger-bg-subtle: var(--base08);
-          --bs-warning-bg-subtle: var(--base0A);
-          --bs-info-bg-subtle: var(base0D);
-        }
-            a:hover > .hidden-part, span:hover > .hidden-part {
-              display: inherit;
-            }
-            a:not(:hover) > .hidden-part, span:not(:hover) > .hidden-part {
-              display: none;
-            }
+:root{
+  --color-blossom: #1d7484;
+  --color-fade: #982c61;
+
+  --color-bg: #${base00};
+  --color-bg-alt: #${base01};
+
+  --color-text: #${base05};
+  --font-size-base: 1.8rem;
+
+  --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-family-heading: --font-family-base;
+}
+
+/* Body */
+html {
+  font-size: 62.5%; / So that root size becomes 10px*/
+  font-family: var(--font-family-base);
+}
+
+body {
+  /* var(--font-size-base must be a rem value */
+  font-size: var(--font-size-base);
+  line-height: 1.618;
+  max-width: 38em;
+  margin: auto;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  padding: 13px;
+}
+
+@media (max-width: 684px) {
+  body {
+  font-size: var(--font-size-base * 0.85);
+  }
+}
+
+@media (max-width: 382px) {
+  body {
+  font-size: var(--font-size-base * 0.75);
+  }
+}
+
+/* added Nav */
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #666;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+nav ul li {
+  float: left;
+  border-right: 1px solid #bbb;
+}
+
+nav ul li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+nav ul li a:hover {
+  background-color: #111;
+}
+
+:root {
+  --word-wrap: {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-word;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.1;
+  font-family: var(--font-family-heading);
+  font-weight: 700;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  @apply --word-wrap;
+}
+
+h1 { font-size: 2.35em }
+h2 { font-size: 2.00em }
+h3 { font-size: 1.75em }
+h4 { font-size: 1.5em }
+h5 { font-size: 1.25em }
+h6 { font-size: 1em }
+
+p {
+  margin-top: 0px;
+  margin-bottom: 2.5rem;
+}
+
+small, sub, sup {
+  font-size: 75%;
+}
+
+hr {
+  border-color: var(--color-blossom);
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-blossom);
+
+  & hover {
+      color: var(--color-fade);
+      border-bottom: 2px solid var(--color-text);
+  }
+
+  & visited {
+      color: darken(var(--color-blossom, 10%));
+  }
+
+}
+
+ul {
+  padding-left: 1.4em;
+  margin-top: 0px;
+  margin-bottom: 2.5rem;
+}
+
+li {
+  margin-bottom: 0.4em;
+}
+
+blockquote {
+  margin-left: 0px;
+  margin-right: 0px;
+  padding-left: 1em;
+  padding-top: 0.8em;
+  padding-bottom: 0.8em;
+  padding-right: 0.8em;
+  border-left: 5px solid var(--color-blossom);
+  margin-bottom: 2.5rem;
+  background-color: var(--color-bg-alt);
+}
+
+blockquote p {
+  margin-bottom: 0;
+}
+
+img, video {
+  height: auto;
+  max-width: 100%;
+  margin-top: 0px;
+  margin-bottom: 2.5rem;
+}
+
+/* Pre and Code */
+pre {
+  background-color: var(--color-bg-alt);
+  display: block;
+  padding: 1em;
+  overflow-x: auto;
+  margin-top: 0px;
+  margin-bottom: 2.5rem;
+}
+
+code {
+  font-size: 0.9em;
+  padding: 0 0.5em;
+  background-color: var(--color-bg-alt);
+  white-space: pre-wrap;
+}
+
+pre > code {
+  padding: 0;
+  background-color: transparent;
+  white-space: pre;
+}
+
+/* Tables */
+table {
+  text-align: justify;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td, th {
+  padding: 0.5em;
+  border-bottom: 1px solid var(--color-bg-alt);
+}
+
+/* Buttons, forms and input */
+input, textarea {
+  border: 1px solid var(--color-text);
+
+  & focus {
+      border: 1px solid var(--color-blossom);
+  }
+
+}
+
+textarea {
+  width: 100%;
+}
+
+.button, button, input[type="submit"], input[type="reset"], input[type="button"] {
+  display: inline-block;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+
+  background-color: var(--color-blossom);
+  color: var(--color-bg;
+  border-radius: 1px;
+  border: 1px solid var(--color-blossom);
+  cursor: pointer;http://155.138.194.207:8080/sty/
+  box-sizing: border-box;
+
+  &[disabled] {
+      cursor: default;
+      opacity: .5;
+  }
+
+  & focus:enabled, & hover:enabled {
+      background-color: var(--color-fade);
+      border-color: var(--color-fade);
+      color: var(--color-bg);
+      outline: 0;
+  }
+
+}
+
+textarea, select, input {
+  color: var(--color-text);
+  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  margin-bottom: 10px;
+  background-color: var(--color-bg-alt);
+  border: 1px solid var(--color-bg-alt);
+  border-radius: 4px;
+  box-shadow: none;
+  box-sizing: border-box;
+
+  & focus {
+      border: 1px solid var(--color-blossom);
+      outline: 0;
+  }
+
+}
+
+input[type="checkbox"]:focus {
+  outline: 1px dotted var(--color-blossom);
+}
+
+label, legend, fieldset {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: 600;
+}
+
+div:hover .hidden-part {
+  display: inherit;
+}
+
+div:not(:hover) .hidden-part {
+  display: none;
+}
+
+.small-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: row;
+}
+
+.small-cards-container > * {
+  display: inline-block;
+}
+
+section#hello {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+section#hello > * {
+  margin: 0;
+  padding-left: 1rem;
+  display: inline-block;
+}
+
+a {
+  font-weight: bold;
+}
+
       </style>
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     </head>
 
-    <body class="mx-auto" style="max-width: max(80vw, 20rem)">
-      <section id="hello" class="my-1 d-flex flex-row align-items-center justify-content-center">
+    <body>
+      <section id="hello">
         <img style="height: 4rem; width: auto;" src="/nix-logo.png">
         <h1 style="font-size: 4rem;">${config.networking.hostName}</h1>
       </section>
-      <section id="nginx" class="my-1">
+      <section id="nginx">
         <h2>Nginx hosts</h2>
+        <div class="small-cards-container">
         ${concatStringsSep "\n" (attrValues (mapAttrs
           (k: v: ''
-            <a class="btn btn-light" target="_blank" href="http://${k}"><b>${k}</b></a>
+            <a class="btn btn-light" target="_blank" href="http://${k}">${k}</a>
           '') (config.services.nginx.virtualHosts)
         ))}
+        </div>
       </section>
 
-      <section id="versions" class="my-1 flex">
-        <h2>Inputs</h2>
-          <span class="btn btn-light"><b>nixcfg</b> <span class="hidden-part">${self.shortRev}  (${mkDate self.sourceInfo.lastModifiedDate 0 1 2 3 "/" 4 5 "/" 6 7 " " 8 9 ":" 10 11 ":" 12 13 null})</span></span>
+      <section id="versions">
+        <h2>Inputs</h2><br>
+            <div class="small-cards-container">
+              <div><b>nixcfg</b> <span class="hidden-part">${self.shortRev}  (${mkDate self.sourceInfo.lastModifiedDate 0 1 2 3 "/" 4 5 "/" 6 7 " " 8 9 ":" 10 11 ":" 12 13 null})</span></div>
 
-          ${builtins.concatStringsSep " " (map (mkInput) (builtins.sort (a: b: a < b)(builtins.attrNames self.inputs)))}
+              ${builtins.concatStringsSep " " (map (mkInput) (builtins.sort (a: b: a < b)(builtins.attrNames self.inputs)))}
+            </div>
       </section>
-
 
     </body>
 
