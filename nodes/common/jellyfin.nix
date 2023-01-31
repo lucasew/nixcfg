@@ -14,7 +14,7 @@ in {
   config = mkIf cfg.enable {
     virtualisation.oci-containers.containers.jellyfin = {
       image = "jellyfin/jellyfin:latest";
-      volumes = [ "/var/lib/jellyfin" "/var/cache/jellyfin" ]
+      volumes = [ "/var/lib/jellyfin:/config" "/var/cache/jellyfin:/cache" ]
       ++ (attrValues (mapAttrs (k: v: "${v}:/media/${k}:ro") cfg.mediaDirs));
       extraOptions = [ "--network=host" ];
     };
