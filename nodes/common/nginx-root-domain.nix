@@ -62,7 +62,7 @@ let
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     </head>
 
-    <body class="mx-1" style="max-width: max(80vw, 20rem)">
+    <body class="mx-auto" style="max-width: max(80vw, 20rem)">
       <section id="hello" class="my-1 d-flex flex-row align-items-center justify-content-center">
         <img style="height: 4rem; width: auto;" src="/nix-logo.png">
         <h1 style="font-size: 4rem;">${config.networking.hostName}</h1>
@@ -71,7 +71,7 @@ let
         <h2>Nginx hosts</h2>
         ${concatStringsSep "\n" (attrValues (mapAttrs
           (k: v: ''
-            <b><a class="btn btn-light" target="_blank" href="http://${k}">${k}</a></b>
+            <a class="btn btn-light" target="_blank" href="http://${k}"><b>${k}</b></a>
           '') (config.services.nginx.virtualHosts)
         ))}
       </section>
