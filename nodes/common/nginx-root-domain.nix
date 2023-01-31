@@ -35,18 +35,18 @@ let
             --var-${k}: #${v};
           '') (pkgs.custom.colors.colors)
           ))}
-          --bs-body-color: var(--base05);
-          --bs-body-bg: var(--base00);
-          --bs-secondary-color: var(--base06);
-          --bs-secondary-bg: var(--base01);
-          --bs-tertiary-color: var(--base07);
-          --bs-tertiary-bg: var(--base02);
-          --bs-emphasis-color: var(--base04);
-          --bs-border-color: var(--base01);
-          --bs-primary: var(--base05);
+          --bs-body-color: var(--base00);
+          --bs-body-bg: var(--base05);
+          --bs-secondary-color: var(--base01);
+          --bs-secondary-bg: var(--base06);
+          --bs-tertiary-color: var(--base02);
+          --bs-tertiary-bg: var(--base07);
+          --bs-emphasis-color: var(--base01);
+          --bs-border-color: var(--base04);
+          --bs-primary: var(--base00);
           --bs-primary-bg-subtle: var(--base0D);
           --bs-primary-border-subtle: var(--base0C);
-          --bs-primary-text: var(--base05);
+          --bs-primary-text: var(--base00);
           --bs-success-bg-subtle: var(--base0B);
           --bs-danger-bg-subtle: var(--base08);
           --bs-warning-bg-subtle: var(--base0A);
