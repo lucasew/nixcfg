@@ -804,16 +804,15 @@
         "nixpkgs-stable": "nixpkgs-stable"
       },
       "locked": {
-        "lastModified": 1673963752,
-        "narHash": "sha256-HUni6IejPeUv8vSO1sacZ6rkeAR3BJOrEhj+uDjgXFA=",
-        "owner": "lucasew",
+        "lastModified": 1675288837,
+        "narHash": "sha256-76s8TLENa4PzWDeuIpEF78gqeUrXi6rEJJaKEAaJsXw=",
+        "owner": "Mic92",
         "repo": "sops-nix",
-        "rev": "eb09a61dc95633924e2c54f420519dda0385dbba",
+        "rev": "a81ce6c961480b3b93498507074000c589bd9d60",
         "type": "github"
       },
       "original": {
-        "owner": "lucasew",
-        "ref": "feat/type-dotenv",
+        "owner": "Mic92",
         "repo": "sops-nix",
         "type": "github"
       }
