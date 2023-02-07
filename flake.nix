@@ -224,9 +224,11 @@
       };
       riverwood = nixosConf {
         mainModule = ./nodes/riverwood/default.nix;
+        nixpkgs = inputs.nixpkgs-unstable;
       };
       whiterun = nixosConf {
         mainModule = ./nodes/whiterun/default.nix;
+        nixpkgs = inputs.nixpkgs-unstable;
         # nixpkgs = inputs.nixpkgs-whiterun;
       };
       demo = nixosConf {
