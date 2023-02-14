@@ -18,10 +18,14 @@ in {
     ./transmission.nix
     ./dlna.nix
     ./zfs.nix
+    ./postgresql.nix
+    ./nextcloud.nix
   ];
   networking.hostId = "97e3b5a7";
 
   virtualisation.oci-containers.backend = "docker";
+
+  services.nextcloud.enable = true;
 
   services.cockpit.enable = true;
 
