@@ -25,7 +25,10 @@ in {
 
   virtualisation.oci-containers.backend = "docker";
 
-  services.nextcloud.enable = true;
+  services.nextcloud = {
+    package = pkgs.nextcloud24;
+    enable = true;
+  };
 
   services.cockpit.enable = true;
 
