@@ -1,26 +1,24 @@
 #!/usr/bin/env python3
 
-from sys import stdin
 from os import environ
 import socket
 
 from urllib.parse import quote
-from urllib.request import Request
 from urllib.request import urlopen
 from pathlib import Path
 
 from argparse import ArgumentParser
 
-parser = ArgumentParser(prog='telegram_mail', description="sendmail drop-in replacement that sends to Telegram")
+parser = ArgumentParser(prog='telegram_mail', description="sendmail drop-in replacement that sends to Telegram")  # noqa: E501
 
-parser.add_argument('-b,--bind', dest='bind', type=Path, help="Where to bind socket", required=True)
-parser.add_argument('-n,--hostname', dest='hostname', type=str, help="This hostname", default=open('/etc/hostname', 'r').read().strip())
-parser.add_argument('-s,--subject', dest='default_subject', type=str, help="Default subject", default="Message")
-parser.add_argument('-t,--telegram-token', dest='telegram_token', type=str, help="Token telegram", default=environ.get('MAIL_TELEGRAM_TOKEN'))
-parser.add_argument('-c,--telegram-chat', dest='telegram_chat', type=str, help="Chat telegram", default=environ.get('MAIL_TELEGRAM_CHAT'))
+parser.add_argument('-b,--bind', dest='bind', type=Path, help="Where to bind socket", required=True)  # noqa: E501
+parser.add_argument('-n,--hostname', dest='hostname', type=str, help="This hostname", default=open('/etc/hostname', 'r').read().strip())  # noqa: E501
+parser.add_argument('-s,--subject', dest='default_subject', type=str, help="Default subject", default="Message")  # noqa: E501
+parser.add_argument('-t,--telegram-token', dest='telegram_token', type=str, help="Token telegram", default=environ.get('MAIL_TELEGRAM_TOKEN'))  # noqa: E501
+parser.add_argument('-c,--telegram-chat', dest='telegram_chat', type=str, help="Chat telegram", default=environ.get('MAIL_TELEGRAM_CHAT'))  # noqa: E501
 
 args = parser.parse_args()
-assert args.telegram_token is not None and args.telegram_chat is not None, 'Unauthorized Telegram access'
+assert args.telegram_token is not None and args.telegram_chat is not None, 'Unauthorized Telegram access'  # noqa: E501
 env_hostname = environ.get('HOSTNAME')
 
 urlopen(f'https://api.telegram.org/bot{args.telegram_token}/getMe')
@@ -33,6 +31,7 @@ if args.bind.is_socket():
     args.bind.unlink()
 
 server.bind(str(args.bind))
+args.bind.chmod(0o777)
 server.listen()
 
 while True:
@@ -46,8 +45,8 @@ while True:
             data += part
             if len(part) == 0:
                 break
-            if len(data) > 4*1024:
-                raise Error("payload too big")
+            if len(data) > 4 * 1024:
+                raise Exception("payload too big")
 
         lines = data.decode('utf-8').split('\n')
 
@@ -65,7 +64,7 @@ while True:
 {joined_message}
 </pre>
         """.strip()
-        url = f'https://api.telegram.org/bot{args.telegram_token}/sendMessage?chat_id={args.telegram_chat}&parse_mode=HTML&disable_web_page_preview=1&text={quote(final_message)}'
+        url = f'https://api.telegram.org/bot{args.telegram_token}/sendMessage?chat_id={args.telegram_chat}&parse_mode=HTML&disable_web_page_preview=1&text={quote(final_message)}'  # noqa: E501
         res = urlopen(url)
         print(f"Sent '{subject}' (res: {res})")
         conn.send(b'OK')
@@ -73,4 +72,3 @@ while True:
         print(f"Error sending '{subject}': {str(e)}")
         conn.send(str(e).encode('utf-8'))
     conn.close()
-
