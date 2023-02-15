@@ -838,11 +838,11 @@
     "telegram-sendmail": {
       "flake": false,
       "locked": {
-        "lastModified": 1676478703,
-        "narHash": "sha256-P/5IF4Vddf26xjwfJ2Zyb0NPaDbIZhZytowyb0xe38U=",
+        "lastModified": 1676486097,
+        "narHash": "sha256-XLex3IwmymkZRWdYPBeycdv4E0rdyPUu/qrjPV0RjEg=",
         "owner": "lucasew",
         "repo": "telegram-sendmail",
-        "rev": "6c39a5c893d7ca9911bf36fa70fc34a7c9451808",
+        "rev": "0c05eb5d3b6b7a961f5d972ac6bed623a0d1d9ec",
         "type": "github"
       },
       "original": {
