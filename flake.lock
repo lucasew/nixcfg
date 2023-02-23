@@ -72,6 +72,22 @@
         "type": "github"
       }
     },
+    "cloud-savegame": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1677171533,
+        "narHash": "sha256-yC6Jq4zL04M4bRZYZa+u3Qcg9j2R9WnDPFbY1LcML74=",
+        "owner": "lucasew",
+        "repo": "cloud-savegame",
+        "rev": "ab512573f3b6e89264d8d436ac1ccb8fb179f96a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lucasew",
+        "repo": "cloud-savegame",
+        "type": "github"
+      }
+    },
     "comma": {
       "flake": false,
       "locked": {
@@ -728,6 +744,7 @@
         "blender-bin": "blender-bin",
         "borderless-browser": "borderless-browser",
         "climod": "climod",
+        "cloud-savegame": "cloud-savegame",
         "comma": "comma",
         "dotenv": "dotenv",
         "erosanix": "erosanix",

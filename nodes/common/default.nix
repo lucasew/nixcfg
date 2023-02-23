@@ -11,6 +11,7 @@ in
     ../../modules/cachix/system.nix
     ../../modules/hold-gc/system.nix
     ./ansible-python.nix
+    ./cloud-savegame.nix
     ./p2k.nix
     ./tuning.nix
     ./jellyfin.nix
