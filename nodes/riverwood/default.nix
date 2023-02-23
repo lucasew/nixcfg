@@ -41,7 +41,7 @@ in
       };
 
       flatout-2 = {
-        installdir="~/.local/share/Steam/steamapps/common/FlatOut2,/run/media/lucasew/Dados/DADOS/Jogos/FlatOut 2";
+        installdir= [ "~/.local/share/Steam/steamapps/common/FlatOut2" "/run/media/lucasew/Dados/DADOS/Jogos/FlatOut 2"];
       };
 
       farming-simulator-2013 = {

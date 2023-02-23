@@ -30,7 +30,7 @@ in {
     enableGit = mkEnableOption "Enable git interactions for Cloud savegame";
 
     outputDir = mkOption {
-      type = types.path;
+      type = types.str;
       default = "~/SavedGames";
       description = ''
         Where the savegame repo will be stored
@@ -44,31 +44,16 @@ in {
         These are converted to the ini file
       '';
 
-      type = types.submodule {
-        freeformType = ini.type;
+      type = types.anything;
 
-        options = {
-          general = {
-            divider = mkOption {
-              type = types.str;
-              default = ",";
-            };
-          };
+      example = builtins.fromTOML "${self.inputs.cloud-savegame}/demo.cfg";
 
-          search = mkOption {
-            description = lib.mdDoc ''
-              Search path related settings
-            '';
-
-            type = types.attrsOf (mkOption {
-              type = types.listOf types.str;
-              default = [];
-              apply = builtins.concatStringsSep cfg.settings.general.divider;
-            });
-
-          };
-        };
+      default = {
+        general.divider = ",";
+        search.paths="~";
+        flatout-2.installdir= ["~/.local/share/Steam/steamapps/common/FlatOut2" ];
       };
+      # TODO: Convert all lists to strings divided by the divider using 'builtins.concatStringsSep cfg.settings.general.divider'
     };
   };
 
@@ -85,18 +70,29 @@ in {
       };
       services.cloud-savegame = {
         enable = true;
-        paths = []
-        ++ (optional cfg.enableGit pkgs.git);
+        path = []
+        ++ (optional cfg.enableGit pkgs.git)
+        ++ (optional cfg.enableGit pkgs.openssh);
         environment = {
           OUTPUT_DIR = cfg.outputDir;
-          CONFIG_FILE = ini.generate "cloud-savegame-settings.ini" cfg.settings;
+
+          CONFIG_FILE = let
+            atom = val: if ((builtins.typeOf val) == "list") then
+              (builtins.concatStringsSep (cfg.settings.general.divider or ",") (map (toString) val))
+            else if ((builtins.typeOf val) == "set") then
+              (builtins.mapAttrs (k: v: atom v) val)
+            else (toString val);
+          in ini.generate "cloud-savegame-settings.ini" (atom cfg.settings);
         };
         description = "Cloud savegame service";
         script = ''
+          export SSH_AUTH_SOCK=/run/user/$(id -u)/ssh-agent
+          tilde=~
+          OUTPUT_DIR="$(echo "$OUTPUT_DIR" | sed "s;~;$tilde;")"
           if [ -d "$OUTPUT_DIR" ]; then
-            ${cfg.package}/bin/cloud-savegame -o "$OUTPUT_DIR" -c "$CONFIG_FILE" ${optionalString "-g" cfg.enableGit} ${optionalString "-v" cfg.enableVerbose}
+            ${cfg.package}/bin/cloud-savegame -o "$OUTPUT_DIR" -c "$CONFIG_FILE" ${optionalString cfg.enableGit "-g"} ${optionalString cfg.enableVerbose "-v"}
           else
-            echo "Output dir doesn't exist"
+            echo "Output dir '$OUTPUT_DIR' doesn't exist"
           fi
         '';
       };
