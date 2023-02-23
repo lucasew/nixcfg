@@ -23,12 +23,32 @@ in
       ./dns.nix
       ./kvm.nix
       ./zfs.nix
-      ./backup-saves.nix
       ./plymouth.nix
       ./remote-build.nix
     ]
   ;
   networking.hostId = "dabd2d19";
+
+  services.cloud-savegame = {
+    enable = true;
+    calendar = "01:00:01";
+    enableVerbose = true;
+    enableGit = true;
+    settings = {
+      search = {
+        paths = [ "~" ];
+        extra_homes = [ "/run/media/lucasew/Dados/DADOS/Lucas" ];
+      };
+
+      flatout-2 = {
+        installdir="~/.local/share/Steam/steamapps/common/FlatOut2,/run/media/lucasew/Dados/DADOS/Jogos/FlatOut 2";
+      };
+
+      farming-simulator-2013 = {
+        ignore_mods = true;
+      };
+    };
+  };
 
   services.cockpit.enable = true;
 
