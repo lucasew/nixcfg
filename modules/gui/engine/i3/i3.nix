@@ -1,4 +1,5 @@
 {pkgs, lib, ...}: 
+# https://thomashunter.name/i3-configurator/
 with pkgs.custom.colors.colors;
 let
   custom_rofi = pkgs.custom.rofi.override { inherit (pkgs.custom) colors; };
@@ -49,8 +50,99 @@ in {
       brightnessctl
     ];
   };
+  environment.etc."i3status".text = lib.mkForce ''
+general {
+  colors = true
+  color_bad = "#${base08}"
+  color_degraded = "#${base08}"
+  color_good = "#${base0B}"
+
+  interval = 2
+}
+
+order += "wireless _first_"
+wireless __first__ {
+  format_up = "  %speed %quality"
+  format_down = "  OFF"
+}
+
+order += "ethernet _first_"
+ethernet _first_ {
+        format_up = "  %speed"
+        format_down = "  OFF"
+}
+
+
+order += "battery all"
+battery all {
+        format = "%status %percentage"
+        format_down = ""
+        status_chr = "⚡"
+        status_bat = ""
+        status_unk = "UNK"
+        status_full = ""
+        path = "/sys/class/power_supply/BAT%d/uevent"
+        low_threshold = 10
+}
+
+order += "tztime local"
+tztime local {
+        format = " %Y-%m-%d %H:%M"
+}
+
+order += "load"
+load {
+        format = "💪 %1min %5min %15min"
+}
+
+order += "cpu_usage"
+cpu_usage {
+        format= " %usage"
+        max_threshold= 75
+}
+
+order += "memory"
+memory {
+       format = " %percentage_used"
+       threshold_degraded = "10%"
+       format_degraded = "! %free"
+}
+
+order += "volume measter"
+volume master {
+        format = "♫ %volume"
+        format_muted = ""
+        device = "default"
+        mixer = "Master"
+        mixer_idx = 0
+}
+  '';
   environment.etc."i3config".text = lib.mkForce ''
 set $mod ${mod}
+
+bar {
+  status_command ${pkgs.i3status}/bin/i3status --config /etc/i3status
+  font pango: Roboto Mono 10
+  hidden_state show
+  position top
+  output primary
+  tray_output primary
+  workspace_buttons yes
+
+  colors {
+    background #${base00}
+    statusline #${base05}
+    separator #${base00}
+
+    # name             border     background text
+    focused_workspace  #${base01} #${base00} #${base05}
+    active_workspace   #${base01} #${base02} #${base05}
+    inactive_workspace #${base01} #${base01} #${base05}
+    urgent_workspace   #${base08} #${base08} #${base00}
+    binding_mode       #${base00} #${base00} #${base05}
+
+  }
+}
 
 # Property Name         Border    Background Text     Indicator  Child
 client.focused          #${base01} #${base00} #${base05} #${base0D} #${base0C}
@@ -58,7 +150,7 @@ client.focused_inactive #${base01} #${base01} #${base05} #${base03} #${base01}
 client.unfocused        #${base01} #${base02} #${base05} #${base01} #${base01}
 client.urgent           #${base08} #${base08} #${base00} #${base08} #${base08}
 client.placeholder      #${base00} #${base00} #${base05} #${base00} #${base00}
-client.background       #${base07}
+client.background       #${base07} #${base00} #${base05}
 
 bindsym $mod+0 workspace number 10
 bindsym $mod+1 workspace number 1
