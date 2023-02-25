@@ -5,7 +5,7 @@ let
   inherit (pkgs.custom) wallpaper colorpipe;
 in {
   imports = [
-    ./polybar.nix
+    # ./polybar.nix
     ./i3.nix
     ./dunst.nix
     ./lockscreen.nix
