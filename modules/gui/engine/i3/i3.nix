@@ -60,16 +60,16 @@ general {
   interval = 2
 }
 
-order += "wireless _first_"
+order += "wireless __first__"
 wireless __first__ {
   format_up = "  %speed %quality"
   format_down = "  OFF"
 }
 
-order += "ethernet _first_"
+order += "ethernet __first__"
 ethernet _first_ {
-        format_up = "  %speed"
-        format_down = "  OFF"
+        format_up = "🖧  %speed"
+        format_down = "🖧  OFF"
 }
 
 
@@ -78,16 +78,16 @@ battery all {
         format = "%status %percentage"
         format_down = ""
         status_chr = "⚡"
-        status_bat = ""
-        status_unk = "UNK"
-        status_full = ""
+        status_bat = "🔋"
+        status_unk = "🤔"
+        status_full = "🔌"
         path = "/sys/class/power_supply/BAT%d/uevent"
         low_threshold = 10
 }
 
 order += "tztime local"
 tztime local {
-        format = " %Y-%m-%d %H:%M"
+        format = "⌛ %Y-%m-%d %H:%M"
 }
 
 order += "load"
@@ -97,21 +97,21 @@ load {
 
 order += "cpu_usage"
 cpu_usage {
-        format= " %usage"
+        format= "🧠 %usage"
         max_threshold= 75
 }
 
 order += "memory"
 memory {
-       format = " %percentage_used"
+       format = "🐸 %percentage_used"
        threshold_degraded = "10%"
-       format_degraded = "! %free"
+       format_degraded = "🐸 %free"
 }
 
-order += "volume measter"
+order += "volume master"
 volume master {
-        format = "♫ %volume"
-        format_muted = ""
+        format = "🔊 %volume"
+        format_muted = "🔇"
         device = "default"
         mixer = "Master"
         mixer_idx = 0
