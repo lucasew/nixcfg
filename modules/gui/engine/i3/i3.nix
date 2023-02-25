@@ -62,7 +62,7 @@ general {
 
 order += "wireless _first_"
 wireless _first_ {
-  format_up = "  %speed %quality"
+  format_up = "  %bitrate %frequency %quality"
   format_down = "  OFF"
 }
 
