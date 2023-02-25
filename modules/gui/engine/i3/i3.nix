@@ -60,34 +60,16 @@ general {
   interval = 2
 }
 
-order += "wireless __first__"
-wireless __first__ {
+order += "wireless _first_"
+wireless _first_ {
   format_up = "  %speed %quality"
   format_down = "  OFF"
 }
 
-order += "ethernet __first__"
+order += "ethernet _first_"
 ethernet _first_ {
         format_up = "🖧  %speed"
         format_down = "🖧  OFF"
-}
-
-
-order += "battery all"
-battery all {
-        format = "%status %percentage"
-        format_down = ""
-        status_chr = "⚡"
-        status_bat = "🔋"
-        status_unk = "🤔"
-        status_full = "🔌"
-        path = "/sys/class/power_supply/BAT%d/uevent"
-        low_threshold = 10
-}
-
-order += "tztime local"
-tztime local {
-        format = "⌛ %Y-%m-%d %H:%M"
 }
 
 order += "load"
@@ -116,6 +98,25 @@ volume master {
         mixer = "Master"
         mixer_idx = 0
 }
+
+order += "battery all"
+battery all {
+        format = "%status %percentage"
+        format_down = ""
+        status_chr = "⚡"
+        status_bat = "🔋"
+        status_unk = "🤔"
+        status_full = "🔌"
+        path = "/sys/class/power_supply/BAT%d/uevent"
+        low_threshold = 10
+}
+
+order += "tztime local"
+tztime local {
+        format = "⌛ %Y-%m-%d %H:%M"
+}
+
+
   '';
   environment.etc."i3config".text = lib.mkForce ''
 set $mod ${mod}
