@@ -126,7 +126,7 @@ bar {
   font pango: Roboto Mono 10
   hidden_state show
   position top
-  output primary
+  # output primary
   tray_output primary
   workspace_buttons yes
 
