@@ -60,6 +60,13 @@ general {
   interval = 2
 }
 
+order += "read_file netusage"
+read_file netusage {
+  path = "/dev/shm/netusage"
+  format = "💬 %content"
+  format_bad = ""
+}
+
 order += "wireless _first_"
 wireless _first_ {
   format_up = "  %bitrate %frequency %quality"
