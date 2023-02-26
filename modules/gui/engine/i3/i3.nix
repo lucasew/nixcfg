@@ -136,8 +136,8 @@ bar {
     separator #${base00}
 
     # name             border     background text
-    focused_workspace  #${base01} #${base00} #${base05}
-    active_workspace   #${base01} #${base02} #${base05}
+    focused_workspace  #${base01} #${base02} #${base05}
+    active_workspace   #${base01} #${base03} #${base05}
     inactive_workspace #${base01} #${base01} #${base05}
     urgent_workspace   #${base08} #${base08} #${base00}
     binding_mode       #${base00} #${base00} #${base05}
