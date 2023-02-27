@@ -36,7 +36,10 @@
         enable = true;
         sslVerify = false; # rede interna não usa ssl
       };
-      postgres.enable = true;
+      postgres = {
+        enable = true;
+        runAsLocalSuperUser = true;
+      };
     };
     scrapeConfigs = (map (item: {
       job_name = item;
