@@ -14,4 +14,6 @@
   boot.zfs.requestEncryptionCredentials = [ "zroot" ];
   boot.zfs.extraPools = [ "storage" ];
   virtualisation.docker.storageDriver = "zfs";
+  systemd.services.docker-jellyfin.after = [ "zfs-import-storage.service" ];
+  systemd.services.transmission.after = [ "zfs-import-storage.service" ];
 }
