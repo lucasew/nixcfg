@@ -11,8 +11,12 @@
     enable = true;
     pools = [ "storage" "zroot" ];
   };
-  boot.zfs.requestEncryptionCredentials = [ "zroot" ];
-  boot.zfs.extraPools = [ "storage" ];
+  boot.zfs = {
+    forceImportRoot = false;
+    requestEncryptionCredentials = [ "zroot" ];
+    allowHibernation = true;
+    extraPools = [ "storage" ];
+  };
   virtualisation.docker.storageDriver = "zfs";
   systemd.services.docker-jellyfin.after = [ "zfs-import-storage.service" ];
   systemd.services.transmission.after = [ "zfs-import-storage.service" ];
