@@ -11,5 +11,7 @@
     enable = true;
     pools = [ "storage" "zroot" ];
   };
+  boot.zfs.requestEncryptionCredentials = [ "zroot" ];
+  boot.zfs.extraPools = [ "storage" ];
   virtualisation.docker.storageDriver = "zfs";
 }
