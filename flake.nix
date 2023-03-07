@@ -48,7 +48,7 @@
             "electron-18.1.0"
         ];
       };
-      overlays = if disableOverlays then [] else overlays ++ (builtins.attrValues self.outputs.overlays);
+      overlays = if disableOverlays then [] else (overlays ++ (builtins.attrValues self.outputs.overlays));
       inherit system;
     };
 
@@ -81,19 +81,15 @@
       inherit self;
       inherit global;
       cfg = throw "your past self made a trap for non compliant code after a migration you did, now follow the stacktrace and go fix it";
-      inherit (pkgs.bumpkin) unpackedInputs;
+      inherit unpackedInputs;
     };
 
     overlays = {
-      home-manager = import "${unpackedInputs.home-manager}/overlay.nix";
-      borderless-browser = (importFlake "${unpackedInputs.borderless-browser}/flake.nix" { inherit nixpkgs; }).overlays.default;
-      # rust-overlay = import "${unpackedInputs.rust-overlay}/rust-overlay.nix";
+      # borderless-browser = (import "${unpackedInputs.flake-compat}")(importFlake "${unpackedInputs.borderless-browser}/flake.nix" { inherit nixpkgs; }).overlays.default;
+      rust-overlay = import "${unpackedInputs.rust-overlay}/rust-overlay.nix";
       this = import ./overlay.nix self;
     };
-    nix-colors = importFlake "${unpackedInputs.nix-colors}/flake.nix" {
-      nixpkgs-lib = importFlake "${unpackedInputs.nixpkgs-lib}";
-      inherit (pkgs.bumpkin.unpackedInputs) base16-schemes;
-    };
+    nix-colors = import "${unpackedInputs.nix-colors}" { inherit (unpackedInputs) base16-schemes nixpkgs-lib; };
   in {
     test = {
     };
@@ -116,7 +112,7 @@
           modules ? []
         , pkgs
         , extraSpecialArgs ? {}
-      }: import "${pkgs.bumpkin.unpackedInputs.home-manager}/modules" {
+      }: import "${unpackedInputs.home-manager}/modules" {
         inherit pkgs;
         extraSpecialArgs = extraArgs // extraSpecialArgs // { inherit pkgs; };
         configuration = {...}: {
@@ -146,7 +142,7 @@
 
     nixOnDroidConfigurations = let
       nixOnDroidConf = mainModule:
-      import "${pkgs.bumpkin.unpackedInputs.nix-on-droid}/modules" {
+      import "${unpackedInputs.nix-on-droid}/modules" {
         config = {
           _module.args = extraArgs;
           home-manager.config._module.args = extraArgs;
@@ -155,9 +151,9 @@
           ];
         };
         pkgs = mkPkgs {
-          overlays = (import "${pkgs.bumpkin.unpackedInputs.nix-on-droid}/overlays");
+          overlays = (import "${unpackedInputs.nix-on-droid}/overlays");
         };
-        home-manager = import pkgs.bumpkin.unpackedInputs.home-manager {};
+        home-manager = import unpackedInputs.home-manager {};
         isFlake = true;
       };
     in mapAttrValues nixOnDroidConf {
