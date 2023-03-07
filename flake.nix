@@ -88,6 +88,10 @@
       # pollymc = (importFlake "${unpackedInputs.pollymc}/flake.nix" { inherit nixpkgs; }).overlay;
       this = import ./overlay.nix self;
     };
+    nix-colors = importFlake "${unpackedInputs.nix-colors}/flake.nix" {
+      nixpkgs-lib = importFlake "${unpackedInputs.nixpkgs-lib}";
+      inherit (unpackedInputs) base16-schemes;
+    };
   in {
     bumpkin = {
       inherit inputs unpackedInputs;
@@ -97,7 +101,7 @@
     inherit pkgs;
     inherit self;
 
-    colors = inputs.nix-colors.colorSchemes."classic-dark";
+    colors = nix-colors.colorSchemes."classic-dark";
 
     homeConfigurations = let
         hmConf = {
