@@ -29,6 +29,7 @@ in {
   home-manager = cp "${bumpkin.unpackedInputs.home-manager}/home-manager";
 
   requireFile = callPackage "${bumpkin.unpackedInputs.nix-requirefile.lib}/package.nix" {
+    inherit (prev) requireFile;
     requireFileSources = [
       bumpkin.unpackedInputs.nix-requirefile.data.main
     ];
