@@ -92,6 +92,7 @@
     };
 
     overlays = {
+      nix-requirefile = import "${unpackedInputs.nix-requirefile.lib}/overlay.nix";
       borderless-browser = import "${unpackedInputs.borderless-browser}/overlay.nix";
       rust-overlay = import "${unpackedInputs.rust-overlay}/rust-overlay.nix";
       this = import ./overlay.nix self;

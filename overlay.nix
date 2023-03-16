@@ -28,8 +28,7 @@ in {
   wrapWine = cp ./pkgs/wrapWine.nix;
   home-manager = cp "${bumpkin.unpackedInputs.home-manager}/home-manager";
 
-  requireFile = callPackage "${bumpkin.unpackedInputs.nix-requirefile.lib}/package.nix" {
-    inherit (prev) requireFile;
+  requireFile = prev.requireFile.override {
     requireFileSources = [
       bumpkin.unpackedInputs.nix-requirefile.data.main
     ];
