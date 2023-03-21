@@ -182,6 +182,13 @@
             exit 1
           fi
         '')
+        (writeShellScriptBin "bumpkin-list" ''
+          if [ -v NIXCFG_ROOT_PATH ]; then
+            bumpkin list -i "$NIXCFG_ROOT_PATH/bumpkin.json" -o "$NIXCFG_ROOT_PATH/bumpkin.json.lock" "$@"
+          else
+            exit 1
+          fi
+        '')
       ];
       shellHook = ''
         ${global.environmentShell}
