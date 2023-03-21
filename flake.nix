@@ -212,6 +212,9 @@
         ++ (with self.homeConfigurations; [
           main.activationPackage
         ])
+        ++ (with self.devShells.${system}; [
+          (pkgs.writeShellScriptBin "s" "echo ${default.outPath}")
+        ])
       ;
       installPhase = ''
         echo $version > $out
