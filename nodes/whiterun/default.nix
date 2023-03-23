@@ -42,8 +42,6 @@ in {
     enable = true;
   };
 
-  services.deluge.enable = true;
-
   services.cockpit.enable = true;
 
   services.magnetico.enable = true;
