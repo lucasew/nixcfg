@@ -11,6 +11,7 @@ in {
   imports = [
     ../base/default.nix
     ./dlna.nix
+    ./helix.nix
     ./espanso.nix
     ./dconf.nix
     ./nixgram.nix
