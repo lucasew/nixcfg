@@ -58,6 +58,7 @@ in {
     nbr.telegram-desktop-bin # communication
     terraform
     vlc # media
+    stremio
     nbr.wine-apps._7zip
     xxd
     pavucontrol # controle de volume
