@@ -30,7 +30,7 @@ if host.data.get('nixos-switch'):
 
 server.shell(
     _sudo=True,
-    name="Switching configuration",
+    name="Switching configuration" if switch_cmd == "switch" else "Setting up configuration to be applied in the next boot",
     commands = [
         f"{str(config_path)}/bin/switch-to-configuration {switch_cmd}"            
     ]
