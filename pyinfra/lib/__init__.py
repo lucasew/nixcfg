@@ -1,4 +1,5 @@
 from pyinfra import host
+from pyinfra.api import operation
 
 __ALL__ = []
 
@@ -21,4 +22,9 @@ def is_nixos():
     from pyinfra.facts.server import LinuxName
     distro = host.get_fact(LinuxName)
     return distro == "NixOS"
+
+@operation()
+@expose()
+def noop():
+    yield ""
 
