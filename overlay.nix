@@ -34,19 +34,11 @@ in {
 
   prev = prev;
   requireFileSources = [ bumpkin.unpackedInputs.nix-requirefile.data.main ];
-  # requireFile = prev.callPackage "${bumpkin.unpackedInputs.nix-requirefile.lib}/package.nix" {
-  # # requireFile = prev.requireFile.override {
-  #   inherit (prev) requireFile;
-  #   requireFileSources = [
-  #     bumpkin.unpackedInputs.nix-requirefile.data.main
-  #   ];
-  # };
 
-  dotenv = cp bumpkin.unpackedInputs.dotenv;
-  # bumpkin = cp inputs.bumpkin;
   nbr = import "${bumpkin.unpackedInputs.nbr}" { pkgs = final; };
   appimage-wrap = final.nbr.appimage-wrap;
 
+  dotenv = cp bumpkin.unpackedInputs.dotenv;
   p2k = cp bumpkin.unpackedInputs.pocket2kindle;
   pytorrentsearch = cp bumpkin.unpackedInputs.pytorrentsearch;
   redial_proxy = cp bumpkin.unpackedInputs.redial_proxy;
@@ -105,7 +97,7 @@ in {
     };
     inherit (flake.outputs) colors;
   };
-  
+
   intel-ocl = prev.intel-ocl.overrideAttrs (old: {
     src = prev.fetchzip {
       url = "https://github.com/lucasew/nixcfg/releases/download/debureaucracyzzz/SRB5.0_linux64.zip";
