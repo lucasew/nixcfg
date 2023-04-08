@@ -19,6 +19,10 @@ in {
     climod = cp bumpkin.unpackedInputs.climod;
   });
 
+  devenv = final.writeShellScriptBin "devenv" ''
+    nix run ${bumpkin.unpackedInputs.devenv}# -- "$@"
+  '';
+
   ctl = cp ./pkgs/ctl;
   c4me = cp ./pkgs/c4me;
   personal-utils = cp ./pkgs/personal-utils.nix;
