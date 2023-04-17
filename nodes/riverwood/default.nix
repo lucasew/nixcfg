@@ -22,7 +22,7 @@ in
       ./networking.nix
       ./dns.nix
       ./kvm.nix
-      ./zfs.nix
+      # ./zfs.nix
       ./plymouth.nix
       ./remote-build.nix
     ]
