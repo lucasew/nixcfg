@@ -10,7 +10,6 @@ in {
     ./netns.nix
     ./zerotier.nix
     ./tailscale.nix
-    ./dns.nix
     ./user.nix
     ./ssh.nix
     ./colors.nix
