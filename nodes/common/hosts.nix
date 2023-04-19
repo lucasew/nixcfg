@@ -14,7 +14,7 @@ in {
     enable = true;
     resolveLocalQueries = false;
     extraConfig = ''
-      port=5353
+      port=53
       domain-needed
       bogus-priv
       no-resolv
