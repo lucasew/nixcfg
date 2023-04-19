@@ -1,9 +1,6 @@
-{ config, lib, ... }:
+{ global, config, lib, ... }:
 let
-  node = {  # tailscale internal IPs, this module conflicts with MagicDNS
-    riverwood = "100.108.254.101";
-    whiterun = "100.85.38.19";
-  }."${config.networking.hostName}";
+  node = global.nodeIps.${config.networking.hostName}.ts or null;
 
   mySubdomains = 
   let
@@ -12,7 +9,7 @@ let
   in lib.flatten [ nginx baseDomain ];
 in {
   services.dnsmasq = {
-    enable = true;
+    enable = node != null;
     resolveLocalQueries = false;
     extraConfig = ''
       port=53
