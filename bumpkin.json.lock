@@ -138,33 +138,33 @@
     },
     "nixpkgs": {
         "unstable-small": {
-            "github_commit": "95d880e0351edc0f2c702c190799e1f32f3611ea",
-            "sha256": "761673fde23aa36d4ca027321fa32503f9eed32ef5055fc7794e10d04a3beebb",
-            "final_url": "https://codeload.github.com/NixOS/nixpkgs/tar.gz/95d880e0351edc0f2c702c190799e1f32f3611ea",
+            "github_commit": "cafa2f02fbbcade5c5c257c190061da555d90913",
+            "sha256": "3c9086bd035b4ee38b9b0a9a55b516f474545dd417538a0a93952052ed8e471a",
+            "final_url": "https://codeload.github.com/NixOS/nixpkgs/tar.gz/cafa2f02fbbcade5c5c257c190061da555d90913",
             "file_type": "tar.gz",
-            "_bpk_last_update": 1678206221
+            "_bpk_last_update": 1682018909
         },
         "unstable": {
-            "github_commit": "9a6aabc4740790ef3bbb246b86d029ccf6759658",
-            "sha256": "c8b2effb9ae618306fa5b6094ae3960de504907332879f63194beed11eb7e8bd",
-            "final_url": "https://codeload.github.com/NixOS/nixpkgs/tar.gz/9a6aabc4740790ef3bbb246b86d029ccf6759658",
+            "github_commit": "555daa9d339b3df75e58ee558a4fec98ea92521e",
+            "sha256": "f35571a2f5ce86d81374d9b2fe2a1dbb3ce937be7c7b81a9bc614f95d8d3ebdd",
+            "final_url": "https://codeload.github.com/NixOS/nixpkgs/tar.gz/555daa9d339b3df75e58ee558a4fec98ea92521e",
             "file_type": "tar.gz",
-            "_bpk_last_update": 1680228745
+            "_bpk_last_update": 1682018946
         },
         "stable": {
-            "github_commit": "e2c97799da5f5cd87adfa5017fba971771e123ef",
-            "sha256": "a2ba3862ba906ef1b9a335e52528db1b0c414caecf9902e860df045166bb0d33",
-            "final_url": "https://codeload.github.com/NixOS/nixpkgs/tar.gz/e2c97799da5f5cd87adfa5017fba971771e123ef",
+            "github_commit": "7c786944f801745310578d1cfc019923396f830c",
+            "sha256": "7dedb3bf1024061cfe331feb0c4538837dc58650913de9a49eb17b61297a8b8b",
+            "final_url": "https://codeload.github.com/NixOS/nixpkgs/tar.gz/7c786944f801745310578d1cfc019923396f830c",
             "file_type": "tar.gz",
-            "_bpk_last_update": 1679362307
+            "_bpk_last_update": 1682018926
         },
         "lib": {
             "default_branch": "heads/master",
-            "github_commit": "44214417fe4595438b31bdb9469be92536a61455",
-            "sha256": "12559101bd91681d735783e46523afbcf5acb78286d8457d0cdaaae403f65b0a",
-            "final_url": "https://codeload.github.com/nix-community/nixpkgs.lib/tar.gz/44214417fe4595438b31bdb9469be92536a61455",
+            "github_commit": "367c0e1086a4eb4502b24d872cea2c7acdd557f4",
+            "sha256": "dc14c1dc083966f4a90c6cb83b1b8f62fb33cb971f6ec537c41b66a7d54efb65",
+            "final_url": "https://codeload.github.com/nix-community/nixpkgs.lib/tar.gz/367c0e1086a4eb4502b24d872cea2c7acdd557f4",
             "file_type": "tar.gz",
-            "_bpk_last_update": 1679362309
+            "_bpk_last_update": 1682018928
         },
         "prs": {
             "bump-cockpit": {
@@ -175,7 +175,7 @@
             "coq-deps": {
                 "sha256": "200b088a7cae25582a45182e4c6c13ae0c54b7e1403a786adb291c09268d596e",
                 "final_url": "https://patch-diff.githubusercontent.com/raw/NixOS/nixpkgs/pull/223056.patch",
-                "_bpk_last_update": 1681219369
+                "_bpk_last_update": 1682018948
             }
         }
     },
