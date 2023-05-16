@@ -66,7 +66,6 @@ in {
     xxd
     pavucontrol # controle de volume
     rnix-lsp
-    (runCommand "bin" {} "mkdir $out; cp -r ${../../bin} $out/bin")
     pytorrentsearch
   ] ;
 
