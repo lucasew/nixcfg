@@ -20,6 +20,7 @@ in {
 
   ];
 
+
   home = {
     homeDirectory = /home/lucasew;
     inherit (global) username;
