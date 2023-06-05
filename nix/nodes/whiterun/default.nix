@@ -14,6 +14,7 @@ in {
     # ./kubernetz.nix
     ./magnetico.nix
     ./invidious.nix
+    ./libreddit.nix
     ./dashboards.nix
     ./cf-torrent.nix
     ./sshfs.nix
