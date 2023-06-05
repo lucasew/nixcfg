@@ -13,6 +13,7 @@ in {
     # "${unpackedInputs.nixos-hardware}/common/gpu/nvidia"
     # ./kubernetz.nix
     ./magnetico.nix
+    ./invidious.nix
     ./dashboards.nix
     ./cf-torrent.nix
     ./sshfs.nix
