@@ -8,7 +8,12 @@ in
     ./nginx-root-domain.nix
     ./nix-index-database.nix
     ./netusage.nix
+    ./magnetico.nix
+    ./lvm.nix
+    ./transmission
+    ./invidious.nix
     ./cockpit-extra.nix
+    ./libreddit.nix
     ../bootstrap/default.nix
     ../../modules/cachix/system.nix
     ../../modules/hold-gc/system.nix

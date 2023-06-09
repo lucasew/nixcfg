@@ -11,18 +11,18 @@ in {
     "${unpackedInputs.nixos-hardware}/common/gpu/amd"
     "${unpackedInputs.nixos-hardware}/common/pc/ssd"
     # "${unpackedInputs.nixos-hardware}/common/gpu/nvidia"
-    ./magnetico.nix
-    ./invidious.nix
-    ./libreddit.nix
     ./dashboards.nix
     ./sshfs.nix
-    ./lvm.nix
     ./rocm-gambiarra.nix
-    ./transmission.nix
     ./dlna.nix
     ./zfs.nix
     ./postgresql.nix
     ./nextcloud.nix
+  ];
+
+  services.transmission.enable = true;
+  systemd.services.transmission.serviceConfig.BindPaths = [
+    "/storage/downloads"
   ];
 
   services.cf-torrent.enable = true;
