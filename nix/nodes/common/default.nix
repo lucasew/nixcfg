@@ -1,6 +1,7 @@
 {self, pkgs, lib, unpackedInputs, ...}:
 let
   inherit (self) inputs;
+  inherit (lib) mkDefault;
 in
 {
   imports = [
@@ -34,6 +35,8 @@ in
     ./telegram_sendmail.nix
     "${unpackedInputs.simple-dashboard}/nixos-module.nix"
   ];
+
+  services.lvm.enable = mkDefault false;
 
   programs.fuse.userAllowOther = true;
 
