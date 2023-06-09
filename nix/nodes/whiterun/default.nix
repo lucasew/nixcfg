@@ -5,19 +5,21 @@ let
   hostname = "whiterun";
 in {
   imports = [
-    ../gui-common
     ./hardware-configuration.nix
+    ../gui-common
+
     "${unpackedInputs.nixos-hardware}/common/cpu/amd/pstate.nix"
     "${unpackedInputs.nixos-hardware}/common/gpu/amd"
     "${unpackedInputs.nixos-hardware}/common/pc/ssd"
+
     # "${unpackedInputs.nixos-hardware}/common/gpu/nvidia"
     ./dashboards.nix
-    ./sshfs.nix
-    ./rocm-gambiarra.nix
     ./dlna.nix
-    ./zfs.nix
-    ./postgresql.nix
     ./nextcloud.nix
+    ./postgresql.nix
+    ./rocm-gambiarra.nix
+    ./sshfs.nix
+    ./zfs.nix
   ];
 
   services.transmission.enable = true;
