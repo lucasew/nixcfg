@@ -5,7 +5,7 @@ let
 in
 
 {
-  config = mkIf services.transmission.enable {
+  config = mkIf config.services.transmission.enable {
     networking.ports = {
       transmission-0000.enable = true; # highest port
       transmission-0001.enable = true;
