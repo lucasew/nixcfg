@@ -260,11 +260,11 @@
         "_bpk_last_update": 1685814333
     },
     "home-manager": {
-        "github_commit": "0d1e053ce997f1dc181a0790c3b1ba2c76550ace",
-        "sha256": "f72082c795c74ea069efaee2e328816f0e2d6ecbcfd34a27ce86bb322298d720",
-        "final_url": "https://codeload.github.com/nix-community/home-manager/tar.gz/0d1e053ce997f1dc181a0790c3b1ba2c76550ace",
+        "github_commit": "e753d659c64c7d158433d87ef7d6151ca1d1817a",
+        "sha256": "5c96548cb042d2e7a1fc4aef8873bf7b7fcef17b4fa2d1028956e12ec9c45c4a",
+        "final_url": "https://codeload.github.com/nix-community/home-manager/tar.gz/e753d659c64c7d158433d87ef7d6151ca1d1817a",
         "file_type": "tar.gz",
-        "_bpk_last_update": 1686678993
+        "_bpk_last_update": 1686681789
     },
     "nix-warez": {
         "default_branch": "heads/master",
