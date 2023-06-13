@@ -55,6 +55,7 @@
             "python-2.7.18.6"
             "electron-18.1.0"
             "electron-21.4.0"
+            "openssl-1.1.1u"
         ];
       };
       overlays = if disableOverlays then [] else (overlays ++ (builtins.attrValues self.outputs.overlays));
