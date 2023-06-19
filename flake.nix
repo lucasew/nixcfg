@@ -4,20 +4,30 @@
   inputs = {
     bumpkin.url = "github:lucasew/bumpkin";
     nix-index-database.url = "github:Mic92/nix-index-database";
+    nixpkgs.url = "nixpkgs/nixpkgs-unstable";
   };
 
   outputs = {
       self
     , bumpkin
     , nix-index-database
+    , nixpkgs
   }:
   let
-    defaultNixpkgs = unpackedInputs.nixpkgs.unstable.overrideAttrs (old: {
-      patches = [
-      ];
-    });
+    inherit (builtins) replaceStrings toFile trace readFile concatStringsSep mapAttrs length;
 
-    inherit (builtins) replaceStrings toFile trace readFile concatStringsSep mapAttrs;
+    patches = [ ];
+
+    defaultNixpkgs = if (length patches == 0)
+      then nixpkgs
+      else (import nixpkgs {}).stdenvNoCC.mkDerivation {
+        name = "source";
+        src = nixpkgs;
+        phases = [ "unpackPhase" "patchPhase" "installPhase" ];
+        inherit patches;
+        installPhase = "cp -r . $out";
+      };
+
 
     inherit (let
       bootstrapPkgs = mkPkgs {
