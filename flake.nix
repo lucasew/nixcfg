@@ -18,23 +18,21 @@
 
     patches = [ ];
 
-    defaultNixpkgs = if (length patches == 0)
+    bootstrapPkgs = import nixpkgs { inherit system; };
+
+    defaultNixpkgs = if ((length patches) == 0)
       then nixpkgs
-      else (import nixpkgs {}).stdenvNoCC.mkDerivation {
+      else bootstrapPkgs.stdenvNoCC.mkDerivation {
         name = "source";
         src = nixpkgs;
         phases = [ "unpackPhase" "patchPhase" "installPhase" ];
         inherit patches;
+        preferLocalBuild = true;
         installPhase = "cp -r . $out";
       };
 
 
     inherit (let
-      bootstrapPkgs = mkPkgs {
-        inherit system;
-        nixpkgs = bumpkin.inputs.nixpkgs.outPath;
-        disableOverlays = true;
-      };
       bumpkinPkg = bootstrapPkgs.callPackage bumpkin.outPath {};
       inputs = bumpkinPkg.loadBumpkin {
         inputFile = ./bumpkin.json;
@@ -52,7 +50,7 @@
     system = builtins.currentSystem or "x86_64-linux";
 
     mkPkgs = {
-      nixpkgs #? defaultNixpkgs
+      nixpkgs ? defaultNixpkgs
     , config ? {}
     , overlays ? []
     , disableOverlays ? false
