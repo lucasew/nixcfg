@@ -5,6 +5,7 @@
     bumpkin.url = "github:lucasew/bumpkin";
     nix-index-database.url = "github:Mic92/nix-index-database";
     nixpkgs.url = "nixpkgs/nixpkgs-unstable";
+    home-manager.url = "home-manager";
   };
 
   outputs = {
@@ -12,6 +13,7 @@
     , bumpkin
     , nix-index-database
     , nixpkgs
+    , home-manager
   }:
   let
     inherit (builtins) replaceStrings toFile trace readFile concatStringsSep mapAttrs length;
@@ -126,7 +128,7 @@
           modules ? []
         , pkgs
         , extraSpecialArgs ? {}
-      }: import "${bumpkinUnpackedInputs.home-manager}/modules" {
+      }: import "${home-manager}/modules" {
         inherit pkgs;
         extraSpecialArgs = extraArgs // extraSpecialArgs // { inherit pkgs; };
         configuration = {...}: {
