@@ -1,0 +1,4 @@
+#!/usr/bin/env nix-shell
+#!nix-shell -i bash -p tigervnc
+# vim:ft=bash
+x0vncserver -display=:0 -SecurityTypes None -ImprovedHextile=1 -RawKeyboard=1
