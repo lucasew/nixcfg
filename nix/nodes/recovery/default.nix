@@ -34,6 +34,7 @@
   networking = {
     hostId = "2c6b15e1";
     hostName = "recovery-iso";
+    wireless.enable = false;
   };
 
   services.xserver.displayManager.autoLogin = {
@@ -42,5 +43,10 @@
   };
 
   system.stateVersion = "22.05"; # Did you read the comment?
+
+  virtualisation.virtualbox = {
+    host.enable = false;
+    guest.enable = true;
+  };
 
 }
