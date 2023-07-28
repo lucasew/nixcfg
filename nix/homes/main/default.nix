@@ -41,6 +41,7 @@ in {
     devenv
     dotenv
     discord
+    jless # json viewer
     feh
     fortune
     graphviz
