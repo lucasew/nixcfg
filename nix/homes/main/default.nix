@@ -42,6 +42,8 @@ in {
     dotenv
     discord
     jless # json viewer
+    rustdesk # remote desktop for many systems
+    gscan2pdf
     feh
     fortune
     graphviz
