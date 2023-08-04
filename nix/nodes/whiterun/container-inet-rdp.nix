@@ -10,11 +10,13 @@ in
 
   containers.chrome-rdp = {
     autoStart = true;
-    hostBridge = "br-chromerdp";
+    privateNetwork = true;
+    hostAddress = "192.168.68.1";
+    localAddress = "192.168.68.2";
     forwardPorts = [
       {
-        hostPort = config.containers.chrome-rdp.services.xrdp.port;
-        containerPort = config.containers.chrome-rdp.services.xrdp.port;
+        hostPort = config.containers.chrome-rdp.config.services.xrdp.port;
+        containerPort = config.containers.chrome-rdp.config.services.xrdp.port;
         protocol = "tcp";
       }
     ];

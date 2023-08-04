@@ -10,7 +10,9 @@ in
 
   containers.chrome-nx = {
     autoStart = true;
-    hostBridge = "br-chromenx";
+    privateNetwork = true;
+    hostAddress = "192.168.68.1";
+    localAddress = "192.168.68.3";
     forwardPorts = [
       {
         hostPort = 2222;
