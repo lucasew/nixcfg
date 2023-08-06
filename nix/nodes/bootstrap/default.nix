@@ -20,6 +20,7 @@ in {
     ./user.nix
     ./zerotier.nix
     ./nix-tmp.nix
+    ./last-generation.nix
     ./dotd.nix
   ];
 
