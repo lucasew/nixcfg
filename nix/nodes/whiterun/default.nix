@@ -58,6 +58,14 @@ in {
   services.cloud-savegame = {
     enable = true;
     calendar = "00:00:01";
+    settings = {
+      search = {
+        paths = [ "/storage/games/steam/compatdata" ];
+      };
+      flatout-2 = {
+        installdir = [ "/storage/games/steam/steamapps/common/FlatOut2" ];
+      };
+    };
   };
 
   services.nextcloud.enable = true;
