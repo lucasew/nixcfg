@@ -2,7 +2,7 @@
 
 let
   inherit (builtins) removeAttrs;
-  inherit (lib) mkOption types submodule literalExpression mdDoc mkDefault attrNames foldl' mapAttrs mkEnableOption attrValues isString length head warn optional concatStringsSep;
+  inherit (lib) mkOption types submodule literalExpression mdDoc mkDefault attrNames foldl' mapAttrs mkEnableOption attrValues isString length head warn optional concatStringsSep filter;
 
   mkAllocModule = {
     description ? null,
@@ -32,7 +32,8 @@ let
       visible
     ;
     default = {};
-    apply = items: let
+    apply = _items: let
+      items = removeAttrs _items (filter (item: !_items.${item}.enable) (attrNames _items));
       itemKeys = attrNames items;
       isItemDefined = itemKey: items.${itemKey}.${valueKey} != null;
       definedItems = lib.filter isItemDefined itemKeys;
@@ -116,14 +117,14 @@ in {
       };
     }) {})
   ];
-  # config.networking.ports = {
-  #   eoq = {
-  #     enable = true;
-  #     port = 22;
-  #   };
-  #   trabson = {
-  #     enable = true;
-  #     port = 49139;
-  #   };
-  # };
+  config.networking.ports = {
+    eoq = {
+      enable = false;
+      port = 22;
+    };
+    trabson = {
+      enable = true;
+      port = 49139;
+    };
+  };
 }
