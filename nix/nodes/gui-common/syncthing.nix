@@ -5,6 +5,7 @@ lib.mkIf config.services.syncthing.enable {
     overrideFolders = lib.mkDefault false;
     overrideDevices = lib.mkDefault false;
     guiAddress = "127.0.0.1:${toString config.networking.ports.syncthing-gui.port}";
+    relay.enable = true;
   };
 
   networking.ports.syncthing-gui.enable = true;
