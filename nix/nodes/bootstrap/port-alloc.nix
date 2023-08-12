@@ -23,6 +23,7 @@ let
     internal ? null,
     relatedPackages ? null,
     visible ? null,
+    dontThrow ? false,
   }: mkOption {
     inherit
       description
@@ -60,10 +61,26 @@ let
       suggestedValue = suggestValue firstValue;
       suggestedValueLiteral = valueLiteral suggestedValue;
 
-      handleMissingKeyPath = passthru: if keyPath != "" then passthru else warn "mkAllocModule: keyPath missing. Error messages will be less useful" passthru;
-      handleMissingValues = passthru: if length undefinedItems == 0 then passthru else throw "Key ${getFullKey (head undefinedItems)} is missing a value. Suggestion: set the value to: `${suggestedValueLiteral}`";
-      handleConflicts = passthru: if conflictDict._conflict == null then passthru else throw "Key ${getFullKey conflictDict._conflict.from} and ${getFullKey conflictDict._conflict.to} have the same values. Suggestion: change the value of one of them to: `${suggestedValueLiteral}`";
-      handleInvalidValues = passthru: if length conflictDict._invalid == 0 then passthru else throw "The following keys have invalid values: ${concatStringsSep ", "(map (getFullKey) conflictDict._invalid)}. Suggestion: change the value of the first key to: `${suggestedValueLiteral}`";
+      throwPassthru = message: passthru: throw message;
+
+      handleCondition = fallback: condition: message: passthru:
+      if condition then passthru
+      else if dontThrow
+        then
+          (passthru // {_message = message; _conflictDict = conflictDict; })
+        else
+          fallback message passthru;
+
+      handleConditionThrow = condition: message: passthru:
+        handleCondition throwPassthru condition message passthru;
+
+      handleConditionWarn = condition: message: passthru:
+        handleCondition lib.warn      condition message passthru;
+
+      handleMissingKeyPath = handleConditionWarn (keyPath != "") "mkAllocModule: keyPath missing. Error messages will be less useful";
+      handleMissingValues = handleConditionThrow (length undefinedItems == 0) "Key ${getFullKey (head undefinedItems)} is missing a value. Suggestion: set the value to: `${suggestedValueLiteral}`";
+      handleConflicts = passthru: handleConditionThrow (conflictDict._conflict == null) "Key ${getFullKey conflictDict._conflict.from} and ${getFullKey conflictDict._conflict.to} have the same values. Suggestion: change the value of one of them to: `${suggestedValueLiteral}`";
+      handleInvalidValues = passthru: handleConditionThrow (length conflictDict._invalid == 0) "The following keys have invalid values: ${concatStringsSep ", "(map (getFullKey) conflictDict._invalid)}. Suggestion: change the value of the first key to: `${suggestedValueLiteral}`";
 
     in lib.pipe items [
       handleMissingKeyPath
@@ -88,6 +105,8 @@ let
 
 in {
   options.networking.ports = mkAllocModule {
+    dontThrow = true;
+
     valueKey = "port";
     valueType = types.port;
     cfg = config.networking.ports;
