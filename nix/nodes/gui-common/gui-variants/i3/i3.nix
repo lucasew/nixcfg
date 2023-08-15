@@ -1,6 +1,5 @@
 {pkgs, lib, config, ...}:
 
-with pkgs.custom.colors.colors;
 let
   custom_rofi = pkgs.custom.rofi.override { inherit (pkgs.custom) colors; };
   inherit (pkgs) writeShellScript makeDesktopItem;
@@ -43,7 +42,6 @@ in {
       terminator
     ];
     services.xserver.windowManager.i3 = {
-      enable = true;
       configFile = "/etc/i3config";
       extraPackages = with pkgs; [
         playerctl
@@ -53,7 +51,7 @@ in {
         brightnessctl
       ];
     };
-    environment.etc."i3status".text = lib.mkForce ''
+    environment.etc."i3status".text = with pkgs.custom.colors.colors; lib.mkForce ''
 general {
   colors = true
   color_bad = "#${base08}"
@@ -128,7 +126,7 @@ tztime local {
 
 
   '';
-    environment.etc."i3config".text = lib.mkForce ''
+    environment.etc."i3config".text = with pkgs.custom.colors.colors; lib.mkForce ''
 set $mod ${mod}
 
 bar {
