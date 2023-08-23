@@ -71,8 +71,10 @@ in {
     nbr.wine-apps._7zip
     xxd
     pavucontrol # controle de volume
-    rnix-lsp
     pytorrentsearch
+    # LSPs
+    nixd
+    python3Packages.python-lsp-server
   ] ;
 
   # programs.hello-world.enable = true;
