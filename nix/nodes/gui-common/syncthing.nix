@@ -9,6 +9,7 @@ lib.mkIf config.services.syncthing.enable {
   };
 
   networking.ports.syncthing-gui.enable = true;
+  networking.ports.syncthing-gui.port = 49151;
 
   services.nginx.virtualHosts."syncthing.${config.networking.hostName}.${config.networking.domain}" = {
     locations."/" = {

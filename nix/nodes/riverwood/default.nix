@@ -28,6 +28,10 @@ in
     };
   };
 
+  services.syncthing = {
+    enable = true;
+  };
+
   services.nginx.enable = true;
 
   services.xserver.windowManager.i3.enable = true;
