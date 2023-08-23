@@ -11,6 +11,10 @@ lib.mkIf config.services.syncthing.enable {
   networking.ports.syncthing-gui.enable = true;
   networking.ports.syncthing-gui.port = 49151;
 
+  systemd.services.syncthing.serviceConfig.ReadWritePaths =
+    map (x: x.path) (builtins.attrValues config.services.syncthing.folders)
+  ;
+
   services.nginx.virtualHosts."syncthing.${config.networking.hostName}.${config.networking.domain}" = {
     locations."/" = {
       proxyPass = "http://${config.services.syncthing.guiAddress}";
