@@ -30,6 +30,19 @@ in
 
   services.syncthing = {
     enable = true;
+    folders = {
+      obsidian = {
+        path = "/home/lucasew/WORKSPACE/ZETTEL/obsidian";
+        label = "Obsidian";
+        id = "43a6e881-d9f2-4517-9ba4-22f4a0c41199";
+        devices = [ "moto-g52" ];
+      };
+    };
+    devices = {
+      moto-g52 = {
+        addresses = [ "moto-g52" ]; # tailscale
+      };
+    };
   };
 
   services.nginx.enable = true;
