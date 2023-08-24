@@ -40,7 +40,7 @@ in
     };
     devices = {
       moto-g52 = {
-        addresses = [ "moto-g52" ]; # tailscale
+        # addresses = [ "moto-g52" ]; # tailscale
         id = "ZZB7S3J-5VVLWXY-OUSSEIS-N5SNGVC-MJVVRK2-7PNVQBE-SI7Z2O4-6GVINAK";
       };
     };
