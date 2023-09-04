@@ -103,6 +103,7 @@ in
   };
   custom = rec {
     colorpipe = cp ./pkgs/colorpipe.nix;
+    chromium = cp ./pkgs/custom/chromium;
     ncdu = cp ./pkgs/custom/ncdu.nix;
     neovim = cp ./pkgs/custom/neovim;
     emacs = cp ./pkgs/custom/emacs;
