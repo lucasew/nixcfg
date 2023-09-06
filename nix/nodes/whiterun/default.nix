@@ -67,11 +67,8 @@ in {
     calendar = "00:00:01";
     settings = {
       search = {
-        paths = [ "/storage/games/steam/compatdata" ];
-        ignore = [
-          "/home/lucasew/WORKSPACE"
-          "/home/lucasew/TMP2"
-          "/run/media"
+        paths = [
+          "/storage/games/steam/compatdata"
         ];
       };
       flatout-2 = {

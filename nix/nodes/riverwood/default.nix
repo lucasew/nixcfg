@@ -68,13 +68,6 @@ in
   services.cloud-savegame = {
     enable = true;
     calendar = "01:00:01";
-    settings = {
-      search.ignore = [
-        "/home/lucasew/WORKSPACE"
-        "/home/lucasew/TMP2"
-        "/run/media"
-      ];
-    };
   };
 
   environment.systemPackages = with pkgs; [
