@@ -69,7 +69,11 @@ in
     enable = true;
     calendar = "01:00:01";
     settings = {
-      search.ignore = [ "/home/lucasew/WORKSPACE/000ANNEX" "/run/media" ];
+      search.ignore = [
+        "/home/lucasew/WORKSPACE"
+        "/home/lucasew/TMP2"
+        "/run/media"
+      ];
     };
   };
 

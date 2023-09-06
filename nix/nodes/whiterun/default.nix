@@ -68,7 +68,11 @@ in {
     settings = {
       search = {
         paths = [ "/storage/games/steam/compatdata" ];
-        ignore = [ "/home/lucasew/WORKSPACE/000ANNEX" "/run/media" ];
+        ignore = [
+          "/home/lucasew/WORKSPACE"
+          "/home/lucasew/TMP2"
+          "/run/media"
+        ];
       };
       flatout-2 = {
         installdir = [ "/storage/games/steam/steamapps/common/FlatOut2" ];
