@@ -3,9 +3,9 @@
 , lib
 }:
 
-lib.pipe chromium [
-  (drv: drv.override { stdenv = ccacheStdenv; })
-  (drv: drv.overrideAttrs (old: {
-    patches = (old.patches or []) ++ [ ./hide-tabs.patch ];
-  }))
-]
+chromium.browser.overrideDerivation (old: {
+  # stdenv = ccacheStdenv;
+  patchPhase = null;
+  postPatch = (old.patchPhase or "") + (old.postPatch or "");
+  patches = (old.patches or []) ++ [ ./hide-tabs.patch ];
+})
