@@ -5,6 +5,9 @@
     bumpkin.url = "github:lucasew/bumpkin";
     bumpkin.inputs.nixpkgs.follows = "nixpkgs";
 
+    cloud-savegame.url = "github:lucasew/cloud-savegame";
+    cloud-savegame.flake = false;
+
     nix-index-database.url = "github:Mic92/nix-index-database";
 
     nixpkgs.url = "nixpkgs/nixpkgs-unstable";
