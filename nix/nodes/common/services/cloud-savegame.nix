@@ -60,6 +60,12 @@ in {
   };
 
   config = mkIf cfg.enable {
+    services.cloud-savegame.settings = {
+      general.divider = ",";
+      search.paths="~";
+      flatout-2.installdir= ["~/.local/share/Steam/steamapps/common/FlatOut2" ];
+    };
+
     environment.etc."cloud-savegame-settings.ini".source = 
       let
         atom = val: if ((builtins.typeOf val) == "list") then
