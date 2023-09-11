@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
+# run command in the context of the repo
+
 __ETC_BASHRC_SOURCED=0
 
-source /etc/bashrc
-
-nix develop "$(dotfilesDir)" -c "$@"
+nix develop "$(sd d root)" -c "$@"
