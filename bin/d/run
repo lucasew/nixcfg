@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+__ETC_BASHRC_SOURCED=0
+
+source /etc/bashrc
+
+nix develop "$(dotfilesDir)" -c "$@"
