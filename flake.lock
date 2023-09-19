@@ -119,6 +119,22 @@
         "type": "github"
       }
     },
+    "dotenv": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1611174470,
+        "narHash": "sha256-/HssR3ouOuF/YMV59r0sDrJ0VwAwXyzO1XjT/JM5rSA=",
+        "owner": "lucasew",
+        "repo": "dotenv",
+        "rev": "c831ecac919d51c385d60a319081185d9f94a8e1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lucasew",
+        "repo": "dotenv",
+        "type": "github"
+      }
+    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": "nixpkgs-lib"
@@ -313,6 +329,22 @@
       "original": {
         "owner": "lucasew",
         "repo": "nix-requirefile",
+        "type": "github"
+      }
+    },
+    "nix-vscode": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1650641713,
+        "narHash": "sha256-cIV/tVx0v7YLUq1lUo7DmOvymA73VST9IPf5n4qSmtI=",
+        "owner": "nixosbrasil",
+        "repo": "nix-vscode",
+        "rev": "97ad196a7c63abf3b97c293f4c7f3cb22aedbf9d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixosbrasil",
+        "repo": "nix-vscode",
         "type": "github"
       }
     },
@@ -522,6 +554,22 @@
         "type": "github"
       }
     },
+    "pocket2kindle": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1622762849,
+        "narHash": "sha256-shlDw5QHH6Regl2LxdurrNqx8IMxnQgsaqsxpRaprQY=",
+        "owner": "lucasew",
+        "repo": "pocket2kindle",
+        "rev": "2b100790585dcd699000fee636efdc3a1e36a1ef",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lucasew",
+        "repo": "pocket2kindle",
+        "type": "github"
+      }
+    },
     "redial-proxy": {
       "flake": false,
       "locked": {
@@ -546,6 +594,7 @@
         "cf-torrent": "cf-torrent",
         "climod": "climod",
         "cloud-savegame": "cloud-savegame",
+        "dotenv": "dotenv",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
@@ -554,11 +603,13 @@
         "nix-index-database": "nix-index-database",
         "nix-on-droid": "nix-on-droid",
         "nix-requirefile": "nix-requirefile",
+        "nix-vscode": "nix-vscode",
         "nixgram": "nixgram",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-lib": "nixpkgs-lib_2",
         "nur": "nur",
+        "pocket2kindle": "pocket2kindle",
         "redial-proxy": "redial-proxy",
         "rust-overlay": "rust-overlay",
         "simple-dashboard": "simple-dashboard",

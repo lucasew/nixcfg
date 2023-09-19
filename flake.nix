@@ -8,6 +8,12 @@
     cloud-savegame.url = "github:lucasew/cloud-savegame";
     cloud-savegame.flake = false;
 
+    dotenv.url = "github:lucasew/dotenv";
+    dotenv.flake = false;
+
+    pocket2kindle.url = "github:lucasew/pocket2kindle";
+    pocket2kindle.flake = false;
+
     nix-index-database.url = "github:Mic92/nix-index-database";
 
     nixpkgs.url = "nixpkgs/nixpkgs-unstable";
@@ -27,6 +33,9 @@
     nix-on-droid.url = "github:t184256/nix-on-droid";
     nix-on-droid.inputs.home-manager.follows = "home-manager";
     nix-on-droid.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-vscode.url = "github:nixosbrasil/nix-vscode";
+    nix-vscode.flake = false;
 
     home-manager.url = "home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
