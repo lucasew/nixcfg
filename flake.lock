@@ -119,6 +119,22 @@
         "type": "github"
       }
     },
+    "devenv": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1695118657,
+        "narHash": "sha256-Gr+pVf3W9CllxJD0clAt3jeDoLGhxKrmEILyQULalLU=",
+        "owner": "cachix",
+        "repo": "devenv",
+        "rev": "328a162f692e878bdb8d0283d937eadf1684cd51",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cachix",
+        "repo": "devenv",
+        "type": "github"
+      }
+    },
     "dotenv": {
       "flake": false,
       "locked": {
@@ -249,6 +265,22 @@
         "type": "github"
       }
     },
+    "nix-emacs": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1659755091,
+        "narHash": "sha256-pM2Jw3ped1x434AC3ZG6SjBxzHhcogQMGHENiDR0DCI=",
+        "owner": "nixosbrasil",
+        "repo": "nix-emacs",
+        "rev": "022b255b0beaf810f187db6f25a112ceaadfd583",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixosbrasil",
+        "repo": "nix-emacs",
+        "type": "github"
+      }
+    },
     "nix-formatter-pack": {
       "inputs": {
         "nixpkgs": [
@@ -313,6 +345,22 @@
       "original": {
         "owner": "t184256",
         "repo": "nix-on-droid",
+        "type": "github"
+      }
+    },
+    "nix-option": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1635712059,
+        "narHash": "sha256-psivvcVMDxlBjM8fgy+IJJLgYOCJZWfVA+qqzrXgus4=",
+        "owner": "lucasew",
+        "repo": "nix-option",
+        "rev": "90a8f980e4e24e2bc8371427921ad79df44ca6d0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lucasew",
+        "repo": "nix-option",
         "type": "github"
       }
     },
@@ -570,6 +618,22 @@
         "type": "github"
       }
     },
+    "pytorrentsearch": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1676054622,
+        "narHash": "sha256-18aZBT4/a3duIC5UzhwGxHvtWNF8iMJd1NsDF13ilOg=",
+        "owner": "lucasew",
+        "repo": "pytorrentsearch",
+        "rev": "2593c10f2aaf3c47f5a6f398637c6117fd13bedb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lucasew",
+        "repo": "pytorrentsearch",
+        "type": "github"
+      }
+    },
     "redial-proxy": {
       "flake": false,
       "locked": {
@@ -594,14 +658,17 @@
         "cf-torrent": "cf-torrent",
         "climod": "climod",
         "cloud-savegame": "cloud-savegame",
+        "devenv": "devenv",
         "dotenv": "dotenv",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
         "nbr": "nbr",
         "nix-colors": "nix-colors",
+        "nix-emacs": "nix-emacs",
         "nix-index-database": "nix-index-database",
         "nix-on-droid": "nix-on-droid",
+        "nix-option": "nix-option",
         "nix-requirefile": "nix-requirefile",
         "nix-vscode": "nix-vscode",
         "nixgram": "nixgram",
@@ -610,8 +677,10 @@
         "nixpkgs-lib": "nixpkgs-lib_2",
         "nur": "nur",
         "pocket2kindle": "pocket2kindle",
+        "pytorrentsearch": "pytorrentsearch",
         "redial-proxy": "redial-proxy",
         "rust-overlay": "rust-overlay",
+        "send2kindle": "send2kindle",
         "simple-dashboard": "simple-dashboard",
         "sops-nix": "sops-nix",
         "telegram-sendmail": "telegram-sendmail"
@@ -635,6 +704,22 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "send2kindle": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1663719539,
+        "narHash": "sha256-o5fFWl71953BGDmRmSmtMj2GlG4DCSirDmv1fRlCzLE=",
+        "owner": "lucasew",
+        "repo": "send2kindle",
+        "rev": "adee92dd3bf7037dcac3a5c8d7d55533e4825990",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lucasew",
+        "repo": "send2kindle",
         "type": "github"
       }
     },

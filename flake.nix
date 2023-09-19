@@ -11,8 +11,23 @@
     dotenv.url = "github:lucasew/dotenv";
     dotenv.flake = false;
 
+    devenv.url = "github:cachix/devenv";
+    devenv.flake = false;
+
     pocket2kindle.url = "github:lucasew/pocket2kindle";
     pocket2kindle.flake = false;
+
+    send2kindle.url = "github:lucasew/send2kindle";
+    send2kindle.flake = false;
+
+    nix-emacs.url = "github:nixosbrasil/nix-emacs";
+    nix-emacs.flake = false;
+
+    nix-option.url = "github:lucasew/nix-option";
+    nix-option.flake = false;
+
+    pytorrentsearch.url = "github:lucasew/pytorrentsearch";
+    pytorrentsearch.flake = false;
 
     nix-index-database.url = "github:Mic92/nix-index-database";
 
