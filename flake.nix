@@ -16,7 +16,7 @@
 
     impermanence.url = "github:nix-community/impermanence";
 
-    nixos-hardware.url = "github:lucasew/nixos-hardware/openrgb-defaults";
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     nbr.url = "github:nixosbrasil/nixpkgs-brasil";
     nbr.inputs.nixpkgs.follows = "nixpkgs";
