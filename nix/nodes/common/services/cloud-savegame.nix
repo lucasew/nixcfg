@@ -1,6 +1,6 @@
 { self, config, pkgs, lib, ... }:
 let
-  inherit (lib) mkOption mkIf mkEnableOption types optionalString optional;
+  inherit (lib) mkOption mkIf mkEnableOption types optionalString optionals;
   ini = pkgs.formats.ini {
     listToValue = value: builtins.concatStringsSep config.options.services.cloud-savegame.settings.general.divider;
   };
@@ -100,20 +100,27 @@ in {
 
       services.cloud-savegame = {
         enable = true;
-        path = []
-        ++ (optional cfg.enableGit pkgs.git)
-        ++ (optional cfg.enableGit pkgs.openssh);
+        path = with pkgs; [ ]
+        ++ (optionals cfg.enableGit (with pkgs; [ git openssh ]));
+
         environment = {
           OUTPUT_DIR = cfg.outputDir;
           CONFIG_FILE = "/etc/cloud-savegame-settings.ini";
         };
         description = "Cloud savegame service";
         script = ''
+          export OUTPUT_DIR
+          export CONFIG_FILE
+
           export SSH_AUTH_SOCK=/run/user/$(id -u)/ssh-agent
           tilde=~
           OUTPUT_DIR="$(echo "$OUTPUT_DIR" | sed "s;~;$tilde;")"
           if [ -d "$OUTPUT_DIR" ]; then
             ${cfg.package}/bin/cloud-savegame -o "$OUTPUT_DIR" -c "$CONFIG_FILE" ${optionalString cfg.enableGit "-g"} ${optionalString cfg.enableVerbose "-v"} ${optionalString cfg.enableBacklink "-b"} --max-depth ${toString cfg.maxDepth}
+            if [ -x /run/wrappers/bin/sendmail ]; then
+              printf "Subject: %s\n%s" "cloud-savegame" "Backup finalizado" | /run/wrappers/bin/sendmail
+            fi
+
           else
             echo "Output dir '$OUTPUT_DIR' doesn't exist"
           fi
