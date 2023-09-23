@@ -540,7 +540,7 @@ def _cmd_eval_all(*args):
 @_define_subcommand("eval")
 def _cmd_eval(*args):
     for arg in args:
-        print(eval(code))
+        print(eval(arg))
 
 @_define_subcommand("repl")
 def _cmd_repl(*args):
