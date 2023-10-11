@@ -29,6 +29,7 @@
       xfce.thunar
       playerctl
       brightnessctl
+      gscreenshot
     ];
   };
 }
