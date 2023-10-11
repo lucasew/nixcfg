@@ -136,6 +136,11 @@ in
     '';
   });
 
+  script-directory-wrapper = final.writeShellScriptBin "sdw" ''
+    . /etc/profile
+    sd "$@"
+  '';
+
   ccacheWrapper = prev.ccacheWrapper.override {
     extraConfig = ''
       export CCACHE_COMPRESS=1
