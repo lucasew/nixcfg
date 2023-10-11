@@ -137,7 +137,7 @@ in
   });
 
   script-directory-wrapper = final.writeShellScriptBin "sdw" ''
-    . /etc/profile
+    . /etc/bashrc
     sd "$@"
   '';
 
