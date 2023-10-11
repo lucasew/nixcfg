@@ -137,7 +137,7 @@ in
   });
 
   script-directory-wrapper = final.writeShellScriptBin "sdw" ''
-    . /etc/bashrc
+    export SD_ROOT="$(SD_ROOT=${../bin} sd d root)/bin"
     sd "$@"
   '';
 
