@@ -101,7 +101,7 @@ in
     skyrim = cp ./pkgs/wineApps/skyrim.nix;
   };
   custom = rec {
-    colorpipe = cp ./pkgs/colorpipe.nix;
+    colorpipe = cp ./pkgs/colorpipe;
     chromium = cp ./pkgs/custom/chromium;
     ncdu = cp ./pkgs/custom/ncdu.nix;
     neovim = cp ./pkgs/custom/neovim;
