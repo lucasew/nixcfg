@@ -32,8 +32,8 @@
       ];
       script = ''
         mkdir ~/.config/waybar -p
-        cat $(sdw d root)/nodes/gui-common/gui-variants/hyprland/waybar/style.css | colorpipe > ~/.config/waybar/style.css
-        cat $(sdw d root)/nodes/gui-common/gui-variants/hyprland/waybar/config | colorpipe > ~/.config/waybar/config
+        cat $(sdw d root)/nix/nodes/gui-common/gui-variants/hyprland/waybar/style.css | colorpipe > ~/.config/waybar/style.css
+        cat $(sdw d root)/nix/nodes/gui-common/gui-variants/hyprland/waybar/config | colorpipe > ~/.config/waybar/config
       '';
       restartTriggers = [ ./waybar/style.css ./waybar/config ];
       wantedBy = [ "default.target" ];
@@ -46,7 +46,7 @@
       ];
       script = ''
         mkdir ~/.config/hypr -p
-        cat $(sdw d root)/nodes/gui-common/gui-variants/hyprland/hypr/hyprland.conf | colorpipe > ~/.config/hypr/hyprland.conf
+        cat $(sdw d root)/nix/nodes/gui-common/gui-variants/hyprland/hypr/hyprland.conf | colorpipe > ~/.config/hypr/hyprland.conf
       '';
       restartTriggers = [ ./hypr/hyprland.conf ];
       wantedBy = [ "default.target" ];
