@@ -2,4 +2,6 @@
 
 set -euo pipefail
 
-git diff HEAD
+# alias for git diff
+
+git diff "$@"
