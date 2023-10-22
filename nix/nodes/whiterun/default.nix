@@ -82,15 +82,6 @@ in {
 
   services.magnetico.enable = true;
 
-  services.jellyfin = {
-    enable = true;
-    mediaDirs = {
-      transmission = "/var/lib/transmission/Downloads";
-      storage_movies = "/storage/downloads/filmes";
-      storage_series = "/storage/downloads/series";
-    };
-  };
-
   boot = {
     supportedFilesystems = [ "ntfs" ];
     loader = {
