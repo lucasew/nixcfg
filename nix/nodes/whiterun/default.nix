@@ -17,7 +17,6 @@ in {
     ./dlna.nix
     ./nextcloud.nix
     ./postgresql.nix
-    ./rocm-gambiarra.nix
     ./sshfs.nix
     ./zfs.nix
     ./container-inet-rdp.nix
@@ -105,7 +104,7 @@ in {
   };
   hardware.opengl.driSupport = true;
   hardware.opengl.extraPackages = with pkgs; [
-     rocm-runtime
+     rocmPackages.rocm-runtime
      rocm-opencl-icd
      rocm-opencl-runtime
   ];
