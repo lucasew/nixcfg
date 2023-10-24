@@ -33,6 +33,11 @@ in {
       profile = "discord-profissional";
       icon = "discord";
     };
+    youtube-tv = {
+      desktopName = "YouTube (UI para TV)";
+      url = "https://youtube.com/tv";
+      profile = "youtube-tv";
+    };
     whatsapp = {
       desktopName = "WhatsApp";
       url = "web.whatsapp.com";
