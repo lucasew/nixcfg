@@ -2,7 +2,8 @@ flake: final: prev:
 let
   inherit (flake.outputs) global;
   inherit (global) rootPath;
-  inherit (prev) lib callPackage writeShellScript;
+  inherit (final) callPackage;
+  inherit (prev) lib writeShellScript;
   inherit (lib) recursiveUpdate;
   inherit (builtins) toString length head tail;
 in
