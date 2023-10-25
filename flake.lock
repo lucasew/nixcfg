@@ -773,6 +773,7 @@
       },
       "original": {
         "owner": "ms-jpq",
+        "ref": "std",
         "repo": "std2",
         "type": "github"
       }

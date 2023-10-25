@@ -93,7 +93,7 @@
     climod.url = "github:nixosbrasil/climod";
     climod.flake = false;
 
-    src-python-std2.url = "github:ms-jpq/std2";
+    src-python-std2.url = "github:ms-jpq/std2/std";
     src-python-std2.flake = false;
   };
 
