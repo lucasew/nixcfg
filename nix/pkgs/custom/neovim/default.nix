@@ -60,14 +60,6 @@ let
 in pkgs.neovim.override {
   withPython3 = true;
   withRuby = false;
-  extraPython3Packages = p: [
-    (p.std2.overrideAttrs (old: {
-      src = flake.inputs.src-python-std2;
-      meta = old.meta // {
-        priority = 1;
-      };
-    }))
-  ];
   configure = {
     packages.plugins.start = with vimPlugins; [
       # utils

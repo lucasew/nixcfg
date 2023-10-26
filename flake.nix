@@ -95,6 +95,9 @@
 
     src-python-std2.url = "github:ms-jpq/std2/std";
     src-python-std2.flake = false;
+
+    src-python-pynvim_pp.url = "github:ms-jpq/pynvim_pp/pp";
+    src-python-pynvim_pp.flake = false;
   };
 
   outputs = {

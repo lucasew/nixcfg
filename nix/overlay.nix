@@ -23,6 +23,17 @@ in
 
   nbr = import "${flake.inputs.nbr}" { pkgs = final; };
 
+  pythonPackagesExtensions = [
+    (final: prev: {
+      std2 = prev.std2.overrideAttrs (old: {
+        src = flake.inputs.src-python-std2;
+      });
+      pynvim_pp = prev.pynvim_pp.overrideAttrs (old: {
+        src = flake.inputs.src-python-pynvim_pp;
+      });
+    })
+  ];
+
   lib = prev.lib.extend (final: prev: {
     jpg2png = cp ./lib/jpg2png.nix;
     buildDockerEnv = cp ./lib/buildDockerEnv.nix;
