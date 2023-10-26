@@ -43,6 +43,10 @@
 
 (tset vim.o :wildignore "*.pyc,*.o,*.class")
 
+
+;; Clipboard
+(tset vim.o :clipboard :unnamedplus)
+
 ;; Imports
 (local coq (require :coq))
 
