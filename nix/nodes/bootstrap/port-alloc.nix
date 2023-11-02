@@ -51,9 +51,9 @@ in {
   };
 
   config = {
-    networking.ports.a.port = 69;
-    networking.ports.x.port = 2048;
-    networking.ports.y.port = 2048;
+    # networking.ports.a.port = 69;
+    # networking.ports.x.port = 2048;
+    # networking.ports.y.port = 2048;
 
     assertions = let
         portNames = lib.attrNames cfg;
