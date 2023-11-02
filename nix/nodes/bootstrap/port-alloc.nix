@@ -1,8 +1,7 @@
 { config, lib, ... }:
 
 let
-  inherit (builtins) hashString;
-  inherit (lib) mkOption mkEnableOption types literalExpression submodule mdDoc mapAttrs;
+  inherit (lib) mkOption mkEnableOption types;
 
   MIN_RANGE = 1024;
   MAX_RANGE = 49151;
@@ -32,12 +31,12 @@ in {
         options = {
           enable = mkEnableOption "port";
           key = mkOption {
-            description = mdDoc "Key hashed to derivate the port";
+            description = lib.mdDoc "Key hashed to derivate the port";
             type = types.str;
             default = name;
           };
           port = mkOption {
-            description = mdDoc "Port allocated";
+            description = lib.mdDoc "Port allocated";
             type = types.port;
             default = portFromKey config.key;
           };
@@ -57,7 +56,6 @@ in {
     networking.ports.y.port = 2048;
 
     assertions = let
-    # debug.assertions = let
         portNames = lib.attrNames cfg;
         # sort by port number
         cmp = a: b: cfg.${a}.port < cfg.${b}.port;
