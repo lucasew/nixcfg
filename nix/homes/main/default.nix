@@ -64,7 +64,6 @@ in {
     sqlite
     sshpass
     nbr.telegram-desktop-bin # communication
-    terraform
     vlc # media
     stremio
     sunshine

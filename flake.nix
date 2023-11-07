@@ -277,7 +277,7 @@
       buildInputs = []
         # ++ (with pkgs.custom; [ neovim ])
         # ++ (with pkgs.custom; [ firefox tixati emacs ])
-        ++ (with pkgs.custom.vscode; [ common programming ])
+        # ++ (with pkgs.custom.vscode; [ common programming ])
         ++ (with self.nixosConfigurations; [
           riverwood.config.system.build.toplevel
           whiterun.config.system.build.toplevel
@@ -286,9 +286,9 @@
         ++ (with self.homeConfigurations; [
           main.activationPackage
         ])
-        ++ (with self.devShells.${system}; [
-          (pkgs.writeShellScriptBin "s" "echo ${default.outPath}")
-        ])
+        # ++ (with self.devShells.${system}; [
+        #   (pkgs.writeShellScriptBin "s" "echo ${default.outPath}")
+        # ])
         # ++ (let
         #   flattenItems = items: if pkgs.lib.isDerivation items
         #     then items
