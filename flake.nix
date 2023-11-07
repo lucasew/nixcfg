@@ -275,7 +275,7 @@
 
       dontUnpack = true;
       buildInputs = []
-        ++ (with pkgs.custom; [ neovim ])
+        # ++ (with pkgs.custom; [ neovim ])
         # ++ (with pkgs.custom; [ firefox tixati emacs ])
         ++ (with pkgs.custom.vscode; [ common programming ])
         ++ (with self.nixosConfigurations; [
