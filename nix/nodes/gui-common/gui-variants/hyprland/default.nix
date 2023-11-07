@@ -8,6 +8,10 @@
   ];
 
   config = lib.mkIf config.programs.hyprland.enable {
+    programs.hyprland.xwayland.enable = true;
+    services.xserver.displayManager.lightdm.enable = true;
+    services.xserver.enable = true;
+
     services.dunst.enable = true;
     services.gammastep.enable = true;
     programs.waybar.enable = true;
