@@ -5,21 +5,11 @@ let
   nginxDomains = builtins.attrNames config.services.nginx.virtualHosts;
   baseDomain = "${config.networking.hostName}.${config.networking.domain}";
   allMySubdomains = lib.flatten [ nginxDomains baseDomain ];
+
+  tinydnsLines = map (item: ".${item}:${node}") allMySubdomains;
 in {
-  services.dnsmasq = {
-    enable = node != null;
-    resolveLocalQueries = false;
-    extraConfig = ''
-      port=53
-      domain-needed
-      bogus-priv
-      no-resolv
-      local=/${config.networking.hostName}.${config.networking.domain}/
-      bind-interfaces
-      except-interface=virbr0
-    '';
+  services.tinydns = {
+    enable = lib.mkDefault node != null;
+    data = if node != null then (builtins.concatStringsSep "\n"  tinydnsLines) else "";
   };
-  networking.extraHosts = lib.mkIf (node != null) ''
-    ${node} ${lib.concatStringsSep " " allMySubdomains}
-  '';
 }
