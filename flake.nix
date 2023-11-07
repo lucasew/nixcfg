@@ -55,8 +55,8 @@
     home-manager.url = "home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    betterdiscord-addons.url = "github:mwittrien/BetterDiscordAddons?dir=Plugins";
-    betterdiscord-addons.flake = false;
+    # betterdiscord-addons.url = "github:mwittrien/BetterDiscordAddons?dir=Plugins";
+    # betterdiscord-addons.flake = false;
 
     nix-requirefile.url = "github:lucasew/nix-requirefile";
     nix-requirefile.flake = false;
