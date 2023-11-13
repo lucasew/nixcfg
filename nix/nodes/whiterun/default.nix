@@ -29,10 +29,10 @@ in {
     fsType = "ext4";
   };
 
-  fileSystems."/media/storage" = {
-    device = "/dev/disk/by-label/storage";
-    fsType = "ext4";
-  };
+  # fileSystems."/media/storage" = {
+  #   device = "/dev/disk/by-label/storage";
+  #   fsType = "ext4";
+  # };
 
   fileSystems."/media/ssd240" = {
     device = "/dev/disk/by-label/ssd240";
