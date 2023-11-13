@@ -91,7 +91,7 @@ in {
   # services.magnetico.enable = true;
 
   boot = {
-    supportedFilesystems = [ "ntfs" ];
+    supportedFilesystems = [ "ntfs" "xfs" ];
     loader = {
       efi.canTouchEfiVariables = true;
       grub = {
