@@ -51,6 +51,12 @@ in {
     options = [ "bind" ];
   };
 
+  fileSystems."/var/backup" = {
+    device = "/media/storage/backup/var";
+    fsType = "none";
+    options = [ "bind" ];
+  };
+
 
   services.nginx.enable = true;
 
