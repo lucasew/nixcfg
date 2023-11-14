@@ -40,7 +40,7 @@ in {
 
   fileSystems."/media/ssd240" = {
     device = "/dev/disk/by-label/ssd240";
-    fsType = "240";
+    fsType = "ext4";
   };
 
   fileSystems."/var/lib/transmission/Downloads" = {
