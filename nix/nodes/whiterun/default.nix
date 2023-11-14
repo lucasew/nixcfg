@@ -23,6 +23,10 @@ in {
     ./container-nat.nix
   ];
 
+  services.restic.server.enable = true;
+  services.restic.server.dataDir = "/media/storage/backup/restic";
+
+
   fileSystems."/media/downloads" = {
     device = "/dev/disk/by-label/downloads";
     options = [ "commit=60" "noatime" ];
