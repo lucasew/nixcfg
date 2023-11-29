@@ -29,17 +29,22 @@ in {
           nice_binary = lib.getExe' pkgs.coreutils "nice";
         };
         enabledPreviewProviders = [
+          "OC\\Preview\\AVI"
           "OC\\Preview\\BMP"
           "OC\\Preview\\GIF"
+          "OC\\Preview\\HEIC"
           "OC\\Preview\\JPEG"
           "OC\\Preview\\Krita"
           "OC\\Preview\\MarkDown"
+          "OC\\Preview\\MKV"
+          "OC\\Preview\\Movie"
           "OC\\Preview\\MP3"
+          "OC\\Preview\\MP4"
           "OC\\Preview\\OpenDocument"
+          "OC\\Preview\\PDF"
           "OC\\Preview\\PNG"
           "OC\\Preview\\TXT"
           "OC\\Preview\\XBitmap"
-          "OC\\Preview\\HEIC"
         ];
       };
     };
