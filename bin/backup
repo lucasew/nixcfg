@@ -19,7 +19,7 @@ fi
 if sd is_node phone; then
   backup /sdcard/DCIM/Camera/ backup/lucasew/camera --exclude=.thumbnails
   backup /sdcard/Pictures/ backup/lucasew/pictures --exclude=.thumbnails
-  backup /sdcard/Android/media/com.whatsapp/WhatsApp/Media/ backup/lucasew/WhatsApp
+  backup /sdcard/Android/media/com.whatsapp/WhatsApp/Media/ backup/lucasew/WhatsApp --exclude=.Links --exclude=.Statuses
   backup /sdcard/Android/media/com.whatsapp/WhatsApp/Backups/ backup/lucasew/WhatsApp
   for database in /sdcard/Android/media/com.whatsapp/WhatsApp/Databases/msgstore.db.crypt*; do
     backup $database  backup/lucasew/WhatsApp
