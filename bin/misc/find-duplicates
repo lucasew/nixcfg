@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+
+from sys import stdin
+from collections import defaultdict
+
+# usage:
+# pass the result of a command like md5sum as stdin to this script with no parameters
+# any hash is supported as long it's in the format: $hash $filename
+
+items = defaultdict(lambda: [])
+
+for line in stdin:
+    line = line.strip()
+    parts = line.split(' ')
+    if len(parts) < 2:
+        continue
+    hash, *rest = parts
+    name = " ".join(rest)
+    while parts[1] == '':
+        parts.remove('')
+    items[hash].append(name)
+
+keys = list(items.keys())
+keys.sort()
+
+for key in keys:
+    item_list = items[key]
+    if len(item_list) <= 1:
+        continue
+    print(key)
+    for item in item_list:
+        print("\t", item)
+        
+
