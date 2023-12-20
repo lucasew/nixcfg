@@ -11,6 +11,8 @@ eval "$(cat /etc/bashrc | grep NIX_PATH)"
 
 NIX_SHELL_BIN=nix-shell
 
+export NIXPKGS_ALLOW_UNFREE=1
+
 which cached-nix-shell 2> /dev/null > /dev/null && NIX_SHELL_BIN=cached-nix-shell
 
 exec $NIX_SHELL_BIN "$@"
