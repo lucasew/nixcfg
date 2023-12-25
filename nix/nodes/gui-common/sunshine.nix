@@ -16,6 +16,7 @@ in
 
     systemd.user.services.sunshine = {
       script = ''
+        xrandr --output $(xrandr  | grep [^s]connected | sed 's; ;\n;g'| head -n 1) --mode 1368x768
         ${lib.getExe cfg.package}
       '';
       serviceConfig = {
