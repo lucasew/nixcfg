@@ -246,13 +246,13 @@ in
     llama-cpp = prev.llama-cpp.override {
       stdenv = prev.gcc11Stdenv;
       cudaSupport = true;
-      openblasSupport = false;
+      # openblasSupport = false;
     };
   };
   ollama-rocm = prev.ollama.override {
     llama-cpp = prev.llama-cpp.override {
       rocmSupport = true;
-      openblasSupport = false;
+      # openblasSupport = false;
     };
   };
 
