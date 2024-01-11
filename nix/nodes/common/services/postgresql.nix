@@ -11,15 +11,8 @@
       apply = lib.mapAttrs (k: v: (map (item: "${k}_${item}") v) ++ [k]);
     };
 
-    services.postgresql.testDatabases = lib.mkOption {
-      description = lib.mdDoc "Extra databases to be created and granted to the test user. Shouldn't contain production data and will be prefixed with `test_`";
-      type = with lib.types; listOf str;
-      default = [];
-    };
   };
   config = lib.mkIf config.services.postgresql.enable {
-
-    services.postgresql.userSpecificDatabases.test = config.services.postgresql.testDatabases;
 
     services.postgresqlBackup = {
       enable = true;
