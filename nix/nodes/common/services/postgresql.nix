@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ lib, config, global, ... }:
 {
   options = {
     services.postgresql.userSpecificDatabases = lib.mkOption {
@@ -20,6 +20,10 @@
     };
 
     services.postgresql = {
+      authentication = lib.concatStringsSep "\n" (map (item: ''
+      host  all all ${item.ts}/32      md5
+      '') (lib.attrValues global.nodeIps));
+
       ensureDatabases = lib.flatten (lib.attrValues config.services.postgresql.userSpecificDatabases);
       ensureUsers = (map ({name, value}: {
         inherit name;
