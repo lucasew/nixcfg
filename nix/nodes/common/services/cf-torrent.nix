@@ -15,6 +15,11 @@ in {
       default = config.networking.ports.cf-torrent.port;
       type = types.port;
     };
+    shutdownTimeout = mkOption {
+      description = "Time in ms to shutdown the service when inactive";
+      default = 10*1000;
+      type = types.int;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -40,6 +45,9 @@ in {
       inherit (cfg.package.meta) description;
       unitConfig = {
         After = [ "network.target" ];
+      };
+      environment = {
+        INACTIVITY_TIMEOUT = toString cfg.shutdownTimeout;
       };
       script = ''
         exec ${cfg.package}/bin/*
