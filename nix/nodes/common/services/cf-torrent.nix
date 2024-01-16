@@ -29,14 +29,20 @@ in {
         proxyWebsockets = true;
       };
     };
+    systemd.sockets.cf-torrent = {
+      socketConfig = {
+        ListenStream = cfg.port;
+      };
+      partOf = [ "cf-torrent.service" ];
+      wantedBy = [ "sockets.target" "multi-user.target" ];
+    };
     systemd.services.cf-torrent = {
       inherit (cfg.package.meta) description;
-      wantedBy = [ "multi-user.target" ];
-      environment = {
-        PORT="${toString cfg.port}";
+      unitConfig = {
+        After = [ "network.target" ];
       };
       script = ''
-        ${cfg.package}/bin/*
+        exec ${cfg.package}/bin/*
       '';
     };
   };

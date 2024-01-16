@@ -56,11 +56,11 @@
     "cf-torrent": {
       "flake": false,
       "locked": {
-        "lastModified": 1680030277,
-        "narHash": "sha256-yYPEna0Y0gVIZdqZq+ihxg4CXkDO1rkCA1iKtrZD820=",
+        "lastModified": 1705366211,
+        "narHash": "sha256-3TLhHbrOqcrBz9scAcGiGr3T/CxdiJctsYcImH6pm1M=",
         "owner": "lucasew",
         "repo": "cf-torrent",
-        "rev": "6a053541528119b4eb89050f1f6f16fd32cfbc3f",
+        "rev": "9132dad9453f441c38186568953a60c127ffeab5",
         "type": "github"
       },
       "original": {
