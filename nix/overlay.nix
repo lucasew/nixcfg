@@ -98,6 +98,7 @@ in
   fhsctl = cp ./pkgs/fhsctl.nix;
   comby = cp ./pkgs/comby.nix;
   pkg = cp ./pkgs/pkg.nix;
+  text2image = cp ./pkgs/text2image.nix;
   wrapWine = cp ./pkgs/wrapWine.nix;
   home-manager = cp "${flake.inputs.home-manager}/home-manager";
 
