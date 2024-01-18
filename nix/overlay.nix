@@ -114,6 +114,7 @@ in
   send2kindle = cp flake.inputs.send2kindle;
   nixgram = cp flake.inputs.nixgram;
   go-annotation = cp flake.inputs.go-annotation;
+  ts-proxy = cp flake.inputs.ts-proxy;
   wrapVSCode = args: import flake.inputs.nix-vscode (args // { pkgs = prev; });
   wrapEmacs = args: import flake.inputs.nix-emacs (args // { pkgs = prev; });
 
