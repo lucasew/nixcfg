@@ -100,6 +100,7 @@ in
   pkg = cp ./pkgs/pkg.nix;
   text2image = cp ./pkgs/text2image.nix;
   wrapWine = cp ./pkgs/wrapWine.nix;
+  ollama-webui = cp ./pkgs/ollama-webui;
   home-manager = cp "${flake.inputs.home-manager}/home-manager";
 
   prev = prev;
