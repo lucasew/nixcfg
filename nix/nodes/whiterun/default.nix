@@ -24,6 +24,8 @@ in {
     ./container-nat.nix
   ];
 
+  services.guix.enable = true;
+
   services.escrivao.enable = true;
 
   services.postgresql = {
