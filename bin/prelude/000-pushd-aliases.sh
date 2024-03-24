@@ -18,3 +18,7 @@ function dotfiles {
 function nixpkgs {
   _conditional_pushd nixpkgs ~/nixpkgs ~/WORKSPACE/OPENSOURCE-contrib/nixpkgs
 }
+
+function gcd {
+  _conditional_pushd "$(sd g root)/$*"
+}
