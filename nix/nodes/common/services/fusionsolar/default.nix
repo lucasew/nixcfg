@@ -31,7 +31,7 @@ in
 
     calendar = mkOption {
       type = types.str;
-      default = "00:00:01";
+      default = "19:00:01";
       description = "When to run the report";
     };
   };
@@ -61,7 +61,7 @@ in
         Group = cfg.group;
       };
       script = ''
-        exec ${python.interpreter} ${./payload.py}
+        exec ${lib.getExe pkgs.xvfb-run} ${python.interpreter} ${./payload.py}
       '';
     };
   };
