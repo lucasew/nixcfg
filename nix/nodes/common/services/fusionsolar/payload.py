@@ -53,12 +53,22 @@ password_input = driver.find_element(By.CSS_SELECTOR, "div#password > input")
 password_input.send_keys(args.password)
 password_input.send_keys(Keys.ENTER)
 time.sleep(10)
-print('[*] Homepage', file=stderr)
-driver.get("https://intl.fusionsolar.huawei.com")
-time.sleep(10)
-print('[*] Tentando listar estações', file=stderr)
-stations = driver.find_elements(By.CSS_SELECTOR, "tbody.ant-table-tbody a.nco-home-list-text-ellipsis")
-print('stations', stations, file=stderr)
+
+stations = []
+remaining_trys = 5
+while len(stations) == 0:
+    print('[*] Homepage', file=stderr)
+    driver.get("https://intl.fusionsolar.huawei.com")
+    time.sleep(10)
+    print('[*] Tentando listar estações', file=stderr)
+    stations = driver.find_elements(By.CSS_SELECTOR, "tbody.ant-table-tbody a.nco-home-list-text-ellipsis")
+    print('stations', stations, file=stderr)
+    if len(stations) == 0:
+        print("[*] Zero estações encontradas, tentando de novo")
+        remaining_trys -= 1
+        if remaining_trys == 0:
+            print('[*] Sem estações, desistindo...')
+            exit(1)
 
 email_text = []
 
