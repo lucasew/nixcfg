@@ -214,13 +214,14 @@ in
         bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -10%
         bindsym XF86AudioMute exec pactl set-sink-volume @DEFAULT_SINK@ toggle
         bindsym XF86AudioMicMute exec pactl set-sink-volume @DEFAULT_SOURCE@ toggle
-        bindsym $mod+m move workspace to output left
         bindsym XF86AudioNext exec playerctl next
         bindsym XF86AudioPrev exec playerctl previous
         bindsym XF86AudioPlay exec playerctl play-pause
         bindsym XF86AudioPause exec playerctl play-pause
         bindsym XF86MonBrightnessUp exec brightnessctl s +5%
         bindsym XF86MonBrightnessDown exec brightnessctl s 5%-
+
+        bindsym $mod+m move workspace to output left
 
         bindsym $mod+l exec sdw utils i3wm lock-screen
         bindsym $mod+n exec sdw utils i3wm modn
