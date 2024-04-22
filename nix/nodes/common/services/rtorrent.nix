@@ -67,15 +67,17 @@ lib.mkIf config.services.rtorrent.enable {
       ProtectKernelModules = true;
       ProtectKernelTunables = true;
       ProtectProc = "invisible";
-      ProtectSystem = "full";
-      ProtectHome = true;
       RestrictAddressFamilies = [ "AF_UNIX" "AF_INET" "AF_INET6" ];
       RestrictNamespaces = true;
       RestrictRealtime = true;
       RestrictSUIDSGID = true;
-      ReadWriteDirectories = [
+      TemporaryFileSystem="/:ro";
+      BindReadOnlyPaths = [ "/nix/store" "/etc" ];
+      BindPaths = [
+        "${config.users.users.${config.services.rtorrent.user}.home}"
         config.services.rtorrent.dataDir
         config.services.rtorrent.downloadDir
+        "/run/rtorrent"
       ];
       SystemCallArchitectures = "native";
       SystemCallFilter = [ "@system-service" "~@privileged" ];
@@ -101,16 +103,20 @@ lib.mkIf config.services.rtorrent.enable {
       ProtectKernelModules = true;
       ProtectKernelTunables = true;
       ProtectProc = "invisible";
-      ProtectSystem = "strict";
-      ProtectHome = true;
       RestrictAddressFamilies = [ "AF_UNIX" "AF_INET" "AF_INET6" ];
       RestrictNamespaces = true;
       RestrictRealtime = true;
       RestrictSUIDSGID = true;
-      ReadOnlyDirectories = [ config.services.rtorrent.downloadDir ];
-      ReadWriteDirectories = [
-        "${config.users.users.${config.services.rtorrent.user}.home}/.local/share/flood"
+      BindReadOnlyPaths = [
+        config.services.rtorrent.downloadDir
+        "/nix/store"
+        "/etc"
       ];
+      BindPaths = [
+        "${config.users.users.${config.services.rtorrent.user}.home}"
+        "/run/rtorrent"
+      ];
+      TemporaryFileSystem="/:ro";
       SystemCallArchitectures = "native";
       SystemCallFilter = [ "~@privileged" ];
     };
