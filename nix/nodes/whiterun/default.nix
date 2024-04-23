@@ -113,7 +113,7 @@ in
   # services.transmission.enable = true;
 
   services.rtorrent.enable = true;
-  services.rtorrent.enableSandboxSample = true;
+  # services.rtorrent.enableSandboxSample = true;
 
   services.miniflux.enable = true;
   # services.nitter.enable = true;
