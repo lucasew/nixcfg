@@ -71,6 +71,10 @@ lib.mkIf config.services.rtorrent.enable {
       RestrictNamespaces = true;
       RestrictRealtime = true;
       RestrictSUIDSGID = true;
+
+      SystemCallArchitectures = "native";
+      SystemCallFilter = [ "@system-service" "~@privileged" ];
+
       TemporaryFileSystem="/:ro";
       BindReadOnlyPaths = [ "/nix/store" "/etc" ];
       BindPaths = [
@@ -79,8 +83,6 @@ lib.mkIf config.services.rtorrent.enable {
         config.services.rtorrent.downloadDir
         "/run/rtorrent"
       ];
-      SystemCallArchitectures = "native";
-      SystemCallFilter = [ "@system-service" "~@privileged" ];
     };
   };
 
@@ -107,6 +109,12 @@ lib.mkIf config.services.rtorrent.enable {
       RestrictNamespaces = true;
       RestrictRealtime = true;
       RestrictSUIDSGID = true;
+
+      SystemCallArchitectures = "native";
+      SystemCallFilter = [ "~@privileged" ];
+
+      TemporaryFileSystem="/:ro";
+
       BindReadOnlyPaths = [
         config.services.rtorrent.downloadDir
         "/nix/store"
@@ -116,9 +124,6 @@ lib.mkIf config.services.rtorrent.enable {
         "${config.users.users.${config.services.rtorrent.user}.home}"
         "/run/rtorrent"
       ];
-      TemporaryFileSystem="/:ro";
-      SystemCallArchitectures = "native";
-      SystemCallFilter = [ "~@privileged" ];
     };
 
     restartIfChanged = true;
