@@ -5,6 +5,8 @@
     config.systemd.services.rtorrent.serviceConfig
     {
       ExecStart = lib.mkForce "/run/rtorrent-poc-payload";  
+      RuntimeDirectory = lib.mkForce "rtorrent-sandbox-poc";
+      BindPaths = [ "/run" ];
     }
   ];
 }
