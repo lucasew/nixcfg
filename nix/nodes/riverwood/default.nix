@@ -30,6 +30,8 @@ in
 
   environment.systemPackages = with pkgs; [ thunderbird ];
 
+  services.rsyncnet-remote-backup.enable = true;
+
   services.guix.enable = true;
 
   services.php-utils.enable = true;
