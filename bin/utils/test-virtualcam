@@ -1,5 +1,6 @@
 #!/usr/bin/env -S sd nix shell
 #!nix-shell -i python3 -p python3Packages.pyvirtualcam python3Packages.opencv4 python3Packages.facenet-pytorch python3Packages.onnxruntime
+# vim:ft=python
 
 import pyvirtualcam
 import numpy as np
