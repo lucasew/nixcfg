@@ -116,10 +116,11 @@ def update_camera_stuff(state):
                     propavg = (propx + propy) / 2
                     final_size = [int(sz * propavg) for sz in output_size]
 
-                    padding_x = (final_size[0] - sx) // 2
-                    padding_y = (final_size[1] - sy) // 2
+                    frame = adjust_gamma(frame)
                     if not state['disable_rectangle']:
                         cv2.rectangle(frame, (xi, yi), (xf, yf), (255, 0, 0), 2)
+                    padding_x = (final_size[0] - sx) // 2
+                    padding_y = (final_size[1] - sy) // 2
                     mask = last_mask
                     if not state['disable_warp']:
                         frame_cutted = frame[yi-padding_y:yf+padding_y, xi-padding_x:xf+padding_x,:]
@@ -127,9 +128,9 @@ def update_camera_stuff(state):
                         frame = cv2.resize(frame_cutted, output_size)
                         mask = cv2.resize(mask_cutted, output_size, cv2.INTER_NEAREST)
 
-                    frame = adjust_gamma(frame)
                     if not state['disable_bg']:
-                        frame[mask > 128, :] = 0
+                        frame_blur = cv2.blur(frame, (23, 23))
+                        frame[mask > 128, :] = frame_blur[mask > 128, :]
 
                 cam.send(frame)
                 cam.sleep_until_next_frame()
