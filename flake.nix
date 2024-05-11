@@ -126,8 +126,8 @@
       flake-utils,
       ...
     }@inputs:
-      flake-utils.lib.eachSystem ["x86_64-linux"] (system:
     let
+    system = "x86_64-linux";
       bootstrapPkgs = import nixpkgs {
         inherit system;
         overlays = [ ]; # essential, infinite loop if not when using overlays
@@ -139,7 +139,6 @@
       };
 
       pkgs = mkPkgs { inherit system; };
-
       mkPkgs =
         {
           nixpkgs ? defaultNixpkgs,
@@ -165,9 +164,8 @@
             ];
           };
           overlays =
-            if disableOverlays then [ ] else (overlays ++ (builtins.attrValues self.outputs.overlays.${system}));
+            if disableOverlays then [ ] else (overlays ++ (builtins.attrValues self.outputs.overlays));
         };
-
       global = {
         username = "lucasew";
         email = "lucas59356@gmail.com";
@@ -198,28 +196,21 @@
         cfg = throw "your past self made a trap for non compliant code after a migration you did, now follow the stacktrace and go fix it";
       };
 
-      overlays = {
-        # nix-requirefile = import "${inputs.nix-requirefile}/overlay.nix";
-        borderless-browser = import "${inputs.borderless-browser}/overlay.nix";
-        rust-overlay = final: prev: import "${inputs.rust-overlay}/rust-overlay.nix" final prev;
-        zzzthis = import ./nix/overlay.nix self;
-      };
-      colors = inputs.nix-colors.colorschemes."ayu-dark" // {
-        isDark = true;
-      };
+
+    in
+      flake-utils.lib.eachSystem ["x86_64-linux"] (system:
+    let
+
+
     in
     {
       # inherit (extraArgs) bumpkin;
       inherit global;
-      inherit overlays;
       legacyPackages = pkgs;
       inherit self;
 
       formatter = pkgs.nixfmt-rfc-style;
 
-      colors = colors // {
-        colors = colors.palette;
-      };
 
       packages = {
         default = pkgs.writeShellScriptBin "default" ''
@@ -229,9 +220,9 @@
 
         deploy =
           let
-            home = self.packages.${system}.homeConfigurations.main.activationPackage;
-            riverwood = self.packages.${system}.nixosConfigurations.riverwood.config.system.build.toplevel;
-            whiterun = self.packages.${system}.nixosConfigurations.whiterun.config.system.build.toplevel;
+            home = self.homeConfigurations.main.activationPackage;
+            riverwood = self.nixosConfigurations.riverwood.config.system.build.toplevel;
+            whiterun = self.nixosConfigurations.whiterun.config.system.build.toplevel;
           in
           pkgs.writeShellScriptBin "deploy" ''
              nix-copy-closure --to riverwood ${riverwood} ${home}
@@ -279,12 +270,12 @@
             # ++ (with pkgs.custom; [ neovim ])
             # ++ (with pkgs.custom; [ firefox tixati emacs ])
             # ++ (with pkgs.custom.vscode; [ common programming ])
-            ++ (with self.packages.${system}.nixosConfigurations; [
+            ++ (with self.nixosConfigurations; [
               riverwood.config.system.build.toplevel
               whiterun.config.system.build.toplevel
               # ivarstead.config.system.build.toplevel
             ])
-            ++ (with self.packages.${system}.homeConfigurations; [ main.activationPackage ])
+            ++ (with self.homeConfigurations; [ main.activationPackage ])
           # ++ (with self.devShells.${system}; [
           #   (pkgs.writeShellScriptBin "s" "echo ${default.outPath}")
           # ])
@@ -304,54 +295,7 @@
           '';
         };
 
-        nixosConfigurations = pkgs.callPackage ./nix/nodes {
-          inherit extraArgs;
-          nodes = {
-            ravenrock = {
-              modules = [ ./nix/nodes/ravenrock ];
-              inherit pkgs;
-            };
-            riverwood = {
-              modules = [ ./nix/nodes/riverwood ];
-              inherit pkgs;
-            };
-            whiterun = {
-              modules = [ ./nix/nodes/whiterun ];
-              inherit pkgs;
-            };
-            recovery = {
-              modules = [ ./nix/nodes/recovery ];
-              inherit pkgs;
-            };
-            demo = {
-              modules = [ ./nix/nodes/demo ];
-              inherit pkgs;
-            };
-          };
-        };
-
-        homeConfigurations = pkgs.callPackage ./nix/homes {
-          inherit extraArgs;
-          nodes = {
-            main = {
-              modules = [ ./nix/homes/main ];
-              inherit pkgs;
-            };
-          };
-        };
-
-        nixOnDroidConfigurations = pkgs.callPackage ./nix/nixOnDroid {
-          inherit extraArgs mkPkgs;
-          nodes = {
-            default = {
-              modules = [ ./nix/nixOnDroid/default ];
-              system = "aarch64-linux";
-            };
-          };
-        };
-
       };
-
       devShells.default = pkgs.mkShell {
         name = "nixcfg-shell";
         buildInputs = with pkgs; [
@@ -380,5 +324,76 @@
           echo Shell setup complete!
         '';
       };
-    });
+    }) // {
+      overlays = {
+        # nix-requirefile = import "${inputs.nix-requirefile}/overlay.nix";
+        borderless-browser = import "${inputs.borderless-browser}/overlay.nix";
+        rust-overlay = final: prev: import "${inputs.rust-overlay}/rust-overlay.nix" final prev;
+        zzzthis = import ./nix/overlay.nix self;
+      };
+      colors = let
+        scheme = inputs.nix-colors.colorschemes."ayu-dark";
+      in scheme // {
+        isDark = true;
+        colors = scheme.palette;
+        # colors = scheme.palette;
+        # inherit (scheme) slug;
+      };
+      # in  // {
+      #   isDark = true;
+      #   inherit (self) colors;
+      # } // self.colors.palette;
+      # colors = self.colors // {
+      #   colors = self.colors.palette;
+      # };
+
+        nixosConfigurations = import ./nix/nodes {
+          inherit extraArgs system;
+          path = inputs.nixpkgs;
+          nodes = {
+            ravenrock = {
+              modules = [ ./nix/nodes/ravenrock ];
+              inherit pkgs;
+            };
+            riverwood = {
+              modules = [ ./nix/nodes/riverwood ];
+              inherit pkgs;
+            };
+            whiterun = {
+              modules = [ ./nix/nodes/whiterun ];
+              inherit pkgs;
+            };
+            recovery = {
+              modules = [ ./nix/nodes/recovery ];
+              inherit pkgs;
+            };
+            # demo = {
+            #   modules = [ ./nix/nodes/demo ];
+            #   inherit pkgs;
+            # };
+          };
+        };
+
+        homeConfigurations = pkgs.callPackage ./nix/homes {
+          inherit extraArgs;
+          nodes = {
+            main = {
+              modules = [ ./nix/homes/main ];
+              inherit pkgs;
+            };
+          };
+        };
+
+        nixOnDroidConfigurations = pkgs.callPackage ./nix/nixOnDroid {
+          inherit extraArgs mkPkgs;
+          nodes = {
+            default = {
+              modules = [ ./nix/nixOnDroid/default ];
+              system = "aarch64-linux";
+            };
+          };
+        };
+
+
+    };
 }

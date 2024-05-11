@@ -144,7 +144,7 @@ in
       height = 768;
       logoScale = 2;
     };
-    colors = flake.colors.${prev.system};
+    inherit (flake) colors;
   };
 
   script-directory = prev.script-directory.overrideAttrs (old: {
