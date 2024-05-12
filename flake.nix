@@ -124,7 +124,7 @@
       ...
     }@inputs:
     let
-    system = "x86_64-linux";
+      system = "x86_64-linux";
       bootstrapPkgs = import nixpkgs {
         inherit system;
         overlays = [ ]; # essential, infinite loop if not when using overlays
@@ -150,8 +150,7 @@
             allowUnfree = true;
             nvidia.acceptLicense = true;
             android_sdk.accept_license = true;
-            permittedInsecurePackages = [
-            ];
+            permittedInsecurePackages = [ ];
           };
           overlays =
             if disableOverlays then [ ] else (overlays ++ (builtins.attrValues self.outputs.overlays));
@@ -185,190 +184,193 @@
         inherit global;
         cfg = throw "your past self made a trap for non compliant code after a migration you did, now follow the stacktrace and go fix it";
       };
-
-
     in
-      flake-utils.lib.eachSystem ["x86_64-linux"] (system: let
+    flake-utils.lib.eachSystem [ "x86_64-linux" ] (
+      system:
+      let
         pkgs = mkPkgs { inherit system; };
-      in {
-      inherit global self;
-      legacyPackages = pkgs;
+      in
+      {
+        inherit global self;
+        legacyPackages = pkgs;
 
-      formatter = pkgs.nixfmt-rfc-style;
+        formatter = pkgs.nixfmt-rfc-style;
 
-      packages = {
-        default = pkgs.writeShellScriptBin "default" ''
-          ${global.environmentShell}
-          "$@"
-        '';
-
-        deploy =
-          let
-            home = self.homeConfigurations.main.activationPackage;
-            riverwood = self.nixosConfigurations.riverwood.config.system.build.toplevel;
-            whiterun = self.nixosConfigurations.whiterun.config.system.build.toplevel;
-          in
-          pkgs.writeShellScriptBin "deploy" ''
-             nix-copy-closure --to riverwood ${riverwood} ${home}
-             nix-copy-closure --to whiterun ${whiterun} ${home}
-             riverwood_cmd=boot
-             whiterun_cmd=boot
-             if [[ "$(realpath ${riverwood}/etc/.nixpkgs-used)" == "$(ssh riverwood realpath /etc/.nixpkgs-used)" ]]; then
-               riverwood_cmd=switch
-             fi
-            if [[ "$(realpath ${whiterun}/etc/.nixpkgs-used)" == "$(ssh whiterun realpath /etc/.nixpkgs-used)" ]]; then
-               whiterun_cmd=switch
-             fi
-            if [[ -v DEPLOY_CMD ]]; then
-              riverwood_cmd=$DEPLOY_CMD
-              whiterun_cmd=$DEPLOY_CMD
-            fi
-
-             ssh -t riverwood ${home}/bin/home-manager-generation 
-             ssh -t whiterun ${home}/bin/home-manager-generation 
-             
-             if [[ "${riverwood}" != "$(ssh riverwood realpath /run/current-system)" ]]; then
-               ssh -t riverwood sudo ${riverwood}/bin/switch-to-configuration $riverwood_cmd
-             else
-               echo "INFO(riverwood): newly built generation results in the same path that is already running"
-             fi
-
-             if [[ "${whiterun}" != "$(ssh whiterun realpath /run/current-system)" ]]; then
-               ssh -t whiterun sudo ${whiterun}/bin/switch-to-configuration $whiterun_cmd
-             else
-               echo "INFO(whiterun): newly built generation results in the same path that is already running"
-             fi
-
+        packages = {
+          default = pkgs.writeShellScriptBin "default" ''
+            ${global.environmentShell}
+            "$@"
           '';
 
-        release = pkgs.stdenv.mkDerivation {
-          pname = "nixcfg-release";
-          version = "${toString self.lastModified}-${self.inputs.nixpkgs.rev}";
-          # version = "${self.rev or (builtins.trace "nixpkgs_${nixpkgs.rev}" "Commita!")}";
+          deploy =
+            let
+              home = self.homeConfigurations.main.activationPackage;
+              riverwood = self.nixosConfigurations.riverwood.config.system.build.toplevel;
+              whiterun = self.nixosConfigurations.whiterun.config.system.build.toplevel;
+            in
+            pkgs.writeShellScriptBin "deploy" ''
+               nix-copy-closure --to riverwood ${riverwood} ${home}
+               nix-copy-closure --to whiterun ${whiterun} ${home}
+               riverwood_cmd=boot
+               whiterun_cmd=boot
+               if [[ "$(realpath ${riverwood}/etc/.nixpkgs-used)" == "$(ssh riverwood realpath /etc/.nixpkgs-used)" ]]; then
+                 riverwood_cmd=switch
+               fi
+              if [[ "$(realpath ${whiterun}/etc/.nixpkgs-used)" == "$(ssh whiterun realpath /etc/.nixpkgs-used)" ]]; then
+                 whiterun_cmd=switch
+               fi
+              if [[ -v DEPLOY_CMD ]]; then
+                riverwood_cmd=$DEPLOY_CMD
+                whiterun_cmd=$DEPLOY_CMD
+              fi
 
-          preferLocalBuild = true;
+               ssh -t riverwood ${home}/bin/home-manager-generation 
+               ssh -t whiterun ${home}/bin/home-manager-generation 
+               
+               if [[ "${riverwood}" != "$(ssh riverwood realpath /run/current-system)" ]]; then
+                 ssh -t riverwood sudo ${riverwood}/bin/switch-to-configuration $riverwood_cmd
+               else
+                 echo "INFO(riverwood): newly built generation results in the same path that is already running"
+               fi
 
-          dontUnpack = true;
-          buildInputs =
-            [ ]
-            # ++ (with pkgs.custom; [ neovim ])
-            # ++ (with pkgs.custom; [ firefox tixati emacs ])
-            # ++ (with pkgs.custom.vscode; [ common programming ])
-            ++ (with self.nixosConfigurations; [
-              riverwood.config.system.build.toplevel
-              whiterun.config.system.build.toplevel
-              # ivarstead.config.system.build.toplevel
-            ])
-            ++ (with self.homeConfigurations; [ main.activationPackage ])
-          # ++ (with self.devShells.${system}; [
-          #   (pkgs.writeShellScriptBin "s" "echo ${default.outPath}")
-          # ])
-          # ++ (let
-          #   flattenItems = items: if pkgs.lib.isDerivation items
-          #     then items
-          #     else if pkgs.lib.isAttrs items then pkgs.lib.flatten ((map (flattenItems) (builtins.attrValues items)))
-          #     else []
-          # ;
-          # in map (item: (pkgs.writeShellScriptBin "source" "echo ${item}")) (flattenItems bumpkinInputs))
-          ;
-          installPhase = ''
-            echo $version > $out
-            for input in $buildInputs; do
-              echo $input >> $out
-            done
+               if [[ "${whiterun}" != "$(ssh whiterun realpath /run/current-system)" ]]; then
+                 ssh -t whiterun sudo ${whiterun}/bin/switch-to-configuration $whiterun_cmd
+               else
+                 echo "INFO(whiterun): newly built generation results in the same path that is already running"
+               fi
+
+            '';
+
+          release = pkgs.stdenv.mkDerivation {
+            pname = "nixcfg-release";
+            version = "${toString self.lastModified}-${self.inputs.nixpkgs.rev}";
+            # version = "${self.rev or (builtins.trace "nixpkgs_${nixpkgs.rev}" "Commita!")}";
+
+            preferLocalBuild = true;
+
+            dontUnpack = true;
+            buildInputs =
+              [ ]
+              # ++ (with pkgs.custom; [ neovim ])
+              # ++ (with pkgs.custom; [ firefox tixati emacs ])
+              # ++ (with pkgs.custom.vscode; [ common programming ])
+              ++ (with self.nixosConfigurations; [
+                riverwood.config.system.build.toplevel
+                whiterun.config.system.build.toplevel
+                # ivarstead.config.system.build.toplevel
+              ])
+              ++ (with self.homeConfigurations; [ main.activationPackage ])
+            # ++ (with self.devShells.${system}; [
+            #   (pkgs.writeShellScriptBin "s" "echo ${default.outPath}")
+            # ])
+            # ++ (let
+            #   flattenItems = items: if pkgs.lib.isDerivation items
+            #     then items
+            #     else if pkgs.lib.isAttrs items then pkgs.lib.flatten ((map (flattenItems) (builtins.attrValues items)))
+            #     else []
+            # ;
+            # in map (item: (pkgs.writeShellScriptBin "source" "echo ${item}")) (flattenItems bumpkinInputs))
+            ;
+            installPhase = ''
+              echo $version > $out
+              for input in $buildInputs; do
+                echo $input >> $out
+              done
+            '';
+          };
+        };
+        devShells.default = pkgs.mkShell {
+          name = "nixcfg-shell";
+          buildInputs = with pkgs; [
+            ctl
+            pyinfra
+            script-directory
+            bumpkin.packages.${system}.default
+            (writeShellScriptBin "bumpkin-bump" ''
+              if [ -v NIXCFG_ROOT_PATH ]; then
+                  bumpkin eval -p -i "$NIXCFG_ROOT_PATH/bumpkin.json" -o "$NIXCFG_ROOT_PATH/bumpkin.json.lock" "$@"
+              else
+                exit 1
+              fi
+            '')
+            (writeShellScriptBin "bumpkin-list" ''
+              if [ -v NIXCFG_ROOT_PATH ]; then
+                bumpkin list -i "$NIXCFG_ROOT_PATH/bumpkin.json" -o "$NIXCFG_ROOT_PATH/bumpkin.json.lock" "$@"
+              else
+                exit 1
+              fi
+            '')
+          ];
+          shellHook = ''
+            export NIXCFG_ROOT_PATH=$(pwd)
+            ${global.environmentShell}
+            echo Shell setup complete!
           '';
         };
-
-      };
-      devShells.default = pkgs.mkShell {
-        name = "nixcfg-shell";
-        buildInputs = with pkgs; [
-          ctl
-          pyinfra
-          script-directory
-          bumpkin.packages.${system}.default
-          (writeShellScriptBin "bumpkin-bump" ''
-            if [ -v NIXCFG_ROOT_PATH ]; then
-                bumpkin eval -p -i "$NIXCFG_ROOT_PATH/bumpkin.json" -o "$NIXCFG_ROOT_PATH/bumpkin.json.lock" "$@"
-            else
-              exit 1
-            fi
-          '')
-          (writeShellScriptBin "bumpkin-list" ''
-            if [ -v NIXCFG_ROOT_PATH ]; then
-              bumpkin list -i "$NIXCFG_ROOT_PATH/bumpkin.json" -o "$NIXCFG_ROOT_PATH/bumpkin.json.lock" "$@"
-            else
-              exit 1
-            fi
-          '')
-        ];
-        shellHook = ''
-          export NIXCFG_ROOT_PATH=$(pwd)
-          ${global.environmentShell}
-          echo Shell setup complete!
-        '';
-      };
-    }) // {
+      }
+    )
+    // {
       overlays = {
         # nix-requirefile = import "${inputs.nix-requirefile}/overlay.nix";
         borderless-browser = import "${inputs.borderless-browser}/overlay.nix";
         rust-overlay = final: prev: import "${inputs.rust-overlay}/rust-overlay.nix" final prev;
         zzzthis = import ./nix/overlay.nix self;
       };
-      colors = let
-        scheme = inputs.nix-colors.colorschemes."ayu-dark";
-      in scheme // {
-        isDark = true;
-        colors = scheme.palette;
+      colors =
+        let
+          scheme = inputs.nix-colors.colorschemes."ayu-dark";
+        in
+        scheme
+        // {
+          isDark = true;
+          colors = scheme.palette;
+        };
+
+      nixosConfigurations = import ./nix/nodes {
+        inherit extraArgs system;
+        path = inputs.nixpkgs;
+        nodes = {
+          ravenrock = {
+            modules = [ ./nix/nodes/ravenrock ];
+            inherit pkgs;
+          };
+          riverwood = {
+            modules = [ ./nix/nodes/riverwood ];
+            inherit pkgs;
+          };
+          whiterun = {
+            modules = [ ./nix/nodes/whiterun ];
+            inherit pkgs;
+          };
+          recovery = {
+            modules = [ ./nix/nodes/recovery ];
+            inherit pkgs;
+          };
+          # demo = {
+          #   modules = [ ./nix/nodes/demo ];
+          #   inherit pkgs;
+          # };
+        };
       };
 
-        nixosConfigurations = import ./nix/nodes {
-          inherit extraArgs system;
-          path = inputs.nixpkgs;
-          nodes = {
-            ravenrock = {
-              modules = [ ./nix/nodes/ravenrock ];
-              inherit pkgs;
-            };
-            riverwood = {
-              modules = [ ./nix/nodes/riverwood ];
-              inherit pkgs;
-            };
-            whiterun = {
-              modules = [ ./nix/nodes/whiterun ];
-              inherit pkgs;
-            };
-            recovery = {
-              modules = [ ./nix/nodes/recovery ];
-              inherit pkgs;
-            };
-            # demo = {
-            #   modules = [ ./nix/nodes/demo ];
-            #   inherit pkgs;
-            # };
+      homeConfigurations = pkgs.callPackage ./nix/homes {
+        inherit extraArgs;
+        nodes = {
+          main = {
+            modules = [ ./nix/homes/main ];
+            inherit pkgs;
           };
         };
+      };
 
-        homeConfigurations = pkgs.callPackage ./nix/homes {
-          inherit extraArgs;
-          nodes = {
-            main = {
-              modules = [ ./nix/homes/main ];
-              inherit pkgs;
-            };
+      nixOnDroidConfigurations = pkgs.callPackage ./nix/nixOnDroid {
+        inherit extraArgs mkPkgs;
+        nodes = {
+          default = {
+            modules = [ ./nix/nixOnDroid/default ];
+            system = "aarch64-linux";
           };
         };
-
-        nixOnDroidConfigurations = pkgs.callPackage ./nix/nixOnDroid {
-          inherit extraArgs mkPkgs;
-          nodes = {
-            default = {
-              modules = [ ./nix/nixOnDroid/default ];
-              system = "aarch64-linux";
-            };
-          };
-        };
-
-
+      };
     };
 }

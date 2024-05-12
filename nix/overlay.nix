@@ -98,7 +98,7 @@ in
   #     };
   #   });
   # };
-  
+
   nur = import flake.inputs.nur { pkgs = prev; };
 
   wineApps = {
@@ -128,9 +128,7 @@ in
     vscode = cp ./pkgs/custom/vscode;
     rofi_xorg = cp ./pkgs/custom/rofi.nix;
     rofi = final.custom.rofi_xorg;
-    rofi_wayland = prev.callPackage ./pkgs/custom/rofi.nix {
-      rofi = final.rofi-wayland;
-    };
+    rofi_wayland = prev.callPackage ./pkgs/custom/rofi.nix { rofi = final.rofi-wayland; };
     pidgin = cp ./pkgs/custom/pidgin.nix;
     send2kindle = cp ./pkgs/custom/send2kindle.nix;
     retroarch = cp ./pkgs/custom/retroarch.nix;
