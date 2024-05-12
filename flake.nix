@@ -64,9 +64,6 @@
     home-manager.url = "home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    # betterdiscord-addons.url = "github:mwittrien/BetterDiscordAddons?dir=Plugins";
-    # betterdiscord-addons.flake = false;
-
     nix-requirefile.url = "github:lucasew/nix-requirefile";
     nix-requirefile.flake = false;
 
@@ -154,13 +151,6 @@
             nvidia.acceptLicense = true;
             android_sdk.accept_license = true;
             permittedInsecurePackages = [
-              # "python-2.7.18.6"
-              # "electron-18.1.0"
-              # "electron-21.4.0"
-              # "openssl-1.1.1u"
-              # "openssl-1.1.1v"
-              # "openssl-1.1.1w"
-              "electron-25.9.0"
             ];
           };
           overlays =
@@ -198,19 +188,13 @@
 
 
     in
-      flake-utils.lib.eachSystem ["x86_64-linux"] (system:
-    let
-
-
-    in
-    {
-      # inherit (extraArgs) bumpkin;
-      inherit global;
+      flake-utils.lib.eachSystem ["x86_64-linux"] (system: let
+        pkgs = mkPkgs { inherit system; };
+      in {
+      inherit global self;
       legacyPackages = pkgs;
-      inherit self;
 
       formatter = pkgs.nixfmt-rfc-style;
-
 
       packages = {
         default = pkgs.writeShellScriptBin "default" ''
@@ -336,16 +320,7 @@
       in scheme // {
         isDark = true;
         colors = scheme.palette;
-        # colors = scheme.palette;
-        # inherit (scheme) slug;
       };
-      # in  // {
-      #   isDark = true;
-      #   inherit (self) colors;
-      # } // self.colors.palette;
-      # colors = self.colors // {
-      #   colors = self.colors.palette;
-      # };
 
         nixosConfigurations = import ./nix/nodes {
           inherit extraArgs system;
