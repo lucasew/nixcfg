@@ -84,10 +84,6 @@ def update_ai_stuff(state):
                     (xi, yi, xf, yf) = map(int, bbx)
                     sx = xf - xi
                     sy = yf - yi
-                    xi -= sx // 3
-                    yi -= sy // 3
-                    xf += sx // 3
-                    yf += sy // 3
                     xi = max(0, xi)
                     yi = max(0, yi)
                     xf = min(xf, output_size[0])
@@ -115,6 +111,12 @@ def update_camera_stuff(state):
                     propx = sx / output_size[0]
                     propy = sy / output_size[1]
                     propavg = (propx + propy) / 2
+                    propavg = min(propavg, 0.7)
+                    sx = int(propavg * output_size[0])
+                    sy = int(propavg * output_size[1])
+                    center_x = int((xi + xf) / 2)
+                    center_y = int((yi + yf) / 2)
+
                     final_size = [int(sz * propavg) for sz in output_size]
 
                     frame = adjust_gamma(frame)
@@ -122,10 +124,14 @@ def update_camera_stuff(state):
                         cv2.rectangle(frame, (xi, yi), (xf, yf), (255, 0, 0), 2)
                     padding_x = (final_size[0] - sx) // 2
                     padding_y = (final_size[1] - sy) // 2
+                    yi = int(max(center_y - (sy/2), 0))
+                    yf = int(min(center_y + (sy/2), output_size[1]))
+                    xi = int(max(center_x - (sx/2), 0))
+                    xf = int(min(center_x + (sx/2), output_size[0]))
                     mask = last_mask
                     if not state['disable_warp']:
-                        frame_cutted = frame[yi-padding_y:yf+padding_y, xi-padding_x:xf+padding_x,:]
-                        mask_cutted = last_mask[yi-padding_y:yf+padding_y, xi-padding_x:xf+padding_x]
+                        frame_cutted = frame[yi:yf, xi:xf,:]
+                        mask_cutted = last_mask[yi:yf, xi:xf]
                         frame = cv2.resize(frame_cutted, output_size)
                         mask = cv2.resize(mask_cutted, output_size, cv2.INTER_NEAREST)
 
