@@ -56,6 +56,7 @@ state=dict(
     disable_bg = False,
     disable_warp = False,
     disable_rectangle=True,
+    disable_grayscale=True,
 )
 
 def update_ai_stuff(state):
@@ -131,6 +132,12 @@ def update_camera_stuff(state):
                     if not state['disable_bg']:
                         frame_blur = cv2.blur(frame, (23, 23))
                         frame[mask > 128, :] = frame_blur[mask > 128, :]
+                    if not state['disable_grayscale']:
+                        frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                        frame = np.zeros(frame.shape, dtype=frame.dtype)
+                        frame[:,:,0] = frame_gray
+                        frame[:,:,1] = frame_gray
+                        frame[:,:,2] = frame_gray
 
                 cam.send(frame)
                 cam.sleep_until_next_frame()
@@ -152,6 +159,8 @@ try:
             state['disable_warp'] = not state['disable_warp']
         if line in ['rect', 'r']:
             state['disable_rectangle'] = not state['disable_rectangle']
+        if line in ['gray', 'g']:
+            state['disable_grayscale'] = not state['disable_grayscale']
             
 except:
     state['stop'] = True
