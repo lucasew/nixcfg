@@ -27,6 +27,8 @@ in
 
   nbr = import "${flake.inputs.nbr}" { pkgs = final; };
 
+  blender-bin = flake.inputs.blender-bin.packages.${prev.system}; 
+
   pythonPackagesExtensions = [
     (final: prev: {
       pyctcdecode = final.callPackage ./pkgs/python/pyctcdecode { };

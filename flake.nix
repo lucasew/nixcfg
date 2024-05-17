@@ -2,6 +2,9 @@
   description = "nixcfg";
 
   inputs = {
+    blender-bin.url = "blender-bin";
+    blender-bin.inputs.nixpkgs.follows = "nixpkgs";
+
     bumpkin.url = "github:lucasew/bumpkin";
     bumpkin.inputs.nixpkgs.follows = "nixpkgs";
 
