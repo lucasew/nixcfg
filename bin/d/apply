@@ -28,12 +28,10 @@ if sd is phone; then
   rm ~/.shortcuts/*
   for shortcut in $(ls $(sd d root)/bin/_shortcuts/termux); do
     echo '[*] Installing shortcut $shortcut'
-    echo $shortcut
-    shortcut_file=$(sd d root)/bin/_shortcuts/termux/$shortcut
     {
       echo '#!/data/data/com.termux/files/usr/bin/bash'
       echo ". $(sd d root)/bin/source_me"
-      cat "$shortcut_file"
+      echo sd _shortcuts termux "$shortcut" '"$@"'
     } > ~/.shortcuts/$shortcut
   done
 
