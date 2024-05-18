@@ -30,6 +30,8 @@ if sd is phone; then
     echo '[*] Installing shortcut $shortcut'
     {
       echo '#!/data/data/com.termux/files/usr/bin/bash'
+      echo 'export LD_PRELOAD="$TERMUX_PREFIX/lib/libtermux-exec.so"'
+      echo 'export PATH="/data/data/com.termux/files/usr/bin"'
       echo bash ~/.dotfiles/bin/source_me _shortcuts termux "$shortcut" '"$@"'
     } > ~/.shortcuts/$shortcut
   done
