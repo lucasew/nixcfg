@@ -19,7 +19,7 @@ function backup {
   from="$1"; shift
   to="${rsyncnet_user}:$1"; shift
 
-  update_status Fazendo backup "'$from' -> '$to'"
+  update_status rsync: "'$from' -> '$to'"
   rsync -avP "${from}" "${to}" "$@"
 }
 
