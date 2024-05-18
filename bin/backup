@@ -115,7 +115,7 @@ last_notification_file=$(mktemp)
 echo Backup finalizado
 
 update_status 'Listando snapshots...'
-ssh "$rsyncnet_user" ls .zfs/snapshot
+ssh "$rsyncnet_user" ls .zfs/snapshot | tr '\n' ' '
 
 update_status 'Listando cota...'
 ssh "$rsyncnet_user" quota
