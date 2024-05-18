@@ -2,5 +2,39 @@
 
 set -euo pipefail
 
-if sd node is_riverwood; do
-done
+flake_ref=$(sd d root)
+
+cmd=switch
+
+if [ $# -gt 0 ]; then
+  cmd="$1"; shift
+fi
+
+if sd is dotfiles-in-store; then
+  flake_ref="github:lucasew/nixcfg"
+fi
+
+if sd is riverwood; then
+  sudo nixos-rebuild "$cmd" --flake "$flake_ref#riverwood"
+fi
+
+if sd is whiterun; then
+  sudo nixos-rebuild "$cmd" --flake "$flake_ref#whiterun"
+fi
+
+if sd is phone; then
+
+  mkdir -p ~/.shortcuts
+  rm ~/.shortcuts/*
+  for shortcut in $(ls $(sd d root)/bin/_shortcuts/termux); do
+    echo '[*] Installing shortcut $shortcut'
+    echo $shortcut
+    shortcut_file=$(sd d root)/bin/_shortcuts/termux/$shortcut
+    {
+      echo '#!/data/data/com.termux/files/usr/bin/bash'
+      echo ". $(sd d root)/bin/source_me"
+      cat "$shortcut_file"
+    } > ~/.shortcuts/$shortcut
+  done
+
+fi
