@@ -116,6 +116,7 @@ echo Backup finalizado
 
 update_status 'Listando snapshots...'
 ssh "$rsyncnet_user" ls .zfs/snapshot | tr '\n' ' '
+echo
 
 update_status 'Listando cota...'
 ssh "$rsyncnet_user" quota
