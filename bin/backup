@@ -16,10 +16,10 @@ function backup {
 
 function obsidian_git {
   OBSIDIAN_DIR=
-  if sd is_node riverwood; then
+  if sd is riverwood; then
     OBSIDIAN_DIR=/home/lucasew/WORKSPACE/ZETTEL/obsidian
   fi
-  if sd is_node phone; then
+  if sd is phone; then
     OBSIDIAN_DIR=/sdcard/Obsidian
   fi
   if [ ! -z "$OBSIDIAN_DIR" ]; then
@@ -40,11 +40,11 @@ obsidian_git add -A
 obsidian_git pull --rebase
 obsidian_git push origin master
 
-if sd is_node riverwood; then
+if sd is riverwood; then
   backup ~/WORKSPACE/CANTGIT/ backup/lucasew/CANTGIT
 fi
 
-if sd is_node phone; then
+if sd is phone; then
   backup /sdcard/DCIM/Camera/ backup/lucasew/camera --exclude=.thumbnails
   backup /sdcard/Pictures/ backup/lucasew/pictures --exclude=.thumbnails
   backup /sdcard/Android/media/com.whatsapp/WhatsApp/Media/ backup/lucasew/WhatsApp --exclude=.Links --exclude=.Statuses
@@ -71,7 +71,7 @@ if sd is_node phone; then
   done
 fi
 
-if sd is_node whiterun; then
+if sd is whiterun; then
   true
   # there is a specific service for this
   # backup /var/backup/postgresql/ backup/lucasew/homelab/postgres
