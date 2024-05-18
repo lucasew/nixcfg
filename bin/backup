@@ -8,9 +8,15 @@ rsyncnet_user=de3163@de3163.rsync.net
 
 TERMUX_NOTIFICATION_ID=termux_backup
 
+function termux-notify {
+  if sd is termux-env; then
+    termux-notification -i $TERMUX_NOTIFICATION_ID -t "Backup"
+  fi
+}
+
 function update_status {
   if sd is termux-env; then
-    echo "$@" | termux-notification -i $TERMUX_NOTIFICATION_ID -t "Backup"
+    echo "$@" | termux-notify
   fi
   echo '[*]' "$@" >&2
 }
@@ -109,4 +115,4 @@ ssh "$rsyncnet_user" ls .zfs/snapshot
 update_status 'Listando cota...'
 ssh "$rsyncnet_user" quota
 
-} | sd is termux-env && termux-notification -i $TERMUX_NOTIFICATION_ID -t "Backup"
+} | termux-notify
