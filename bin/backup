@@ -62,5 +62,8 @@ ssh "$rsyncnet_user" find backup -size 0 -delete
 #   ssh "$rsyncnet_user" -o SendEnv=GIT_TERMINAL_PROMPT git --git-dir "git/$repo" fetch --all --prune
 # done
 
+echo '[*] Listando snapshots...'
+ssh "$rsyncnet_user" ls .zfs/snapshot
 
+echo '[*] Listando cota...'
 ssh "$rsyncnet_user" quota
