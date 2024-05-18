@@ -100,10 +100,13 @@ ssh "$rsyncnet_user" find backup -size 0 -delete
 #   ssh "$rsyncnet_user" -o SendEnv=GIT_TERMINAL_PROMPT git --git-dir "git/$repo" fetch --all --prune
 # done
 
+{
+echo Backup finalizado
+
 update_status 'Listando snapshots...'
 ssh "$rsyncnet_user" ls .zfs/snapshot
 
 update_status 'Listando cota...'
 ssh "$rsyncnet_user" quota
 
-update_status Finalizado
+} | sd is termux-env && termux-notification -i $TERMUX_NOTIFICATION_ID -t "Backup"
