@@ -6,11 +6,20 @@ set -eu -o pipefail
 
 rsyncnet_user=de3163@de3163.rsync.net
 
+TERMUX_NOTIFICATION_ID=termux_backup
+
+function update_status {
+  if sd is termux-env; then
+    echo "$@" | termux-notification -i $TERMUX_NOTIFICATION_ID -t "Backup"
+  fi
+  echo '[*]' "$@" >&2
+}
+
 function backup {
   from="$1"; shift
   to="${rsyncnet_user}:$1"; shift
 
-  echo '[*]' Fazendo backup "'$from' -> '$to'"
+  update_status Fazendo backup "'$from' -> '$to'"
   rsync -avP "${from}" "${to}" "$@"
 }
 
@@ -24,8 +33,8 @@ function obsidian_git {
   fi
   if [ ! -z "$OBSIDIAN_DIR" ]; then
     pushd "$OBSIDIAN_DIR" >/dev/null
-    echo "[*] obsidian/git: $@" >&2
-    echo
+
+    update_status "obsidian/git: $@"
     git "$@"
     popd >/dev/null
   fi
@@ -88,8 +97,10 @@ ssh "$rsyncnet_user" find backup -size 0 -delete
 #   ssh "$rsyncnet_user" -o SendEnv=GIT_TERMINAL_PROMPT git --git-dir "git/$repo" fetch --all --prune
 # done
 
-echo '[*] Listando snapshots...'
+update_status 'Listando snapshots...'
 ssh "$rsyncnet_user" ls .zfs/snapshot
 
-echo '[*] Listando cota...'
+update_status 'Listando cota...'
 ssh "$rsyncnet_user" quota
+
+update_status Finalizado
