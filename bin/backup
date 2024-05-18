@@ -41,10 +41,13 @@ function obsidian_git {
 }
 
 obsidian_git add -A
+obsidian_commit_mktemp=$(mktemp)
 {
   echo "backup checkpoint"
   obsidian_git diff --stat --staged
-} | obsidian_git commit -F - --allow-empty
+} > $obsidian_commit_mktemp
+obsidian_git commit -F $obsidian_commit_mktemp --allow-empty
+rm $obsidian_commit_mktemp
 
 obsidian_git pull --rebase
 obsidian_git push origin master
