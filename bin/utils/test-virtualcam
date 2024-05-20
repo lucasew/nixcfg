@@ -57,15 +57,24 @@ state=dict(
     disable_warp = False,
     disable_rectangle=True,
     disable_grayscale=True,
+    has_new_frame=True,
+    pause_processing=False
 )
 
 def update_ai_stuff(state):
     last_run = time.time()
     try:
         while not state['stop']:
+            if state['pause_processing']:
+                time.sleep(1)
+                continue
             interval = time.time() - last_run
+            if not state['has_new_frame']:
+                state['has_new_frame'] = False
+                continue
             if interval < 1.0:
                 time.sleep(1.0 - interval)
+                continue
             last_run = time.time()
             print("Running AI round")
             frame = state['last_frame']
@@ -100,51 +109,52 @@ def update_camera_stuff(state):
                 ret, frame = cap.read()
                 if not ret:
                     break
-                frame = adjust_gamma(frame)
-                state['last_frame'] = frame
-                detected_faces = state['detected_faces']
-                last_mask = state['last_mask']
-                if len(detected_faces) > 0:
-                    (xi, yi, xf, yf) = detected_faces[0]
-                    sx = xf - xi
-                    sy = yf - yi
-                    propx = sx / output_size[0]
-                    propy = sy / output_size[1]
-                    propavg = (propx + propy) / 2
-                    propavg = min(propavg, 0.7)
-                    sx = int(propavg * output_size[0])
-                    sy = int(propavg * output_size[1])
-                    center_x = int((xi + xf) / 2)
-                    center_y = int((yi + yf) / 2)
-
-                    final_size = [int(sz * propavg) for sz in output_size]
-
+                if not state['pause_processing']:
                     frame = adjust_gamma(frame)
-                    if not state['disable_rectangle']:
-                        cv2.rectangle(frame, (xi, yi), (xf, yf), (255, 0, 0), 2)
-                    padding_x = (final_size[0] - sx) // 2
-                    padding_y = (final_size[1] - sy) // 2
-                    yi = int(max(center_y - (sy/2), 0))
-                    yf = int(min(center_y + (sy/2), output_size[1]))
-                    xi = int(max(center_x - (sx/2), 0))
-                    xf = int(min(center_x + (sx/2), output_size[0]))
-                    mask = last_mask
-                    if not state['disable_warp']:
-                        frame_cutted = frame[yi:yf, xi:xf,:]
-                        mask_cutted = last_mask[yi:yf, xi:xf]
-                        frame = cv2.resize(frame_cutted, output_size)
-                        mask = cv2.resize(mask_cutted, output_size, cv2.INTER_NEAREST)
+                    state['last_frame'] = frame
+                    detected_faces = state['detected_faces']
+                    last_mask = state['last_mask']
+                    if len(detected_faces) > 0:
+                        (xi, yi, xf, yf) = detected_faces[0]
+                        sx = xf - xi
+                        sy = yf - yi
+                        propx = sx / output_size[0]
+                        propy = sy / output_size[1]
+                        propavg = (propx + propy) / 2
+                        propavg = min(propavg, 0.7)
+                        sx = int(propavg * output_size[0])
+                        sy = int(propavg * output_size[1])
+                        center_x = int((xi + xf) / 2)
+                        center_y = int((yi + yf) / 2)
 
-                    if not state['disable_bg']:
-                        frame_blur = cv2.blur(frame, (23, 23))
-                        frame[mask > 128, :] = frame_blur[mask > 128, :]
-                    if not state['disable_grayscale']:
-                        frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                        frame = np.zeros(frame.shape, dtype=frame.dtype)
-                        frame[:,:,0] = frame_gray
-                        frame[:,:,1] = frame_gray
-                        frame[:,:,2] = frame_gray
+                        final_size = [int(sz * propavg) for sz in output_size]
 
+                        frame = adjust_gamma(frame)
+                        if not state['disable_rectangle']:
+                            cv2.rectangle(frame, (xi, yi), (xf, yf), (255, 0, 0), 2)
+                        padding_x = (final_size[0] - sx) // 2
+                        padding_y = (final_size[1] - sy) // 2
+                        yi = int(max(center_y - (sy/2), 0))
+                        yf = int(min(center_y + (sy/2), output_size[1]))
+                        xi = int(max(center_x - (sx/2), 0))
+                        xf = int(min(center_x + (sx/2), output_size[0]))
+                        mask = last_mask
+                        if not state['disable_warp']:
+                            frame_cutted = frame[yi:yf, xi:xf,:]
+                            mask_cutted = last_mask[yi:yf, xi:xf]
+                            frame = cv2.resize(frame_cutted, output_size)
+                            mask = cv2.resize(mask_cutted, output_size, cv2.INTER_NEAREST)
+
+                        if not state['disable_bg']:
+                            frame_blur = cv2.blur(frame, (23, 23))
+                            frame[mask > 128, :] = frame_blur[mask > 128, :]
+                        if not state['disable_grayscale']:
+                            frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                            frame = np.zeros(frame.shape, dtype=frame.dtype)
+                            frame[:,:,0] = frame_gray
+                            frame[:,:,1] = frame_gray
+                            frame[:,:,2] = frame_gray
+                    state['has_new_frame'] = True
                 cam.send(frame)
                 cam.sleep_until_next_frame()
     finally:
@@ -167,6 +177,8 @@ try:
             state['disable_rectangle'] = not state['disable_rectangle']
         if line in ['gray', 'g']:
             state['disable_grayscale'] = not state['disable_grayscale']
+        if line in ['p', 'pause']:
+            state['pause_processing'] = not state['pause_processing']
             
 except:
     state['stop'] = True
