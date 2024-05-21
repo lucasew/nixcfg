@@ -143,8 +143,8 @@ def process_image(frame, state):
     (xi, yi, xf, yf) = detected_faces[0]
     sx = xf - xi
     sy = yf - yi
-    propx = sx / output_size[0]
-    propy = sy / output_size[1]
+    propx = sx / output_size[1]
+    propy = sy / output_size[0]
     propavg = (propx + propy) / 2
     propavg = min(propavg, 0.7)
     sx = int(propavg * output_size[0])
