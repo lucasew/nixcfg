@@ -1,5 +1,7 @@
 <?php
 
+// ==================================== Ingestão da request que vem do stdin =============
+
 $_http_header = fgets(STDIN);
 $_http_header = trim($_http_header);
 $_http_header = explode(" ", $_http_header);
@@ -7,6 +9,12 @@ $_http_header = explode(" ", $_http_header);
 $_SERVER['REQUEST_METHOD'] = $_http_header[0];
 $_SERVER['REQUEST_URI'] = $_http_header[1];
 $_SERVER['QUERY_STRING'] = parse_url($_http_header[1], PHP_URL_QUERY);
+
+$_HEADERS = array();
+function header(string $header) {
+    global $_HEADERS;
+    array_push($_HEADERS, $header);
+}
 
 while (true) {
     $_header = fgets(STDIN);
@@ -27,12 +35,17 @@ while (true) {
     $_SERVER['HTTP_' . $_header_name] = $_header_value;
 }
 
+// ==================================== Primitiva de header pra retorno =============
+set_header("Server", "GambiarraStation");
+set_header("Connection", "close");
+
 $_HEADERS_KV = array();
 function set_header(string $key, string $value) {
     global $_HEADERS_KV;
     $_HEADERS_KV[$key] = $value;
 }
 
+// ==================================== Utilitários para content-type =============
 function set_contenttype(string $content_type) {
     set_header("Content-Type", $content_type);
 }
@@ -53,6 +66,7 @@ function mime_from_buffer($buffer) {
 }
 
 
+// ==================================== Utilitários para roteamento =============
 $INPUT_DATA = array_merge_recursive($_GET, $_POST);
 $ROUTE = parse_url($_SERVER["REQUEST_URI"])["path"];
 $IS_ROUTED = false;
@@ -134,28 +148,17 @@ function exact_with_route_param(string $selected_route, string $handler_script) 
     execphp($handler_script);
 }
 
+ob_start(); // saporra appenda os echo num buffer pq nessa fase ainda não tem nada retornado
 
-$_HEADERS = array();
-function header(string $header) {
-    global $_HEADERS;
-    array_push($_HEADERS, $header);
-}
-
-set_header("Server", "GambiarraStation");
-set_header("Connection", "close");
-
-ob_start();
-
-?>
-<?php
+// ==================================== ROTAS ===============================
 
 exact_route("/phpinfo", "phpinfo.php");
 exact_route("/image", "image.php");
 
 use_route("/", "index.php");
 
-?>
-<?php
+// ==================================== Finalização =========================
+
 $data = ob_get_contents();
 ob_end_clean();
 
