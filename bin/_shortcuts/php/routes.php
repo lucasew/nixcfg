@@ -19,7 +19,6 @@ function header(string $header) {
 while (true) {
     $_header = fgets(STDIN);
     $_header = trim($_header);
-    // echo "header: " . '"' . $_header . '"' . "\n";
     if (strlen($_header) == 0) {
         break;
     }
@@ -30,8 +29,6 @@ while (true) {
     $_header_value = substr($_header, strlen($_header_name)+1);
     $_header_value = trim($_header_value);
 
-    // var_dump($_header);
-    // echo "NAME: '" . $_header_name . "' VALUE: '" . $_header_value . "'\n";
     $_SERVER['HTTP_' . $_header_name] = $_header_value;
 }
 
@@ -75,7 +72,6 @@ function mark_routed() {
     global $IS_ROUTED;
     $orig_VALUE = $IS_ROUTED;
     $IS_ROUTED = true;
-    // return false;
     return $orig_VALUE;
 }
 
@@ -126,8 +122,6 @@ function exact_with_route_param(string $selected_route, string $handler_script) 
     };
     $params_parts = $preprocess($selected_route);
     $route_parts = $preprocess($ROUTE);
-    // log_httpd(json_encode($params_parts));
-    // log_httpd(json_encode($route_parts));
 
     $extra_params = [];
     if (count($params_parts) == count($route_parts)) {
