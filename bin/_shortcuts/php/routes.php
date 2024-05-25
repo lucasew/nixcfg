@@ -154,6 +154,7 @@ ob_start(); // saporra appenda os echo num buffer pq nessa fase ainda não tem n
 
 exact_route("/phpinfo", "phpinfo.php");
 exact_route("/image", "image.php");
+exact_route("/scope_test", "scope_test.php");
 
 use_route("/", "index.php");
 
