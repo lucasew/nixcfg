@@ -28,7 +28,6 @@ in
     ./tmux
     ./tuning.nix
     ./unstore.nix
-    ./user.nix
     ./postgres-backup.nix
     ./forbidden-paths.nix
   ];
