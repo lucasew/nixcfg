@@ -12,7 +12,7 @@ function update_status {
 function sync_private_repo {
   repo="$1"; shift
   repo_dir=~/.personal
-  update_status "Sincronizando repositório $repo"
+  update_status "Sincronizando $repo"
   remote_url="ssh://$rsyncnet_user/data2/home/de3163/git-personal/$repo"
   mkdir -p "$repo_dir"
   pushd "$repo_dir" >/dev/null
