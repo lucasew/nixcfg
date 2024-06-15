@@ -96,6 +96,18 @@ in
       fi
       "$EDITOR" "$@"
     '')
+    (pkgs.makeDesktopItem {
+      name = "nixcfg-quicksync";
+      desktopName = "nixcfg: Sincronização Rápida";
+      icon = "sync-synchronizing";
+      exec = "sdw quicksync";
+    })
+    (pkgs.makeDesktopItem {
+      name = "nixcfg-backup";
+      desktopName = "nixcfg: Backup";
+      icon = "sync-synchronizing";
+      exec = "sdw backup";
+    })
   ];
 
   # programs.hello-world.enable = true;
