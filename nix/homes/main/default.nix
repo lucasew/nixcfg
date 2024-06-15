@@ -42,8 +42,6 @@ in
     calibre # a dependency is broken
     chromium
     regex101
-    custom.tixati
-    custom.pidgin
     # (custom.neovim.override { inherit colors; })
     # (custom.emacs.override { inherit colors; })
     # custom.firefox # now I am using chromium
@@ -54,6 +52,7 @@ in
     jless # json viewer
     rustdesk # remote desktop for many systems
     gscan2pdf
+    keepassxc
     feh
     fortune
     graphviz
