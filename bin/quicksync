@@ -32,10 +32,10 @@ function sync_private_repo {
 }
 erros=()
 
+sync_private_repo personal-keepass || erros+=(personal-keepass) || true
+sync_private_repo personal-beancount || erros+=(personal-beancount) || true
 sync_private_repo personal-zettel-obsidian || erros+=(personal-zettel-obsidian) || true
 sync_private_repo personal-zettel-org || erros+=(personal-zettel-org) || true
-sync_private_repo personal-beancount || erros+=(personal-beancount) || true
 sync_private_repo personal-decsync || erros+=(personal-decsync) || true
-sync_private_repo personal-keepass || erros+=(personal-keepass) || true
 
 update_status "Sincronização concluída. Jobs falhos: ${erros[@]}"
