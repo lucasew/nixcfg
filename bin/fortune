@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# fortune com as frases custom
+
+fortune "$(sd d root)/assets/fortune"
