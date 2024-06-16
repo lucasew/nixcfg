@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -eu
+
+CACHE_DIR="$(realpath "$(mktemp -d)/../nixcfg-cached-eval")"
+mkdir -p "$CACHE_DIR"
+
+FLAKE_REF="$1"; shift
+IFS=' ' read REF_HASH _ <<< $(echo $FLAKE_REF | md5sum )
+
+# echo $FLAKE_REF >&2
+
+CACHE_FILE="$CACHE_DIR/$REF_HASH"
+
+if [ ! -f "$CACHE_FILE" ]; then
+  EVAL_OUT="$(nix eval --raw "$FLAKE_REF")"
+  nix-store -r "$EVAL_OUT" >/dev/null
+  echo "$EVAL_OUT" > "$CACHE_FILE"
+fi
+
+cat $CACHE_FILE

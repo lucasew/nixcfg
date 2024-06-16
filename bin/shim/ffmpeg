@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
 if ! sd is binary-available ffmpeg >/dev/null; then
-	ffmpeg_out=$(nix eval --raw "$(sd d root --really)#pkgs.ffmpeg.outPath")
-	nix-store -r $ffmpeg_out >/dev/null
-	export PATH=$PATH:$ffmpeg_out/bin
+	ref="$(sd d root)#pkgs.ffmpeg"
+	export PATH=$PATH:$(sd nix cached-eval $ref)/bin
 	# echo $python_out
 fi
 
