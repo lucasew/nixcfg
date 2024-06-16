@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if ! sd is binary-available tput >/dev/null; then
+	ref="$(sd d root)#pkgs.ncurses"
+	export PATH=$PATH:$(sd nix cached-eval $ref)/bin
+	# echo $python_out
+fi
+
+exec $(sd is binary-available tput) "$@"

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if ! sd is binary-available figlet >/dev/null; then
+	ref="$(sd d root)#pkgs.figlet"
+	export PATH=$PATH:$(sd nix cached-eval $ref)/bin
+	# echo $python_out
+fi
+
+exec $(sd is binary-available figlet) "$@"
