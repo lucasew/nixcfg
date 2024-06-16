@@ -1,2 +1,2 @@
-figlet -f big -w $(tput cols) -c "$(hostname)"
+figlet -f big -w $(tput cols) -c "$(hostname)" || true
 
