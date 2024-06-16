@@ -290,6 +290,7 @@ __sd() {
 # the interactive shell, and so that we can exec the subshell
 # without destroying the interactive shell.
 sd() (
+  export SD_CMD=
   __sd "$@"
 )
 

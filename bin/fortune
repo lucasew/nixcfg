@@ -4,8 +4,10 @@
 
 from pathlib import Path
 from random import choice
+import sys
 
 FORTUNE_DIR = Path(__file__).parent.parent / "assets" / "fortune"
+# print(__file__, file=sys.stderr)
 
 
 def fetch_fortunes():

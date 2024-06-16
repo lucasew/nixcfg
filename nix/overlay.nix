@@ -148,7 +148,8 @@ in
   };
 
   script-directory-wrapper = final.writeShellScriptBin "sdw" ''
-    ${../bin}/source_me sd "$@"
+    export SD_CMD=
+    ${./..}/bin/source_me sd "$@"
   '';
 
   ccacheWrapper = prev.ccacheWrapper.override {
