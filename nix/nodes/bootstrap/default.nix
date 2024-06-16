@@ -15,7 +15,6 @@ let
     killall
     script-directory-wrapper
     ;
-  inherit (global) username;
 in
 {
   imports = [
@@ -23,7 +22,7 @@ in
     ./colors.nix
     ./ccache.nix
     ./dotfiles-dir.nix
-    ./motd.nix
+    ./rev.nix
     ./netns.nix
     ./nix-binary-caches.nix
     ./nixpkgs-symlink.nix
