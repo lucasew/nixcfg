@@ -34,6 +34,8 @@ in
     ./transmission.nix
   ];
 
+  gc-hold.enable = true;
+
   boot.kernel.sysctl = {
     "vfs.zfs.arc_sys_free" = 4 * 1024 * 1024 * 1024; # make ZFS free arc before hitting swap
   };

@@ -16,6 +16,13 @@ let
 in
 {
   config = lib.mkIf cfg.enable {
+    # sops.secrets.postgres-backup-rclone = {
+    #   sopsFile = ../../secrets/rclone.ini;
+    #   owner = config.users.users.lucasew.name;
+    #   group = config.users.users.lucasew.group;
+    #   format = "ini";
+    # };
+
     systemd.services = lib.listToAttrs (
       map (item: {
         name = item;

@@ -39,7 +39,13 @@ in
     '';
   };
 
-  environment.systemPackages = with pkgs; [ thunderbird ];
+  environment.systemPackages = with pkgs; [
+    thunderbird
+    gparted
+    git-annex
+    git-remote-gcrypt
+    appimage-wrap
+  ];
 
   services.rsyncnet-remote-backup = {
     enable = true;
@@ -154,23 +160,26 @@ in
     };
   };
 
-  gc-hold.paths = with pkgs; [
-    go
-    gopls
-    # zig zls
-    # terraform
-    # ansible vagrant
-    gnumake
-    cmake
-    clang
-    gdb
-    ccls
-    # python3Packages.pylsp-mypy
-    # nodejs yarn
-    # openjdk11 maven ant
-    docker-compose
-    # jre
-  ];
+  gc-hold = {
+    enable = true;
+    paths = with pkgs; [
+      go
+      gopls
+      # zig zls
+      # terraform
+      # ansible vagrant
+      gnumake
+      cmake
+      clang
+      gdb
+      ccls
+      # python3Packages.pylsp-mypy
+      # nodejs yarn
+      # openjdk11 maven ant
+      docker-compose
+      # jre
+    ];
+  };
 
   networking.hostName = hostname; # Define your hostname.
 

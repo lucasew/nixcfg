@@ -35,7 +35,6 @@ in
   '';
 
   environment.systemPackages = with pkgs; [
-    gparted
     parallel
     home-manager
     paper-icon-theme
@@ -44,11 +43,7 @@ in
     pv
     # Extra
     distrobox # plan b
-    git-annex
-    git-remote-gcrypt
-    appimage-wrap
     xorg.xkill
-    kitty
   ];
 
   programs.dconf.enable = true;

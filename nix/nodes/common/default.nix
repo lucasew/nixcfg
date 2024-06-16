@@ -18,7 +18,6 @@ in
     ./ansible-python.nix
     ./services
 
-    ./admin-user.nix
     ./hosts.nix
     ./kvm.nix
     ./lvm.nix
@@ -84,7 +83,7 @@ in
   boot.loader.grub.memtest86.enable = true;
 
   virtualisation.docker = {
-    enable = true;
+    enable = lib.mkDefault true;
     # dockerSocket.enable = true;
     # dockerCompat = true;
     enableNvidia = true;
@@ -110,7 +109,7 @@ in
   cachix.enable = true;
 
   services.smartd = {
-    enable = true;
+    enable = lib.mkDefault true;
     autodetect = true;
     notifications.test = true;
   };

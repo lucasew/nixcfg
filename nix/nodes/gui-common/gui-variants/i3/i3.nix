@@ -24,6 +24,7 @@ in
     environment.systemPackages = [
       lockerSpace
       custom_rofi
+      pkgs.kitty
     ];
     services.xserver.displayManager.lightdm = {
       greeters.enso = {

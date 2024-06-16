@@ -9,6 +9,16 @@ let
 in
 {
   config = mkIf config.services.nextcloud.enable {
+
+    sops.secrets.nextcloud-admin-password = {
+      sopsFile = ../../secrets/nextcloud-admin-password;
+      group = config.users.groups.admin-password.name;
+      format = "binary";
+      mode = "0440";
+    };
+
+    users.groups.admin-password = { };
+
     services.nextcloud.package = pkgs.nextcloud29;
     users.users.nextcloud = {
       extraGroups = [
@@ -25,7 +35,7 @@ in
         dbuser = "nextcloud";
         dbhost = "/run/postgresql";
         adminuser = "lucasew";
-        adminpassFile = "/var/run/secrets/admin-password";
+        adminpassFile = "/var/run/secrets/nextcloud-admin-password";
       };
       settings = {
         preview_ffmpeg_path = lib.getExe pkgs.ffmpeg;

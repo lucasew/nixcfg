@@ -344,6 +344,10 @@
             modules = [ ./nix/nodes/whiterun ];
             inherit pkgs;
           };
+          atomicpi = {
+            modules = [ ./nix/nodes/atomicpi ];
+            inherit pkgs;
+          };
           recovery = {
             modules = [ ./nix/nodes/recovery ];
             inherit pkgs;
