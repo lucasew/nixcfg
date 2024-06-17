@@ -1,8 +1,9 @@
-{ lib, config, ... }:
+{ lib, config, pkgs, ... }:
 
 {
   config = lib.mkIf config.services.xserver.desktopManager.kodi.enable {
     hardware.opengl.enable = true;
+
     services = {
       displayManager = {
         sessionData = {
@@ -12,6 +13,7 @@
       xserver = {
         enable = true;
         displayManager.lightdm.enable = true;
+        desktopManager.kodi.package = pkgs.custom.kodi;
       };
     };
   };

@@ -120,6 +120,13 @@ in
     skyrim = cp ./pkgs/wineApps/skyrim.nix;
   };
   custom = rec {
+    kodi = final.kodi.withPackages (kpkgs: with kpkgs; [
+      vfs-sftp
+      sponsorblock
+      invidious
+      joystick
+      sendtokodi
+    ]);
     colorpipe = cp ./pkgs/colorpipe;
     chromium = cp ./pkgs/custom/chromium;
     ncdu = cp ./pkgs/custom/ncdu.nix;
