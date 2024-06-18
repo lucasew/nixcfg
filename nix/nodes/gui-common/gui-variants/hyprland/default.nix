@@ -13,6 +13,9 @@
   ];
 
   config = lib.mkIf config.programs.hyprland.enable {
+
+    security.polkit.agent.enable = true;
+
     programs.hyprland = {
       xwayland.enable = true;
       portalPackage = pkgs.xdg-desktop-portal-wlr // {
@@ -138,10 +141,6 @@
       '';
       restartTriggers = [ "${./hypr/hyprland.conf}" ];
       wantedBy = [ "default.target" ];
-    };
-
-    systemd.user.services.polkit-agent = {
-      script = "exec ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1";
     };
 
     environment.systemPackages = with pkgs; [

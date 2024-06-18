@@ -27,6 +27,7 @@ in
     ./sunshine.nix
     ./wallpaper.nix
     ./extra-fonts.nix
+    ./polkit.nix
     ./gui-variants
   ];
 

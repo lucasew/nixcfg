@@ -16,6 +16,9 @@
   ];
 
   config = lib.mkIf config.services.xserver.windowManager.i3.enable {
+
+    security.polkit.agent.enable = true;
+
     # Redshift
     services.redshift.enable = true;
 
