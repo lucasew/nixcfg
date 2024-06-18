@@ -7,6 +7,8 @@
     "${self.inputs.nixos-hardware}/common/gpu/intel"
   ];
 
+  nix.settings.auto-optimise-store = true;
+
   programs.sunshine.enable = true;
 
   services.xserver.desktopManager.kodi.enable = true;
