@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if ! sd is binary-available buku >/dev/null; then
+	ref="$(sd d root)#pkgs.buku"
+	export PATH=$PATH:$(sd nix cached-eval $ref)/bin
+fi
+
+exec $(sd is binary-available buku) "$@"
