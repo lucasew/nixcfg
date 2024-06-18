@@ -44,7 +44,7 @@ in
     regex101
     # (custom.neovim.override { inherit colors; })
     # (custom.emacs.override { inherit colors; })
-    # custom.firefox # now I am using chromium
+    custom.firefox # now I am using chromium
     # custom.vscode.programming
     cached-nix-shell
     devenv
