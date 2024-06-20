@@ -1,6 +1,45 @@
+#!/usr/bin/env python3
 #!/usr/bin/env bash
-goto_ws=$(i3-msg i3-msg -t get_workspaces | jq '.[] | select(.focused == true) | "i3-msg workspace number " + .name' | sed s/\"//g)
 
-i3-msg -t get_outputs | jq '.[] | select(.current_workspace != null) |  "i3-msg workspace number " + .current_workspace + ";i3-msg move workspace to output left"' | sed s/\"//g | bash
 
-echo $goto_ws | bash
+# sends the workspace to the next monitor
+
+import subprocess
+import json
+
+res = subprocess.run(['i3-msg', '-t', 'get_workspaces'], stdout=subprocess.PIPE)
+workspaces = json.loads(res.stdout.decode('utf-8'))
+focused_workspace = None
+for workspace in workspaces:
+    if workspace['focused']:
+        focused_workspace = workspace['name']
+assert focused_workspace is not None
+
+res = subprocess.run(['i3-msg', '-t', 'get_outputs'], stdout=subprocess.PIPE)
+screen_data = json.loads(res.stdout.decode('utf-8'))
+
+screens = []
+workspace_screens = {}
+for screen in screen_data:
+    if screen['current_workspace'] is not None:
+        screens.append(screen['name'])
+        workspace_screens[screen['name']] = screen['current_workspace']
+
+print(screens)
+print(workspace_screens)
+
+old_screens = screens.copy()
+
+screens.insert(0, screens.pop(-1))
+
+print(screens)
+print(workspace_screens)
+
+for (from_screen, to_screen) in zip(old_screens, screens):
+    subprocess.run(['i3-msg', "workspace", "number", workspace_screens[from_screen]])
+    subprocess.run(['i3-msg', "move", "workspace", 'to', 'output', to_screen])
+
+for ws in workspace_screens.values():
+    subprocess.run(['i3-msg', "workspace", "number", ws])
+    
+subprocess.run(['i3-msg', "workspace", "number", focused_workspace])

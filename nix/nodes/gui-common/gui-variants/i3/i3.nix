@@ -185,6 +185,8 @@ in
         bindsym $mod+Shift+Left move left
         bindsym $mod+Shift+Right move right
         bindsym $mod+Shift+Up move up
+        bindsym $mod+Shift+h workspace prev_on_output
+        bindsym $mod+Shift+l workspace next_on_output
         bindsym $mod+Shift+c reload
         bindsym $mod+Shift+e exec i3-nagbar -t warning -m 'Do you want to exit i3?' -b 'Yes' 'loginctl kill-session $XDG_SESSION_ID'
         bindsym $mod+Shift+f floating toggle

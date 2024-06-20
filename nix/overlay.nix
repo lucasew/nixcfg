@@ -154,8 +154,11 @@ in
   };
 
   script-directory-wrapper = final.writeShellScriptBin "sdw" ''
+    set -eu
     export SD_CMD=
-    ${./..}/bin/source_me sd "$@"
+    export SD_ROOT="$(${flake}/bin/source_me sd d root)"
+    [ -d "$SD_ROOT" ]
+    "$SD_ROOT/bin/source_me" sd "$@"
   '';
 
   ccacheWrapper = prev.ccacheWrapper.override {
