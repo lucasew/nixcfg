@@ -55,6 +55,29 @@ in
       settings = {
         content = {
           user_stylesheets = map (item: "${item}") [ stylesheetBase16Variables ];
+          blocking.adblock.lists = [
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/annoyances-cookies.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/annoyances-others.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/annoyances.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badlists.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badware.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2020.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2021.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2022.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2023.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2024.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/quick-fixes.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/resource-abuse.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/ubo-link-shorteners.txt"
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt"
+            "https://easylist.to/easylist/easylist.txt"
+            "https://easylist.to/easylist/easyprivacy.txt"
+            "https://easylist-downloads.adblockplus.org/abp-filters-anti-cv.txt"
+            "https://www.i-dont-care-about-cookies.eu/abp/"
+            "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt"
+          ];
         };
         colors = {
 
