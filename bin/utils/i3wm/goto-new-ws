@@ -1,3 +1,17 @@
 #!/usr/bin/env bash
-ws=$[ $RANDOM % 100 + 11 ]
-i3-msg workspace number $ws
+
+wsfile="/tmp/_i3_last_ws"
+
+last_ws=10
+if [ -f $wsfile ]; then
+  last_ws="$(cat "$wsfile")"
+fi
+last_ws=$((last_ws+1))
+echo $last_ws
+echo $last_ws > $wsfile
+
+if [ $1 -eq "window" ]; then
+i3-msg move container to workspace number $last_ws
+fi
+
+i3-msg workspace number $last_ws

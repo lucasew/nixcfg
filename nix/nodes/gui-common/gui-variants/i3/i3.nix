@@ -185,8 +185,10 @@ in
         bindsym $mod+Shift+Left move left
         bindsym $mod+Shift+Right move right
         bindsym $mod+Shift+Up move up
+
         bindsym $mod+Shift+h workspace prev_on_output
         bindsym $mod+Shift+l workspace next_on_output
+
         bindsym $mod+Shift+c reload
         bindsym $mod+Shift+e exec i3-nagbar -t warning -m 'Do you want to exit i3?' -b 'Yes' 'loginctl kill-session $XDG_SESSION_ID'
         bindsym $mod+Shift+f floating toggle
@@ -201,11 +203,13 @@ in
         bindsym $mod+Shift+d exec rofi-window
         bindsym $mod+e layout toggle split
         bindsym $mod+f fullscreen toggle
-        bindsym $mod+h split h
         bindsym $mod+minus scratchpad show
         bindsym $mod+s layout stacking
         bindsym $mod+space focus mode_toggle
+
+        bindsym $mod+h split h
         bindsym $mod+v split v
+
         bindsym $mod+w layout tabbed
         bindsym $mod+Ctrl+Right=resize shrink width 1 px or 1 ppt
         bindsym $mod+Ctrl+Up=resize grow height 1 px or 1 ppt
@@ -224,13 +228,15 @@ in
         bindsym XF86MonBrightnessUp exec brightnessctl s +5%
         bindsym XF86MonBrightnessDown exec brightnessctl s 5%-
 
-        bindsym $mod+m move workspace to output left
+        bindsym $mod+Shift+m move workspace to output left
+        bindsym $mod+m focus output next
 
         bindsym $mod+l exec sdw utils i3wm lock-screen
         bindsym $mod+n exec sdw utils i3wm modn
+
         bindsym $mod+b exec sdw utils i3wm goto-new-ws
-        bindsym $mod+Shift+b exec sdw utils i3wm send2pqp
-        bindsym $mod+Shift+p exec sdw utils i3wm toggle-monitor
+        bindsym $mod+Shift+b exec sdw utils i3wm goto-new-ws shift
+
 
         bindsym --release Print exec ${pkgs.spectacle}/bin/spectacle
 
