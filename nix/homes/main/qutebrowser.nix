@@ -20,9 +20,10 @@ in
     programs.qutebrowser = {
       keyBindings = {
         normal = {
-          xb = "config-cycle statusbar.show always never";
-          xt = "config-cycle tabs.show always never";
-          xx = "config-cycle statusbar.show always never;; config-cycle tabs.show always never";
+          xb = "config-cycle statusbar.show never always";
+          xt = "config-cycle tabs.show never always ";
+          xx = "config-cycle statusbar.show never always ;; config-cycle tabs.show never always ";
+          xd = "config-cycle colors.webpage.preferred_color_scheme light dark";
         };
       };
       greasemonkey = [
@@ -411,10 +412,11 @@ in
           };
           webpage = {
 
-            # Background color for webpages if unset (or empty to use the theme's
-            # color).
-            # bg = c.base00;
-            darkmode.enabled = true;
+          #   # Background color for webpages if unset (or empty to use the theme's
+          #   # color).
+          #   # bg = c.base00;
+            preferred_color_scheme = "dark";
+          #   darkmode.enabled = true;
           };
         };
         # colors.webpage.darkmode.policy.images = "never";
