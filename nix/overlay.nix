@@ -214,18 +214,6 @@ in
     };
   });
 
-  mopidyPackages = prev.mopidyPackages.overrideScope (
-    self: super: {
-      mopidy-ytmusic = super.mopidy-ytmusic.overrideAttrs (old: {
-        nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ super.pythonPackages.pythonRelaxDepsHook ];
-        pythonRelaxDeps = [
-          "ytmusicapi"
-          "pytube"
-        ];
-      });
-    }
-  );
-
   cached-nix-shell = callPackage flake.inputs.src-cached-nix-shell { pkgs = prev; };
 
   ollama-cuda = prev.ollama.override { acceleration = "cuda"; };

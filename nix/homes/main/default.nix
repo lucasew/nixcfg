@@ -21,9 +21,7 @@ in
     ./theme
     ./discord.nix
     ./qutebrowser.nix
-    ./mopidy.nix
   ];
-  services.mopidy.enable = true;
 
   programs.helix.enable = true;
   # services.espanso.enable = true;

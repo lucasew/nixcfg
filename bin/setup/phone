@@ -101,9 +101,6 @@ install_fdroid_app self com.quickoffice.android
 # Fdroid store
 install_fdroid_app main org.fdroid.fdroid
 
-# MPDroid App to control the mopidy instance
-install_fdroid_app main com.namelessdev.mpdroid
-
 # AntennaPod Podcast player
 install_fdroid_app main de.danoeh.antennapod
 
