@@ -1,15 +1,6 @@
 flake: final: prev:
 let
-  inherit (flake.outputs) global;
   inherit (final) callPackage;
-  inherit (prev) lib writeShellScript;
-  inherit (lib) recursiveUpdate;
-  inherit (builtins)
-    toString
-    length
-    head
-    tail
-    ;
 in
 let
   cp = f: (callPackage f) { };
@@ -161,30 +152,6 @@ in
     "$SD_ROOT/bin/source_me" sd "$@"
   '';
 
-  ccacheWrapper = prev.ccacheWrapper.override {
-    extraConfig = ''
-      export CCACHE_COMPRESS=1
-      export CCACHE_DIR="/var/cache/ccache"
-      export CCACHE_UMASK=007
-      if [ ! -d "$CCACHE_DIR" ]; then
-        echo "====="
-        echo "Directory '$CCACHE_DIR' does not exist"
-        echo "Please create it with:"
-        echo "  sudo mkdir -m0770 '$CCACHE_DIR'"
-        echo "  sudo chown root:nixbld '$CCACHE_DIR'"
-        echo "====="
-        exit 1
-      fi
-      if [ ! -w "$CCACHE_DIR" ]; then
-        echo "====="
-        echo "Directory '$CCACHE_DIR' is not accessible for user $(whoami)"
-        echo "Please verify its access permissions"
-        echo "====="
-        exit 1
-      fi
-    '';
-  };
-
   opencv4Full = prev.python3Packages.opencv4.override {
     pythonPackages = prev.python3Packages;
     enablePython = true;
@@ -226,8 +193,4 @@ in
   movfuscator = prev.callPackage ./pkgs/movfuscator { };
 
   regex101 = prev.callPackage flake.inputs.regex101 { };
-
-  # nix = prev.nixVersions.nix_2_15;
-  # electron = prev.electron_27-bin;
-  # electron_25 = prev.electron_25-bin;
 }
