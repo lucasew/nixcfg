@@ -183,9 +183,6 @@ in
 
   cached-nix-shell = callPackage flake.inputs.src-cached-nix-shell { pkgs = prev; };
 
-  ollama-cuda = prev.ollama.override { acceleration = "cuda"; };
-  ollama-rocm = prev.ollama.override { acceleration = "rocm"; };
-
   rio = flake.inputs.rio.packages.${prev.system}.default;
 
   arcan = prev.arcan.override { useTracy = false; };
