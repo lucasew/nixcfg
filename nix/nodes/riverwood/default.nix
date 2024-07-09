@@ -1,14 +1,10 @@
 {
   self,
-  global,
   pkgs,
   config,
-  lib,
   ...
-}@args:
+}:
 let
-  inherit (self) inputs;
-  inherit (global) username;
   hostname = "riverwood";
 in
 {
@@ -16,8 +12,8 @@ in
     ./hardware-configuration.nix
     ../gui-common
 
-    "${self.inputs.nixos-hardware}/common/cpu/intel/kaby-lake"
-    "${self.inputs.nixos-hardware}/common/gpu/intel"
+    "${self.inputs.nixos-hardware}/common/cpu/intel"
+    "${self.inputs.nixos-hardware}/common/gpu/intel/kaby-lake"
     "${self.inputs.nixos-hardware}/common/pc/laptop/ssd"
 
     ./kvm.nix
