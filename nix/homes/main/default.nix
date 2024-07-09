@@ -116,6 +116,7 @@ in
     # adskipped-spotify.enable = true;
     jq.enable = true;
     obs-studio = {
+      package = pkgs.obs-studio;
       enable = true;
     };
     htop = {
