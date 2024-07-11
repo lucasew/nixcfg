@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+gh auth status
+
+{
+  gh repo list --fork --json owner,name,defaultBranchRef --jq '.[] | "\(.owner.login)/\(.name) -b \(.defaultBranchRef.name)"'
+  echo lucasew/nixpkgs -b staging
+} | while read repo; do
+  sd source_me notification --id $$ --title GitHub fork update --message "Updating $repo"
+  echo "[*] gh repo sync $repo"
+  gh repo sync $repo
+done
