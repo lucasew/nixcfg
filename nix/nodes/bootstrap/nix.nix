@@ -4,6 +4,7 @@ let
 in
 {
   nix = {
+    package = pkgs.lix;
     gc = {
       automatic = true;
       dates = "weekly";
