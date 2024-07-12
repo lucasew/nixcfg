@@ -124,8 +124,8 @@
         cat $(sdw d root)/nix/nodes/gui-common/gui-variants/hyprland/waybar/config | colorpipe > ~/.config/waybar/config
       '';
       restartTriggers = [
-        "${./waybar/style.css}"
-        "${./waybar/config}"
+        ./waybar/style.css
+        ./waybar/config
       ];
       wantedBy = [ "default.target" ];
     };
@@ -139,7 +139,7 @@
         mkdir ~/.config/hypr -p
         cat $(sdw d root)/nix/nodes/gui-common/gui-variants/hyprland/hypr/hyprland.conf | colorpipe > ~/.config/hypr/hyprland.conf
       '';
-      restartTriggers = [ "${./hypr/hyprland.conf}" ];
+      restartTriggers = [ ./hypr/hyprland.conf ];
       wantedBy = [ "default.target" ];
     };
 
