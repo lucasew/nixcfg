@@ -8,6 +8,7 @@ from .__common import define_command
 
 import os
 import sys
+import math
 
 @define_command()
 def reverse_txt(value):
@@ -569,3 +570,25 @@ def juro_composto(capital, juro, tempo):
 @define_command()
 def juro_composto_total(capital, juro, tempo):
     return juro_composto(capital, juro, tempo) + float(capital)
+
+@define_command()
+def juro_composto_dup(juro):
+    "Quanto T precisa pra duplicar o capital"
+    """
+    M = C * (1 + i)^t
+
+    C = 1.0
+    M = 2.0
+    i = juro
+
+    resultado = t
+
+    2.0 = 1.0 * (1 + i)^t
+
+    wolfram:
+
+    t = log(2) / log(i+1)
+
+    """
+    juro = float(juro)
+    return math.log2(2) / math.log2(juro+1)
