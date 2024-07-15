@@ -72,7 +72,7 @@ in
   services.xserver.windowManager.i3.enable = true;
   # programs.hyprland.enable = true;
 
-  programs.sunshine.enable = true;
+  services.sunshine.enable = true;
 
   # virtualisation.waydroid.enable = true;
 

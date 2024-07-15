@@ -9,7 +9,7 @@
 
   nix.settings.auto-optimise-store = true;
 
-  programs.sunshine.enable = true;
+  services.sunshine.enable = true;
 
   services.xserver.desktopManager.kodi.enable = true;
 
