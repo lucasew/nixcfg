@@ -37,7 +37,6 @@ in
   home.packages = with pkgs; [
     anki
     gum
-    calibre # a dependency is broken
     chromium
     regex101
     # (custom.neovim.override { inherit colors; })
@@ -59,7 +58,6 @@ in
     gnome.evince
     libnotify
     libreoffice
-    mendeley
     ncdu
     # nix-option
     nix-prefetch-scripts
