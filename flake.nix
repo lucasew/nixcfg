@@ -80,7 +80,6 @@
     nix-colors.inputs.nixpkgs-lib.follows = "nixpkgs-lib";
 
     rust-overlay.url = "github:oxalica/rust-overlay";
-    rust-overlay.inputs.flake-utils.follows = "flake-utils";
 
     flake-utils.url = "github:numtide/flake-utils";
 
