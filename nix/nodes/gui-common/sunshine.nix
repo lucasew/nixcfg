@@ -14,7 +14,8 @@ in
     environment.systemPackages = [ cfg.package ];
 
     services.sunshine.settings = {
-      gamepad = "ds4";
+      motion_as_ds4 = true;
+      touchpad_as_ds4 = true;
     };
 
     systemd.user.services.sunshine = {
