@@ -6,6 +6,7 @@
 
 import subprocess
 import json
+import time
 
 res = subprocess.run(['i3-msg', '-t', 'get_workspaces'], stdout=subprocess.PIPE)
 workspaces = json.loads(res.stdout.decode('utf-8'))
@@ -37,9 +38,12 @@ print(workspace_screens)
 
 for (from_screen, to_screen) in zip(old_screens, screens):
     subprocess.run(['i3-msg', "workspace", "number", workspace_screens[from_screen]])
+    time.sleep(0.1)
     subprocess.run(['i3-msg', "move", "workspace", 'to', 'output', to_screen])
+    time.sleep(0.1)
 
 for ws in workspace_screens.values():
     subprocess.run(['i3-msg', "workspace", "number", ws])
+    time.sleep(0.1)
     
 subprocess.run(['i3-msg', "workspace", "number", focused_workspace])
