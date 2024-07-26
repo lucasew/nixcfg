@@ -35,7 +35,6 @@ in
   };
 
   home.packages = with pkgs; [
-    anki
     gum
     chromium
     regex101
@@ -54,15 +53,11 @@ in
     fortune
     graphviz
     github-cli
-    gimp
-    gnome.evince
     libnotify
-    libreoffice
     ncdu
     # nix-option
     nix-prefetch-scripts
     nix-output-monitor
-    obsidian
     pkg
     rclone
     ripgrep
@@ -71,14 +66,8 @@ in
     sqlite
     sshpass
 
-    # communication
-    tdesktop
-    # nbr.telegram-desktop-bin
-
     # media
     vlc
-    stremio
-    moonlight-qt
     nbr.wine-apps._7zip
     xxd
     pavucontrol # controle de volume
