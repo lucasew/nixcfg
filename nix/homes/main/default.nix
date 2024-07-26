@@ -37,7 +37,6 @@ in
   home.packages = with pkgs; [
     gum
     chromium
-    regex101
     # (custom.neovim.override { inherit colors; })
     # (custom.emacs.override { inherit colors; })
     custom.firefox # now I am using chromium
