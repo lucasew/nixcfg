@@ -36,7 +36,6 @@ in
   };
 
   environment.systemPackages = with pkgs; [
-    thunderbird
     gparted
     git-annex
     git-remote-gcrypt
