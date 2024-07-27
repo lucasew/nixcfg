@@ -23,7 +23,6 @@ in
     ./ipfs.nix
     ./gamemode.nix
     ./syncthing.nix
-    ./stremio.nix
     ./sunshine.nix
     ./wallpaper.nix
     ./extra-fonts.nix
