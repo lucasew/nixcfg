@@ -7,7 +7,7 @@
 
 {
   imports = [
-    ../optional/flatpak-wayland.nix
+    ../optional/flatpak.nix
     ../optional/kdeconnect-indicator.nix
     ../optional/dunst.nix
   ];

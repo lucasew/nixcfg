@@ -10,7 +10,7 @@
   imports = [
     ./i3.nix
     ./lockscreen.nix
-    ../optional/flatpak-wayland.nix
+    ../optional/flatpak.nix
     ../optional/kdeconnect-indicator.nix
     ../optional/dunst.nix
   ];
