@@ -190,4 +190,14 @@ in
   movfuscator = prev.callPackage ./pkgs/movfuscator { };
 
   regex101 = prev.callPackage flake.inputs.regex101 { };
+
+  conda = prev.conda.override {
+    extraPkgs = with final; [
+      libGL
+      libGLU
+      xorg.libX11
+      xorg.libXi
+      qt5.qtbase
+    ];
+  };
 }
