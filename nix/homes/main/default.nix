@@ -37,10 +37,7 @@ in
   home.packages = with pkgs; [
     gum
     chromium
-    # (custom.neovim.override { inherit colors; })
-    # (custom.emacs.override { inherit colors; })
     custom.firefox # now I am using chromium
-    # custom.vscode.programming
     cached-nix-shell
     devenv
     dotenv
@@ -71,6 +68,13 @@ in
     xxd
     pavucontrol # controle de volume
     pytorrentsearch
+
+    # dev
+    conda
+    # custom.vscode.programming
+    # (custom.neovim.override { inherit colors; })
+    # (custom.emacs.override { inherit colors; })
+
     # LSPs
     nil
     python3Packages.python-lsp-server
