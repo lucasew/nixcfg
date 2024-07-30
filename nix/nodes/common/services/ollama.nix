@@ -12,15 +12,12 @@ in
 {
 
   config = lib.mkIf cfg.enable {
-    services.ollama.acceleration = "cuda";
+    services.ollama = {
+      acceleration = "cuda";
+      listenAddress = "127.0.0.1:${toString config.networking.ports.ollama.port}";
+    };
 
     networking.ports.ollama.enable = true;
-
-    systemd.services.ollama = {
-      environment = {
-        OLLAMA_HOST = lib.mkForce "127.0.0.1:${toString config.networking.ports.ollama.port}";
-      };
-    };
 
     services.nginx.virtualHosts."ollama.${config.networking.hostName}.${config.networking.domain}" = {
       root = "${pkgs.ollama-webui}/share/ollama-webui/www";
