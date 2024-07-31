@@ -20,7 +20,9 @@ in
   ];
 
   programs.bash.bashrcExtra = ''
-    source $(sdw d root)/bin/source_me
+    if command -v sdw > /dev/null 2> /dev/null && [ -f "$(sdw d root || echo "/nhaa")/bin/source_me" ]; then
+      source $(sdw d root)/bin/source_me
+    fi
   '';
 
   home.packages = with pkgs; [
