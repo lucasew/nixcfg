@@ -202,7 +202,10 @@ in
         bindsym $mod+d exec rofi-launch
         bindsym $mod+Shift+d exec rofi-window
         bindsym $mod+e layout toggle split
+
         bindsym $mod+f fullscreen toggle
+        bindsym $mod+Ctrl+f fullscreen toggle global
+
         bindsym $mod+minus scratchpad show
         bindsym $mod+s layout stacking
         bindsym $mod+space focus mode_toggle
