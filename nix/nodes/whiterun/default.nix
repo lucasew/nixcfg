@@ -34,6 +34,8 @@ in
     ./transmission.nix
   ];
 
+  hardware.nvidia.modesetting.enable = false;
+
   gc-hold.enable = true;
 
   boot.kernel.sysctl = {
