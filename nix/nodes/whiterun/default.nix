@@ -34,6 +34,8 @@ in
     ./transmission.nix
   ];
 
+  programs.nix-ld.enable = true;
+
   hardware.nvidia.modesetting.enable = false;
 
   gc-hold.enable = true;
