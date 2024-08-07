@@ -15,7 +15,7 @@
         # intel-compute-runtime
         # beignet
         intel-ocl
-        vaapiIntel
+        intel-vaapi-driver
       ];
       extraPackages32 = with pkgs.pkgsi686Linux; [ vaapiIntel ];
     };
