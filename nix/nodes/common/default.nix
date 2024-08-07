@@ -40,8 +40,6 @@ in
 
   services.lvm.enable = mkDefault false;
 
-  programs.nix-ld.libraries = [];
-
   programs.fuse.userAllowOther = true;
 
   services.cloud-savegame = {
