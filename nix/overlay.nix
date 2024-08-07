@@ -20,6 +20,8 @@ in
 
   blender-bin = flake.inputs.blender-bin.packages.${prev.system}; 
 
+  inherit (flake.inputs.nix-alien.packages.${prev.system}) nix-alien;
+
   pythonPackagesExtensions = [
     (final: prev: {
       pyctcdecode = final.callPackage ./pkgs/python/pyctcdecode { };

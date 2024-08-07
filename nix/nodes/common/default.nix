@@ -23,6 +23,7 @@ in
     ./lvm.nix
     ./nginx-root-domain.nix
     ./nginx.nix
+    ./nix-ld.nix
     ./nix-index-database.nix
     ./sops.nix
     ./tmux
