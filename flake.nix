@@ -17,6 +17,10 @@
     devenv.url = "github:cachix/devenv";
     devenv.flake = false;
 
+    fusionsolar-bot.url = "github:lucasew/fusionsolar-bot";
+    fusionsolar-bot.inputs.nixpkgs.follows = "nixpkgs";
+    fusionsolar-bot.inputs.flake-utils.follows = "flake-utils";
+
     pocket2kindle.url = "github:lucasew/pocket2kindle";
     pocket2kindle.flake = false;
 
@@ -335,6 +339,9 @@
       nixosConfigurations = import ./nix/nodes {
         inherit extraArgs system;
         path = inputs.nixpkgs;
+        extraModules = [
+          inputs.fusionsolar-bot.nixosModules.${system}.default
+        ];
         nodes = {
           ravenrock = {
             modules = [ ./nix/nodes/ravenrock ];
