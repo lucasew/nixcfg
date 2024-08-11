@@ -232,11 +232,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1723336836,
-        "narHash": "sha256-D9e7yw3V5lQh7+bn3AaR1d+Qk8QNmke4X0G/HjOm/yU=",
+        "lastModified": 1723394124,
+        "narHash": "sha256-r1BQvWk50s1U4wBDgdtooQWThgf+uabxLojNtYg8y1M=",
         "owner": "lucasew",
         "repo": "fusionsolar-bot",
-        "rev": "e35ef90cdc632ea187de1d6c33b8f3f6deb82c64",
+        "rev": "6380c0018a1e826466f8cdda52592defc6170018",
         "type": "github"
       },
       "original": {
