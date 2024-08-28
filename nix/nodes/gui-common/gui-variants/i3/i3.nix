@@ -135,7 +135,7 @@ in
           workspace_buttons yes
 
           colors {
-            background #${base00}
+            background #00${base00}
             statusline #${base05}
             separator #${base00}
 
@@ -241,7 +241,7 @@ in
         bindsym $mod+Shift+b exec sdw utils i3wm goto-new-ws shift
 
 
-        bindsym --release Print exec ${pkgs.spectacle}/bin/spectacle
+        bindsym --release Print exec org.flameshot.Flameshot gui
 
         exec --no-startup-id ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1
 
