@@ -1076,11 +1076,11 @@
     "ts-proxy": {
       "flake": false,
       "locked": {
-        "lastModified": 1724350486,
-        "narHash": "sha256-Ep1ygh32O75ul86+HE+9fsaELNAjPp50nH+HyCQDAyw=",
+        "lastModified": 1725886733,
+        "narHash": "sha256-pBHi8rMdzI4KeSURmtb9n3TuQgWR+ugRUP2+VfTW/tY=",
         "owner": "lucasew",
         "repo": "ts-proxy",
-        "rev": "4cc9aceac66aa3e7304b41cabdda9d3b14c7ee38",
+        "rev": "d11e52ffcb935e62dcf8e373232f916716d1bf6c",
         "type": "github"
       },
       "original": {
