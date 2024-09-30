@@ -174,6 +174,7 @@ in
       # nodejs yarn
       # openjdk11 maven ant
       docker-compose
+      blender-bin.blender_3_6
       # jre
     ];
   };
