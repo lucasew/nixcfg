@@ -126,7 +126,7 @@ in
         set $mod ${mod}
 
         bar {
-          status_command ${pkgs.i3status}/bin/i3status --config /etc/i3status
+          status_command ${lib.getExe pkgs.i3pystatus} -c $(sdw d root)/bin/_shortcuts/i3pystatus/main.py
           font pango: Roboto Mono 10
           hidden_state show
           position top
