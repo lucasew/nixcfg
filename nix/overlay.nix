@@ -119,6 +119,7 @@ in
       joystick
       sendtokodi
     ]);
+    i3pystatus = cp ./pkgs/i3pystatus.nix;
     colorpipe = cp ./pkgs/colorpipe;
     chromium = cp ./pkgs/custom/chromium;
     ncdu = cp ./pkgs/custom/ncdu.nix;
