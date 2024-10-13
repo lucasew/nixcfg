@@ -16,6 +16,15 @@ in
     unpacked = (cp ./lib/unpackRecursive.nix) inputs;
   };
 
+  wallabag = prev.wallabag.overrideAttrs (old: {
+    postFixup = (old.postFixup or "") + ''
+      # exit 1
+      echo $out/**/*.yml
+      substituteInPlace $out/app/config/services{,_test}.yml \
+        --replace-fail '../../src/Wallabag' "$out/src/Wallabag"
+    '';
+  });
+
   nbr = import "${flake.inputs.nbr}" { pkgs = final; };
 
   blender-bin = flake.inputs.blender-bin.packages.${prev.system}; 

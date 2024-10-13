@@ -24,5 +24,6 @@
     ./python-microservices
     ./rtorrent.nix
     ./rsyncnet-remote-backup.nix
+    ./wallabag.nix
   ];
 }
