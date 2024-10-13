@@ -13,6 +13,8 @@ let
       (pkgs.runCommand "wallabag-parameters.yaml" {} ''
         mkdir -p $out/config
         ln -sf ${parameters} $out/config/parameters.yml
+        substitute ${cfg.package}/app/config/config.yml $out/config/config.yml \
+          --replace-fail 'cookie_secure: auto' 'cookie_secure: false' # allow http, I guess
       '')
       "${cfg.package}/app"
     ];
@@ -171,7 +173,7 @@ in
       rm -f app
       ln -sf ${appDir} app
       ln -sf ${cfg.package}/composer.{json,lock} .
-      ln -sf ${cfg.package}/src .
+      ln -sf ${cfg.package}/{src,translations,templates} .
 
       if [ ! -f installed ]; then
         echo "Installing wallabag"
