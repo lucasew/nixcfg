@@ -55,6 +55,7 @@ in
         peer-port-random-low = config.networking.ports.transmission-999.port;
         peer-port-random-high = config.networking.ports.transmission-000.port;
         rpc-port = config.networking.ports.transmission-rpc.port;
+        rpc-host-whitelist-enabled = false;
         message-level = 3; # journalctl all the things, hope it doesnt spam
         utp-enabled = true;
       };
