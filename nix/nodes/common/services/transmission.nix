@@ -59,9 +59,9 @@ in
         utp-enabled = true;
       };
     };
-    services.nginx.virtualHosts."transmission.${config.networking.hostName}.${config.networking.domain}" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:${toString config.services.transmission.settings.rpc-port}";
+    services.ts-proxy.hosts = {
+      transmission = {
+        addr = "http://127.0.0.1:${toString config.services.transmission.settings.rpc-port}";
       };
     };
   };

@@ -33,10 +33,9 @@ in
 
     services.nitter.preferences.replaceTwitter = domain;
 
-    services.nginx.virtualHosts."${domain}" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:${toString config.networking.ports.nitter.port}";
-        proxyWebsockets = true;
+    services.ts-proxy.hosts = {
+      nitter = {
+        addr = "http://127.0.0.1:${toString config.networking.ports.nitter.port}";
       };
     };
   };

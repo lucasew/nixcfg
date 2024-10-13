@@ -7,10 +7,9 @@ lib.mkIf config.services.libreddit.enable {
     inherit (config.networking.ports.libreddit) port;
   };
 
-  services.nginx.virtualHosts."libreddit.${config.networking.hostName}.${config.networking.domain}" = {
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString config.services.libreddit.port}";
-      proxyWebsockets = true;
+  services.ts-proxy.hosts = {
+    libreddit = {
+      addr =  "http://127.0.0.1:${toString config.services.libreddit.port}";
     };
   };
 }

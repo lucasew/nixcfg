@@ -36,10 +36,10 @@ in
         ADMIN_PASSWORD=adminadmin
       '';
     };
-    services.nginx.virtualHosts."${domain}" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:${toString config.networking.ports.miniflux.port}";
-        proxyWebsockets = true;
+
+    services.ts-proxy.hosts = {
+      miniflux = {
+        addr = "http://127.0.0.1:${toString config.networking.ports.miniflux.port}";
       };
     };
     services.postgresqlBackup.databases = [ "miniflux" ];

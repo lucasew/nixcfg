@@ -9,13 +9,9 @@
       extraFlags = [ "--no-auth" ];
     };
 
-    services.nginx.virtualHosts."restic.${config.networking.hostName}.${config.networking.domain}" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:${toString config.networking.ports.restic-server.port}";
-        proxyWebsockets = true;
-        extraConfig = ''
-          client_max_body_size 10G;
-        '';
+    services.ts-proxy.hosts = {
+      restic-server = {
+        addr = "http://127.0.0.1:${toString config.networking.ports.restic-server.port}";
       };
     };
 
