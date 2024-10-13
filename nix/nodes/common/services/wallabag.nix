@@ -42,7 +42,7 @@ in
       domain = lib.mkOption {
         description = "DNS domain of server";
         type = lib.types.str;
-        default = "wallabag.${config.networking.hostName}.${config.networking.domain}";
+        default = "wallabag.${config.services.ts-proxy.network-domain}";
       };
       user = lib.mkOption {
         description = "Service user";
