@@ -25,5 +25,6 @@
     ./rtorrent.nix
     ./rsyncnet-remote-backup.nix
     ./wallabag.nix
+    ./ts-proxy.nix
   ];
 }

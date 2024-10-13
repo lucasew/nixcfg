@@ -41,12 +41,12 @@ in
 
     services.cf-torrent.port = mkDefault config.networking.ports.cf-torrent.port;
 
-    services.nginx.virtualHosts."cf-torrent.${config.networking.hostName}.${config.networking.domain}" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:${toString cfg.port}";
-        proxyWebsockets = true;
+    services.ts-proxy.hosts = {
+      cf-torrent = {
+        addr = "http://127.0.0.1:${toString cfg.port}";
       };
     };
+
     systemd.sockets.cf-torrent = {
       socketConfig = {
         ListenStream = cfg.port;
@@ -57,6 +57,7 @@ in
         "multi-user.target"
       ];
     };
+
     systemd.services.cf-torrent = {
       inherit (cfg.package.meta) description;
       unitConfig = {

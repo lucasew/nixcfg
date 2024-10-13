@@ -191,12 +191,12 @@ in
     ];
 
     services.rabbitmq.enable = true;
-    users.users.wallabag = {
+    users.users.${cfg.user} = {
       isSystemUser = true;
-      group = "wallabag";
+      inherit (cfg) group;
     };
 
-    users.groups.wallabag = {};
+    users.groups.${cfg.group} = {};
 
     services.wallabag.config = {
       database_driver = "pdo_pgsql";
