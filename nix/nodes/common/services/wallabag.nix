@@ -66,8 +66,21 @@ in
   };
 
   config = lib.mkIf config.services.wallabag.enable {
+    networking.ports.wallabag.enable = true;
+
     environment.systemPackages = [ console ];
+    services.ts-proxy.hosts = {
+      wallabag = {
+        addr = "http://127.0.0.1:${toString config.networking.ports.wallabag.port}";
+      };
+    };
     services.nginx.virtualHosts."${cfg.domain}" = {
+      listen = [
+        {
+          port = config.networking.ports.wallabag.port;
+          addr = "127.0.0.1";
+        }
+      ];
       root = "${cfg.package}/web";
       locations."/" = {
         priority = 10;
