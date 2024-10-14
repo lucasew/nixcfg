@@ -11,24 +11,18 @@
   services.grafana = {
     enable = true;
     settings.server = {
-      domain = "grafana.${config.networking.hostName}.${config.networking.domain}";
+      domain = "grafana.${config.services.ts-proxy.network-domain}";
       http_port = config.networking.ports.grafana-web.port;
       http_addr = "127.0.0.1";
     };
   };
 
-  services.nginx.virtualHosts."grafana.${config.networking.hostName}.${config.networking.domain}" = {
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}";
-      proxyWebsockets = true;
-      recommendedProxySettings = true;
+  services.ts-proxy.hosts = {
+    grafana = {
+      addr = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}";
     };
-  };
-
-  services.nginx.virtualHosts."prometheus.${config.networking.hostName}.${config.networking.domain}" = {
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString config.services.prometheus.port}";
-      # proxyWebsockets = true;
+    prometheus = {
+      addr = "http://127.0.0.1:${toString config.services.prometheus.port}";
     };
   };
 
@@ -42,7 +36,7 @@
     enable = true;
     inherit (config.networking.ports.prometheus) port;
 
-    webExternalUrl = "http://prometheus.${config.networking.hostName}.${config.networking.domain}";
+    webExternalUrl = "http://prometheus.${config.services.ts-proxy.network-domain}";
     exporters = {
       node = {
         enable = true;

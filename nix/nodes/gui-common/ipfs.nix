@@ -8,10 +8,9 @@ lib.mkIf config.services.kubo.enable {
   networking.ports.ipfs-swarm.enable = true;
   # networking.ports.ipfs-swarm.port = lib.mkDefault 49141;
 
-  services.nginx.virtualHosts."ipfs.${config.networking.hostName}.${config.networking.domain}" = {
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString config.networking.ports.ipfs-api.port}";
-      proxyWebsockets = true;
+  services.ts-proxy.hosts = {
+    ipfs = {
+      addr = "http://127.0.0.1:${toString config.networking.ports.ipfs-api.port}";
     };
   };
 

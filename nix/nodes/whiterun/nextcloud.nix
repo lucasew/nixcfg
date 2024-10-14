@@ -6,9 +6,27 @@
 }:
 let
   inherit (lib) mkIf;
+  domain = "nextcloud.${config.services.ts-proxy.network-domain}";
 in
 {
   config = mkIf config.services.nextcloud.enable {
+    networking.ports.nextcloud.enable = true;
+
+    services.nginx.virtualHosts.${domain} = {
+      listen = [
+        {
+          port = config.networking.ports.nextcloud.port;
+          addr = "127.0.0.1";
+        }
+      ];
+    };
+
+    services.ts-proxy.hosts = {
+      nextcloud = {
+        addr = "http://127.0.0.1:${toString config.networking.ports.nextcloud.port}";
+        enableHTTPS = true;
+      };
+    };
 
     sops.secrets.nextcloud-admin-password = {
       sopsFile = ../../secrets/nextcloud-admin-password;
@@ -28,7 +46,7 @@ in
     };
     services.nextcloud = {
       configureRedis = true;
-      hostName = "nextcloud.${config.networking.hostName}.${config.networking.domain}";
+      hostName = domain;
       config = {
         dbtype = "pgsql";
         dbname = "nextcloud";
@@ -82,10 +100,11 @@ in
     services.postgresqlBackup.databases = [ "nextcloud" ];
 
     services.postgresql = {
+      enable = true;
       ensureDatabases = [ "nextcloud" ];
-      # ensureUsers = [
-      #   {name = "nextcloud"; ensurePermissions."DATABASE nextcloud" = "ALL PRIVILEGES";}
-      # ];
+      ensureUsers = [
+        {name = "nextcloud"; ensureDBOwnership = true;}
+      ];
     };
   };
 }
