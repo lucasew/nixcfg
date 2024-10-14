@@ -42,6 +42,7 @@ in
         type = lib.types.attrsOf (lib.types.submodule ({ name, ...}: {
           options = {
             enableFunnel = lib.mkEnableOption "enable funnel for this endpoint";
+            enableHTTPS = lib.mkEnableOption "enable HTTPS for this endpoint";
 
             addr = lib.mkOption {
               description = "What service to proxy";
@@ -107,7 +108,10 @@ in
             "-n" host.name
             "-s" "${cfg.dataDir}/tsproxy-${host.name}"
 
-          ] ++ (lib.optional host.enableFunnel ["-f"]))}
+          ]
+          ++ (lib.optional host.enableFunnel ["-f"])
+          ++ (lib.optional host.enableHTTPS ["-t"])
+          )}
         '';
       };
     }) cfg.hosts));

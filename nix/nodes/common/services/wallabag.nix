@@ -72,6 +72,7 @@ in
     services.ts-proxy.hosts = {
       wallabag = {
         addr = "http://127.0.0.1:${toString config.networking.ports.wallabag.port}";
+        enableHTTPS = true;
       };
     };
     services.nginx.virtualHosts."${cfg.domain}" = {
@@ -219,7 +220,7 @@ in
       database_name = "wallabag";
       database_user = cfg.user;
       database_password = null; # socket authenticates using the user
-      domain_name = "http://" + cfg.domain;
+      domain_name = "https://" + cfg.domain;
       database_table_prefix = "wallabag_";
       database_socket = "/run/postgresql/.s.PGSQL.${toString config.services.postgresql.port}";
       database_charset = "utf8";
