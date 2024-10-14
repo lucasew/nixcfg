@@ -2,11 +2,11 @@
 #!nix-shell -i bash -p ollama
 
 if [ ! -v OLLAMA_HOST ]; then
-  OLLAMA_HOST=http://ollama.whiterun.lucao.net:80
+  OLLAMA_HOST=http://ollama
 fi
 
 if [ ! -v OLLAMA_MODEL ]; then
-  OLLAMA_MODEL=llama2
+  OLLAMA_MODEL=llama3
 fi
 
 export OLLAMA_HOST
