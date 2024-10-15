@@ -22,7 +22,6 @@ in
     ./tuning.nix
     ./ipfs.nix
     ./gamemode.nix
-    ./syncthing.nix
     ./sunshine.nix
     ./wallpaper.nix
     ./extra-fonts.nix
