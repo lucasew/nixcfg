@@ -164,7 +164,7 @@ let
             ${
               concatStringsSep "\n" (
                 attrValues (
-                  mapAttrs (k: v: ''
+                  mapAttrs (k: v: if builtins.length v.listen > 0 then "" else ''
                     <a class="btn btn-light" target="_blank" href="http://${k}">${k}</a>
                   '') (config.services.nginx.virtualHosts)
                 )
