@@ -13,7 +13,6 @@
     ./transmission.nix
     ./tt-rss.nix
     ./telegram_sendmail.nix
-    ./php-utils.nix
     ./p2k.nix
     ./postgresql.nix
     ./nixgram.nix

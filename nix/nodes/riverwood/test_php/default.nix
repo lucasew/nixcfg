@@ -105,13 +105,9 @@ in
       exec ${lib.getExe cfg.php}  -d display_errors="stderr" -d disable_functions="header" "routes.php"
       '';
     };
-    services.nginx.virtualHosts."php-teste.${config.networking.hostName}.${config.networking.domain}" = {
-      locations."/" = {
-        proxyPass = "http://unix:" + cfg.socket;
-        extraConfig = ''
-          keepalive_timeout 0;
-        '';
-      };
+
+    services.ts-proxy.hosts.phputils = {
+      addr = "http://unix:" + cfg.socket;
     };
   };
 }
