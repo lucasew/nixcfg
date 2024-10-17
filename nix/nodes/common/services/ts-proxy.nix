@@ -42,11 +42,24 @@ in
         type = lib.types.attrsOf (lib.types.submodule ({ name, ...}: {
           options = {
             enableFunnel = lib.mkEnableOption "enable funnel for this endpoint";
-            enableHTTPS = lib.mkEnableOption "enable HTTPS for this endpoint";
+            enableTLS = lib.mkEnableOption "enable TLS for this endpoint";
+            enableRaw = lib.mkEnableOption "treat this endpoint as a raw TCP socket";
 
-            addr = lib.mkOption {
-              description = "What service to proxy";
+            network = lib.mkOption {
+              description = "First parameter of net.Dial";
               type = lib.types.str;
+              default = "";
+            };
+
+            address = lib.mkOption {
+              description = "Second parameter of net.Dial";
+              type = lib.types.str;
+            };
+
+            listen = lib.mkOption {
+              description = "Which port to listen in the vhost";
+              type = lib.types.port;
+              default = 0;
             };
 
             name = lib.mkOption {
@@ -103,14 +116,15 @@ in
         };
 
         script = ''
-          ${lib.getExe' pkgs.ts-proxy "ts-proxyd"} ${lib.escapeShellArgs ([
-            "-h" host.addr          
-            "-n" host.name
-            "-s" "${cfg.dataDir}/tsproxy-${host.name}"
-
-          ]
-          ++ (lib.optional host.enableFunnel ["-f"])
-          ++ (lib.optional host.enableHTTPS ["-t"])
+          ${lib.getExe' pkgs.ts-proxy "ts-proxyd"} ${lib.escapeShellArgs ([]
+            ++ (["-address" host.address])
+            ++ (lib.optional host.enableFunnel ["-f"])
+            ++ (lib.optional (host.listen != 0) ["-listen" (toString host.listen)])
+            ++ (["-n" host.name])
+            ++ (lib.optional (host.network != "") ["-net" host.network])
+            ++ (lib.optional host.enableRaw ["-raw"])
+            ++ (["-s" "${cfg.dataDir}/tsproxy-${host.name}"])
+            ++ (lib.optional host.enableHTTPS ["-t"])
           )}
         '';
       };
