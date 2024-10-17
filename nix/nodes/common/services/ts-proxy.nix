@@ -108,6 +108,7 @@ in
         restartIfChanged = true;
 
         serviceConfig = {
+          Slice = "ts-proxy.slice";
           User = cfg.user;
           Group = cfg.group;
           Restart = "always";
