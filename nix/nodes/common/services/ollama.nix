@@ -14,7 +14,8 @@ in
   config = lib.mkIf cfg.enable {
     services.ts-proxy.hosts = {
       ollama = {
-        addr = "http://127.0.0.1:${toString config.networking.ports.ollama-web.port}";
+        enableTLS = true;
+        address = "127.0.0.1:${toString config.networking.ports.ollama-web.port}";
       };
     };
 

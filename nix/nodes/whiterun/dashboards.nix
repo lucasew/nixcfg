@@ -19,10 +19,12 @@
 
   services.ts-proxy.hosts = {
     grafana = {
-      addr = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}";
+      address = "127.0.0.1:${toString config.services.grafana.settings.server.http_port}";
+      enableTLS = true;
     };
     prometheus = {
-      addr = "http://127.0.0.1:${toString config.services.prometheus.port}";
+      address = "127.0.0.1:${toString config.services.prometheus.port}";
+      enableTLS = true;
     };
   };
 

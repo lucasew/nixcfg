@@ -43,7 +43,8 @@ in
 
     services.ts-proxy.hosts = {
       cf-torrent = {
-        addr = "http://127.0.0.1:${toString cfg.port}";
+        address = "127.0.0.1:${toString cfg.port}";
+        enableTLS = true;
       };
     };
 

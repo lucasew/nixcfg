@@ -39,7 +39,8 @@ in
 
     services.ts-proxy.hosts = {
       miniflux = {
-        addr = "http://127.0.0.1:${toString config.networking.ports.miniflux.port}";
+        enableTLS = true;
+        address = "127.0.0.1:${toString config.networking.ports.miniflux.port}";
       };
     };
     services.postgresqlBackup.databases = [ "miniflux" ];

@@ -107,7 +107,9 @@ in
     };
 
     services.ts-proxy.hosts.phputils = {
-      addr = "http://unix:" + cfg.socket;
+      enableTLS = true;
+      network = "unix";
+      address = cfg.socket;
     };
   };
 }

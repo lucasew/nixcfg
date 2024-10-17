@@ -23,8 +23,8 @@ in
 
     services.ts-proxy.hosts = {
       nextcloud = {
-        addr = "http://127.0.0.1:${toString config.networking.ports.nextcloud.port}";
-        enableHTTPS = true;
+        address = "127.0.0.1:${toString config.networking.ports.nextcloud.port}";
+        enableTLS = true;
       };
     };
 

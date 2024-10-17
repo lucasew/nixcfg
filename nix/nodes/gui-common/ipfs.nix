@@ -10,7 +10,7 @@ lib.mkIf config.services.kubo.enable {
 
   services.ts-proxy.hosts = {
     ipfs = {
-      addr = "http://127.0.0.1:${toString config.networking.ports.ipfs-api.port}";
+      address = "127.0.0.1:${toString config.networking.ports.ipfs-api.port}";
     };
   };
 

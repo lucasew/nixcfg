@@ -71,8 +71,8 @@ in
     environment.systemPackages = [ console ];
     services.ts-proxy.hosts = {
       wallabag = {
-        addr = "http://127.0.0.1:${toString config.networking.ports.wallabag.port}";
-        enableHTTPS = true;
+        address = "127.0.0.1:${toString config.networking.ports.wallabag.port}";
+        enableTLS = true;
       };
     };
     services.nginx.virtualHosts."${cfg.domain}" = {

@@ -9,7 +9,8 @@ lib.mkIf config.services.libreddit.enable {
 
   services.ts-proxy.hosts = {
     libreddit = {
-      addr =  "http://127.0.0.1:${toString config.services.libreddit.port}";
+      address =  "127.0.0.1:${toString config.services.libreddit.port}";
+      enableTLS = true;
     };
   };
 }

@@ -118,13 +118,13 @@ in
         script = ''
           ${lib.getExe' pkgs.ts-proxy "ts-proxyd"} ${lib.escapeShellArgs ([]
             ++ (["-address" host.address])
-            ++ (lib.optional host.enableFunnel ["-f"])
-            ++ (lib.optional (host.listen != 0) ["-listen" (toString host.listen)])
+            ++ (lib.optional host.enableFunnel "-f")
+            ++ (lib.optionals (host.listen != 0) ["-listen" (toString host.listen)])
             ++ (["-n" host.name])
-            ++ (lib.optional (host.network != "") ["-net" host.network])
-            ++ (lib.optional host.enableRaw ["-raw"])
+            ++ (lib.optionals (host.network != "") ["-net" host.network])
+            ++ (lib.optional host.enableRaw "-raw")
             ++ (["-s" "${cfg.dataDir}/tsproxy-${host.name}"])
-            ++ (lib.optional host.enableHTTPS ["-t"])
+            ++ (lib.optional host.enableTLS "-t")
           )}
         '';
       };

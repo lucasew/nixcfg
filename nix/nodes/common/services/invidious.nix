@@ -15,7 +15,8 @@ lib.mkIf config.services.invidious.enable {
 
   services.ts-proxy.hosts = {
     invidious = {
-       addr = "http://127.0.0.1:${toString config.networking.ports.invidious.port}"; 
+      address = "127.0.0.1:${toString config.networking.ports.invidious.port}"; 
+      enableTLS = true;
     };
   };
 }
