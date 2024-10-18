@@ -4,15 +4,14 @@
 let
   cfg = config.services.ngircd;
 
-  ini = pkgs.formats.libconfig {};
+  toml = pkgs.formats.toml {};
 
   configFile = pkgs.runCommand "ngircd.conf" {
-    configText = ini.generate "ngircd_input.conf" cfg.config;
-    passAsFile = [ "configText" ];
+    config = toml.generate "ngircd_input.conf" cfg.config;
 
     preferLocalBuild = true;
   } ''
-      cp $configTextPath $out
+      cp $config $out
       ${cfg.package}/sbin/ngircd --config $out --configtest
   '';
 
@@ -27,7 +26,7 @@ in
       config = lib.mkOption {
         description = "The ngircd configuration (see ngircd.conf(5)).";
 
-        type = ini.type;
+        type = toml.type;
       };
 
       package = lib.mkPackageOption pkgs "ngircd" { };
