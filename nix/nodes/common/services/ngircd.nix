@@ -57,6 +57,20 @@ in
         ExecReload= "/run/current-system/sw/bin/kill -HUP $MAINPID";
         User = "ngircd";
         Group = "ngircd";
+        PrivateTmp = true;
+        NoNewPrivileges = true;
+        PrivateDevices= true;
+        DevicePolicy="closed";
+        ProtectSystem="strict";
+        ProtectHome=true;
+        ProtectControlGroups=true;
+        ProtectKernelModules=true;
+        ProtectKernelTunables=true;
+        RestrictNamespaces=true;
+        RestrictRealtime=true;
+        RestrictSUIDSGID=true;
+        MemoryDenyWriteExecute=true;
+        LockPersonality=true;
       };
 
       # systemd sends SIGHUP on reload, which is supported
