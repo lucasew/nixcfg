@@ -63,6 +63,7 @@ in
     services.ts-proxy.hosts = {
       transmission = {
         address = "127.0.0.1:${toString config.services.transmission.settings.rpc-port}";
+        enableTLS = true;
       };
     };
   };

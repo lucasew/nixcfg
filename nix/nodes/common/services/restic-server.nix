@@ -12,6 +12,7 @@
     services.ts-proxy.hosts = {
       restic-server = {
         address = "127.0.0.1:${toString config.networking.ports.restic-server.port}";
+        enableTLS = true;
       };
     };
 

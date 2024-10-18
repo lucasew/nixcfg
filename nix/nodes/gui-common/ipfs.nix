@@ -11,6 +11,7 @@ lib.mkIf config.services.kubo.enable {
   services.ts-proxy.hosts = {
     ipfs = {
       address = "127.0.0.1:${toString config.networking.ports.ipfs-api.port}";
+      enableTLS = true;
     };
   };
 
