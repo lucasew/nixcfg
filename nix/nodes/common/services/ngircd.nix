@@ -12,7 +12,17 @@ let
     preferLocalBuild = true;
   } ''
       cp $config $out
-      ${cfg.package}/sbin/ngircd --config $out --configtest
+
+      # TODO: proper generator
+      substituteInPlace $out \
+        --replace '= false' '= "no"' \
+        --replace '= true' '= "yes"'
+      sed -i 's;^\[\[\([^\]*\)\]\]$;[\1];' $out # general, for example, may appear twice, fixing syntax
+      sed -i 's;^\([^ ]*\) = \"\([^"]*\)"$;\1 = \2;' $out # fix quote enclosing
+      sed -i 's;^\([^=]*\)=;  \1=;' $out
+
+
+      ${lib.getExe cfg.package} --config $out --configtest
   '';
 
 in
@@ -35,14 +45,18 @@ in
 
   config = lib.mkIf cfg.enable {
     #!!! TODO: Use ExecReload (see https://github.com/NixOS/nixpkgs/issues/1988)
+    environment.etc."ngircd.conf".source = configFile;
+
     systemd.services.ngircd = {
       description = "The ngircd IRC server";
 
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
-        ExecStart = "${lib.getExe cfg.package} --config ${configFile} --nodaemon";
+        ExecStart = "${lib.getExe cfg.package} --config /etc/ngircd.conf --nodaemon --syslog";
+        ExecReload= "/run/current-system/sw/bin/kill -HUP $MAINPID";
         User = "ngircd";
+        Group = "ngircd";
       };
 
       # systemd sends SIGHUP on reload, which is supported
@@ -60,22 +74,26 @@ in
     # TODO: did I read socket activation????
     networking.ports.ircd.enable = true;
     services.ngircd.config = {
-      global = {
+      Global = {
         Info = "lucasew's IRC server";
         Listen = "127.0.0.1"; # ts-proxy will reverse proxy it
         MotdPhrase = "aoba";
         Ports = config.networking.ports.ircd.port;
       };
-      channel = [
+      Channel = [
         {
-          name = "#general";
-          topic = "Tópico principal";
+          Name = "#general";
+          Topic = "Tópico principal";
+          Autojoin = true;
         }
         {
-          name = "#test";
-          topic = "Tópico teste";
+          Name = "#test";
+          Topic = "Tópico teste";
         }
       ];
+      Options = {
+        PAM = false;
+      };
     };
     services.ts-proxy.hosts.irc = {
       enableTLS = true;
