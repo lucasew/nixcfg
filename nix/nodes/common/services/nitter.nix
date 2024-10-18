@@ -31,7 +31,8 @@
 
     services.ts-proxy.hosts = {
       nitter = {
-        addr = "http://127.0.0.1:${toString config.networking.ports.nitter.port}";
+        address = "http://127.0.0.1:${toString config.networking.ports.nitter.port}";
+        enableTLS = true;
       };
     };
   };
