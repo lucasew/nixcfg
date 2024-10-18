@@ -1126,11 +1126,11 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1729131609,
-        "narHash": "sha256-oUqtZs3oW/3xM8En3ePD7x8VQ5vj6n+PShUIoWhc6ms=",
+        "lastModified": 1729270545,
+        "narHash": "sha256-pnl6AoJyV2kr/w1q+Q2xPVsTCJlRFYEOhNqOgHlC5cY=",
         "owner": "lucasew",
         "repo": "ts-proxy",
-        "rev": "c9914ef919d9a34bc0f0c659a80b05da0b9fdad5",
+        "rev": "7e08d1d6c2d9c627c31907f0b3f8afc8e7324b7b",
         "type": "github"
       },
       "original": {
