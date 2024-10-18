@@ -52,6 +52,10 @@ in
     calendar = "03/6:00:01";
   };
 
+  services.ngircd = {
+    enable = true;
+  };
+
   services.wallabag.enable = true;
 
   services.fusionsolar-reporter.enable = true;
