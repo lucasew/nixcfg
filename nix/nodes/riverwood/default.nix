@@ -115,6 +115,7 @@ in
 
   virtualisation.kvmgt.enable = false;
   virtualisation.spiceUSBRedirection.enable = true;
+  virtualisation.containerd.enable = true;
 
   # programs.steam.enable = true;
 

@@ -159,6 +159,7 @@ in
   networking.hostId = "97e3b5a7";
 
   virtualisation.oci-containers.backend = "docker";
+  virtualisation.containerd.enable = true;
 
   services.kubo.enable = true;
 
