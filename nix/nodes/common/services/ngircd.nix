@@ -108,6 +108,9 @@ in
       Options = {
         PAM = false;
       };
+      Limits = {
+        MaxNickLength = 16;
+      };
     };
     services.ts-proxy.hosts.irc = {
       enableTLS = true;
