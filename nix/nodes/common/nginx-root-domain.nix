@@ -173,6 +173,21 @@ let
             </div>
           </section>
 
+          <section id="tailscale">
+            <h2>Tailscale services</h2>
+            <div class="small-cards-container">
+            ${
+              concatStringsSep "\n" (
+                attrValues (
+                  mapAttrs (k: v: if v.enableRaw then "" else ''
+                    <a class="btn btn-light" target="_blank" href="${if v.enableTLS then "https" else "http"}://${v.name}.${config.services.ts-proxy.network-domain}">${v.name}</a>
+                  '') (config.services.ts-proxy.hosts)
+                )
+              )
+            }
+            </div>
+          </section>
+
           <section id="versions">
             <h2>Inputs</h2><br>
                 <div class="small-cards-container">
