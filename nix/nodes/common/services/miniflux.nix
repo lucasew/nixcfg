@@ -1,9 +1,5 @@
 { config, lib, ... }:
 
-let
-  domain = "miniflux.${config.networking.hostName}.${config.networking.domain}";
-in
-
 {
 
   imports = [
@@ -12,8 +8,8 @@ in
       {
         config = lib.mkIf config.services.invidious.enable {
           services.miniflux.config = {
-            INVIDIOUS_INSTANCE = "invidious.${config.networking.hostName}.${config.networking.domain}";
-            YOUTUBE_EMBED_URL_OVERRIDE = "http://invidious.${config.networking.hostName}.${config.networking.domain}/embed/";
+            INVIDIOUS_INSTANCE = "https://invidious.${config.services.ts-proxy.network-domain}";
+            YOUTUBE_EMBED_URL_OVERRIDE = "https://invidious.${config.services.ts-proxy.network-domain}/embed/";
           };
         };
       }
@@ -25,7 +21,7 @@ in
     services.miniflux = {
       config = {
         LISTEN_ADDR = "localhost:${toString config.networking.ports.miniflux.port}";
-        BASE_URL = "http://${domain}";
+        BASE_URL = "https://miniflux.${config.services.ts-proxy.network-domain}";
         FETCH_ODYSEE_WATCH_TIME = toString 1;
         FETCH_YOUTUBE_WATCH_TIME = toString 1;
       };

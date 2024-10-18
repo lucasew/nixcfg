@@ -27,7 +27,7 @@ in
     networking.ports.ollama.enable = true;
     networking.ports.ollama-web.enable = true;
 
-    services.nginx.virtualHosts."ollama.${config.networking.hostName}.${config.networking.domain}" = {
+    services.nginx.virtualHosts."ollama.local" = {
       listen = [
         {
           port = config.networking.ports.ollama-web.port;

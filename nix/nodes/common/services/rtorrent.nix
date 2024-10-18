@@ -206,9 +206,10 @@
           ]
         );
 
-    services.nginx.virtualHosts."rtorrent.${config.networking.hostName}.${config.networking.domain}" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:${toString config.networking.ports.rtorrent-flood.port}";
+    services.ts-proxy.hosts = {
+      rtorrent = {
+        address = "127.0.0.1:${toString config.networking.ports.rtorrent-flood.port}";
+        enableTLS = true;
       };
     };
   };

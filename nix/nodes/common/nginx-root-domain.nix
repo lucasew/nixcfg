@@ -203,10 +203,7 @@ in
   services.nginx.virtualHosts."${config.networking.hostName}" = {
     locations."/".root = "/etc/rootdomain";
   };
-  services.nginx.virtualHosts."${config.networking.hostName}.${config.networking.domain}" = {
-    locations."/".root = "/etc/rootdomain";
-  };
-  services.nginx.virtualHosts."index.${config.networking.hostName}.${config.networking.domain}" = {
+  services.nginx.virtualHosts."${config.networking.hostName}.${config.services.ts-proxy.network-domain}" = {
     locations."/".root = "/etc/rootdomain";
   };
 }

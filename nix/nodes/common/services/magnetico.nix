@@ -18,11 +18,12 @@ in
 
     systemd.services.magneticod.wantedBy = mkForce [ ]; # disable start on boot
 
-    networking.firewall.allowedTCPPorts = [ config.services.magnetico.crawler.port ];
+    networking.firewall.allowedUDPPorts = [ config.services.magnetico.crawler.port ];
 
-    services.nginx.virtualHosts."magnetico.${config.networking.hostName}.${config.networking.domain}" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:${toString config.services.magnetico.web.port}";
+    services.ts-proxy.hosts = {
+      magnetico = {
+        address = "127.0.0.1:${toString config.services.magnetico.web.port}";
+        enableTLS = true;
       };
     };
   };

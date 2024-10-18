@@ -26,7 +26,6 @@ in
     ./nextcloud.nix
     ./sshfs.nix
     ./zfs.nix
-    ./binary-cache.nix
     ./escrivao.nix
     # ./container-inet-rdp.nix
     ./container-nat.nix

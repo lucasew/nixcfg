@@ -1,16 +1,12 @@
 { config, lib, ... }:
 
-let
-  domain = "nitter.${config.networking.hostName}.${config.networking.domain}";
-in
-
 {
   imports = [
     (
       { config, ... }:
       {
         config = lib.mkIf config.services.invidious.enable {
-          services.nitter.preferences.replaceYouTube = "invidious.${config.networking.hostName}.${config.networking.domain}";
+          services.nitter.preferences.replaceYouTube = "invidious.${config.services.ts-proxy.network-domain}";
         };
       }
     )
@@ -19,7 +15,7 @@ in
       { config, ... }:
       {
         config = lib.mkIf config.services.libreddit.enable {
-          services.nitter.preferences.replaceReddit = "libreddit.${config.networking.hostName}.${config.networking.domain}";
+          services.nitter.preferences.replaceReddit = "libreddit.${config.services.ts-proxy.network-domain}";
         };
       }
     )
@@ -31,7 +27,7 @@ in
       inherit (config.networking.ports.nitter) port;
     };
 
-    services.nitter.preferences.replaceTwitter = domain;
+    services.nitter.preferences.replaceTwitter = "nitter.${config.services.ts-proxy.network-domain}";
 
     services.ts-proxy.hosts = {
       nitter = {
