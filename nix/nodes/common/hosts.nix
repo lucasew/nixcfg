@@ -22,7 +22,6 @@ let
 in
 lib.mkIf (node != null) {
   services.tinydns = {
-    enable = lib.mkDefault (node != null);
     data = ''
       .${baseDomain}:${node}:ns:${toString ttl}
       ${tinydnsData}
