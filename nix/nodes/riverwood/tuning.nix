@@ -10,15 +10,6 @@
 
   hardware = {
     bluetooth.enable = true;
-    opengl = {
-      extraPackages = with pkgs; [
-        # intel-compute-runtime
-        # beignet
-        intel-ocl
-        intel-vaapi-driver
-      ];
-      extraPackages32 = with pkgs.pkgsi686Linux; [ vaapiIntel ];
-    };
   };
 
   # não deixar explodir
