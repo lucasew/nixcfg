@@ -195,7 +195,7 @@ in
 
   cached-nix-shell = callPackage flake.inputs.src-cached-nix-shell { pkgs = prev; };
 
-  rio = flake.inputs.rio.packages.${prev.system}.default;
+  # rio = flake.inputs.rio.packages.${prev.system}.default;
 
   arcan = prev.arcan.override { useTracy = false; };
 

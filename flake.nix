@@ -41,8 +41,8 @@
     pytorrentsearch.url = "github:lucasew/pytorrentsearch";
     pytorrentsearch.flake = false;
 
-    rio.url = "github:raphamorim/rio";
-    rio.inputs.nixpkgs.follows = "nixpkgs";
+    # rio.url = "github:raphamorim/rio";
+    # rio.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-index-database.url = "github:Mic92/nix-index-database";
 
