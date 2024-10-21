@@ -22,7 +22,6 @@ in
     ./remote-build.nix
     ./tuning.nix
     ./test_socket_activated
-    ./test_php
   ];
 
   boot = {

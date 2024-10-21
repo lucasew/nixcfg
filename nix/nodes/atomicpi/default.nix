@@ -45,8 +45,6 @@
 
   virtualisation.docker.enable = false;
 
-  services.php-utils.enable = false;
-
   documentation.enable = false;
   documentation.nixos.enable = false;
   services.smartd.enable = false;

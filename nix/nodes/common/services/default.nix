@@ -24,5 +24,6 @@
     ./wallabag.nix
     ./ts-proxy.nix
     ./ngircd.nix
+    ./phputils
   ];
 }

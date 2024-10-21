@@ -33,6 +33,8 @@ in
     ./transmission.nix
   ];
 
+  services.phputils.enable = true;
+
   programs.nix-ld.enable = true;
 
   hardware.nvidia.modesetting.enable = false;
