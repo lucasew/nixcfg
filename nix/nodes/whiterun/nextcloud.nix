@@ -56,6 +56,7 @@ in
         adminpassFile = "/var/run/secrets/nextcloud-admin-password";
       };
       settings = {
+        trusted_domains = [ domain ];
         preview_ffmpeg_path = lib.getExe pkgs.ffmpeg;
         "memories.exiftool" = lib.getExe pkgs.exiftool;
         "memories.ffmpeg_path" = lib.getExe' pkgs.ffmpeg "ffmpeg";
