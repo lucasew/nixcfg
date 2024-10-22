@@ -63,6 +63,7 @@ in
         "memories.ffprobe_path" = lib.getExe' pkgs.ffmpeg "ffprobe";
         "memories.vod.ffmpeg" = lib.getExe' pkgs.ffmpeg "ffmpeg";
         "memories.vod.ffprobe" = lib.getExe' pkgs.ffmpeg "ffprobe";
+        "overwrite.cli.url" = "https://${domain}";
         recognize = {
           nice_binary = lib.getExe' pkgs.coreutils "nice";
         };
