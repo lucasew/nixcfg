@@ -57,13 +57,16 @@ in
       };
       settings = {
         trusted_domains = [ domain ];
+        trusted_proxies = [ "127.0.0.1" ];
+        overwritehost = domain;
+        overwriteprotocol = "https";
+        "overwrite.cli.url" = "https://${domain}";
         preview_ffmpeg_path = lib.getExe pkgs.ffmpeg;
         "memories.exiftool" = lib.getExe pkgs.exiftool;
         "memories.ffmpeg_path" = lib.getExe' pkgs.ffmpeg "ffmpeg";
         "memories.ffprobe_path" = lib.getExe' pkgs.ffmpeg "ffprobe";
         "memories.vod.ffmpeg" = lib.getExe' pkgs.ffmpeg "ffmpeg";
         "memories.vod.ffprobe" = lib.getExe' pkgs.ffmpeg "ffprobe";
-        "overwrite.cli.url" = "https://${domain}";
         recognize = {
           nice_binary = lib.getExe' pkgs.coreutils "nice";
         };
