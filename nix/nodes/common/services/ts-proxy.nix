@@ -99,6 +99,12 @@ in
         "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group} - -"
       ];
 
+    systemd.slices.ts-proxys.sliceConfig = {
+      CPUQuota = "10%";
+      MemoryHigh = "256M";
+      MemoryMax = "384M";
+    };
+
     systemd.services = lib.mkMerge (builtins.attrValues (builtins.mapAttrs (k: host: {      
       ${host.unitName} = {
         
