@@ -32,16 +32,22 @@ in
       wantedBy = [ "sockets.target" "multi-user.target" ];
     };
 
+    systemd.slices.phputils.sliceConfig = {
+      MemoryMax = "64M";
+      MemoryHigh = "16M";
+      CPUQuota = "10%";
+      ManagedOOMSwap = "kill";
+      ManagedOOMPressure = "kill";
+    };
+
     systemd.services."phputils@" = {
       stopIfChanged = true;
       after = [ "network.target"  ];
       serviceConfig = {
+        Slice = "phputils.slice";
         StandardInput = "socket";
         StandardOutput = "socket";
         StandardError = "journal";
-
-        MemoryHigh = "16M";
-        MemoryMax = "32M";
 
         DevicePolicy = "closed";
         MemoryDenyWriteExecute = true;
