@@ -121,6 +121,11 @@ in
     # fsType = "ext4";
   };
 
+  fileSystems."/media/ssd1tb" = {
+    device = "/dev/disk/by-label/ssd1tb";
+    fsType = "ext4";
+  };
+
   fileSystems."/var/backup" = {
     device = "/media/storage/backup/var";
     fsType = "none";
