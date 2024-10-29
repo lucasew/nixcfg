@@ -20,7 +20,7 @@
     ./ollama.nix
     ./python-microservices
     ./rtorrent.nix
-    ./rsyncnet-remote-backup.nix
+    ./rsyncnet
     ./wallabag.nix
     ./ts-proxy.nix
     ./ngircd.nix

@@ -23,6 +23,7 @@ let
       -o IdentitiesOnly=yes \
       -i /run/secrets/rsyncnet-remote-backup \
       "${cfg.host}" \
+      -- \
       "$@"
   '';
 in
@@ -55,6 +56,11 @@ in
       description = "When to run the backups";
       type = types.str;
     };
+    dataDir = lib.mkOption {
+      description = "Data dir";
+      type = lib.types.str;
+      default = "/var/backup/rsyncnet";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -62,16 +68,21 @@ in
       users.${cfg.user} = {
         isSystemUser = true;
         group = cfg.group;
+        home = cfg.dataDir;
       };
       groups.${cfg.group} = { };
     };
 
     sops.secrets.rsyncnet-remote-backup = {
-      sopsFile = ../../../secrets/rsyncnet;
+      sopsFile = ../../../../secrets/rsyncnet;
       owner = cfg.user;
       group = cfg.group;
       format = "binary";
     };
+
+    systemd.tmpfiles.rules = [
+      "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group} - -"
+    ];
 
     systemd.timers."rsyncnet-remote-backup" = {
       description = "rsync.net backup timer";
@@ -84,16 +95,21 @@ in
     };
 
     systemd.services."rsyncnet-remote-backup" = {
-      path = [ wrappedSsh ];
+      path = [ wrappedSsh pkgs.bash pkgs.pv pkgs.git pkgs.gawk ];
 
       restartIfChanged = false;
       stopIfChanged = false;
 
       script = ''
+        cd "${cfg.dataDir}"
+        export PATH+=":/run/wrappers/bin"
+
         for repo in $(wssh ls git); do
           unit="rsyncnet-remote-backup-git@$repo"
           systemctl start "$unit" &
         done
+
+        bash ${./hash-backups.sh}
 
         echo '[*] Waiting for jobs to finish...'
 
