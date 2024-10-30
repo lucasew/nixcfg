@@ -127,7 +127,8 @@ in
 
         bar {
           status_command ${lib.getExe pkgs.i3pystatus} -c $(sdw d root)/bin/_shortcuts/i3pystatus/main.py
-          font pango: Roboto Mono 10
+          i3bar_command i3bar --transparency
+          font pango: Fira Code 10
           hidden_state show
           position top
           # output primary
@@ -135,7 +136,8 @@ in
           workspace_buttons yes
 
           colors {
-            background #00${base00}
+            # background #00${base00}
+            background #00000000
             statusline #${base05}
             separator #${base00}
 
