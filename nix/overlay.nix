@@ -6,6 +6,10 @@ let
   cp = f: (callPackage f) { };
 in
 {
+  unstable = flake.lib.mkPkgs {
+    nixpkgs = flake.inputs.nixpkgs-unstable;
+    inherit (prev) system;
+  };
   inherit flake;
   bumpkin = rec {
     bumpkin = cp flake.inputs.bumpkin;

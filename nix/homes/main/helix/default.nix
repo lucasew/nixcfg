@@ -6,6 +6,7 @@
 }:
 {
   config = lib.mkIf config.programs.helix.enable {
+    home.packages = [ pkgs.unstable.lsp-ai ];
     programs.helix = {
       settings = builtins.fromTOML (builtins.readFile ./config.toml);
       themes = {

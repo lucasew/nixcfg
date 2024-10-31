@@ -47,6 +47,7 @@
     nix-index-database.url = "github:Mic92/nix-index-database";
 
     nixpkgs.url = "nixpkgs/nixos-24.05";
+    nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
 
     nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
 
@@ -319,6 +320,9 @@
       }
     )
     // {
+      lib = {
+        inherit mkPkgs;
+      };
       overlays = {
         # nix-requirefile = import "${inputs.nix-requirefile}/overlay.nix";
         borderless-browser = import "${inputs.borderless-browser}/overlay.nix";
