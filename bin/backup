@@ -39,11 +39,11 @@ if sd is phone; then
 
   mkdir -p ~/.cache/backup
 
-  for appfolder in Tachiyomi RetroArch; do
-    tar -cvf ~/.cache/backup/$appfolder.tar /sdcard/$appfolder
-    backup ~/.cache/backup/$appfolder.tar backup/lucasew
-    rm ~/.cache/backup/$appfolder.tar
-  done
+  # for appfolder in Tachiyomi RetroArch; do
+  #   tar -cvf ~/.cache/backup/$appfolder.tar /sdcard/$appfolder
+  #   backup ~/.cache/backup/$appfolder.tar backup/lucasew
+  #   rm ~/.cache/backup/$appfolder.tar
+  # done
 
   mkdir -p ~/.cache/backup/termux
   dpkg-query -f '${binary:Package}\n' -W > ~/.cache/backup/termux/packages.txt
