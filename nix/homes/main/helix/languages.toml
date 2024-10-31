@@ -1,0 +1,25 @@
+[language-server.lsp-ai]
+command = "lsp-ai"
+
+[language-server.lsp-ai.config.memory]
+file_store = { }
+
+[language-server.lsp-ai.config.models.main]
+type = "ollama"
+model = "deepseek-coder"
+generate_endpoint = "https://ollama.stargazer-shark.ts.net/api/generate"
+chat_endpoint = "https://ollama.stargazer-shark.ts.net/api/chat"
+
+[[language-server.lsp-ai.config.chat]]
+trigger = "!C"
+action_display_name = "Chat"
+model = "main"
+parameters = { max_context = 4096, max_tokens = 1024, messages = [ { role = "system", content = "You are a code assistant chatbot. The user will ask you for assistance coding and you will do you best to answer succinctly and accurately" } ] }
+
+[language-server.typos-lsp]
+command = "typos-lsp"
+
+[[language]]
+name = "toml"
+language-servers = ["typos-lsp", "lsp-ai"]
+

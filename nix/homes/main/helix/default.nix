@@ -6,9 +6,10 @@
 }:
 {
   config = lib.mkIf config.programs.helix.enable {
-    home.packages = [ pkgs.unstable.lsp-ai ];
+    home.packages = with pkgs.unstable; [ lsp-ai typos-lsp ];
     programs.helix = {
       settings = builtins.fromTOML (builtins.readFile ./config.toml);
+      languages = builtins.fromTOML (builtins.readFile ./languages.toml);
       themes = {
         base16 = with builtins.mapAttrs (k: v: "#${v}") pkgs.custom.colors.colors; {
           attributes = base09;
