@@ -53,7 +53,7 @@
     environment.systemPackages = with pkgs; [
       gnome.eog # eye of gnome
       xfce.ristretto
-      mate.caja
+      pcmanfm
     ];
   };
 }
