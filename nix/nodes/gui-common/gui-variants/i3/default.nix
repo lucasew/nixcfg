@@ -54,7 +54,6 @@
       gnome.eog # eye of gnome
       xfce.ristretto
       mate.caja
-      doublecmd
     ];
   };
 }
