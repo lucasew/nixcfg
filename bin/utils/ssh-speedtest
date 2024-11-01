@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# ssh-speedtest [rx|rx] [ssh args]
+# script pra fazer speedtest de sessão ssh
+# baseado no comando de teste enviado pelo customer support do rsync.net
+
+set -eo pipefail
+
+op=""
+if (($# > 0)); then
+  op="$1";shift
+fi
+
+if (($# == 0)); then
+  echo "Missing ssh args" >&2
+  exit 1
+fi
+
+case "$op" in
+  rx)
+  ssh "$@" 'dd if=/dev/urandom bs=1k count=1024000' | pv | dd of=/dev/null bs=1k count=1024000
+  ;;
+  tx)
+    dd if=/dev/urandom bs=1k count=1024000 | pv | ssh "$@" 'dd of=/dev/null bs=1k count=1024000'
+  ;;
+  *)
+    echo Invalid command. Valid commands: rx tx >&2
+  ;;
+esac
