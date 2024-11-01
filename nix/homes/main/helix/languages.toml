@@ -7,8 +7,8 @@ file_store = { }
 [language-server.lsp-ai.config.models.main]
 type = "ollama"
 model = "deepseek-coder"
-generate_endpoint = "https://ollama.stargazer-shark.ts.net/api/generate"
-chat_endpoint = "https://ollama.stargazer-shark.ts.net/api/chat"
+generate_endpoint = "http://ollama.stargazer-shark.ts.net/api/generate"
+chat_endpoint = "http://ollama.stargazer-shark.ts.net/api/chat"
 
 [[language-server.lsp-ai.config.chat]]
 trigger = "!C"
@@ -23,3 +23,6 @@ command = "typos-lsp"
 name = "toml"
 language-servers = ["typos-lsp", "lsp-ai"]
 
+[[language]]
+name = "markdown"
+language-servers = ["typos-lsp", "lsp-ai"]
