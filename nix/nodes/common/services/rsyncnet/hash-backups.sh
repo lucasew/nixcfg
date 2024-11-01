@@ -13,7 +13,7 @@ OUT_DIR="$(pwd)"
 # OUT_DIR="/tmp/rsyncnet"
 mkdir -p "$OUT_DIR"
 
-cd "$OUT_DIR"
+cd "$OUT_DIR" || exit
 
 last_snapshots=($(ls | grep -e ^custom_daily | sort | tail -n 2))
 
