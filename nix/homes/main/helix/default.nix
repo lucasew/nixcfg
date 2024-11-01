@@ -6,8 +6,22 @@
 }:
 {
   config = lib.mkIf config.programs.helix.enable {
-    home.packages = with pkgs.unstable; [ lsp-ai typos-lsp ];
+    home.packages = with pkgs.unstable; [
+      lsp-ai
+      typos-lsp
+      yaml-language-server
+      docker-compose-language-service
+      nodePackages.bash-language-server
+      nodePackages.svelte-language-server
+      emmet-language-server
+      vscode-langservers-extracted
+      marksman
+      gopls
+      ltex-ls
+      jdt-language-server
+    ];
     programs.helix = {
+      package = pkgs.unstable.helix;
       settings = builtins.fromTOML (builtins.readFile ./config.toml);
       languages = builtins.fromTOML (builtins.readFile ./languages.toml);
       themes = {
