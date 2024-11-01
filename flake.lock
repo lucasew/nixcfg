@@ -1038,11 +1038,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1729270545,
-        "narHash": "sha256-pnl6AoJyV2kr/w1q+Q2xPVsTCJlRFYEOhNqOgHlC5cY=",
+        "lastModified": 1730427043,
+        "narHash": "sha256-MhOu4NsJW+ayQI9Wfd75a834ZPlprokVTz4LqtbD4vo=",
         "owner": "lucasew",
         "repo": "ts-proxy",
-        "rev": "7e08d1d6c2d9c627c31907f0b3f8afc8e7324b7b",
+        "rev": "6272f58db7132121ec69d23a3d2bd589bd3f303e",
         "type": "github"
       },
       "original": {

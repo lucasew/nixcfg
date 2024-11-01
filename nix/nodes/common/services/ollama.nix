@@ -14,33 +14,20 @@ in
   config = lib.mkIf cfg.enable {
     services.ts-proxy.hosts = {
       ollama = {
-        enableTLS = true;
-        address = "127.0.0.1:${toString config.networking.ports.ollama-web.port}";
+        # enableTLS = true;
+        address = "127.0.0.1:${toString config.networking.ports.ollama.port}";
       };
     };
 
     services.ollama = {
       acceleration = "cuda";
-      listenAddress = "127.0.0.1:${toString config.networking.ports.ollama.port}";
+      package = pkgs.unstable.ollama;
+      environmentVariables = {
+        OLLAMA_ORIGINS = "*";
+      };
+      listenAddress = "0.0.0.0:${toString config.networking.ports.ollama.port}";
     };
 
     networking.ports.ollama.enable = true;
-    networking.ports.ollama-web.enable = true;
-
-    services.nginx.virtualHosts."ollama.local" = {
-      listen = [
-        {
-          port = config.networking.ports.ollama-web.port;
-          addr = "127.0.0.1";
-        }
-      ];
-      root = "${pkgs.ollama-webui}/share/ollama-webui/www";
-      locations = {
-        "/" = {
-          proxyPass = "http://127.0.0.1:${toString config.networking.ports.ollama.port}";
-          proxyWebsockets = true;
-        };
-      };
-    };
   };
 }
