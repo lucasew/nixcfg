@@ -33,6 +33,8 @@ in
     ./transmission.nix
   ];
 
+  services.minecraft-server.enable = true;
+
   services.phputils.enable = true;
 
   programs.nix-ld.enable = true;
