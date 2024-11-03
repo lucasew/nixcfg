@@ -95,7 +95,7 @@ in
     };
 
     systemd.services."rsyncnet-remote-backup" = {
-      path = [ wrappedSsh pkgs.bash pkgs.pv pkgs.git pkgs.gawk ];
+      path = with pkgs; [ wrappedSsh bash pv git gawk rsync openssh ];
 
       restartIfChanged = false;
       stopIfChanged = false;
@@ -104,10 +104,14 @@ in
         cd "${cfg.dataDir}"
         export PATH+=":/run/wrappers/bin"
 
+
         for repo in $(wssh ls git); do
           unit="rsyncnet-remote-backup-git@$repo"
           systemctl start "$unit" &
         done
+
+        wssh mkdir -p backup/lucasew/homelab/${config.networking.hostName}
+        rsync -e "ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /run/secrets/rsyncnet-remote-backup" -avP /var/backup/ "${cfg.host}:backup/lucasew/homelab/${config.networking.hostName}"
 
         bash ${./hash-backups.sh}
 
@@ -119,6 +123,11 @@ in
       serviceConfig = {
         User = cfg.user;
         Group = cfg.group;
+        ExecStartPre = [
+        "+/run/current-system/sw/bin/chgrp -R ${cfg.group} /var/backup"
+        "+/run/current-system/sw/bin/chmod -R g+r /var/backup"
+        "+/run/current-system/sw/bin/find /var/backup -type d -exec /run/current-system/sw/bin/chmod g+x {} \\;"
+        ];
       };
     };
 
