@@ -29,8 +29,6 @@ in
     ./tmux
     ./tuning.nix
     ./unstore.nix
-    ./postgres-backup.nix
-    ./forbidden-paths.nix
   ];
 
   boot.supportedFilesystems = [
