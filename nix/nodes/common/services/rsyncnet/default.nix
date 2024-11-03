@@ -59,7 +59,7 @@ in
     dataDir = lib.mkOption {
       description = "Data dir";
       type = lib.types.str;
-      default = "/var/backup/rsyncnet";
+      default = "/var/lib/rsyncnet-items";
     };
   };
 
