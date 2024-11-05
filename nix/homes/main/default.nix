@@ -21,8 +21,10 @@ in
     ./theme
     ./discord.nix
     ./qutebrowser.nix
+    ./zen-browser.nix
   ];
 
+  programs.zen-browser.enable = true;
   programs.helix.enable = true;
   # services.espanso.enable = true;
   programs.man.enable = true;
