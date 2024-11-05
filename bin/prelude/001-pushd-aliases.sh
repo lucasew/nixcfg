@@ -24,10 +24,23 @@ function gcd {
 }
 
 function rcd {
-  selected_repo="$(find ~/WORKSPACE -maxdepth 3 -type d  -name '.git' | fzf)"
-  if [ ! -z $selected_repo ]; then
+  selected_repo="$(find ~/WORKSPACE -maxdepth 4 -type d  -name '.git' | fzf -q "$*")"
+  if [[ -n $selected_repo ]]; then
     _conditional_pushd "$selected_repo/.."
   else
     echo no repo selected >&2
+  fi
+}
+
+function repo_root {
+  git rev-parse --show-toplevel
+}
+
+function dcd {
+  local root
+  root="$(repo_root)"
+  if [[ -n "$root" ]]; then
+    selected_dir="$(fzf --walker-root="$root" --walker=dir,follow,hidden -q "$*")"
+    _conditional_pushd "$selected_dir"
   fi
 }
