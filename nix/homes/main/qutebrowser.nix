@@ -34,7 +34,6 @@ in
         hm-options = "https://nix-community.github.io/home-manager/options.html";
         nixos-options = "https://search.nixos.org/options";
         miniflux = "http://miniflux.whiterun.lucao.net";
-        yt = "http://invidious.whiterun.lucao.net";
         whiterun = "http://whiterun.lucao.net";
         nc = "http://nextcloud.whiterun.lucao.net/apps/files/";
         grafana = "http://grafana.whiterun.lucao.net/dashboards";
@@ -48,7 +47,6 @@ in
         ddg = "https://duckduckgo.com/?t=h_&q={}";
         nixpkgs = "https://github.com/search?q=repo%3ANixOS%2Fnixpkgs%20{}";
         options = "https://search.nixos.org/options?query={}";
-        yt = "http://invidious.whiterun.lucao.net/search?q={}";
         so = "https://stackoverflow.com/search?q={}";
         cft = "http://cf-torrent.whiterun.lucao.net/search/torrent/result?use_google=1&use_duckduckgo=1&query={}";
         ml = "https://lista.mercadolivre.com.br/{}";

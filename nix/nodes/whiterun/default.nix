@@ -156,7 +156,6 @@ in
   boot.plymouth.enable = true;
 
   services.libreddit.enable = true;
-  services.invidious.enable = true;
 
   # services.boinc.enable = true;
 

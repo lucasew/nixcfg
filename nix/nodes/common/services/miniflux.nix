@@ -2,19 +2,6 @@
 
 {
 
-  imports = [
-    (
-      { config, ... }:
-      {
-        config = lib.mkIf config.services.invidious.enable {
-          services.miniflux.config = {
-            INVIDIOUS_INSTANCE = "https://invidious.${config.services.ts-proxy.network-domain}";
-            YOUTUBE_EMBED_URL_OVERRIDE = "https://invidious.${config.services.ts-proxy.network-domain}/embed/";
-          };
-        };
-      }
-    )
-  ];
   config = lib.mkIf config.services.miniflux.enable {
     networking.ports.miniflux.enable = true;
 

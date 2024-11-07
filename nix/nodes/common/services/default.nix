@@ -6,7 +6,6 @@
     ./cockpit-extra.nix
     ./escrivao
     ./fusionsolar
-    ./invidious.nix
     ./magnetico.nix
     ./miniflux.nix
     ./libreddit.nix

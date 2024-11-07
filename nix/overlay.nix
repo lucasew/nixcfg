@@ -128,7 +128,6 @@ in
     kodi = final.kodi.withPackages (kpkgs: with kpkgs; [
       vfs-sftp
       sponsorblock
-      invidious
       joystick
       sendtokodi
     ]);
