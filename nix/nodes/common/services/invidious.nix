@@ -1,9 +1,10 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 lib.mkIf config.services.invidious.enable {
   networking.ports.invidious.enable = true;
   # networking.ports.invidious.port = lib.mkDefault 49149;
   services.invidious = {
+    package = pkgs.unstable.invidious;
     inherit (config.networking.ports.invidious) port;
     settings = {
       db = {

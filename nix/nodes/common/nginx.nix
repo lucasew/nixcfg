@@ -1,4 +1,4 @@
-{ global, lib, ... }:
+{ pkgs, global, lib, ... }:
 
 let
   inherit (builtins) attrValues concatStringsSep;
@@ -9,6 +9,7 @@ let
 in
 {
   services.nginx = {
+    package = pkgs.unstable.nginxMainline;
     appendHttpConfig = ''
       ${concatStringsSep "\n" ipExprs}
       allow 127.0.0.1;

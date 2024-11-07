@@ -87,6 +87,7 @@ in
     # Logic related to my config
     # TODO: did I read socket activation????
     networking.ports.ircd.enable = true;
+    services.ngircd.package = lib.mkDefault pkgs.unstable.ngircd;
     services.ngircd.config = {
       Global = {
         Info = "lucasew's IRC server";

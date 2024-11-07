@@ -45,11 +45,11 @@ in
       };
     };
     services.transmission = {
-      package = pkgs.transmission_4;
+      package = pkgs.unstable.transmission_4;
       openFirewall = true;
       openPeerPorts = true;
       downloadDirPermissions = null;
-      webHome = pkgs.flood-for-transmission;
+      webHome = pkgs.unstable.flood-for-transmission;
       settings = {
         peer-port-random-on-start = true;
         peer-port-random-low = config.networking.ports.transmission-999.port;
