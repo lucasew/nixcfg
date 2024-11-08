@@ -37,6 +37,7 @@ in
   };
 
   home.packages = with pkgs; [
+    blender-bin.blender_3_6
     gum
     chromium
     custom.firefox # now I am using chromium
