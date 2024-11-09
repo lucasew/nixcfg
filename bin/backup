@@ -62,7 +62,7 @@ if sd is whiterun; then
 fi
 
 # deleting empty files
-ssh "$rsyncnet_user" find backup -size 0 -delete
+# ssh "$rsyncnet_user" find backup -size 0 -delete
 
 # mirroring of git repos -- new ones using git clone --mirror
 # TODO: is this the right way?
