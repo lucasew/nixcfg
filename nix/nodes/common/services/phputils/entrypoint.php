@@ -28,7 +28,7 @@ while (true) {
 
     // fixes security issue where an attacker could
     // pass arbitrary stuff into the TAILSCALE_USER_LOGIN header
-    error_log("header: $_header_name");
+    // error_log("header: $_header_name");
     if ($_header_name == "Tailscale-User-Login") {
         define("TS_LOGIN", $_header_value);
     }
@@ -284,7 +284,7 @@ auth_tailscale();
 
 function rickroll_unlogged() {
     if (!TS_HAS_LOGIN) {
-        http_response_code(301);
+        http_response_code(307);
         set_header("Location", "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
         exit(0); // dispara shutdown, que vai enviar o que precisa ser enviado
     }
