@@ -126,7 +126,7 @@ in
         set $mod ${mod}
 
         bar {
-          status_command ${lib.getExe pkgs.i3pystatus} -c $(sdw d root)/bin/_shortcuts/i3pystatus/main.py
+          status_command ${lib.getExe pkgs.unstable.i3pystatus} -c $(sdw d root)/bin/_shortcuts/i3pystatus/main.py
           i3bar_command i3bar --transparency
           font pango: Fira Code 10
           hidden_state show
