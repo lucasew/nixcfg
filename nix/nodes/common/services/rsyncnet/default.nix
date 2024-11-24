@@ -17,7 +17,6 @@ let
 
   wrappedSsh = pkgs.writeShellScriptBin "wssh" ''
     exec ${lib.getExe pkgs.openssh}  \
-      -v \
       -T \
       -o StrictHostKeyChecking=no \
       -o IdentitiesOnly=yes \
@@ -104,16 +103,20 @@ in
         cd "${cfg.dataDir}"
         export PATH+=":/run/wrappers/bin"
 
-
-        for repo in $(wssh ls git); do
-          unit="rsyncnet-remote-backup-git@$repo"
-          systemctl start "$unit" &
-        done
-
         wssh mkdir -p backup/lucasew/homelab/${config.networking.hostName}
+        # cópia dos backups do postgres por ex
         rsync -e "ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /run/secrets/rsyncnet-remote-backup" -avP /var/backup/ "${cfg.host}:backup/lucasew/homelab/${config.networking.hostName}"
 
-        bash ${./hash-backups.sh}
+        function backup_git {
+          repo="$1"; shift
+          wssh git --git-dir "git/$repo" fetch --all --prune || {
+            printf "Subject: git-backup/falha: %s\n%s" "$repo" "Backup do repositório falhou" | sendmail
+          }
+        }
+
+        for repo in $(wssh ls git | grep -v -e '^zzz'); do
+          backup_git "$repo"
+        done
 
         echo '[*] Waiting for jobs to finish...'
 
@@ -128,36 +131,6 @@ in
         "+/run/current-system/sw/bin/chmod -R g+r /var/backup"
         "+/run/current-system/sw/bin/find /var/backup -type d -exec /run/current-system/sw/bin/chmod g+x {} \\;"
         ];
-      };
-    };
-
-    security.polkit.extraConfig = ''
-      polkit.addRule(function(action, subject) {
-          if (action.id == "org.freedesktop.systemd1.manage-units" && action.lookup("unit").startsWith('rsyncnet-remote-backup-git@') && subject.user === '${cfg.user}') {
-            return polkit.Result.YES;
-          }
-      })
-    '';
-
-    systemd.services."rsyncnet-remote-backup-git@" = {
-      path = [ wrappedSsh ];
-
-      restartIfChanged = false;
-      stopIfChanged = false;
-
-      script = ''
-        echo | wssh git --git-dir "git/$(echo "$INSTANCE_NAME" | sed 's;\/;-;g')" fetch --all --prune || true
-      '';
-
-      environment = {
-        INSTANCE_NAME = "%I";
-      };
-
-      serviceConfig = {
-        Type = "oneshot";
-        TimeoutStartSec = cfg.git-step-timeout;
-        User = cfg.user;
-        Group = cfg.group;
       };
     };
   };
