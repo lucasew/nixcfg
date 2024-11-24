@@ -109,7 +109,8 @@ in
 
         function backup_git {
           repo="$1"; shift
-          wssh git --git-dir "git/$repo" fetch --all --prune || {
+          echo git-backup $repo >&2
+          timeout 60 wssh git --git-dir "git/$repo" fetch --all --prune || {
             printf "Subject: git-backup/falha: %s\n%s" "$repo" "Backup do repositório falhou" | sendmail
           }
         }
