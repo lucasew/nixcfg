@@ -13,6 +13,7 @@ in
 
   imports = [
     ../base/default.nix
+    ./atuin.nix
     ./dlna.nix
     ./helix
     ./espanso.nix
@@ -23,6 +24,8 @@ in
     ./qutebrowser.nix
     ./zen-browser.nix
   ];
+
+  programs.atuin.enable = true;
 
   programs.zen-browser.enable = true;
   programs.helix.enable = true;
