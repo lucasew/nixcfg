@@ -41,10 +41,10 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+            build-dir: /nix/build
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: cachix/cachix-action@v10
         with:
           name: lucasew-personal
           authToken: '${{ secrets.CACHIX_TOKEN }}'
-      - run: nix build .#release -L --keep-going -j 2
-
+      - run: nix build .#release -L --keep-going
