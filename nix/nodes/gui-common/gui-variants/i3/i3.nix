@@ -169,10 +169,7 @@ in
         bindsym $mod+7 workspace number 7
         bindsym $mod+8 workspace number 8
         bindsym $mod+9 workspace number 9
-        bindsym $mod+Down focus down
-        bindsym $mod+Left focus left
-        bindsym $mod+Return exec kitty
-        bindsym $mod+Right focus right
+
         bindsym $mod+Shift+0 move container to workspace number 10
         bindsym $mod+Shift+1 move container to workspace number 1
         bindsym $mod+Shift+2 move container to workspace number 2
@@ -183,6 +180,14 @@ in
         bindsym $mod+Shift+7 move container to workspace number 7
         bindsym $mod+Shift+8 move container to workspace number 8
         bindsym $mod+Shift+9 move container to workspace number 9
+
+        bindsym $mod+Down focus down
+        bindsym $mod+Up focus up
+        bindsym $mod+Left focus left
+        bindsym $mod+Right focus right
+        bindsym $mod+a focus parent
+        bindsym $mod+Return exec kitty
+
         bindsym $mod+Shift+Down move down
         bindsym $mod+Shift+Left move left
         bindsym $mod+Shift+Right move right
@@ -199,8 +204,6 @@ in
         bindsym $mod+Shift+minus move scratchpad
         bindsym $mod+Shift+q kill
         bindsym $mod+Shift+r restart
-        bindsym $mod+Up focus up
-        bindsym $mod+a focus parent
         bindsym $mod+d exec rofi-launch
         bindsym $mod+Shift+d exec rofi-window
         bindsym $mod+e layout toggle split
