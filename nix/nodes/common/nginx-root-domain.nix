@@ -211,8 +211,8 @@ in
 {
   environment.etc."rootdomain/index.html".source = pkgs.writeText "template.html" template;
   environment.etc."rootdomain/favicon.ico".source = pkgs.fetchurl {
-    url = "https://nixos.org/favicon.ico";
-    sha256 = "sha256-5inMf6x/pZ3E2UVz5+Z/N8Ic/2uV2jhrVeD111uK/Jg=";
+    url = "https://search.nixos.org/images/nix-logo.png";
+    hash = "sha256-4wRQyZ6CPOahELEvTY0h+7c6F1PPA6NvXGKBeDI/P8M=";
   };
 
   services.nginx.virtualHosts."${config.networking.hostName}" = {

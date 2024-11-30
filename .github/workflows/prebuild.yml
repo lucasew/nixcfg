@@ -34,6 +34,6 @@ jobs:
         with:
           name: lucasew-personal
           authToken: '${{ secrets.CACHIX_TOKEN }}'
-      - run: nix build .#release
+      - run: nix build .#release -L --keep-going
 
 
