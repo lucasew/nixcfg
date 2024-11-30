@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: prebuild
+name: Build and test stuff for basic breakage
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -21,7 +21,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: cachix/install-nix-action@v12
+      - uses: cachix/install-nix-action@v25
         with:
           nix_path: nixpkgs=channel:nixos-unstable
           extra_nix_config: |
