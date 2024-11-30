@@ -222,14 +222,15 @@ in
         bindsym $mod+Ctrl+Left=resize grow width 1 px or 1 ppt
 
         # custom keys
-        bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +10%
-        bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -10%
-        bindsym XF86AudioMute exec pactl set-sink-volume @DEFAULT_SINK@ toggle
-        bindsym XF86AudioMicMute exec pactl set-sink-volume @DEFAULT_SOURCE@ toggle
-        bindsym XF86AudioNext exec playerctl next
-        bindsym XF86AudioPrev exec playerctl previous
-        bindsym XF86AudioPlay exec playerctl play-pause
-        bindsym XF86AudioPause exec playerctl play-pause
+        bindsym XF86AudioRaiseVolume exec sdw utils i3wm audio up
+        bindsym XF86AudioLowerVolume exec sdw utils i3wm audio down
+        bindsym XF86AudioMute exec sdw utils i3wm audio mute
+
+        bindsym XF86AudioNext exec  sdw utils i3wm playerctl next
+        bindsym XF86AudioPrev exec  sdw utils i3wm playerctl previous
+        bindsym XF86AudioPlay exec  sdw utils i3wm playerctl play-pause
+        bindsym XF86AudioPause exec sdw utils i3wm playerctl play-pause
+
         bindsym XF86MonBrightnessUp exec brightnessctl s +5%
         bindsym XF86MonBrightnessDown exec brightnessctl s 5%-
 
@@ -240,7 +241,7 @@ in
         bindsym $mod+n exec sdw utils i3wm modn
 
         bindsym $mod+b exec sdw utils i3wm goto-new-ws
-        bindsym $mod+Shift+b exec sdw utils i3wm goto-new-ws shift
+        bindsym $mod+Shift+b exec sdw utils i3wm goto-new-ws window
 
 
         bindsym --release Print exec org.flameshot.Flameshot gui

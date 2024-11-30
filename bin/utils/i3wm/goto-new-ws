@@ -10,7 +10,7 @@ last_ws=$((last_ws+1))
 echo $last_ws
 echo $last_ws > $wsfile
 
-if [ $1 -eq "window" ]; then
+if [ "$1" == "window" ]; then
 i3-msg move container to workspace number $last_ws
 fi
 

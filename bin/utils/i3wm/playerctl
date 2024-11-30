@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Shows a notification showing what is being played
+
+# python> int.from_bytes(b'music') >> 14
+NOTIFICATION_ID=28693965
+CMD="$1"; shift
+if [[ "$CMD" != 'show' ]]; then
+  playerctl "$CMD"
+fi
+
+[[ "$CMD" == 'play-pause' ]] || (sleep 2; echo wait for player to react) # the player needs to think it's next move, it doesn't block anything tho
+
+playerctl metadata  -f '{{playerName}};{{mpris:artUrl}};{{status}};{{artist}};{{title}};{{position*100/mpris:length}};' | while IFS=';' read -r player icon state artist title position; do
+  echo "$state"
+  emoji="❔"
+  case "$state" in
+    Playing) emoji="▶️" ;;
+    Paused) emoji="⏸️" ;;
+    Stopped) emoji="⏹️" ;;
+  esac
+  notify-send "$emoji $player" "$artist - $title" -h int:value:"$position" -i "$icon" -r $NOTIFICATION_ID
+done
