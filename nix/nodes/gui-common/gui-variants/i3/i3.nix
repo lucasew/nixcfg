@@ -231,8 +231,8 @@ in
         bindsym XF86AudioPlay exec  sdw utils i3wm playerctl play-pause
         bindsym XF86AudioPause exec sdw utils i3wm playerctl play-pause
 
-        bindsym XF86MonBrightnessUp exec brightnessctl s +5%
-        bindsym XF86MonBrightnessDown exec brightnessctl s 5%-
+        bindsym XF86MonBrightnessUp   exec sdw utils i3wm brightnessctl up
+        bindsym XF86MonBrightnessDown exec sdw utils i3wm brightnessctl down
 
         bindsym $mod+Shift+m move workspace to output left
         bindsym $mod+m focus output next

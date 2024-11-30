@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# python> int.from_bytes(b'light') >> 14
+NOTIFICATION_ID=28419485
+VALUE_INCREMENT=5
+CMD="$1"; shift
+
+case "$CMD" in
+  show) ;;
+  up) brightnessctl s +$VALUE_INCREMENT% ;;
+  down) brightnessctl s $VALUE_INCREMENT%- ;;
+esac
+
+
+brightnessctl -m | while IFS=',' read -r devname _devclass _current level _max; do
+  emoji="☀️"
+  notify-send "$emoji $devname" -h int:value:"$level" -r $NOTIFICATION_ID
+done
