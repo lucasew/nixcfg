@@ -20,11 +20,12 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: jlumbroso/free-disk-space@v1.3.1
+      - name: Maximize build disk space
+        uses: jlumbroso/free-disk-space@v1.3.1
         with:
           swap-storage: false
           tool-cache: true
-      - name: Maximize build disk space
+      - name: Other way to maximize build space + LVM trick on /nix
         uses: easimon/maximize-build-space@v10
         with:
           build-mount-path: /nix
