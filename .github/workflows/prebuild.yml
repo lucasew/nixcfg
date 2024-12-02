@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Setup stuff
         run: |
-          mkdir -p /nix/build
+          sudo mkdir -p /nix/build
           df -h
       - name: Install Nix
         uses: cachix/install-nix-action@v30
