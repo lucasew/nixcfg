@@ -45,5 +45,5 @@ jobs:
           name: lucasew-personal
           authToken: '${{ secrets.CACHIX_TOKEN }}'
       - run: |
-          {while true; do df -h; uptime; sleep 60; done } &
+          { while true; do df -h; uptime; sleep 60; done } &
           nix build .#release -L --keep-going
