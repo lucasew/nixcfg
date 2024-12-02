@@ -44,6 +44,6 @@ jobs:
         with:
           name: lucasew-personal
           authToken: '${{ secrets.CACHIX_TOKEN }}'
-      - run: nix build .#release -L --keep-going
-      - name: Quanto grosso é o que entrou?
-        run: df -h
+      - run: |
+          {while true; do df -h; uptime; sleep 60; done } &
+          nix build .#release -L --keep-going
