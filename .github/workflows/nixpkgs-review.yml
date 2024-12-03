@@ -40,6 +40,7 @@ jobs:
         with:
           repository: NixOS/nixpkgs
           ref: master
+          path: ./nixpkgs
       - name: Prepare for Nix if cleaned up
         if: ${{ github.event.inputs.free-space }}
         run: |
@@ -59,6 +60,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           { while true; do df -h; uptime; sleep 60; done } &
+          cd nixpkgs
           nix run nixpkgs#nixpkgs-review -- pr ${{ github.event.inputs.pr }} --post-result --no-shell
       - uses: actions/upload-artifact@v4
         with:
