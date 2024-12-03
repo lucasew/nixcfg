@@ -1,0 +1,68 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Send a bump PR and test eval
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: "PR number"
+        type: number
+        required: true
+      free-space:
+        description: "Run workflow to increase free space (tradeoff: runs faster vs runs bigger PRs)"
+        type: boolean
+        default: true
+        required: true
+
+
+concurrency:
+  group: review-${{ github.event.inputs.pr }}
+  cancel-in-progress: true
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Free up space
+        uses: lucasew/action-i-only-care-about-nix@main
+        if: ${{ github.event.inputs.free-space }}
+      - name: Get nixpkgs
+        uses: actions/checkout@v2
+        with:
+          repository: NixOS/nixpkgs
+          ref: master
+      - name: Prepare for Nix if cleaned up
+        if: ${{ github.event.inputs.free-space }}
+        run: |
+          sudo mkdir -p /nix/build
+          df -h
+      - name: Install Nix
+        uses: cachix/install-nix-action@v30
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+            build-dir = /nix/build
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Run review
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          { while true; do df -h; uptime; sleep 60; done } &
+          nix run nixpkgs#nixpkgs-review -- pr ${{ github.event.inputs.pr }} --post-result --no-shell
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: /nix/var/log/nix/drvs
+          include-hidden-files: true
+
