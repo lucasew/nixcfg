@@ -54,6 +54,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           { while true; do df -h; uptime; sleep 60; done } &
+          git config --global user.email "user@example.com"
+          git config --global user.name "user"
           git clone https://github.com/NixOS/nixpkgs nixpkgs
           cd nixpkgs
           nix run nixpkgs#nixpkgs-review -- pr ${{ github.event.inputs.pr }} --post-result --no-shell
