@@ -14,8 +14,8 @@ lib.mkIf config.services.cockpit.enable {
         Origins = builtins.concatStringsSep " " [
           "http://${config.networking.hostName}:${toString config.services.cockpit.port}"
           "https://${config.networking.hostName}:${toString config.services.cockpit.port}"
-          "http://${config.networking.hostName}:${toString config.services.cockpit.port}"
-          "https://${config.networking.hostName}:${toString config.services.cockpit.port}"
+          "http://localhost:${toString config.services.cockpit.port}"
+          "https://localhost:${toString config.services.cockpit.port}"
         ];
       };
     };
