@@ -34,9 +34,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Free up space
         uses: lucasew/action-i-only-care-about-nix@main
-        if: ${{ github.event.inputs.free-space }}
+        if: ${{ github.event.inputs.free-space == 'true' }}
       - name: Prepare for Nix if cleaned up
-        if: ${{ github.event.inputs.free-space }}
+        if: ${{ github.event.inputs.free-space == 'true' }}
         run: |
           sudo mkdir -p /nix/build
           df -h
