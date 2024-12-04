@@ -50,7 +50,7 @@ in
   };
   config = mkIf cfg.enable {
     sops.secrets."nixgram" = {
-      sopsFile = ../../../secrets/nixgram.env;
+      sopsFile = ../../../../secrets/nixgram.env;
       format = "dotenv";
     };
     systemd.services.nixgram = {

@@ -82,7 +82,7 @@ in
 
   config = {
     sops.secrets.ts-proxy = {
-        sopsFile = ../../../secrets/ts-proxy.env;
+        sopsFile = ../../../../secrets/ts-proxy.env;
         owner = cfg.user;
         group = cfg.group;
         format = "dotenv";

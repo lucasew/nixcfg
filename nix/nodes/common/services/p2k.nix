@@ -25,7 +25,7 @@ in
     };
 
     sops.secrets.pocket2kindle = {
-      sopsFile = ../../../secrets/p2k.env;
+      sopsFile = ../../../../secrets/p2k.env;
       format = "dotenv";
     };
 

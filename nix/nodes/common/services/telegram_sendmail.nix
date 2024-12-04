@@ -16,7 +16,7 @@ in
     services.telegram-sendmail.extraArgs = ["-t" "120"];
 
     sops.secrets.telegram-sendmail = {
-      sopsFile = ../../../secrets/telegram_sendmail.env;
+      sopsFile = ../../../../secrets/telegram_sendmail.env;
       owner = config.users.users.telegram_sendmail.name;
       group = config.users.users.telegram_sendmail.group;
       format = "dotenv";

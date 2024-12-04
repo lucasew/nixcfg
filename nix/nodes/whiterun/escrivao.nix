@@ -16,7 +16,7 @@ in
       ];
     };
     sops.secrets.escrivao-token = {
-      sopsFile = ../../secrets/escrivao-token;
+      sopsFile = ../../../secrets/escrivao-token;
       owner = config.users.users.${cfg.user}.name;
       group = config.users.users.${cfg.user}.group;
       format = "binary";

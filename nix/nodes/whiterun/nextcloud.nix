@@ -29,7 +29,7 @@ in
     };
 
     sops.secrets.nextcloud-admin-password = {
-      sopsFile = ../../secrets/nextcloud-admin-password;
+      sopsFile = ../../../secrets/nextcloud-admin-password;
       group = config.users.groups.admin-password.name;
       format = "binary";
       mode = "0440";

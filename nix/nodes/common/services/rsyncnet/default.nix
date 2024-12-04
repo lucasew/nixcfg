@@ -73,7 +73,7 @@ in
     };
 
     sops.secrets.rsyncnet-remote-backup = {
-      sopsFile = ../../../../secrets/rsyncnet;
+      sopsFile = ../../../../../secrets/rsyncnet;
       owner = cfg.user;
       group = cfg.group;
       format = "binary";
