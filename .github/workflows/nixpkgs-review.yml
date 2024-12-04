@@ -50,7 +50,7 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Run review
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_NIXPKGS_REVIEW }}
         run: |
           { while true; do df -h; uptime; sleep 60; done } &
           git config --global user.email "user@example.com"
