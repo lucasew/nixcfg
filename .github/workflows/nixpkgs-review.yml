@@ -12,6 +12,11 @@ on:
         description: "PR number"
         type: number
         required: true
+      extra-args:
+        description: "Extra args for nixpkgs-review"
+        type: string
+        default: ""
+        required: false
       free-space:
         description: "Run workflow to increase free space (tradeoff: runs faster vs runs bigger PRs)"
         type: boolean
@@ -68,7 +73,7 @@ jobs:
           git config --global user.email "user@example.com"
           git config --global user.name "user"
           cd nixpkgs
-          nix run nixpkgs#nixpkgs-review -- pr ${{ github.event.inputs.pr }} --post-result --no-shell
+          nix run nixpkgs#nixpkgs-review -- pr ${{ github.event.inputs.pr }} --post-result --no-shell ${{ github.event.inputs.extra-args }}
       - uses: actions/upload-artifact@v4
         with:
           name: build-logs
