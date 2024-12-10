@@ -1,33 +1,40 @@
-{ config, pkgs, lib, ...}:
-
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   cfg = config.services.ngircd;
 
-  toml = pkgs.formats.toml {};
+  toml = pkgs.formats.toml { };
 
-  configFile = pkgs.runCommand "ngircd.conf" {
-    config = toml.generate "ngircd_input.conf" cfg.config;
+  configFile =
+    pkgs.runCommand "ngircd.conf"
+      {
+        config = toml.generate "ngircd_input.conf" cfg.config;
 
-    preferLocalBuild = true;
-  } ''
-      cp $config $out
+        preferLocalBuild = true;
+      }
+      ''
+        cp $config $out
 
-      # TODO: proper generator
-      substituteInPlace $out \
-        --replace '= false' '= "no"' \
-        --replace '= true' '= "yes"'
-      sed -i 's;^\[\[\([^\]*\)\]\]$;[\1];' $out # general, for example, may appear twice, fixing syntax
-      sed -i 's;^\([^ ]*\) = \"\([^"]*\)"$;\1 = \2;' $out # fix quote enclosing
-      sed -i 's;^\([^=]*\)=;  \1=;' $out
+        # TODO: proper generator
+        substituteInPlace $out \
+          --replace '= false' '= "no"' \
+          --replace '= true' '= "yes"'
+        sed -i 's;^\[\[\([^\]*\)\]\]$;[\1];' $out # general, for example, may appear twice, fixing syntax
+        sed -i 's;^\([^ ]*\) = \"\([^"]*\)"$;\1 = \2;' $out # fix quote enclosing
+        sed -i 's;^\([^=]*\)=;  \1=;' $out
 
 
-      ${lib.getExe cfg.package} --config $out --configtest
-  '';
+        ${lib.getExe cfg.package} --config $out --configtest
+      '';
 
 in
 {
-  disabledModules = [ "services/networking/ngircd.nix" ];  
+  disabledModules = [ "services/networking/ngircd.nix" ];
 
   options = {
     services.ngircd = {
@@ -54,23 +61,23 @@ in
 
       serviceConfig = {
         ExecStart = "${lib.getExe cfg.package} --config /etc/ngircd.conf --nodaemon --syslog";
-        ExecReload= "/run/current-system/sw/bin/kill -HUP $MAINPID";
+        ExecReload = "/run/current-system/sw/bin/kill -HUP $MAINPID";
         User = "ngircd";
         Group = "ngircd";
         PrivateTmp = true;
         NoNewPrivileges = true;
-        PrivateDevices= true;
-        DevicePolicy="closed";
-        ProtectSystem="strict";
-        ProtectHome=true;
-        ProtectControlGroups=true;
-        ProtectKernelModules=true;
-        ProtectKernelTunables=true;
-        RestrictNamespaces=true;
-        RestrictRealtime=true;
-        RestrictSUIDSGID=true;
-        MemoryDenyWriteExecute=true;
-        LockPersonality=true;
+        PrivateDevices = true;
+        DevicePolicy = "closed";
+        ProtectSystem = "strict";
+        ProtectHome = true;
+        ProtectControlGroups = true;
+        ProtectKernelModules = true;
+        ProtectKernelTunables = true;
+        RestrictNamespaces = true;
+        RestrictRealtime = true;
+        RestrictSUIDSGID = true;
+        MemoryDenyWriteExecute = true;
+        LockPersonality = true;
       };
 
       # systemd sends SIGHUP on reload, which is supported
@@ -82,7 +89,7 @@ in
       group = "ngircd";
       description = "ngircd user.";
     };
-    users.groups.ngircd = {};
+    users.groups.ngircd = { };
 
     # Logic related to my config
     # TODO: did I read socket activation????

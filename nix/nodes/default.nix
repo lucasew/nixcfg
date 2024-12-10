@@ -3,7 +3,7 @@
   nodes,
   extraArgs,
   system,
-  extraModules ? []
+  extraModules ? [ ],
 }:
 
 let

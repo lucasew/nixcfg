@@ -15,14 +15,16 @@
     };
   };
   config = lib.mkIf config.gc-hold.enable {
-    environment.etc.nix-gchold.text = let
+    environment.etc.nix-gchold.text =
+      let
 
-      getPath = drv: drv.outPath;
-      flakePaths = lib.attrValues self.inputs;
-      allDrvs = config.gc-hold.paths ++ flakePaths;
-      paths = map (getPath) allDrvs;
-      pathsStr = lib.concatStringsSep "\n" paths;
+        getPath = drv: drv.outPath;
+        flakePaths = lib.attrValues self.inputs;
+        allDrvs = config.gc-hold.paths ++ flakePaths;
+        paths = map (getPath) allDrvs;
+        pathsStr = lib.concatStringsSep "\n" paths;
 
-    in pathsStr;
+      in
+      pathsStr;
   };
 }

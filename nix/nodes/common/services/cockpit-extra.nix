@@ -1,8 +1,4 @@
-{
-  config,
-  lib,
-  ...
-}:
+{ config, lib, ... }:
 
 lib.mkIf config.services.cockpit.enable {
   # networking.ports.cockpit.enable = true;

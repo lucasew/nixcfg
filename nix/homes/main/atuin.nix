@@ -5,4 +5,3 @@ lib.mkIf config.programs.atuin.enable {
     enableBashIntegration = true;
   };
 }
-

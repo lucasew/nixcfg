@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   cfg = config.programs.zen-browser;
@@ -17,7 +22,7 @@ in
         else
           echo WARNING: zen browser is not installed: flatpak install $zenBin
         fi
-        '';
-      };
+      '';
+    };
   };
 }

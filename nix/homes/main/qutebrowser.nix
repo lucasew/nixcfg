@@ -410,11 +410,11 @@ in
           };
           webpage = {
 
-          #   # Background color for webpages if unset (or empty to use the theme's
-          #   # color).
-          #   # bg = c.base00;
+            #   # Background color for webpages if unset (or empty to use the theme's
+            #   # color).
+            #   # bg = c.base00;
             preferred_color_scheme = "dark";
-          #   darkmode.enabled = true;
+            #   darkmode.enabled = true;
           };
         };
         # colors.webpage.darkmode.policy.images = "never";

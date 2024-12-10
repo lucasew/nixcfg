@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   cfg = config.services.phputils;
@@ -7,8 +12,10 @@ in
 {
   options = {
     services.phputils = {
-      enable = (lib.mkEnableOption "php teste") // {default=true;};
-      php = lib.mkPackageOption pkgs "php" {};
+      enable = (lib.mkEnableOption "php teste") // {
+        default = true;
+      };
+      php = lib.mkPackageOption pkgs "php" { };
       scriptDir = lib.mkOption {
         description = "Where are the scripts";
         default = "/etc/phputils";
@@ -29,7 +36,10 @@ in
         Accept = true;
       };
       partOf = [ "phputils.service" ];
-      wantedBy = [ "sockets.target" "multi-user.target" ];
+      wantedBy = [
+        "sockets.target"
+        "multi-user.target"
+      ];
     };
 
     systemd.slices.phputils.sliceConfig = {
@@ -42,7 +52,7 @@ in
 
     systemd.services."phputils@" = {
       stopIfChanged = true;
-      after = [ "network.target"  ];
+      after = [ "network.target" ];
       serviceConfig = {
         Slice = "phputils.slice";
         StandardInput = "socket";

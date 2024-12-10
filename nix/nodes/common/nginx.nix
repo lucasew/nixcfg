@@ -1,4 +1,9 @@
-{ pkgs, global, lib, ... }:
+{
+  pkgs,
+  global,
+  lib,
+  ...
+}:
 
 let
   inherit (builtins) attrValues concatStringsSep;
