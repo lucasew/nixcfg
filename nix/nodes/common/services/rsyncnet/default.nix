@@ -79,9 +79,7 @@ in
       format = "binary";
     };
 
-    systemd.tmpfiles.rules = [
-      "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group} - -"
-    ];
+    systemd.tmpfiles.rules = [ "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group} - -" ];
 
     systemd.timers."rsyncnet-remote-backup" = {
       description = "rsync.net backup timer";
@@ -94,7 +92,15 @@ in
     };
 
     systemd.services."rsyncnet-remote-backup" = {
-      path = with pkgs; [ wrappedSsh bash pv git gawk rsync openssh ];
+      path = with pkgs; [
+        wrappedSsh
+        bash
+        pv
+        git
+        gawk
+        rsync
+        openssh
+      ];
 
       restartIfChanged = false;
       stopIfChanged = false;
@@ -128,9 +134,9 @@ in
         User = cfg.user;
         Group = cfg.group;
         ExecStartPre = [
-        "+/run/current-system/sw/bin/chgrp -R ${cfg.group} /var/backup"
-        "+/run/current-system/sw/bin/chmod -R g+r /var/backup"
-        "+/run/current-system/sw/bin/find /var/backup -type d -exec /run/current-system/sw/bin/chmod g+x {} \\;"
+          "+/run/current-system/sw/bin/chgrp -R ${cfg.group} /var/backup"
+          "+/run/current-system/sw/bin/chmod -R g+r /var/backup"
+          "+/run/current-system/sw/bin/find /var/backup -type d -exec /run/current-system/sw/bin/chmod g+x {} \\;"
         ];
       };
     };

@@ -3,17 +3,18 @@
 # python> int.from_bytes(b'audio') >> 14
 NOTIFICATION_ID=25548177
 VOLUME_INCREMENT=5
-CMD="$1"; shift
+CMD="$1"
+shift
 
 CHOSEN_SINK="@DEFAULT_SINK@"
 
 case "$CMD" in
-	up) pactl set-sink-volume $CHOSEN_SINK +$VOLUME_INCREMENT% ;;
-	down) pactl set-sink-volume $CHOSEN_SINK -$VOLUME_INCREMENT% ;;
-	mute) pactl set-sink-volume $CHOSEN_SINK toggle ;;
+up) pactl set-sink-volume $CHOSEN_SINK +$VOLUME_INCREMENT% ;;
+down) pactl set-sink-volume $CHOSEN_SINK -$VOLUME_INCREMENT% ;;
+mute) pactl set-sink-volume $CHOSEN_SINK toggle ;;
 esac
 
-level="$(pactl get-sink-volume @DEFAULT_SINK@ | tr ' ' '\n'| grep % | uniq | sed 's;%;;')"
+level="$(pactl get-sink-volume @DEFAULT_SINK@ | tr ' ' '\n' | grep % | uniq | sed 's;%;;')"
 echo "$level"
 
 emoji="🔊"
@@ -22,4 +23,3 @@ if [[ $level == 0 ]]; then
 fi
 
 notify-send "$emoji Volume" "$(pactl get-default-sink)" -h int:value:"$level" -i "audio" -r $NOTIFICATION_ID
-

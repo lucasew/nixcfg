@@ -4,14 +4,14 @@ wsfile="/tmp/_i3_last_ws"
 
 last_ws=10
 if [ -f $wsfile ]; then
-  last_ws="$(cat "$wsfile")"
+	last_ws="$(cat "$wsfile")"
 fi
-last_ws=$((last_ws+1))
+last_ws=$((last_ws + 1))
 echo $last_ws
-echo $last_ws > $wsfile
+echo $last_ws >$wsfile
 
 if [ "$1" == "window" ]; then
-i3-msg move container to workspace number $last_ws
+	i3-msg move container to workspace number $last_ws
 fi
 
 i3-msg workspace number $last_ws

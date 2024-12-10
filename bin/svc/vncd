@@ -4,8 +4,7 @@
 # spawns an unauthenticated VNC server
 
 if [[ -v WAYLAND_DISPLAY ]]; then
-	sd svc .vncd-wayland --really "$@" 
+	sd svc .vncd-wayland --really "$@"
 else
-	sd svc .vncd-xorg --really "$@" 
+	sd svc .vncd-xorg --really "$@"
 fi
-

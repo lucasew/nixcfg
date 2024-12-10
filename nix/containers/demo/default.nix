@@ -1,5 +1,4 @@
-{
-}:
+{ }:
 
 {
   interactive = true;

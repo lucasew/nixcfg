@@ -3,7 +3,7 @@ from sys import argv
 
 args = [*argv[1:]]
 if len(args) == 0:
-    args.append('repl')
+    args.append("repl")
 cmd = args[0]
 args = args[1:]
 

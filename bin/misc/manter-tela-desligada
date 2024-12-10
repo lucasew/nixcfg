@@ -2,10 +2,10 @@
 
 set -euo pipefail
 while true; do
-  sleep 1
-  if [ ! -z "$(cat /sys/class/leds/*capslock/brightness | grep 1)" ]; then
-    echo '* desligar tela *'
-    DISPLAY=:0 xset dpms force off
-    echo foi
-  fi
+	sleep 1
+	if [ ! -z "$(cat /sys/class/leds/*capslock/brightness | grep 1)" ]; then
+		echo '* desligar tela *'
+		DISPLAY=:0 xset dpms force off
+		echo foi
+	fi
 done

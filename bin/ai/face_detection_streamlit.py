@@ -6,6 +6,7 @@
 # demo dataset: https://www.kaggle.com/datasets/rawatjitesh/avengers-face-recognition
 
 import faulthandler
+
 faulthandler.enable()
 
 import sys
@@ -22,19 +23,19 @@ if not runtime.exists():
     from streamlit.web import cli as stcli
     from shutil import which
     import os
-    args=[which("streamlit"), 'run', __file__, '--', *sys.argv[1:]]
+
+    args = [which("streamlit"), "run", __file__, "--", *sys.argv[1:]]
     print(args[0], args, flush=True)
     os.execvp(args[0], args)
 
 from streamlit.runtime.scriptrunner.script_run_context import get_script_run_ctx
 
-    
+
 print(get_script_run_ctx())
 
 
 from facenet_pytorch import MTCNN, InceptionResnetV1
 from matplotlib import pyplot as plt
-
 
 
 import cv2
@@ -50,13 +51,17 @@ import torch
 print("chegou AAAAA")
 
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"pytorch device: {device}", file=stderr)
 
 mtcnn = MTCNN(
-    image_size=160, margin=0, min_face_size=20,
-    thresholds=[0.6, 0.7, 0.7], factor=0.709, post_process=True,
-    device=device
+    image_size=160,
+    margin=0,
+    min_face_size=20,
+    thresholds=[0.6, 0.7, 0.7],
+    factor=0.709,
+    post_process=True,
+    device=device,
 )
 
 camera_img = st.camera_input("Tire uma foto")

@@ -1,4 +1,4 @@
-{lib, self}:
+{ lib, self }:
 
 {
   environment.etc."nixos-commit.txt".text =

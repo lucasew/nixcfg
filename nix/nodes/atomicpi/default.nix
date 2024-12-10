@@ -1,4 +1,4 @@
-{ self, lib, ...}:
+{ self, lib, ... }:
 
 {
   imports = [
@@ -32,7 +32,7 @@
   boot = {
     loader = {
       efi = {
-        canTouchEfiVariables = false;  
+        canTouchEfiVariables = false;
       };
       grub = {
         efiSupport = true;
@@ -41,7 +41,7 @@
     };
   };
 
-  gc-hold.paths = lib.mkForce [];
+  gc-hold.paths = lib.mkForce [ ];
 
   virtualisation.docker.enable = false;
 

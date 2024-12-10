@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   inherit (config.networking.ports.minecraft) port;
@@ -11,7 +16,7 @@ in
     systemd.services.minecraft-server-backup = {
       description = "Minecraft server backup";
       path = [ pkgs.zip ];
-      wantedBy = lib.mkForce []; # don't start on boot
+      wantedBy = lib.mkForce [ ]; # don't start on boot
       script = ''
         function rcon {
           if [[ -p /run/minecraft-server.stdin ]]; then
