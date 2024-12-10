@@ -392,5 +392,9 @@
           };
         };
       };
+
+      containers = pkgs.callPackage ./nix/containers {
+        inherit self;
+      };
     };
 }
