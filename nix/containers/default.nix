@@ -13,6 +13,7 @@
   gzip,
   which,
   curl,
+  vim,
   less,
   wget,
   man,
@@ -74,6 +75,7 @@ let
             coreutils-full
           ]
           ++ lib.optionals interactive [
+            vim
             gawk
             gnutar
             gzip
