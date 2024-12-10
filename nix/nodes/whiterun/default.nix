@@ -43,9 +43,7 @@ in
 
   gc-hold.enable = true;
 
-  gc-hold.paths = with pkgs; [
-    blender-bin.blender_3_6
-  ];
+  gc-hold.paths = with pkgs; [ blender-bin.blender_3_6 ];
 
   boot.kernel.sysctl = {
     "vfs.zfs.arc_sys_free" = 4 * 1024 * 1024 * 1024; # make ZFS free arc before hitting swap

@@ -1,4 +1,9 @@
-{ global, lib, config, ... }:
+{
+  global,
+  lib,
+  config,
+  ...
+}:
 let
   inherit (global) username;
 in

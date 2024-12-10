@@ -21,17 +21,19 @@ in
   };
 
   wallabag = prev.wallabag.overrideAttrs (old: {
-    postFixup = (old.postFixup or "") + ''
-      # exit 1
-      echo $out/**/*.yml
-      substituteInPlace $out/app/config/services{,_test}.yml \
-        --replace-fail '../../src/Wallabag' "$out/src/Wallabag"
-    '';
+    postFixup =
+      (old.postFixup or "")
+      + ''
+        # exit 1
+        echo $out/**/*.yml
+        substituteInPlace $out/app/config/services{,_test}.yml \
+          --replace-fail '../../src/Wallabag' "$out/src/Wallabag"
+      '';
   });
 
   nbr = import "${flake.inputs.nbr}" { pkgs = final; };
 
-  blender-bin = flake.inputs.blender-bin.packages.${prev.system}; 
+  blender-bin = flake.inputs.blender-bin.packages.${prev.system};
 
   inherit (flake.inputs.nix-alien.packages.${prev.system}) nix-alien;
 
@@ -125,12 +127,14 @@ in
     skyrim = cp ./pkgs/wineApps/skyrim.nix;
   };
   custom = rec {
-    kodi = final.kodi.withPackages (kpkgs: with kpkgs; [
-      vfs-sftp
-      sponsorblock
-      joystick
-      sendtokodi
-    ]);
+    kodi = final.kodi.withPackages (
+      kpkgs: with kpkgs; [
+        vfs-sftp
+        sponsorblock
+        joystick
+        sendtokodi
+      ]
+    );
     colorpipe = cp ./pkgs/colorpipe;
     chromium = cp ./pkgs/custom/chromium;
     ncdu = cp ./pkgs/custom/ncdu.nix;
@@ -205,9 +209,7 @@ in
 
   regex101 = prev.callPackage flake.inputs.regex101 { };
 
-  elixir_edge = final.unstable.elixir.override {
-    erlang = final.unstable.erlang_27;
-  };
+  elixir_edge = final.unstable.elixir.override { erlang = final.unstable.erlang_27; };
 
   conda = prev.conda.override {
     extraPkgs = with final; [

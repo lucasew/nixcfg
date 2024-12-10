@@ -357,9 +357,7 @@
       nixosConfigurations = import ./nix/nodes {
         inherit extraArgs system;
         path = inputs.nixpkgs;
-        extraModules = [
-          inputs.fusionsolar-bot.nixosModules.${system}.default
-        ];
+        extraModules = [ inputs.fusionsolar-bot.nixosModules.${system}.default ];
         nodes = {
           ravenrock = {
             modules = [ ./nix/nodes/ravenrock ];
@@ -408,8 +406,6 @@
         };
       };
 
-      containers = pkgs.callPackage ./nix/containers {
-        inherit self;
-      };
+      containers = pkgs.callPackage ./nix/containers { inherit self; };
     };
 }
