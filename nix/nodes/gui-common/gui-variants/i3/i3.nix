@@ -201,7 +201,9 @@ in
         bindsym $mod+Shift+f floating toggle
         bindsym $mod+Shift+s sticky toggle
 
+        bindsym $mod+minus exec sdw utils i3wm toggle-scratchpad
         bindsym $mod+Shift+minus move scratchpad
+
         bindsym $mod+Shift+q kill
         bindsym $mod+Shift+r restart
         bindsym $mod+d exec rofi-launch
@@ -211,7 +213,6 @@ in
         bindsym $mod+f fullscreen toggle
         bindsym $mod+Ctrl+f fullscreen toggle global
 
-        bindsym $mod+minus exec sdw utils i3wm toggle-scratchpad
         bindsym $mod+s layout stacking
         bindsym $mod+space focus mode_toggle
 
