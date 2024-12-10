@@ -8,7 +8,7 @@ systemctl --user stop wallpaper-change || true
 systemctl --user reset-failed wallpaper-change || true
 
 if [ -v WAYLAND_DISPLAY ]; then
-    sd wall .change-wayland "$@"
+	sd wall .change-wayland "$@"
 else
-    sd wall .change-xorg "$@"
+	sd wall .change-xorg "$@"
 fi

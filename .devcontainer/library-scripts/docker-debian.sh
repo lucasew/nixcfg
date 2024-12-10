@@ -16,93 +16,92 @@ USERNAME=${4:-"automatic"}
 set -e
 
 if [ "$(id -u)" -ne 0 ]; then
-    echo -e 'Script must be run as root. Use sudo, su, or add "USER root" to your Dockerfile before running this script.'
-    exit 1
+	echo -e 'Script must be run as root. Use sudo, su, or add "USER root" to your Dockerfile before running this script.'
+	exit 1
 fi
 
 # Determine the appropriate non-root user
 if [ "${USERNAME}" = "auto" ] || [ "${USERNAME}" = "automatic" ]; then
-    USERNAME=""
-    POSSIBLE_USERS=("vscode" "node" "codespace" "$(awk -v val=1000 -F ":" '$3==val{print $1}' /etc/passwd)")
-    for CURRENT_USER in ${POSSIBLE_USERS[@]}; do
-        if id -u ${CURRENT_USER} > /dev/null 2>&1; then
-            USERNAME=${CURRENT_USER}
-            break
-        fi
-    done
-    if [ "${USERNAME}" = "" ]; then
-        USERNAME=root
-    fi
-elif [ "${USERNAME}" = "none" ] || ! id -u ${USERNAME} > /dev/null 2>&1; then
-    USERNAME=root
+	USERNAME=""
+	POSSIBLE_USERS=("vscode" "node" "codespace" "$(awk -v val=1000 -F ":" '$3==val{print $1}' /etc/passwd)")
+	for CURRENT_USER in ${POSSIBLE_USERS[@]}; do
+		if id -u ${CURRENT_USER} >/dev/null 2>&1; then
+			USERNAME=${CURRENT_USER}
+			break
+		fi
+	done
+	if [ "${USERNAME}" = "" ]; then
+		USERNAME=root
+	fi
+elif [ "${USERNAME}" = "none" ] || ! id -u ${USERNAME} >/dev/null 2>&1; then
+	USERNAME=root
 fi
 
 # Function to run apt-get if needed
-apt-get-update-if-needed()
-{
-    if [ ! -d "/var/lib/apt/lists" ] || [ "$(ls /var/lib/apt/lists/ | wc -l)" = "0" ]; then
-        echo "Running apt-get update..."
-        apt-get update
-    else
-        echo "Skipping apt-get update."
-    fi
+apt-get-update-if-needed() {
+	if [ ! -d "/var/lib/apt/lists" ] || [ "$(ls /var/lib/apt/lists/ | wc -l)" = "0" ]; then
+		echo "Running apt-get update..."
+		apt-get update
+	else
+		echo "Skipping apt-get update."
+	fi
 }
 
 # Ensure apt is in non-interactive to avoid prompts
 export DEBIAN_FRONTEND=noninteractive
 
 # Install apt-transport-https, curl, lsb-release, gpg if missing
-if ! dpkg -s apt-transport-https curl ca-certificates lsb-release > /dev/null 2>&1 || ! type gpg > /dev/null 2>&1; then
-    apt-get-update-if-needed
-    apt-get -y install --no-install-recommends apt-transport-https curl ca-certificates lsb-release gnupg2 
+if ! dpkg -s apt-transport-https curl ca-certificates lsb-release >/dev/null 2>&1 || ! type gpg >/dev/null 2>&1; then
+	apt-get-update-if-needed
+	apt-get -y install --no-install-recommends apt-transport-https curl ca-certificates lsb-release gnupg2
 fi
 
 # Install Docker CLI if not already installed
-if type docker > /dev/null 2>&1; then
-    echo "Docker CLI already installed."
+if type docker >/dev/null 2>&1; then
+	echo "Docker CLI already installed."
 else
-    curl -fsSL https://download.docker.com/linux/$(lsb_release -is | tr '[:upper:]' '[:lower:]')/gpg | (OUT=$(apt-key add - 2>&1) || echo $OUT)
-    echo "deb [arch=amd64] https://download.docker.com/linux/$(lsb_release -is | tr '[:upper:]' '[:lower:]') $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list
-    apt-get update
-    apt-get -y install --no-install-recommends docker-ce-cli
+	curl -fsSL https://download.docker.com/linux/$(lsb_release -is | tr '[:upper:]' '[:lower:]')/gpg | (OUT=$(apt-key add - 2>&1) || echo $OUT)
+	echo "deb [arch=amd64] https://download.docker.com/linux/$(lsb_release -is | tr '[:upper:]' '[:lower:]') $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list
+	apt-get update
+	apt-get -y install --no-install-recommends docker-ce-cli
 fi
 
-# Install Docker Compose if not already installed 
-if type docker-compose > /dev/null 2>&1; then
-    echo "Docker Compose already installed."
+# Install Docker Compose if not already installed
+if type docker-compose >/dev/null 2>&1; then
+	echo "Docker Compose already installed."
 else
 
-    LATEST_COMPOSE_VERSION=$(curl -sSL "https://api.github.com/repos/docker/compose/releases/latest" | grep -o -P '(?<="tag_name": ").+(?=")')
-    curl -sSL "https://github.com/docker/compose/releases/download/${LATEST_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    chmod +x /usr/local/bin/docker-compose
+	LATEST_COMPOSE_VERSION=$(curl -sSL "https://api.github.com/repos/docker/compose/releases/latest" | grep -o -P '(?<="tag_name": ").+(?=")')
+	curl -sSL "https://github.com/docker/compose/releases/download/${LATEST_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+	chmod +x /usr/local/bin/docker-compose
 fi
 
 # If init file already exists, exit
 if [ -f "/usr/local/share/docker-init.sh" ]; then
-    exit 0
+	exit 0
 fi
 
 # By default, make the source and target sockets the same
 if [ "${SOURCE_SOCKET}" != "${TARGET_SOCKET}" ]; then
-    touch "${SOURCE_SOCKET}"
-    ln -s "${SOURCE_SOCKET}" "${TARGET_SOCKET}"
+	touch "${SOURCE_SOCKET}"
+	ln -s "${SOURCE_SOCKET}" "${TARGET_SOCKET}"
 fi
 
 # Add a stub if not adding non-root user access, user is root
 if [ "${ENABLE_NONROOT_DOCKER}" = "false" ] || [ "${USERNAME}" = "root" ]; then
-    echo '/usr/bin/env bash -c "\$@"' > /usr/local/share/docker-init.sh
-    chmod +x /usr/local/share/docker-init.sh
-    exit 0
+	echo '/usr/bin/env bash -c "\$@"' >/usr/local/share/docker-init.sh
+	chmod +x /usr/local/share/docker-init.sh
+	exit 0
 fi
 
 # If enabling non-root access and specified user is found, setup socat and add script
-chown -h "${USERNAME}":root "${TARGET_SOCKET}"        
-if ! dpkg -s socat > /dev/null 2>&1; then
-    apt-get-update-if-needed
-    apt-get -y install socat
+chown -h "${USERNAME}":root "${TARGET_SOCKET}"
+if ! dpkg -s socat >/dev/null 2>&1; then
+	apt-get-update-if-needed
+	apt-get -y install socat
 fi
-tee /usr/local/share/docker-init.sh > /dev/null \
-<< EOF 
+tee /usr/local/share/docker-init.sh >/dev/null \
+	<<EOF
 #!/usr/bin/env bash
 #-------------------------------------------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.

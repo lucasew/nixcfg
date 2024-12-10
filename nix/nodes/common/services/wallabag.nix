@@ -1,8 +1,13 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
-  yaml = pkgs.formats.yaml {};
-  parameters = yaml.generate "wallabag-parameters.yaml" {parameters = cfg.config; };
+  yaml = pkgs.formats.yaml { };
+  parameters = yaml.generate "wallabag-parameters.yaml" { parameters = cfg.config; };
 
   cfg = config.services.wallabag;
   appDir = pkgs.buildEnv {
@@ -10,7 +15,7 @@ let
     ignoreCollisions = true;
     checkCollisionContents = false;
     paths = [
-      (pkgs.runCommand "wallabag-parameters.yaml" {} ''
+      (pkgs.runCommand "wallabag-parameters.yaml" { } ''
         mkdir -p $out/config
         ln -sf ${parameters} $out/config/parameters.yml
         substitute ${cfg.package}/app/config/config.yml $out/config/config.yml \
@@ -37,7 +42,7 @@ in
       config = lib.mkOption {
         description = "Configuration for wallabag";
         type = yaml.type;
-        default = {};
+        default = { };
       };
       domain = lib.mkOption {
         description = "DNS domain of server";
@@ -60,9 +65,9 @@ in
         default = "/var/lib/wallabag";
       };
 
-      package = lib.mkPackageOption pkgs "wallabag" {};
+      package = lib.mkPackageOption pkgs "wallabag" { };
     };
-    
+
   };
 
   config = lib.mkIf config.services.wallabag.enable {
@@ -116,7 +121,7 @@ in
       phpPackage = pkgs.php;
       phpEnv = {
         WALLABAG_DATA = cfg.dataDir;
-        PATH = lib.makeBinPath [pkgs.php];
+        PATH = lib.makeBinPath [ pkgs.php ];
       };
       settings = {
         "listen.owner" = config.services.nginx.user;
@@ -130,7 +135,7 @@ in
         "php_admin_flag[log_errors]" = true;
         "catch_workers_output" = true;
       };
-       phpOptions = ''
+      phpOptions = ''
         extension=${pkgs.phpExtensions.pdo}/lib/php/extensions/pdo.so
         extension=${pkgs.phpExtensions.pdo_pgsql}/lib/php/extensions/pdo_pgsql.so
         extension=${pkgs.phpExtensions.session}/lib/php/extensions/session.so
@@ -151,23 +156,30 @@ in
       '';
     };
 
-    services.postgresqlBackup.databases = ["wallabag"];
+    services.postgresqlBackup.databases = [ "wallabag" ];
 
     services.postgresql = {
       enable = true;
-      ensureDatabases = ["wallabag"];
+      ensureDatabases = [ "wallabag" ];
       ensureUsers = [
-        {name = "wallabag"; ensureDBOwnership = true;}
+        {
+          name = "wallabag";
+          ensureDBOwnership = true;
+        }
       ];
     };
 
     systemd.services.wallabag-setup = {
       description = "Wallabag setup";
-      wantedBy = ["multi-user.target"];
-      before = ["phpfpm-wallabag.service"];
-      requiredBy = ["phpfpm-wallabag.service"];
-      after = ["postgresql.service"];
-      path = [pkgs.coreutils pkgs.php pkgs.phpPackages.composer];
+      wantedBy = [ "multi-user.target" ];
+      before = [ "phpfpm-wallabag.service" ];
+      requiredBy = [ "phpfpm-wallabag.service" ];
+      after = [ "postgresql.service" ];
+      path = [
+        pkgs.coreutils
+        pkgs.php
+        pkgs.phpPackages.composer
+      ];
       environment = {
         WALLABAG_DATA = cfg.dataDir;
       };
@@ -180,29 +192,27 @@ in
         PermissionsStartOnly = true;
       };
       script = ''
-      echo "Setting up wallabag files in $WALLABAG_DATA ..."
-      cd "${cfg.dataDir}"
+        echo "Setting up wallabag files in $WALLABAG_DATA ..."
+        cd "${cfg.dataDir}"
 
-      rm -rf var/cache/*
-      rm -f app
-      ln -sf ${appDir} app
-      ln -sf ${cfg.package}/composer.{json,lock} .
-      ln -sf ${cfg.package}/{src,translations,templates} .
+        rm -rf var/cache/*
+        rm -f app
+        ln -sf ${appDir} app
+        ln -sf ${cfg.package}/composer.{json,lock} .
+        ln -sf ${cfg.package}/{src,translations,templates} .
 
-      if [ ! -f installed ]; then
-        echo "Installing wallabag"
-        ${lib.getExe console} --env=prod wallabag:install --no-interaction
-        touch installed
-      else
-        ${lib.getExe console} --env=prod doctrine:migrations:migrate --no-interaction
-      fi
-      ${lib.getExe console} --env=prod cache:clear
-    '';
+        if [ ! -f installed ]; then
+          echo "Installing wallabag"
+          ${lib.getExe console} --env=prod wallabag:install --no-interaction
+          touch installed
+        else
+          ${lib.getExe console} --env=prod doctrine:migrations:migrate --no-interaction
+        fi
+        ${lib.getExe console} --env=prod cache:clear
+      '';
     };
 
-    systemd.tmpfiles.rules = [
-      "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group} - -"
-    ];
+    systemd.tmpfiles.rules = [ "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group} - -" ];
 
     services.rabbitmq.enable = true;
     users.users.${cfg.user} = {
@@ -210,7 +220,7 @@ in
       inherit (cfg) group;
     };
 
-    users.groups.${cfg.group} = {};
+    users.groups.${cfg.group} = { };
 
     services.wallabag.config = {
       database_driver = "pdo_pgsql";
@@ -232,17 +242,17 @@ in
       secret = "whatever, it's only available for some nodes in my network anyway";
       fosuser_registration = false;
       fosuser_confirmation = true;
-      rss_limit = 50 ;
+      rss_limit = 50;
       rabbitmq_host = "localhost";
-      rabbitmq_port = 5672 ;
-      rabbitmq_user = "guest" ;
-      rabbitmq_password = "guest" ;
-      redis_scheme = "tcp" ;
+      rabbitmq_port = 5672;
+      rabbitmq_user = "guest";
+      rabbitmq_password = "guest";
+      redis_scheme = "tcp";
       redis_host = "localhost";
-      redis_port = 6379 ;
-      redis_path = null ;
+      redis_port = 6379;
+      redis_path = null;
       redis_password = null;
-      sentry_dsn = null ;
+      sentry_dsn = null;
       from_email = "wallabag@${config.networking.domain}";
       twofactor_sender = "wallabag@${config.networking.domain}";
       fos_oauth_server_access_token_lifetime = 3600;

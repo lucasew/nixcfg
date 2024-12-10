@@ -164,9 +164,15 @@ let
             ${
               concatStringsSep "\n" (
                 attrValues (
-                  mapAttrs (k: v: if builtins.length v.listen > 0 then "" else ''
-                    <a class="btn btn-light" target="_blank" href="http://${k}">${k}</a>
-                  '') (config.services.nginx.virtualHosts)
+                  mapAttrs (
+                    k: v:
+                    if builtins.length v.listen > 0 then
+                      ""
+                    else
+                      ''
+                        <a class="btn btn-light" target="_blank" href="http://${k}">${k}</a>
+                      ''
+                  ) (config.services.nginx.virtualHosts)
                 )
               )
             }
@@ -179,9 +185,17 @@ let
             ${
               concatStringsSep "\n" (
                 attrValues (
-                  mapAttrs (k: v: if v.enableRaw then "" else ''
-                    <a class="btn btn-light" target="_blank" href="${if v.enableTLS then "https" else "http"}://${v.name}.${config.services.ts-proxy.network-domain}">${v.name}</a>
-                  '') (config.services.ts-proxy.hosts)
+                  mapAttrs (
+                    k: v:
+                    if v.enableRaw then
+                      ""
+                    else
+                      ''
+                        <a class="btn btn-light" target="_blank" href="${
+                          if v.enableTLS then "https" else "http"
+                        }://${v.name}.${config.services.ts-proxy.network-domain}">${v.name}</a>
+                      ''
+                  ) (config.services.ts-proxy.hosts)
                 )
               )
             }

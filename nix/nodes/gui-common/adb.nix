@@ -1,4 +1,10 @@
-{ pkgs, global, config, lib, ... }:
+{
+  pkgs,
+  global,
+  config,
+  lib,
+  ...
+}:
 let
   inherit (global) username;
 in

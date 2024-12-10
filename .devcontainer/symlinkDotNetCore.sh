@@ -17,23 +17,23 @@ cp -f "$splitSdksDir/3/LICENSE.txt" "$allSdksDir"
 cp -f "$splitSdksDir/3/ThirdPartyNotices.txt" "$allSdksDir"
 
 function createLinks() {
-    local sdkVersion="$1"
-    
-    installedDir="$splitSdksDir/$sdkVersion"
-    cd "$installedDir"
+	local sdkVersion="$1"
 
-    # Find folders with the name being a version number like 3.1.0 or 3.1.301
-    find . -maxdepth 3 -type d -regex '.*/[0-9]\.[0-9]\.[0-9]+' | while read subPath; do
-        # Trim beginning 2 characters from the line which currently looks like, for example, './sdk/2.2.402'
-        subPath="${subPath:2}"
-        
-        linkFrom="$allSdksDir/$subPath"
-        linkFromParentDir=$(dirname $linkFrom)
-        mkdir -p "$linkFromParentDir"
+	installedDir="$splitSdksDir/$sdkVersion"
+	cd "$installedDir"
 
-        linkTo="$installedDir/$subPath"
-        ln -sTf $linkTo $linkFrom
-    done
+	# Find folders with the name being a version number like 3.1.0 or 3.1.301
+	find . -maxdepth 3 -type d -regex '.*/[0-9]\.[0-9]\.[0-9]+' | while read subPath; do
+		# Trim beginning 2 characters from the line which currently looks like, for example, './sdk/2.2.402'
+		subPath="${subPath:2}"
+
+		linkFrom="$allSdksDir/$subPath"
+		linkFromParentDir=$(dirname $linkFrom)
+		mkdir -p "$linkFromParentDir"
+
+		linkTo="$installedDir/$subPath"
+		ln -sTf $linkTo $linkFrom
+	done
 }
 
 createLinks "3.1.301"

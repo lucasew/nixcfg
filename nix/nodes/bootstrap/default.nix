@@ -60,10 +60,12 @@ in
     PATH = "$PATH";
   };
   programs.bash = {
-    promptInit = builtins.concatStringsSep "\n" (map (builtins.readFile) [
-      ./bash_init.sh
-      ../../../bin/prelude/999-nix-ps1.sh
-    ]);
+    promptInit = builtins.concatStringsSep "\n" (
+      map (builtins.readFile) [
+        ./bash_init.sh
+        ../../../bin/prelude/999-nix-ps1.sh
+      ]
+    );
   };
   networking.domain = lib.mkDefault "lucao.net";
 }

@@ -1,4 +1,9 @@
-{lib, config, pkgs, ...}:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.services.ts-proxy;
@@ -17,7 +22,7 @@ in
         default = "/run/secrets/ts-proxy";
       };
 
-      package = lib.mkPackageOption pkgs "ts-proxy" {};
+      package = lib.mkPackageOption pkgs "ts-proxy" { };
 
       user = lib.mkOption {
         description = "Service user";
@@ -39,65 +44,68 @@ in
       hosts = lib.mkOption {
         description = "Services to expose to ts-proxy";
 
-        type = lib.types.attrsOf (lib.types.submodule ({ name, ...}: {
-          options = {
-            enableFunnel = lib.mkEnableOption "enable funnel for this endpoint";
-            enableTLS = lib.mkEnableOption "enable TLS for this endpoint";
-            enableRaw = lib.mkEnableOption "treat this endpoint as a raw TCP socket";
+        type = lib.types.attrsOf (
+          lib.types.submodule (
+            { name, ... }:
+            {
+              options = {
+                enableFunnel = lib.mkEnableOption "enable funnel for this endpoint";
+                enableTLS = lib.mkEnableOption "enable TLS for this endpoint";
+                enableRaw = lib.mkEnableOption "treat this endpoint as a raw TCP socket";
 
-            network = lib.mkOption {
-              description = "First parameter of net.Dial";
-              type = lib.types.str;
-              default = "";
-            };
+                network = lib.mkOption {
+                  description = "First parameter of net.Dial";
+                  type = lib.types.str;
+                  default = "";
+                };
 
-            address = lib.mkOption {
-              description = "Second parameter of net.Dial";
-              type = lib.types.str;
-            };
+                address = lib.mkOption {
+                  description = "Second parameter of net.Dial";
+                  type = lib.types.str;
+                };
 
-            listen = lib.mkOption {
-              description = "Which port to listen in the vhost";
-              type = lib.types.port;
-              default = 0;
-            };
+                listen = lib.mkOption {
+                  description = "Which port to listen in the vhost";
+                  type = lib.types.port;
+                  default = 0;
+                };
 
-            name = lib.mkOption {
-              description = "Service name";
-              type = lib.types.str;
-              default = name;
-            };
+                name = lib.mkOption {
+                  description = "Service name";
+                  type = lib.types.str;
+                  default = name;
+                };
 
-            unitName = lib.mkOption {
-              description = "Systemd unit of the proxy";
-              type = lib.types.str;
-              default = "ts-proxy-${name}";
-            };
-          };
-          
-        }));
+                unitName = lib.mkOption {
+                  description = "Systemd unit of the proxy";
+                  type = lib.types.str;
+                  default = "ts-proxy-${name}";
+                };
+              };
+
+            }
+          )
+        );
       };
     };
   };
 
   config = {
     sops.secrets.ts-proxy = {
-        sopsFile = ../../../../secrets/ts-proxy.env;
-        owner = cfg.user;
-        group = cfg.group;
-        format = "dotenv";
-      };
+      sopsFile = ../../../../secrets/ts-proxy.env;
+      owner = cfg.user;
+      group = cfg.group;
+      format = "dotenv";
+    };
 
-      users.users.${cfg.user} = {
-        isSystemUser = true;
-        inherit (cfg) group;
-      };
+    users.users.${cfg.user} = {
+      isSystemUser = true;
+      inherit (cfg) group;
+    };
 
-      users.groups.${cfg.group} = {};
+    users.groups.${cfg.group} = { };
 
-      systemd.tmpfiles.rules = [
-        "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group} - -"
-      ];
+    systemd.tmpfiles.rules = [ "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group} - -" ];
 
     systemd.slices.ts-proxys.sliceConfig = {
       CPUQuota = "10%";
@@ -105,36 +113,58 @@ in
       MemoryMax = "384M";
     };
 
-    systemd.services = lib.mkMerge (builtins.attrValues (builtins.mapAttrs (k: host: {      
-      ${host.unitName} = {
-        
-        description = "ts-proxy service for ${host.name}";
-        wantedBy = ["multi-user.target"];
+    systemd.services = lib.mkMerge (
+      builtins.attrValues (
+        builtins.mapAttrs (k: host: {
+          ${host.unitName} = {
 
-        restartIfChanged = true;
+            description = "ts-proxy service for ${host.name}";
+            wantedBy = [ "multi-user.target" ];
 
-        serviceConfig = {
-          Slice = "ts-proxy.slice";
-          User = cfg.user;
-          Group = cfg.group;
-          Restart = "always";
-          RestartSec = "10s";
-          EnvironmentFile = cfg.environmentFile;
-        };
+            restartIfChanged = true;
 
-        script = ''
-          ${lib.getExe' pkgs.ts-proxy "ts-proxyd"} ${lib.escapeShellArgs ([]
-            ++ (["-address" host.address])
-            ++ (lib.optional host.enableFunnel "-f")
-            ++ (lib.optionals (host.listen != 0) ["-listen" ":${toString host.listen}"])
-            ++ (["-n" host.name])
-            ++ (lib.optionals (host.network != "") ["-net" host.network])
-            ++ (lib.optional host.enableRaw "-raw")
-            ++ (["-s" "${cfg.dataDir}/tsproxy-${host.name}"])
-            ++ (lib.optional host.enableTLS "-t")
-          )}
-        '';
-      };
-    }) cfg.hosts));
+            serviceConfig = {
+              Slice = "ts-proxy.slice";
+              User = cfg.user;
+              Group = cfg.group;
+              Restart = "always";
+              RestartSec = "10s";
+              EnvironmentFile = cfg.environmentFile;
+            };
+
+            script = ''
+              ${lib.getExe' pkgs.ts-proxy "ts-proxyd"} ${
+                lib.escapeShellArgs (
+                  [ ]
+                  ++ ([
+                    "-address"
+                    host.address
+                  ])
+                  ++ (lib.optional host.enableFunnel "-f")
+                  ++ (lib.optionals (host.listen != 0) [
+                    "-listen"
+                    ":${toString host.listen}"
+                  ])
+                  ++ ([
+                    "-n"
+                    host.name
+                  ])
+                  ++ (lib.optionals (host.network != "") [
+                    "-net"
+                    host.network
+                  ])
+                  ++ (lib.optional host.enableRaw "-raw")
+                  ++ ([
+                    "-s"
+                    "${cfg.dataDir}/tsproxy-${host.name}"
+                  ])
+                  ++ (lib.optional host.enableTLS "-t")
+                )
+              }
+            '';
+          };
+        }) cfg.hosts
+      )
+    );
   };
 }
