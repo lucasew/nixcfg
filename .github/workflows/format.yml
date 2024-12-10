@@ -34,7 +34,7 @@ jobs:
       - name: Format nix
         run: nix fmt
       - name: Format bash
-        run: nix run .#shfmt -- . -w
+        run: nix run .#shfmt -- -w .
       - name: Format python
         run: nix run .#ruff -- format
       - name: Send PR
