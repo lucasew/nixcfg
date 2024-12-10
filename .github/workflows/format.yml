@@ -31,8 +31,12 @@ jobs:
             experimental-features = nix-command flakes
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
             build-dir = /nix/build
-      - name: Format
+      - name: Format nix
         run: nix fmt
+      - name: Format bash
+        run: nix run .#shfmt -- .
+      - name: Format python
+        run: nix run .#ruff -- format
       - name: Send PR
         uses: peter-evans/create-pull-request@v4
         with:
