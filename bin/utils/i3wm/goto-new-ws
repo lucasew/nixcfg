@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-wsfile="/tmp/_i3_last_ws"
+wsfile="/tmp/.i3_last_ws"
 
 last_ws=10
 if [ -f $wsfile ]; then
