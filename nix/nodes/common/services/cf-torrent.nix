@@ -45,6 +45,7 @@ in
       cf-torrent = {
         address = "127.0.0.1:${toString cfg.port}";
         enableTLS = true;
+        proxies = [ "cf-torrent.service" ];
       };
     };
 

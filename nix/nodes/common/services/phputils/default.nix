@@ -85,6 +85,7 @@ in
       enableTLS = true;
       enableFunnel = true;
       network = "unix";
+      proxies = [ "phputils.socket" ];
       address = cfg.socket;
     };
   };

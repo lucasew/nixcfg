@@ -57,6 +57,7 @@ in
       enableRaw = true;
       enableFunnel = true;
       address = "127.0.0.1:${toString port}";
+      proxies = [ "minecraft-server.service" ];
       listen = 10000;
     };
   };

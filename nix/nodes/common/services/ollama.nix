@@ -16,6 +16,7 @@ in
       ollama = {
         # enableTLS = true;
         address = "127.0.0.1:${toString config.networking.ports.ollama.port}";
+        proxies = [ "ollama.service" ];
       };
     };
 

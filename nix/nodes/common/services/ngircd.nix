@@ -124,6 +124,7 @@ in
       enableTLS = true;
       enableRaw = true;
       address = "127.0.0.1:${toString config.networking.ports.ircd.port}";
+      proxies = [ "ngircd.service" ];
       listen = 6697;
     };
   };

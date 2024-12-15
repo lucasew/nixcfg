@@ -76,6 +76,12 @@ in
                   default = name;
                 };
 
+                proxies = lib.mkOption {
+                  description = "Which units this ts-proxy instance is proxying.";
+                  type = lib.types.listOf lib.types.str;
+                  default = [];
+                };
+
                 unitName = lib.mkOption {
                   description = "Systemd unit of the proxy";
                   type = lib.types.str;
@@ -119,7 +125,11 @@ in
           ${host.unitName} = {
 
             description = "ts-proxy service for ${host.name}";
-            wantedBy = [ "multi-user.target" ];
+            wantedBy = lib.mkIf (host.proxies == []) [ "multi-user.target" ];
+
+            after = host.proxies;
+            partOf = host.proxies;
+            wants = host.proxies;
 
             restartIfChanged = true;
 
