@@ -12,11 +12,13 @@ in
 {
   config = lib.mkIf config.services.minecraft-server.enable {
     networking.ports.minecraft.enable = true;
+    systemd.services.minecraft-server = {
+      wantedBy = lib.mkForce [ ]; # don't start on boot
+    };
 
     systemd.services.minecraft-server-backup = {
       description = "Minecraft server backup";
       path = [ pkgs.zip ];
-      wantedBy = lib.mkForce [ ]; # don't start on boot
       script = ''
         function rcon {
           if [[ -p /run/minecraft-server.stdin ]]; then
