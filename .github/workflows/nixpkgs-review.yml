@@ -105,6 +105,8 @@ jobs:
           ref: ${{ github.event.inputs.branch }}
           fetch-depth: 0
       - uses: DeterminateSystems/nix-installer-action@v16
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Run review
         env:
@@ -139,6 +141,8 @@ jobs:
           ref: ${{ github.event.inputs.branch }}
           fetch-depth: 0
       - uses: DeterminateSystems/nix-installer-action@v16
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Run review
         env:
