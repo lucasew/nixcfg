@@ -143,11 +143,6 @@ jobs:
       - name: Fetch nixpkgs from git if not
         if: steps.git-nixpkgs.outputs.cache-hit != 'true'
         run: git clone https://github.com/NixOS/nixpkgs nixpkgs
-      - uses: actions/checkout@v4
-        with:
-          path: nixpkgs
-          ref: ${{ github.event.inputs.branch }}
-          fetch-depth: 0
       - uses: DeterminateSystems/nix-installer-action@v16
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
