@@ -44,7 +44,7 @@ concurrency:
 
 jobs:
   build-x86_64-linux:
-    name: 'nixpkgs-review #${{ github.event.inputs.pr }} on x86_64-linux'
+    name: '#${{ github.event.inputs.pr }} on x86_64-linux'
     if: ${{ github.event.inputs.x86_64-linux == 'true' }}
     runs-on: ubuntu-latest
 
@@ -57,15 +57,16 @@ jobs:
         run: |
           sudo mkdir -p /nix/build
           df -h
-      - uses: actions/cache@v4
+      - name: Try to fetch nixpkgs clone from cache
+        id: git-nixpkgs
+        uses: actions/cache@v4
         with:
-          path: nixpkgs
-          key: git-folder
-      - uses: actions/checkout@v4
-        with:
-          path: nixpkgs
-          ref: ${{ github.event.inputs.branch }}
-          fetch-depth: 0
+          path: |
+            nixpkgs
+          key: git-nixpkgs
+      - name: Fetch nixpkgs from git if not
+        if: steps.git-nixpkgs.outputs.cache-hit != 'true'
+        run: git clone https://github.com/NixOS/nixpkgs nixpkgs
       - uses: DeterminateSystems/nix-installer-action@v16
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -74,7 +75,7 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Run review
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_NIXPKGS_REVIEW }}
           PR: ${{ github.event.inputs.pr }}
           EXTRA_ARGS: ${{ github.event.inputs.extra-args }}
         run: |
@@ -90,27 +91,28 @@ jobs:
           include-hidden-files: true
 
   build-aarch64-darwin:
-    name: 'nixpkgs-review #${{ github.event.inputs.pr }} on aarch64-darwin'
+    name: '#${{ github.event.inputs.pr }} on aarch64-darwin'
     if: ${{ github.event.inputs.aarch64-darwin == 'true' }}
     runs-on: macos-latest
 
     steps:
-      - uses: actions/cache@v4
+      - name: Try to fetch nixpkgs clone from cache
+        id: git-nixpkgs
+        uses: actions/cache@v4
         with:
-          path: nixpkgs
-          key: git-folder
-      - uses: actions/checkout@v4
-        with:
-          path: nixpkgs
-          ref: ${{ github.event.inputs.branch }}
-          fetch-depth: 0
+          path: |
+            nixpkgs
+          key: git-nixpkgs
+      - name: Fetch nixpkgs from git if not
+        if: steps.git-nixpkgs.outputs.cache-hit != 'true'
+        run: git clone https://github.com/NixOS/nixpkgs nixpkgs
       - uses: DeterminateSystems/nix-installer-action@v16
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Run review
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_NIXPKGS_REVIEW }}
           PR: ${{ github.event.inputs.pr }}
           EXTRA_ARGS: ${{ github.event.inputs.extra-args }}
         run: |
@@ -126,15 +128,21 @@ jobs:
           include-hidden-files: true
 
   build-x86_64-darwin:
-    name: 'nixpkgs-review #${{ github.event.inputs.pr }} on x86_64-darwin'
+    name: '#${{ github.event.inputs.pr }} on x86_64-darwin'
     if: ${{ github.event.inputs.x86_64-darwin == 'true' }}
     runs-on: macos-13
 
     steps:
-      - uses: actions/cache@v4
+      - name: Try to fetch nixpkgs clone from cache
+        id: git-nixpkgs
+        uses: actions/cache@v4
         with:
-          path: nixpkgs
-          key: git-folder
+          path: |
+            nixpkgs
+          key: git-nixpkgs
+      - name: Fetch nixpkgs from git if not
+        if: steps.git-nixpkgs.outputs.cache-hit != 'true'
+        run: git clone https://github.com/NixOS/nixpkgs nixpkgs
       - uses: actions/checkout@v4
         with:
           path: nixpkgs
@@ -146,7 +154,7 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Run review
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_NIXPKGS_REVIEW }}
           PR: ${{ github.event.inputs.pr }}
           EXTRA_ARGS: ${{ github.event.inputs.extra-args }}
         run: |
