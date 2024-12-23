@@ -8,7 +8,7 @@
     ./fusionsolar
     ./magnetico.nix
     ./miniflux.nix
-    ./libreddit.nix
+    ./redlib.nix
     ./transmission.nix
     ./telegram_sendmail.nix
     ./p2k.nix

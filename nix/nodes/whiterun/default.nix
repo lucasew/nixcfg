@@ -153,7 +153,7 @@ in
 
   boot.plymouth.enable = true;
 
-  services.libreddit.enable = true;
+  services.redlib.enable = true;
 
   # services.boinc.enable = true;
 
