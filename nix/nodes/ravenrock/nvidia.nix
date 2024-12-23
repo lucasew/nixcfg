@@ -16,8 +16,6 @@ in
     # nvidiaPersistenced = true;
   };
 
-  virtualisation.docker.enableNvidia = true;
-
   hardware.graphics.enable = true;
 
   services.xserver.videoDrivers = [ "nvidia" ];

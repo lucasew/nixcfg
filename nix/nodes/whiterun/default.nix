@@ -169,8 +169,6 @@ in
   virtualisation.oci-containers.backend = "docker";
   virtualisation.containerd.enable = true;
 
-  virtualisation.docker.enableNvidia = true;
-
   services.kubo.enable = true;
 
   services.telegram-sendmail.enable = true;

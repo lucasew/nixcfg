@@ -7,7 +7,7 @@
 {
   imports = [ "${self.inputs.nixos-hardware}/common/gpu/nvidia" ];
 
-  # services.xserver.videoDrivers = [ "modesetting" ]; # usar só AMD pra dar vídeo
+  services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia = {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
@@ -16,8 +16,12 @@
     # nvidiaPersistenced = true;
   };
 
+  hardware.nvidia-container-toolkit.enable =
+     config.virtualisation.docker.enable
+  || config.virtualisation.podman.enable;
+
   # boot.initrd.kernelModules = [ "nvidia" ];
   # boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
 
-  environment.systemPackages = with pkgs; [ nvtopPackages.full ];
+  environment.systemPackages = [ pkgs.nvtopPackages.full ];
 }
