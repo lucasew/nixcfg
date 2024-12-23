@@ -51,7 +51,7 @@
       vSync = true;
     };
     environment.systemPackages = with pkgs; [
-      gnome.eog # eye of gnome
+      eog # eye of gnome
       xfce.ristretto
       pcmanfm
     ];

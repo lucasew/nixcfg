@@ -145,7 +145,7 @@
 
     environment.systemPackages = with pkgs; [
       swaylock
-      gnome.eog # eye of gnome
+      eog # eye of gnome
       xfce.ristretto
       pcmanfm
       playerctl

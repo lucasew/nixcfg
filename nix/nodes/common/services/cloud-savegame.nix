@@ -100,7 +100,7 @@ in
 
       default = {
         general.divider = ",";
-        search.paths = "~";
+        search.paths = ["~"];
         flatout-2.installdir = [ "~/.local/share/Steam/steamapps/common/FlatOut2" ];
       };
     };
@@ -109,7 +109,7 @@ in
   config = mkIf cfg.enable {
     services.cloud-savegame.settings = {
       general.divider = ",";
-      search.paths = "~";
+      search.paths = ["~"];
       flatout-2.installdir = [ "~/.local/share/Steam/steamapps/common/FlatOut2" ];
     };
 

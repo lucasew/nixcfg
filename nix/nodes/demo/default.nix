@@ -16,7 +16,7 @@
   # nixpkgs.config = {
   #   allowUnfree = true;
   # };
-  hardware.opengl.enable = true;
+  hardware.graphics.enable = true;
   boot.cleanTmpDir = true;
   i18n.defaultLocale = "pt_BR.UTF-8";
   time.timeZone = "America/Sao_Paulo";

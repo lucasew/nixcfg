@@ -7,7 +7,7 @@
 
 {
   config = lib.mkIf config.services.xserver.desktopManager.kodi.enable {
-    hardware.opengl.enable = true;
+    hardware.graphics.enable = true;
 
     services = {
       displayManager = {

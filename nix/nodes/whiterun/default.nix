@@ -169,6 +169,8 @@ in
   virtualisation.oci-containers.backend = "docker";
   virtualisation.containerd.enable = true;
 
+  virtualisation.docker.enableNvidia = true;
+
   services.kubo.enable = true;
 
   services.telegram-sendmail.enable = true;
@@ -209,11 +211,9 @@ in
       };
     };
   };
-  hardware.opengl.driSupport = true;
-  hardware.opengl.extraPackages = with pkgs; [
+  hardware.graphics.extraPackages = with pkgs; [
     rocmPackages.rocm-runtime
-    rocm-opencl-icd
-    rocm-opencl-runtime
+    rocmPackages.clr
   ];
   hardware.opengl.extraPackages32 = with pkgs; [ driversi686Linux.amdvlk ];
 

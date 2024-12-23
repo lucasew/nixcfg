@@ -81,12 +81,7 @@ in
 
   boot.loader.grub.memtest86.enable = true;
 
-  virtualisation.docker = {
-    enable = lib.mkDefault true;
-    # dockerSocket.enable = true;
-    # dockerCompat = true;
-    enableNvidia = true;
-  };
+  virtualisation.docker.enable = lib.mkDefault true;
 
   environment = {
     systemPackages = with pkgs; [

@@ -26,7 +26,7 @@ in
       environmentVariables = {
         OLLAMA_ORIGINS = "*";
       };
-      listenAddress = "0.0.0.0:${toString config.networking.ports.ollama.port}";
+      inherit (config.networking.ports.ollama) port;
     };
 
     networking.ports.ollama.enable = true;

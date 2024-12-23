@@ -73,13 +73,7 @@ in
     };
   };
 
-  hardware = {
-    opengl = {
-      enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
-    };
-  };
+  hardware.graphics.enable = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = lib.mkDefault true;
