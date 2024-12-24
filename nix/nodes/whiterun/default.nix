@@ -85,7 +85,7 @@ in
   services.python-microservices.services.stt-ptbr = {
     script = builtins.readFile ./python-microservice-stt-ptbr.py;
     python = pkgs.python3.withPackages (
-      p: with pkgs.python3PackagesBin; [
+      p: with p; [
         transformers
         torchaudio
         pytorch
