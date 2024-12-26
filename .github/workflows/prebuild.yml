@@ -48,7 +48,7 @@ jobs:
           authToken: '${{ secrets.CACHIX_TOKEN }}'
       - run: |
           { while true; do df -h; uptime; sleep 60; done } &
-          nix build .#release --keep-going
+          nix build .#release --keep-going --accept-flake-config
       - uses: actions/upload-artifact@v4
         with:
           name: build-logs
