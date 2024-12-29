@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+PR="$1"; shift
+
+export JOB_LABEL="review #$PR $*"
+
+  # -L "$JOB_LABEL" \
+ssh whiterun \
+  ts \
+  -m \
+  systemd-run --user --working-directory ~/nixpkgs -P \
+  sdw nix review --really pr "$PR" \
+  --no-shell \
+  --post-result \
+  --eval local \
+  "$@"
