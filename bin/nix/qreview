@@ -12,5 +12,6 @@ ssh whiterun \
   sdw nix review --really pr "$PR" \
   --no-shell \
   --post-result \
+  --build-graph nix \
   --eval local \
   "$@"
