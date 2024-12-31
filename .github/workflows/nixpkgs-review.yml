@@ -43,8 +43,55 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  pre-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show summary
+        env:
+          WORKFLOW_INFORMATION: |
+            # [nixpkgs-reviewd](${{github.server_url}}/${{ github.repository }}) workflow started
+
+            - **Extra args**: `${{github.event.inputs.extra-args}}`
+            - **Free space**: ${{github.event.inputs.free-space}}
+            - **PR link**: https://github.com/NixOS/nixpkgs/pull/${{ github.event.inputs.pr }}
+
+            **TARGETS**
+            - **x86_64-linux**: ${{github.event.inputs.x86_64-linux}}
+            - **x86_64-darwin**: ${{github.event.inputs.x86_64-darwin}}
+            - **aarch64-darwin**: ${{github.event.inputs.aarch64-darwin}}
+        run:
+          echo "$WORKFLOW_INFORMATION" >> $GITHUB_STEP_SUMMARY
+  post-run:
+    runs-on: ubuntu-latest
+    needs:
+      - build-x86_64-linux
+      - build-aarch64-darwin
+      - build-x86_64-darwin
+    if: ${{ always() }}
+    steps:
+      - name: Fetch reports from runners
+        uses: actions/download-artifact@v4
+        with:
+          path: reports
+          pattern: report-*
+      - name: Join reports
+        env:
+          COMMENT: |
+            # [nixpkgs-reviewd](${{github.server_url}}/${{ github.repository }}) workflow finished
+
+            **Status and logs**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          mkdir -p reports # create if not exists so find doesn't fail
+          find reports -type f
+
+          echo "$COMMENT" >> $GITHUB_STEP_SUMMARY
+          for item in $(find reports -name report.md); do
+            echo "" >> $GITHUB_STEP_SUMMARY
+            cat "$item" >> $GITHUB_STEP_SUMMARY
+          done
+
   build-x86_64-linux:
-    name: '#${{ github.event.inputs.pr }} on x86_64-linux'
+    name: 'x86_64-linux'
     if: ${{ github.event.inputs.x86_64-linux == 'true' }}
     runs-on: ubuntu-latest
 
@@ -83,15 +130,28 @@ jobs:
           git config --global user.email "user@example.com"
           git config --global user.name "user"
           cd $GITHUB_WORKSPACE/nixpkgs
-          nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --post-result --no-shell $EXTRA_ARGS
+          nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell --eval local $EXTRA_ARGS
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: build-logs-x86_64-linux
-          path: /nix/var/log/nix/drvs
+          name: logs-x86_64-linux
+          path: |
+            ~/.cache/nixpkgs-review/*/logs
+            /nix/var/log/nix/drvs
           include-hidden-files: true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-x86_64-linux
+          path: ~/.cache/nixpkgs-review/*/report.md
+      - name: Result in summary
+        if: always()
+        env:
+          PR: ${{ github.event.inputs.pr }}
+        run: cat ~/.cache/nixpkgs-review/pr-$PR/report.md >> $GITHUB_STEP_SUMMARY
 
   build-aarch64-darwin:
-    name: '#${{ github.event.inputs.pr }} on aarch64-darwin'
+    name: 'aarch64-darwin'
     if: ${{ github.event.inputs.aarch64-darwin == 'true' }}
     runs-on: macos-latest
 
@@ -120,15 +180,28 @@ jobs:
           git config --global user.email "user@example.com"
           git config --global user.name "user"
           cd $GITHUB_WORKSPACE/nixpkgs
-          nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --post-result --no-shell $EXTRA_ARGS
+          nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell --eval local $EXTRA_ARGS
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: build-logs-aarch64-darwin
-          path: /nix/var/log/nix/drvs
+          name: logs-aarch64-darwin
+          path: |
+            /nix/var/log/nix/drvs
+            ~/.cache/nixpkgs-review/*/logs
           include-hidden-files: true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-aarch64-darwin
+          path: ~/.cache/nixpkgs-review/*/report.md
+      - name: Result in summary
+        if: always()
+        env:
+          PR: ${{ github.event.inputs.pr }}
+        run: cat ~/.cache/nixpkgs-review/pr-$PR/report.md >> $GITHUB_STEP_SUMMARY
 
   build-x86_64-darwin:
-    name: '#${{ github.event.inputs.pr }} on x86_64-darwin'
+    name: 'x86_64-darwin'
     if: ${{ github.event.inputs.x86_64-darwin == 'true' }}
     runs-on: macos-13
 
@@ -157,9 +230,22 @@ jobs:
           git config --global user.email "user@example.com"
           git config --global user.name "user"
           cd $GITHUB_WORKSPACE/nixpkgs
-          nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --post-result --no-shell $EXTRA_ARGS
+          nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell --eval local $EXTRA_ARGS
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: build-logs-x86_64-darwin
-          path: /nix/var/log/nix/drvs
+          name: logs-x86_64-darwin
+          path: |
+            /nix/var/log/nix/drvs
+            ~/.cache/nixpkgs-review/*/logs
           include-hidden-files: true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-x86_64-darwin
+          path: ~/.cache/nixpkgs-review/*/report.md
+      - name: Result in summary
+        if: always()
+        env:
+          PR: ${{ github.event.inputs.pr }}
+        run: cat ~/.cache/nixpkgs-review/pr-$PR/report.md >> $GITHUB_STEP_SUMMARY
