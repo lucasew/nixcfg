@@ -124,6 +124,7 @@ jobs:
         env:
           PR: ${{ github.event.inputs.pr }}
           EXTRA_ARGS: ${{ github.event.inputs.extra-args }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           { while true; do df -h; uptime; sleep 60; done } &
           git config --global user.email "user@example.com"
@@ -173,6 +174,7 @@ jobs:
         env:
           PR: ${{ github.event.inputs.pr }}
           EXTRA_ARGS: ${{ github.event.inputs.extra-args }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           { while true; do df -h; uptime; sleep 60; done } &
           git config --global user.email "user@example.com"
@@ -222,6 +224,7 @@ jobs:
         env:
           PR: ${{ github.event.inputs.pr }}
           EXTRA_ARGS: ${{ github.event.inputs.extra-args }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           { while true; do df -h; uptime; sleep 60; done } &
           git config --global user.email "user@example.com"
