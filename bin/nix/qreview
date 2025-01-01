@@ -8,7 +8,7 @@ export JOB_LABEL="review #$PR $*"
 ssh whiterun \
   ts \
   -m \
-  systemd-run --user --working-directory ~/nixpkgs -P --collect \
+  systemd-run --user --working-directory ~/nixpkgs -P --collect -p KillSignal=SIGINT -p TimeoutStopSec=infinity \
   sdw nix review --really pr "$PR" \
   --no-shell \
   --post-result \
