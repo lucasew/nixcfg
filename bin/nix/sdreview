@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+
+# run nixpkgs-review for a PR in a systemd unit
 
 PR="$1"; shift
 
@@ -12,9 +15,9 @@ systemd-run \
   \
   sdw nix review --really \
   \
-  pr "$PR" \
+  pr \
+  "$PR" "$@" \
   --no-shell \
   --post-result \
   --build-graph nix \
-  --eval local \
-  "$PR" "$@"
+  --eval local

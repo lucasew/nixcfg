@@ -4,8 +4,8 @@ PR="$1"; shift
 export JOB_LABEL="review #$PR $*"
 
   # -L "$JOB_LABEL" \
+  # -L "$JOB_LABEL" \
 ssh whiterun \
   ts \
   -m \
-  -L "$JOB_LABEL" \
   sd nix sdreview "$PR" "$@"

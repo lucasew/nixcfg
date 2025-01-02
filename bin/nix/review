@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
+# nixpkgs-review wrapper
+
 set -euo pipefail
 
-sync
 nix run nixpkgs#nixpkgs-review -- "$@"
-sync
