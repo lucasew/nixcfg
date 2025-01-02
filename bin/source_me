@@ -1,8 +1,18 @@
 #!/usr/bin/env bash
 
 # basically starts the modular bashrc
+export SD_ROOT
+SD_ROOT="$(dirname "$(realpath "$BASH_SOURCE")")"
 
-export SD_ROOT="$(dirname "$(realpath "$BASH_SOURCE")")"
+if [[ "$SD_ROOT" =~ "/nix" ]]; then
+	if [[ -d ~/.dotfiles/bin ]]; then
+		SD_ROOT=~/.dotfiles/bin
+	elif [[ -d /etc/.dotfiles/bin ]]; then
+		SD_ROOT=/etc/.dotfiles/bin
+	fi
+fi
+
+
 
 # i=0
 for script in $(ls $SD_ROOT/prelude | sort); do
