@@ -8,4 +8,4 @@ export JOB_LABEL="review #$PR $*"
 ssh whiterun \
   ts \
   -m \
-  sd nix sdreview "$PR" "$@"
+  sdw nix sdreview "$PR" "$@"
