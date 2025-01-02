@@ -5,3 +5,4 @@
 set -euo pipefail
 
 nix run nixpkgs#nixpkgs-review -- "$@"
+sync
