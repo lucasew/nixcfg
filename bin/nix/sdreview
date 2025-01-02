@@ -12,6 +12,7 @@ systemd-run \
   --collect \
   -p KillSignal=SIGINT \
   -p TimeoutStopSec=infinity \
+  -E POST_REVIEW_SLEEP=60 \
   \
   sdw nix review --really \
   \
