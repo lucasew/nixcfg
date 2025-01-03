@@ -20,5 +20,4 @@ systemd-run \
   "$PR" "$@" \
   --no-shell \
   --post-result \
-  --build-graph nix \
-  --eval local
+  --build-graph nix
