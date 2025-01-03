@@ -15,13 +15,13 @@ in
   imports = [
     ./hardware-configuration.nix
     ../gui-common
+    ./monitoring
 
     "${self.inputs.nixos-hardware}/common/cpu/amd/pstate.nix"
     "${self.inputs.nixos-hardware}/common/gpu/amd"
     "${self.inputs.nixos-hardware}/common/pc/ssd"
     ./nvidia.nix
 
-    ./dashboards.nix
     ./dlna.nix
     ./nextcloud.nix
     ./sshfs.nix
