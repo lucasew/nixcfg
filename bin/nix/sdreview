@@ -6,7 +6,7 @@ PR="$1"; shift
 
 systemd-run \
   --user \
-  --working-directory /media/ssd1tb/nixpkgs \
+  --working-directory ~/nixpkgs \
   -P \
   --unit "nixpkgs-review-$PR" \
   --collect \
