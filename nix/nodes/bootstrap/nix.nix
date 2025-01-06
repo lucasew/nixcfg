@@ -17,8 +17,8 @@ in
     };
 
     settings = {
-      min-free = lib.mkDefault (5 * 1024 * 1024 * 1024);
-      max-free = lib.mkDefault (100 * 1024 * 1024 * 1024);
+      min-free = lib.mkDefault (5 * 1024 * 1024 * 1024); # 5GB
+      max-free = lib.mkDefault (100 * 1024 * 1024 * 1024); # 100GB
       trusted-users = [
         username
         "@wheel"
