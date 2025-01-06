@@ -5,7 +5,7 @@ export JOB_LABEL="review #$PR $*"
 
   # -L "$JOB_LABEL" \
   # -L "$JOB_LABEL" \
-ssh whiterun \
+ssh lucasew@whiterun \
   ts \
   -m \
   sdw nix sdreview "$PR" "$@"
