@@ -7,7 +7,6 @@
     tmp.cleanOnBoot = true;
   };
   services = {
-    irqbalance.enable = true;
     ananicy = {
       enable = true;
       package = pkgs.ananicy-cpp;

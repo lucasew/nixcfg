@@ -87,7 +87,6 @@ in
     #   enable = true;
     #   resolveLocalQueries = true;
     # };
-    irqbalance.enable = true;
     # php-utils.enable = true;
     # vaultwarden.enable = true;
     # postgresql = {
