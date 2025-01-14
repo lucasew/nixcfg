@@ -16,6 +16,7 @@ in
     ./atuin.nix
     ./dlna.nix
     ./helix
+    ./ghostty.nix
     ./espanso.nix
     ./dconf.nix
     ./borderless-browser.nix
@@ -24,6 +25,8 @@ in
     ./qutebrowser.nix
     ./zen-browser.nix
   ];
+
+  programs.ghostty.enable = true;
 
   programs.atuin.enable = true;
 
