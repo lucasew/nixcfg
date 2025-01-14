@@ -24,7 +24,6 @@ in
     environment.systemPackages = [
       lockerSpace
       custom_rofi
-      pkgs.kitty
     ];
     services.xserver.displayManager.lightdm = {
       greeters.enso = {
@@ -186,7 +185,7 @@ in
         bindsym $mod+Left focus left
         bindsym $mod+Right focus right
         bindsym $mod+a focus parent
-        bindsym $mod+Return exec kitty
+        bindsym $mod+Return exec sdw shim terminal
 
         bindsym $mod+Shift+Down move down
         bindsym $mod+Shift+Left move left

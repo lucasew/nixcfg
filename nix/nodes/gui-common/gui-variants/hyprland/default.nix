@@ -58,7 +58,6 @@
         swaylock
         config.programs.hyprland.package
         playerctl
-        kitty
       ];
       restartIfChanged = true;
       script =
