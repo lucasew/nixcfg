@@ -43,11 +43,6 @@
     wireless.enable = false;
   };
 
-  services.displayManager.autoLogin = {
-    enable = true;
-    user = "lucasew";
-  };
-
   system.stateVersion = "22.05"; # Did you read the comment?
 
   virtualisation.virtualbox = {

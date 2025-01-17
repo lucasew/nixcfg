@@ -25,12 +25,8 @@ in
       lockerSpace
       custom_rofi
     ];
-    services.xserver.displayManager.lightdm = {
-      greeters.enso = {
-        enable = true;
-        blur = true;
-      };
-    };
+
+    services.xserver.displayManager.lightdm.enable = true;
 
     services.xserver.windowManager.i3 = {
       configFile = "/etc/i3config";

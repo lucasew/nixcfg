@@ -14,6 +14,11 @@ let
   '';
 in
 {
+  services.displayManager.autoLogin = {
+    enable = lib.mkDefault true;
+    user = lib.mkDefault username;
+  };
+
   users = {
     mutableUsers = true;
     users = {

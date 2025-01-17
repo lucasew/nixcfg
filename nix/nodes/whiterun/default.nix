@@ -159,11 +159,6 @@ in
 
   # services.boinc.enable = true;
 
-  services.displayManager.autoLogin = {
-    enable = true;
-    user = "lucasew";
-  };
-
   services.flatpak.enable = true;
 
   networking.hostId = "97e3b5a7";

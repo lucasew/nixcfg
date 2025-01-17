@@ -14,6 +14,8 @@
 
   config = lib.mkIf config.programs.hyprland.enable {
 
+    services.xserver.displayManager.lightdm.enable = true;
+
     security.polkit.agent.enable = true;
 
     programs.hyprland = {

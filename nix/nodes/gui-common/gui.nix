@@ -2,9 +2,6 @@
 {
   services.xserver = {
     desktopManager.xterm.enable = false;
-    displayManager.lightdm = {
-      background = pkgs.custom.wallpaper;
-    };
   };
 
   fonts.packages = with pkgs; [

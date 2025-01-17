@@ -13,17 +13,10 @@
 
   services.xserver.desktopManager.kodi.enable = true;
 
-  services.displayManager.autoLogin = {
-    enable = true;
-    user = "lucasew";
-  };
-
   networking.firewall = {
     allowedTCPPorts = [ 8080 ];
     allowedUDPPorts = [ 8080 ];
   };
-
-  # services.xserver.displayManager.lightdm.autoLogin.timeout = lib.mkDefault 3;
 
   networking.hostName = "atomicpi";
 
