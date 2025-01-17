@@ -14,8 +14,9 @@
 
   sops.secrets.ssh-hosts = {
     sopsFile = ../../../secrets/ssh-hosts;
-    owner = config.users.users.lucasew.name;
-    group = config.users.users.lucasew.group;
+    owner = config.users.users.root.name;
+    group = config.users.groups.users.name;
+    mode = "0440";
     format = "binary";
   };
 }
