@@ -20,9 +20,9 @@
 
     programs.hyprland = {
       xwayland.enable = true;
-      portalPackage = pkgs.xdg-desktop-portal-wlr // {
-        override = args: pkgs.xdg-desktop-portal-wlr.override (builtins.removeAttrs args [ "hyprland" ]);
-      };
+      # portalPackage = pkgs.xdg-desktop-portal-wlr // {
+      #   override = args: pkgs.xdg-desktop-portal-wlr.override (builtins.removeAttrs args [ "hyprland" ]);
+      # };
     };
 
     services.xserver.enable = true;
@@ -44,10 +44,11 @@
     };
     systemd.user.services.blueberry-tray = {
       path = with pkgs; [
-        (blueberry.overrideAttrs (old: {
-          patches = (old.patches or [ ]) ++ [ ./blueberry-tray-fix.patch ];
-          buildInputs = old.buildInputs ++ [ pkgs.libappindicator-gtk3 ];
-        }))
+        blueberry
+        # (blueberry.overrideAttrs (old: {
+        #   patches = (old.patches or [ ]) ++ [ ./blueberry-tray-fix.patch ];
+        #   buildInputs = old.buildInputs ++ [ pkgs.libappindicator-gtk3 ];
+        # }))
       ];
       script = "blueberry-tray; while true; do sleep 3600; done";
       restartIfChanged = true;
@@ -118,6 +119,7 @@
       path = with pkgs; [
         script-directory-wrapper
         custom.colorpipe
+        bash
       ];
       script = ''
         mkdir ~/.config/waybar -p
@@ -135,6 +137,7 @@
       path = with pkgs; [
         script-directory-wrapper
         custom.colorpipe
+        bash
       ];
       script = ''
         mkdir ~/.config/hypr -p
