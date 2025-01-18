@@ -256,6 +256,13 @@ function content_scope_pop_markdown() {
     return content_scope_pop();
 }
 
+function sakuracss_auto () {
+    ?>
+        <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" media="screen" />
+        <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura-dark.css" media="screen and (prefers-color-scheme: dark)" />
+    <?php
+}
+
 function auth_tailscale() {
     $name = "";
     $profile_pic = "";
