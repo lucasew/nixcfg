@@ -157,6 +157,8 @@ in
     ];
   };
 
+  services.hardware.openrgb.enable = true;
+
   networking.hostName = hostname; # Define your hostname.
 
   # Some programs need SUID wrappers, can be configured further or are
