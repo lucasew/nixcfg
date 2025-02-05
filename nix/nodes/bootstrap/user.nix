@@ -31,6 +31,7 @@ in
           "video"
           "render"
           "transmission"
+          "ssh"
         ];
         initialPassword = "changeme";
         openssh.authorizedKeys.keyFiles = [ ../../../authorized_keys ];

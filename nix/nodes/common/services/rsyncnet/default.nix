@@ -68,6 +68,7 @@ in
         isSystemUser = true;
         group = cfg.group;
         home = cfg.dataDir;
+        extraGroups = [ "ssh" ];
       };
       groups.${cfg.group} = { };
     };
