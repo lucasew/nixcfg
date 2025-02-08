@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-if sd is binary-available ghostty; then
-	exec ghostty "$@"
-fi
-
 if sd is binary-available kitty; then
 	exec kitty "$@"
 fi

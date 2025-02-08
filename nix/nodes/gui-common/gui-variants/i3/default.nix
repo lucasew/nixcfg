@@ -54,6 +54,7 @@
       eog # eye of gnome
       xfce.ristretto
       pcmanfm
+      kitty
     ];
   };
 }
