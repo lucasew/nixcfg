@@ -1,1 +1,1 @@
-mkdir -p "$TMPDIR"
+[[ -z "$TMPDIR" ]] || mkdir -p "$TMPDIR"
