@@ -11,6 +11,8 @@
     ../gui-common
   ];
 
+  services.xserver.windowManager.i3.enable = true;
+
   boot = {
     supportedFilesystems = [
       "ntfs"
