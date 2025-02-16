@@ -43,6 +43,7 @@ in
   };
 
   home.packages = with pkgs; [
+    mission-center
     blender-bin.blender_3_6
     gum
     chromium
