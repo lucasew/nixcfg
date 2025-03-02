@@ -143,7 +143,7 @@ in
             };
 
             script = ''
-              ${lib.getExe' pkgs.ts-proxy "ts-proxyd"} ${
+              exec ${lib.getExe' pkgs.ts-proxy "ts-proxyd"} ${
                 lib.escapeShellArgs (
                   [ ]
                   ++ ([
