@@ -7,8 +7,11 @@
 import subprocess
 import json
 import time
+import os
 
-res = subprocess.run(['i3-msg', '-t', 'get_workspaces'], stdout=subprocess.PIPE)
+rpc = 'swaymsg' if 'WAYLAND_DISPLAY' in os.environ else 'i3-msg'
+
+res = subprocess.run([rpc, '-t', 'get_workspaces'], stdout=subprocess.PIPE)
 workspaces = json.loads(res.stdout.decode('utf-8'))
 focused_workspace = None
 for workspace in workspaces:
@@ -16,7 +19,7 @@ for workspace in workspaces:
         focused_workspace = workspace['name']
 assert focused_workspace is not None
 
-res = subprocess.run(['i3-msg', '-t', 'get_outputs'], stdout=subprocess.PIPE)
+res = subprocess.run([rpc, '-t', 'get_outputs'], stdout=subprocess.PIPE)
 screen_data = json.loads(res.stdout.decode('utf-8'))
 
 screens = []
@@ -37,13 +40,13 @@ print(screens)
 print(workspace_screens)
 
 for (from_screen, to_screen) in zip(old_screens, screens):
-    subprocess.run(['i3-msg', "workspace", "number", workspace_screens[from_screen]])
+    subprocess.run([rpc, "workspace", "number", workspace_screens[from_screen]])
     time.sleep(0.1)
-    subprocess.run(['i3-msg', "move", "workspace", 'to', 'output', to_screen])
+    subprocess.run([rpc, "move", "workspace", 'to', 'output', to_screen])
     time.sleep(0.1)
 
 for ws in workspace_screens.values():
-    subprocess.run(['i3-msg', "workspace", "number", ws])
+    subprocess.run([rpc, "workspace", "number", ws])
     time.sleep(0.1)
     
-subprocess.run(['i3-msg', "workspace", "number", focused_workspace])
+subprocess.run([rpc, "workspace", "number", focused_workspace])
