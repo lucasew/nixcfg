@@ -20,6 +20,9 @@ in
 {
 
   config = lib.mkIf config.services.xserver.windowManager.i3.enable {
+    xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    xdg.portal.config.common.default = "*";
+    xdg.portal.xdgOpenUsePortal = true;
     # https://thomashunter.name/i3-configurator/
     environment.systemPackages = [
       lockerSpace
