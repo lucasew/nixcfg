@@ -7,6 +7,8 @@ run-name: "nixcfg bump based on ${{ github.sha }}"
 # events but only for the master branch
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * 6' # saturday 2am
 
 concurrency:
   group: prebuild
