@@ -125,7 +125,7 @@ in
           ${host.unitName} = {
 
             description = "ts-proxy service for ${host.name}";
-            wantedBy = lib.mkIf (host.proxies == []) [ "multi-user.target" ];
+            wantedBy = if host.proxies == [] then [ "multi-user.target" ] else host.proxies;
 
             after = host.proxies;
             partOf = host.proxies;
