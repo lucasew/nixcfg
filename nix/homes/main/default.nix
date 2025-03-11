@@ -43,6 +43,8 @@ in
   };
 
   home.packages = with pkgs; [
+    uv
+    ruff
     mission-center
     blender-bin.blender_3_6
     gum
