@@ -26,6 +26,6 @@
   };
   security.pam.enableEcryptfs = true;
   boot.kernelModules = [ "ecryptfs" ];
-  environment.systemPackages = [ pkgs.ecryptfs pkgs.chromium ];
+  environment.systemPackages = with pkgs; [ ecryptfs chromium docker-compose ];
   virtualisation.podman.enable = true;
 }
