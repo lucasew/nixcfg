@@ -33,6 +33,7 @@
     ripgrep
     fd
     helix
+    ruff
     uv
   ];
   virtualisation.podman.enable = true;
