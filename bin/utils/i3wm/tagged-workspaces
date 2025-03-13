@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+
+import subprocess
+import os
+from pathlib import Path
+import tomllib
+
+from argparse import ArgumentParser
+parser = ArgumentParser()
+parser.add_argument('--move', action='store_true')
+parser.add_argument('--settings', default=Path.home() / "settings.toml")
+args = parser.parse_args()
+
+mapping = {
+    "www": 1,
+    "meet": 2
+}
+
+if args.settings.exists():
+    config = tomllib.loads(args.settings.read_text())
+    mapping = {
+        **mapping,
+        **config.get('workspaces', {})
+    }
+
+
+rpc = 'swaymsg' if 'WAYLAND_DISPLAY' in os.environ else 'i3-msg'
+
+selected = subprocess.run(
+    ['dmenu'],
+    stdout=subprocess.PIPE,
+    input="\n".join(mapping.keys()),
+    encoding='utf-8'
+).stdout.strip()
+
+selected_workspace = mapping.get(selected)
+if selected_workspace is not None:
+    selected_workspace = str(selected_workspace)
+    if args.move:
+        subprocess.run([rpc, "move", "container", "to", "workspace", "number", selected_workspace])
+    else:
+        subprocess.run([rpc, "workspace", "number", selected_workspace])

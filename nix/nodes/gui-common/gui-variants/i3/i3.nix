@@ -241,6 +241,9 @@ in
 
         bindsym $mod+l exec sdw utils i3wm lock-screen
         bindsym $mod+n exec sdw utils i3wm modn
+        bindsym $mod+z exec sdw utils i3wm tagged-workspaces
+        bindsym $mod+Shift+z exec sdw utils i3wm tagged-workspaces --move
+
 
         bindsym $mod+b exec sdw utils i3wm goto-new-ws
         bindsym $mod+Shift+b exec sdw utils i3wm goto-new-ws window
