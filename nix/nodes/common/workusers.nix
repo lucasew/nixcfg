@@ -7,6 +7,7 @@
         isNormalUser = true;
         extraGroups = [
           "work"
+          "ssh"
         ];
         uid = 2000;
       };
@@ -14,6 +15,7 @@
         isNormalUser = true;
         extraGroups = [
           "work"
+          "ssh"
         ];
         uid = 2001;
       };
