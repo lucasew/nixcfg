@@ -29,6 +29,7 @@ in
     ./tmux
     ./tuning.nix
     ./unstore.nix
+    ./workusers.nix
   ];
 
   boot.supportedFilesystems = [
