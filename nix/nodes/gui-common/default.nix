@@ -34,6 +34,7 @@ in
   '';
 
   environment.systemPackages = with pkgs; [
+    keepassxc
     parallel
     home-manager
     paper-icon-theme

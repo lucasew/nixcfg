@@ -56,7 +56,6 @@ in
     jless # json viewer
     rustdesk # remote desktop for many systems
     gscan2pdf
-    keepassxc
     feh
     fortune
     graphviz
