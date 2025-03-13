@@ -25,4 +25,5 @@
   security.pam.enableEcryptfs = true;
   boot.kernelModules = [ "ecryptfs" ];
   environment.systemPackages = [ pkgs.ecryptfs pkgs.chromium ];
+  virtualisation.podman.enable = true;
 }
