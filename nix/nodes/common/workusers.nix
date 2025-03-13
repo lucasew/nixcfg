@@ -24,5 +24,5 @@
   };
   security.pam.enableEcryptfs = true;
   boot.kernelModules = [ "ecryptfs" ];
-  environment.systemPackages = [ pkgs.ecryptfs ];
+  environment.systemPackages = [ pkgs.ecryptfs pkgs.chromium ];
 }
