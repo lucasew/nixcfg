@@ -2,7 +2,7 @@
 #!nix-shell -i bash -p unstable.ollama
 
 if [ ! -v OLLAMA_HOST ]; then
-  OLLAMA_HOST=http://ollama.stargazer-shark.ts.net
+  OLLAMA_HOST=https://ollama.stargazer-shark.ts.net
 fi
 
 if [ ! -v OLLAMA_MODEL ]; then

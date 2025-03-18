@@ -1,1 +1,1 @@
-export OLLAMA_HOST=http://ollama.stargazer-shark.ts.net
+export OLLAMA_HOST=https://ollama.stargazer-shark.ts.net
