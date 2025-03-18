@@ -15,6 +15,7 @@ lib.mkIf config.programs.nix-ld.enable {
       xorg.libXi
       wayland
       alsa-lib
+      openblas
     ]
     ++ (appimageTools.defaultFhsEnvArgs.targetPkgs pkgs);
 
