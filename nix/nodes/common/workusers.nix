@@ -3,14 +3,7 @@
 {
   users = {
     users = {
-      w_dr = {
-        isNormalUser = true;
-        extraGroups = [
-          "work"
-          "ssh"
-        ];
-        uid = 2000;
-      };
+      # reservado uid 2000
       w_cilia = {
         isNormalUser = true;
         extraGroups = [
