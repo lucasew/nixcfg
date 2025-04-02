@@ -49,7 +49,7 @@ in
     blender-bin.blender_3_6
     gum
     chromium
-    custom.firefox # now I am using chromium
+    # custom.firefox # now I am using chromium
     cached-nix-shell
     devenv
     dotenv
