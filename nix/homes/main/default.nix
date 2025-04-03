@@ -43,11 +43,11 @@ in
   };
 
   home.packages = with pkgs; [
+    unstable.zed-editor
     uv
     ruff
     mission-center
     blender-bin.blender_3_6
-    gum
     chromium
     # custom.firefox # now I am using chromium
     cached-nix-shell
@@ -55,7 +55,6 @@ in
     dotenv
     jless # json viewer
     rustdesk # remote desktop for many systems
-    gscan2pdf
     feh
     fortune
     graphviz
@@ -78,7 +77,6 @@ in
     nbr.wine-apps._7zip
     xxd
     pavucontrol # controle de volume
-    pytorrentsearch
 
     # dev
     conda
