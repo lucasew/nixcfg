@@ -1025,11 +1025,11 @@
     "telegram-sendmail": {
       "flake": false,
       "locked": {
-        "lastModified": 1730176656,
-        "narHash": "sha256-WcEbE5Um0nLtB/tv5RcGKNZ9z2/JKsoqFzYhb27untk=",
+        "lastModified": 1743646182,
+        "narHash": "sha256-Ki9fGWiCo0ul2wNtcGs3oeAcszI/jxpGmsvw/94gWuQ=",
         "owner": "lucasew",
         "repo": "telegram-sendmail",
-        "rev": "6c1f9fd589d7b84e23e389deb398a1328667f274",
+        "rev": "8563ce801ef50eb095ba75027a631753cf75c846",
         "type": "github"
       },
       "original": {
