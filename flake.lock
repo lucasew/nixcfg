@@ -108,11 +108,11 @@
     "cloud-savegame": {
       "flake": false,
       "locked": {
-        "lastModified": 1742399745,
-        "narHash": "sha256-TzVArHAM4crghBY0NM0RM/HV8iXmGtGprapcCyWplR4=",
+        "lastModified": 1743644532,
+        "narHash": "sha256-PtUj/8UHMjSoN7nf/XzS5Vq+HErclK8asMEf4Oz9Mrw=",
         "owner": "lucasew",
         "repo": "cloud-savegame",
-        "rev": "a80255c5363d59c75ec0623cc2ef6c7b53d36c3d",
+        "rev": "1c3cb23fd3399fcfc3fe8ebc7b9fbaf4faa7f257",
         "type": "github"
       },
       "original": {
