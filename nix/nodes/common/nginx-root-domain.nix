@@ -161,44 +161,40 @@ let
           <section id="nginx">
             <h2>Nginx hosts</h2>
             <div class="small-cards-container">
-            ${
-              concatStringsSep "\n" (
-                attrValues (
-                  mapAttrs (
-                    k: v:
-                    if builtins.length v.listen > 0 then
-                      ""
-                    else
-                      ''
-                        <a class="btn btn-light" target="_blank" href="http://${k}">${k}</a>
-                      ''
-                  ) (config.services.nginx.virtualHosts)
-                )
+            ${concatStringsSep "\n" (
+              attrValues (
+                mapAttrs (
+                  k: v:
+                  if builtins.length v.listen > 0 then
+                    ""
+                  else
+                    ''
+                      <a class="btn btn-light" target="_blank" href="http://${k}">${k}</a>
+                    ''
+                ) (config.services.nginx.virtualHosts)
               )
-            }
+            )}
             </div>
           </section>
 
           <section id="tailscale">
             <h2>Tailscale services</h2>
             <div class="small-cards-container">
-            ${
-              concatStringsSep "\n" (
-                attrValues (
-                  mapAttrs (
-                    k: v:
-                    if v.enableRaw then
-                      ""
-                    else
-                      ''
-                        <a class="btn btn-light" target="_blank" href="${
-                          if v.enableTLS then "https" else "http"
-                        }://${v.name}.${config.services.ts-proxy.network-domain}">${v.name}</a>
-                      ''
-                  ) (config.services.ts-proxy.hosts)
-                )
+            ${concatStringsSep "\n" (
+              attrValues (
+                mapAttrs (
+                  k: v:
+                  if v.enableRaw then
+                    ""
+                  else
+                    ''
+                      <a class="btn btn-light" target="_blank" href="${
+                        if v.enableTLS then "https" else "http"
+                      }://${v.name}.${config.services.ts-proxy.network-domain}">${v.name}</a>
+                    ''
+                ) (config.services.ts-proxy.hosts)
               )
-            }
+            )}
             </div>
           </section>
 
@@ -209,11 +205,9 @@ let
                     mkDate self.sourceInfo.lastModifiedDate 0 1 2 3 "/" 4 5 "/" 6 7 " " 8 9 ":" 10 11 ":" 12 13 null
                   })</span></span>
 
-                  ${
-                    builtins.concatStringsSep " " (
-                      map (mkInput) (builtins.sort (a: b: a < b) (builtins.attrNames self.inputs))
-                    )
-                  }
+                  ${builtins.concatStringsSep " " (
+                    map (mkInput) (builtins.sort (a: b: a < b) (builtins.attrNames self.inputs))
+                  )}
                 </div>
           </section>
 
@@ -232,7 +226,8 @@ in
   services.nginx.virtualHosts."${config.networking.hostName}" = {
     locations."/".root = "/etc/rootdomain";
   };
-  services.nginx.virtualHosts."${config.networking.hostName}.${config.services.ts-proxy.network-domain}" = {
-    locations."/".root = "/etc/rootdomain";
-  };
+  services.nginx.virtualHosts."${config.networking.hostName}.${config.services.ts-proxy.network-domain}" =
+    {
+      locations."/".root = "/etc/rootdomain";
+    };
 }

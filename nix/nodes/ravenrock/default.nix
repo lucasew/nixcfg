@@ -74,7 +74,7 @@ in
     allowedTCPPorts = [
       # 22
       # 80 443
-      # 59356 
+      # 59356
     ];
   };
   users.users = {

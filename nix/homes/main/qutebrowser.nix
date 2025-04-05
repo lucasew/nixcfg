@@ -9,9 +9,9 @@ let
   c = builtins.mapAttrs (k: v: "#${v}") pkgs.custom.colors.colors;
   stylesheetBase16Variables = pkgs.writeText "base16.css" ''
     :root {
-      ${
-        builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs (k: v: "--${k}: ${v};") c))
-      }
+      ${builtins.concatStringsSep "\n" (
+        builtins.attrValues (builtins.mapAttrs (k: v: "--${k}: ${v};") c)
+      )}
     }
   '';
 in

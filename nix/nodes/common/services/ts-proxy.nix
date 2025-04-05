@@ -79,7 +79,7 @@ in
                 proxies = lib.mkOption {
                   description = "Which units this ts-proxy instance is proxying.";
                   type = lib.types.listOf lib.types.str;
-                  default = [];
+                  default = [ ];
                 };
 
                 unitName = lib.mkOption {
@@ -125,7 +125,7 @@ in
           ${host.unitName} = {
 
             description = "ts-proxy service for ${host.name}";
-            wantedBy = if host.proxies == [] then [ "multi-user.target" ] else host.proxies;
+            wantedBy = if host.proxies == [ ] then [ "multi-user.target" ] else host.proxies;
 
             after = host.proxies;
             partOf = host.proxies;

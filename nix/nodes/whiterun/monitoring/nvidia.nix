@@ -1,6 +1,9 @@
-
-
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   networking.ports.prometheus-exporter-nvidia.enable = true;
@@ -22,7 +25,7 @@
       {
         job_name = "nvidia";
         static_configs = [
-           {
+          {
             targets = [
               "127.0.0.1:${toString config.networking.ports.prometheus-exporter-nvidia.port}"
             ];

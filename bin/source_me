@@ -12,8 +12,6 @@ if [[ "$SD_ROOT" =~ "/nix" ]]; then
 	fi
 fi
 
-
-
 # i=0
 for script in $(ls $SD_ROOT/prelude | sort); do
 	# i=$((i+1))

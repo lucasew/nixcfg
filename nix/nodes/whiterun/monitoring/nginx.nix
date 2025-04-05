@@ -15,7 +15,7 @@
       {
         job_name = "nginx";
         static_configs = [
-           {
+          {
             targets = [
               "127.0.0.1:${toString config.networking.ports.prometheus-exporter-nginx.port}"
             ];

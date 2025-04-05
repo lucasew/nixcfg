@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   custom_rofi = pkgs.custom.rofi_wayland.override { inherit (pkgs.custom) colors; };
@@ -29,12 +34,12 @@ in
       };
       wlr.enable = true;
       # wlr.settings.screencast = { output_name = "DP-2"; chooser_type = "simple"; chooser_cmd = "${pkgs.slurp}/bin/slurp -f %o -or"; };
-    }; 
+    };
     services.xserver.displayManager.lightdm.enable = true;
     services.xserver.displayManager.sessionData.autologinSession = lib.mkDefault "sway";
-     services.xserver.enable  = true;
+    services.xserver.enable = true;
     systemd.user.services.gammastep.environment.WAYLAND_DISPLAY = "wayland-1";
-  
+
     security.polkit.agent.enable = true;
     services.tumbler.enable = true;
     programs.kdeconnect.enable = true;
@@ -60,7 +65,7 @@ in
       brightnessctl
     ];
 
-  systemd.user.services.xss-lock.restartIfChanged = true;
+    systemd.user.services.xss-lock.restartIfChanged = true;
 
     environment.etc."sway/config".text =
       with pkgs.custom.colors.colors;
@@ -208,5 +213,5 @@ in
         hide_edge_borders smart
         focus_on_window_activation urgent
       '';
-      };
-    }
+  };
+}

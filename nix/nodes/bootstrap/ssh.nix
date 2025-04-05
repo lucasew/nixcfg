@@ -12,7 +12,7 @@
   '';
   programs.mosh.enable = true;
 
-  users.groups.ssh = {};
+  users.groups.ssh = { };
 
   sops.secrets.ssh-hosts = {
     sopsFile = ../../../secrets/ssh-hosts;

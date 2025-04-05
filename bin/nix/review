@@ -9,6 +9,6 @@ nix run nixpkgs#nixpkgs-review -- "$@"
 sync
 
 if [[ -v POST_REVIEW_SLEEP ]]; then
-  sleep "$POST_REVIEW_SLEEP"
-  echo post review sleep "$POST_REVIEW_SLEEP" >&2
+	sleep "$POST_REVIEW_SLEEP"
+	echo post review sleep "$POST_REVIEW_SLEEP" >&2
 fi
