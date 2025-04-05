@@ -24,7 +24,6 @@ in
 
 {
   programs.ghostty.themes.base16-custom = {
-    
 
     background = "#${base00}";
     foreground = "#${base05}";

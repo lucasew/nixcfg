@@ -11,7 +11,7 @@
 
       type = with lib.types; attrsOf (listOf str);
 
-      # $user_$database for all databases + $user so psql works out of the box 
+      # $user_$database for all databases + $user so psql works out of the box
       # one will still need to set passwords for users
       apply = lib.mapAttrs (k: v: (map (item: "${k}_${item}") v) ++ [ k ]);
     };
