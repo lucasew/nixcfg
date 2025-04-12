@@ -45,7 +45,7 @@
 
       # otherwise authenticate with tailscale
       # PLEASE DON'T USE A PREAUTHORIZED KEY HERE. Reusable is nice :thumbs_up:
-      ${tailscale}/bin/tailscale up -authkey tskey-auth-k8uwUQKo1w11CNTRL-51rRMSt93kUgfZVQHWrydUQXkDutjJ1VL
+      ${tailscale}/bin/tailscale up -authkey tskey-auth-kS8RZ4QHJm11CNTRL-3Z1nwteVWDcNjhQZKvqHCcntgpFA7MW7
     '';
   };
 }
