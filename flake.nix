@@ -36,9 +36,6 @@
     fusionsolar-bot.inputs.nixpkgs.follows = "nixpkgs";
     fusionsolar-bot.inputs.flake-utils.follows = "flake-utils";
 
-    pocket2kindle.url = "github:lucasew/pocket2kindle";
-    pocket2kindle.flake = false;
-
     send2kindle.url = "github:lucasew/send2kindle";
     send2kindle.flake = false;
 
@@ -52,12 +49,6 @@
 
     nix-option.url = "github:lucasew/nix-option";
     nix-option.flake = false;
-
-    pytorrentsearch.url = "github:lucasew/pytorrentsearch";
-    pytorrentsearch.flake = false;
-
-    # rio.url = "github:raphamorim/rio";
-    # rio.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-index-database.url = "github:Mic92/nix-index-database";
 

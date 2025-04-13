@@ -72,7 +72,6 @@ in
   '';
 
   ctl = cp ./pkgs/ctl;
-  cmdlinegl = cp ./pkgs/cmdlinegl;
 
   personal-utils = cp ./pkgs/personal-utils.nix;
   fhsctl = cp ./pkgs/fhsctl.nix;
@@ -87,8 +86,6 @@ in
   appimage-wrap = final.nbr.appimage-wrap;
 
   dotenv = cp flake.inputs.dotenv;
-  p2k = cp flake.inputs.pocket2kindle;
-  pytorrentsearch = cp flake.inputs.pytorrentsearch;
   redial_proxy = cp flake.inputs.redial_proxy;
   send2kindle = cp flake.inputs.send2kindle;
   nixgram = cp flake.inputs.nixgram;
@@ -96,8 +93,6 @@ in
   ts-proxy = flake.inputs.ts-proxy.packages.${prev.system}.default;
   wrapVSCode = args: import flake.inputs.nix-vscode (args // { pkgs = prev; });
   wrapEmacs = args: import flake.inputs.nix-emacs (args // { pkgs = prev; });
-
-  instantngp = cp ./pkgs/instantngp.nix;
 
   # nix-option = callPackage "${flake.inputs.nix-option}" {
   #   nixos-option = (callPackage "${flake.inputs.nixpkgs}/nixos/modules/installer/tools/nixos-option" { }).overrideAttrs (attrs: attrs // {
@@ -109,22 +104,6 @@ in
 
   nur = import flake.inputs.nur { pkgs = prev; };
 
-  wineApps = {
-    cs_extreme = cp ./pkgs/wineApps/cs_extreme.nix;
-    dead_space = cp ./pkgs/wineApps/dead_space.nix;
-    gta_sa = cp ./pkgs/wineApps/gta_sa.nix;
-    among_us = cp ./pkgs/wineApps/among_us.nix;
-    ets2 = cp ./pkgs/wineApps/ets2.nix;
-    mspaint = cp ./pkgs/wineApps/mspaint.nix;
-    pinball = cp ./pkgs/wineApps/pinball.nix;
-    sosim = cp ./pkgs/wineApps/sosim.nix;
-    tora = cp ./pkgs/wineApps/tora.nix;
-    nfsu2 = cp ./pkgs/wineApps/nfsu2.nix;
-    flatout2 = cp ./pkgs/wineApps/flatout2.nix;
-    watchdogs2 = cp ./pkgs/wineApps/watchdogs2.nix;
-    rimworld = cp ./pkgs/wineApps/rimworld.nix;
-    skyrim = cp ./pkgs/wineApps/skyrim.nix;
-  };
   custom = rec {
     kodi = final.kodi.withPackages (
       kpkgs: with kpkgs; [
@@ -147,7 +126,6 @@ in
     pidgin = cp ./pkgs/custom/pidgin.nix;
     send2kindle = cp ./pkgs/custom/send2kindle.nix;
     retroarch = cp ./pkgs/custom/retroarch.nix;
-    loader = cp ./pkgs/custom/loader/default.nix;
     polybar = cp ./pkgs/custom/polybar.nix;
     colors-lib-contrib = import "${flake.inputs.nix-colors}/lib/contrib" { pkgs = prev; };
     # wallpaper = ./wall.jpg;
@@ -198,12 +176,6 @@ in
   });
 
   cached-nix-shell = callPackage flake.inputs.src-cached-nix-shell { pkgs = prev; };
-
-  # rio = flake.inputs.rio.packages.${prev.system}.default;
-
-  arcan = prev.arcan.override { useTracy = false; };
-
-  movfuscator = prev.callPackage ./pkgs/movfuscator { };
 
   regex101 = prev.callPackage flake.inputs.regex101 { };
 
