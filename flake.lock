@@ -782,38 +782,6 @@
         "type": "github"
       }
     },
-    "pocket2kindle": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1743250105,
-        "narHash": "sha256-xhkCsHJod3gFoT21QM9isux9lYK14ahdsSAS+TRlBrk=",
-        "owner": "lucasew",
-        "repo": "pocket2kindle",
-        "rev": "68e908447cafd69d63fc4bd65213cf6dd60f3e3a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "lucasew",
-        "repo": "pocket2kindle",
-        "type": "github"
-      }
-    },
-    "pytorrentsearch": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1676054622,
-        "narHash": "sha256-18aZBT4/a3duIC5UzhwGxHvtWNF8iMJd1NsDF13ilOg=",
-        "owner": "lucasew",
-        "repo": "pytorrentsearch",
-        "rev": "2593c10f2aaf3c47f5a6f398637c6117fd13bedb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "lucasew",
-        "repo": "pytorrentsearch",
-        "type": "github"
-      }
-    },
     "redial-proxy": {
       "flake": false,
       "locked": {
@@ -877,8 +845,6 @@
         "nixpkgs-lib": "nixpkgs-lib_2",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nur": "nur",
-        "pocket2kindle": "pocket2kindle",
-        "pytorrentsearch": "pytorrentsearch",
         "redial-proxy": "redial-proxy",
         "regex101": "regex101",
         "rust-overlay": "rust-overlay",

@@ -21,7 +21,7 @@
   boot.kernelModules = [ "ecryptfs" ];
   environment.systemPackages = with pkgs; [
     ecryptfs
-    chromium
+    brave
     docker-compose
     ripgrep
     fd

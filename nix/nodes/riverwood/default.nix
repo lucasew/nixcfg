@@ -88,7 +88,6 @@ in
 
   boot.plymouth.enable = true;
 
-  services.pocket2kindle.enable = true;
   programs.gamemode.enable = true;
 
   services.flatpak.enable = true;

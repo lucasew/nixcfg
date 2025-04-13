@@ -48,7 +48,7 @@ in
     ruff
     mission-center
     blender-bin.blender_3_6
-    chromium
+    brave
     # custom.firefox # now I am using chromium
     cached-nix-shell
     devenv
