@@ -79,7 +79,6 @@ in
   pkg = cp ./pkgs/pkg.nix;
   text2image = cp ./pkgs/text2image.nix;
   wrapWine = cp ./pkgs/wrapWine.nix;
-  ollama-webui = cp ./pkgs/ollama-webui;
   home-manager = cp "${flake.inputs.home-manager}/home-manager";
 
   prev = prev;
@@ -136,7 +135,6 @@ in
       ]
     );
     colorpipe = cp ./pkgs/colorpipe;
-    chromium = cp ./pkgs/custom/chromium;
     ncdu = cp ./pkgs/custom/ncdu.nix;
     neovim = cp ./pkgs/custom/neovim;
     emacs = cp ./pkgs/custom/emacs;
