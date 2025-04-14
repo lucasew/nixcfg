@@ -12,6 +12,14 @@
         ];
         uid = 2001;
       };
+      w_logito = {
+        isNormalUser = true;
+        extraGroups = [
+          "work"
+          "ssh"
+        ];
+        uid = 2002;
+      };
     };
     groups.work = {
       gid = 1999;
