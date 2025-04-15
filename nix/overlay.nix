@@ -57,7 +57,15 @@ in
     }
   );
 
-  python3PackagesCuda = prev.python3Packages.overrideScope (_: _: { cudaSupport = true; });
+  python3PackagesCuda = prev.python3Packages.overrideScope (self: super: {
+    cudaSupport = true;
+    ctranslate2 = super.ctranslate2.override {
+      ctranslate2-cpp = prev.ctranslate2.override {
+        withCUDA = true;
+        withCuDNN = true;  
+      };
+    };
+  });
 
   lib = prev.lib.extend (
     final: prev: {
