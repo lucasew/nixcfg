@@ -60,6 +60,7 @@ in
     graphviz
     github-cli
     libnotify
+    mpv
     ncdu
     # nix-option
     nix-prefetch-scripts
