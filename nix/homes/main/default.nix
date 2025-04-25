@@ -60,7 +60,6 @@ in
     graphviz
     github-cli
     libnotify
-    mpv
     ncdu
     # nix-option
     nix-prefetch-scripts
@@ -143,4 +142,11 @@ in
     };
   };
   programs.bash.enable = true;
+
+  programs.mpv = {
+    enable = true;
+    config = {
+      ytdl-format = "720p,mp4";
+    };
+  };
 }
