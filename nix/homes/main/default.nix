@@ -146,7 +146,7 @@ in
   programs.mpv = {
     enable = true;
     config = {
-      ytdl-format = "720p,mp4";
+      ytdl-raw-options = "format-sort=\"vcodec:h264,res,acodec:m4a\"";
     };
   };
 }
