@@ -11,8 +11,15 @@ status.register(
 status.register("tlp")
 
 status.register(
+    "mem",
+    format="{percent_used_mem}",
+    warn_percentage=80,
+    alert_percentage=90
+)
+
+status.register(
     "cpu_usage",
-    format="{usage_all}",
+    format="{usage}",
     format_all="C",
     exclude_average=True,
     dynamic_color=True,
