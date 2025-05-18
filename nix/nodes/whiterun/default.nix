@@ -150,8 +150,6 @@ in
   # services.rtorrent.enable = true;
   # services.rtorrent.enableSandboxSample = true;
 
-  services.miniflux.enable = true;
-
   programs.gamemode.enable = true;
   services.cf-torrent.enable = true;
 

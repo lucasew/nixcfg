@@ -33,7 +33,7 @@ in
         nixpkgs = "https://github.com/NixOS/nixpkgs";
         hm-options = "https://nix-community.github.io/home-manager/options.html";
         nixos-options = "https://search.nixos.org/options";
-        miniflux = "http://miniflux.whiterun.lucao.net";
+        miniflux = "http://miniflux.app.lew.tec.br";
         whiterun = "http://whiterun.lucao.net";
         nc = "http://nextcloud.whiterun.lucao.net/apps/files/";
         grafana = "http://grafana.whiterun.lucao.net/dashboards";

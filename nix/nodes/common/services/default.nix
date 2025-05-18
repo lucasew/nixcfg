@@ -7,7 +7,6 @@
     ./escrivao
     ./fusionsolar
     ./magnetico.nix
-    ./miniflux.nix
     ./redlib.nix
     ./transmission.nix
     ./telegram_sendmail.nix
