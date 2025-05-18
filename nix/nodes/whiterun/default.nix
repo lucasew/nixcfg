@@ -37,8 +37,6 @@ in
 
   services.phputils.enable = true;
 
-  services.n8n.enable = true;
-
   programs.nix-ld.enable = true;
 
   hardware.nvidia.modesetting.enable = false;

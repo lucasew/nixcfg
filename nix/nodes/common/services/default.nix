@@ -21,7 +21,6 @@
     ./wallabag.nix
     ./ts-proxy.nix
     ./ngircd.nix
-    ./n8n.nix
     ./minecraft.nix
     ./phputils
   ];
