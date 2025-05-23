@@ -14,7 +14,7 @@ in
 
     "${self.inputs.nixos-hardware}/common/cpu/intel"
     "${self.inputs.nixos-hardware}/common/gpu/intel/kaby-lake"
-    "${self.inputs.nixos-hardware}/common/pc/laptop/ssd"
+    "${self.inputs.nixos-hardware}/common/pc/laptop"
 
     ./kvm.nix
     ./networking.nix
