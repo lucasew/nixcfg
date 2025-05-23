@@ -17,6 +17,15 @@
   };
 
   inputs = {
+    nixpkgs.url = "nixpkgs/nixos-25.05";
+    nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
+
+    nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
+
+    home-manager.url = "home-manager/release-25.05";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+
     blender-bin.url = "blender-bin";
     blender-bin.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -52,10 +61,6 @@
 
     nix-index-database.url = "github:Mic92/nix-index-database";
 
-    nixpkgs.url = "nixpkgs/nixos-24.11";
-    nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
-
-    nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
 
     nix-alien.url = "github:thiagokokada/nix-alien";
     nix-alien.inputs.nixpkgs.follows = "nixpkgs";
@@ -78,9 +83,6 @@
 
     nix-vscode.url = "github:nixosbrasil/nix-vscode";
     nix-vscode.flake = false;
-
-    home-manager.url = "home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-requirefile.url = "github:lucasew/nix-requirefile";
     nix-requirefile.flake = false;
