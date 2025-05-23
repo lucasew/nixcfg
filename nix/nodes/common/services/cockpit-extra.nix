@@ -5,16 +5,16 @@ lib.mkIf config.services.cockpit.enable {
 
   services.cockpit = {
     # inherit (config.networking.ports.cockpit) port;
-    settings = {
-      WebService = {
-        Origins = lib.mkForce builtins.concatStringsSep " " [
-          "http://${config.networking.hostName}:${toString config.services.cockpit.port}"
-          "https://${config.networking.hostName}:${toString config.services.cockpit.port}"
-          "http://localhost:${toString config.services.cockpit.port}"
-          "https://localhost:${toString config.services.cockpit.port}"
-        ];
-      };
-    };
+    # settings = {
+    #   WebService = {
+    #     Origins = lib.mkForce builtins.concatStringsSep " " [
+    #       "http://${config.networking.hostName}:${toString config.services.cockpit.port}"
+    #       "https://${config.networking.hostName}:${toString config.services.cockpit.port}"
+    #       "http://localhost:${toString config.services.cockpit.port}"
+    #       "https://localhost:${toString config.services.cockpit.port}"
+    #     ];
+    #   };
+    # };
   };
 
   systemd.services =
