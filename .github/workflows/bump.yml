@@ -28,7 +28,7 @@ jobs:
       - name: Setup kitchen
         uses: lucasew/action-i-only-care-about-nix@main
       - name: Get ingredients
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Prepare for the stove
         run: |
           sudo mkdir -p /nix/build
