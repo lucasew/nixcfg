@@ -253,11 +253,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1747480967,
-        "narHash": "sha256-nIvsZY10pOKNVrd9Hh1L7EeKgCnKFLAoT8rtr8hCXQU=",
+        "lastModified": 1748026859,
+        "narHash": "sha256-6/YwQhmOTGUIq7BoS6O2OgnY3ryv8rjUswzXX6SqVvM=",
         "owner": "lucasew",
         "repo": "fusionsolar-bot",
-        "rev": "5e89f7a158164d5ad6802c98af2ff6e571c03d13",
+        "rev": "07f788c962104a06657b64416fb46b6066dc1e96",
         "type": "github"
       },
       "original": {
@@ -770,11 +770,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1748015271,
-        "narHash": "sha256-Bun9eIRTZdjU+9o5NbqCClWDphsnzxJAG3cMWSxV4Rc=",
+        "lastModified": 1748035871,
+        "narHash": "sha256-l2Vp7WS43x+S7t8bW15t7OIyVB1rorDi2F9Cs9nD7AY=",
         "owner": "nix-community",
         "repo": "nur",
-        "rev": "d2b83ef5eef6f3799482a626d97d5af4f8607653",
+        "rev": "359df8208806b64e75b0aa2753482cf007086959",
         "type": "github"
       },
       "original": {
