@@ -7,7 +7,7 @@ lib.mkIf config.services.cockpit.enable {
     # inherit (config.networking.ports.cockpit) port;
     settings = {
       WebService = {
-        Origins = builtins.concatStringsSep " " [
+        Origins = lib.mkForce builtins.concatStringsSep " " [
           "http://${config.networking.hostName}:${toString config.services.cockpit.port}"
           "https://${config.networking.hostName}:${toString config.services.cockpit.port}"
           "http://localhost:${toString config.services.cockpit.port}"
