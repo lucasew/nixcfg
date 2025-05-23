@@ -57,6 +57,8 @@ in
     }
   );
 
+  enroot = callPackage ./pkgs/enroot.nix {};
+
   python3PackagesCuda = prev.python3Packages.overrideScope (self: super: {
     cudaSupport = true;
     ctranslate2 = super.ctranslate2.override {
