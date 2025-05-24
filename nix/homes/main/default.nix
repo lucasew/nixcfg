@@ -26,6 +26,8 @@ in
     ./zen-browser.nix
   ];
 
+  borderless-browser.chromium = lib.getExe pkgs.brave;
+
   # programs.ghostty.enable = true;
 
   programs.atuin.enable = true;
