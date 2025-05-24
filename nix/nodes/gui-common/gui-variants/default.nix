@@ -7,5 +7,6 @@
     ./sway
     ./hyprland
     ./kodi
+    ./dotfiles.nix
   ];
 }

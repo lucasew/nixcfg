@@ -3,48 +3,13 @@
     "position": "top", // Waybar position (top|bottom|left|right)
     "height": 10, // Waybar height (to be removed for auto height)
     // "width": 1280, // Waybar width
-    "spacing": 4, // Gaps between modules (4px)
+    "spacing": 1, // Gaps between modules (4px)
     // Choose the order of the modules
     // "modules-left": ["hyprland/workspaces"],
-    "modules-left": ["sway/workspaces"],
+    "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["hyprland/window"],
     "modules-right": ["idle_inhibitor", "pulseaudio", "backlight", "network", "custom/updates", "cpu", "memory", "temperature", "battery", "tray", "clock"],
     // Modules configuration
-    "sway/workspaces": {
-         "disable-scroll": true,
-         "all-outputs": true,
-         "warp-on-scroll": false,
-         "format": "{name}: {icon}",
-         "format-icons": {
-             "1": "",
-             "2": "",
-             "3": "",
-             "4": "",
-             "5": "",
-             "urgent": "",
-             "focused": "",
-             "default": ""
-         }
-     },
-     "hyprland/workspaces": {
-         "disable-scroll": false,
-         "on-click": "activate",
-         // "all-outputs": false,
-         // "format": "{name}: {icon}",
-         "format": "{name}",
-         "on-scroll-up": "hyprctl dispatch workspace m-1 > /dev/null",
-         "on-scroll-down": "hyprctl dispatch workspace m+1 > /dev/null",
-         "format-icons": {
-             "1": "a ",
-             "2": "b ",
-             "3": "c ",
-             "4": "d ",
-             "5": "e ",
-             "urgent": "⚠️",
-             "focused": "",
-             "default": ""
-         }
-     },
     "keyboard-state": {
         "numlock": false,
         "capslock": false,
@@ -75,22 +40,18 @@
         "format-alt": "{:%Y-%m-%d}"
     },
     "cpu": {
-        "format": "{usage}% 🧠",
+        "format": "{usage}%",
         "tooltip": false
     },
     "memory": {
-        "format": "{}% 🐸"
+        "format": "{}%"
     },
     "temperature": {
         // "thermal-zone": 2,
         // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
-        "critical-threshold": 80,
-        // "format-critical": "{temperatureC}°C {icon}",
-        "format": "{temperatureC}°C 🌡️",
-    },
-    "backlight": {
-        // "device": "acpi_video1",
-        "format": "{percent}% ☀️",
+        "critical-threshold": 70,
+        "format-critical": "{temperatureC}°C!",
+        "format": "{temperatureC}°C",
     },
     "battery": {
         "states": {

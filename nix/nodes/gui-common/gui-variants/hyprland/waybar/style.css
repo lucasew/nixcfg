@@ -15,57 +15,21 @@
 @define-color base0E #%base0E%;
 @define-color base0F #%base0F%;
 
-* {
-    transition: none;
-    box-shadow: none;
-}
-
-#waybar {
-    /* font-family: 'Source Code Pro', sans-serif; */
-    /* font-family: 'Apple Color Emoji', sans-serif; */
-    font-family: sans-serif;
+window {
+    font-family: 'Fira Code', sans-serif;
     font-size: 1em;
     font-weight: 400;
+    transition: none;
+    box-shadow: none;
+    background-color: @base00;
     color: @base04;
-    background: transparent;
+    min-height: 0;
 }
-
-#workspaces button.visible {
-}
-
-#workspaces button {
-    background-color: @base02;
-    opacity: 0.5;
-}
-
-#workspaces button.active {
-    opacity: 0.8;
-}
-
-#workspaces button.urgent {
-    background-color: @base08;
-}
-
 #tray, #mode, #battery, #cpu, #memory, #network, #pulseaudio, #idle_inhibitor, #backlight, #custom-storage, #custom-updates, #custom-weather, #custom-mail, #clock, #temperature, #window {
-    background-color: @base02;
-    opacity: 0.8;
-    border-radius: 4px;
-    min-width: 20px;
-    margin: 2px;
-    padding: 4px;
-}
-
-#window.empty {
-    /* background-color: transparent; */
-    opacity: 0.4;
-    border-radius: 0;
-    min-width: 0;
+    background-color: @base00;
+    margin: 0;
     padding: 0;
-}
-
-#clock {
-    margin-left: 0px;
-    margin-right: 4px;
+    margin-left: 1rem;
 }
 
 #pulseaudio.muted {
@@ -77,5 +41,22 @@
 }
 #temperature.critical {
     color: @base0F;
+}
+
+
+#workspaces button {
+  padding: 0;
+  margin: 0;
+  
+}
+
+#workspaces button.focused, button.active {
+    font-weight: bolder;
+    color: @base00;
+    background-color: @base04;
+}
+
+#workspaces button.urgent {
+    background-color: @base08;
 }
 
