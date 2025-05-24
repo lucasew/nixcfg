@@ -29,9 +29,12 @@ in
   config = lib.mkIf config.programs.sway.enable {
     systemd.user.services.xss-lock.restartIfChanged = true;
 
-    programs.xss-lock.lockerCommand = lib.mkDefault ''
-      ${lib.getExe pkgs.swaylock} ${lib.escapeShellArgs locker-params}
-    '';
+    programs.xss-lock = {
+      enable = true;
+      lockerCommand = lib.mkDefault ''
+        ${lib.getExe pkgs.swaylock} ${lib.escapeShellArgs locker-params}
+      '';
+    };
 
     services.dunst.enable = true;
     xdg.portal = {
