@@ -15,6 +15,9 @@ let
     type = "Application";
     exec = "sdw utils i3wm lock-screen";
   };
+  locker-params = with pkgs.custom.colors.colors; [
+    "--color=${base00}"
+  ];
 in
 
 {
@@ -24,9 +27,19 @@ in
     ../optional/dunst.nix
   ];
   config = lib.mkIf config.programs.sway.enable {
+    systemd.user.services.xss-lock.restartIfChanged = true;
+
+    programs.xss-lock.lockerCommand = lib.mkDefault ''
+      ${lib.getExe pkgs.swaylock} ${lib.escapeShellArgs locker-params}
+    '';
+
     services.dunst.enable = true;
     xdg.portal = {
       enable = true;
+      xdgOpenUsePortal = true;
+      extraPortals = [
+        pkgs.xdg-desktop-portal-wlr
+      ];
       config = {
         common = {
           default = "wlr";
@@ -35,10 +48,10 @@ in
       wlr.enable = true;
       # wlr.settings.screencast = { output_name = "DP-2"; chooser_type = "simple"; chooser_cmd = "${pkgs.slurp}/bin/slurp -f %o -or"; };
     };
+    services.displayManager.sessionData.autologinSession = lib.mkDefault "sway";
     services.xserver.displayManager.lightdm.enable = true;
-    services.xserver.displayManager.sessionData.autologinSession = lib.mkDefault "sway";
     services.xserver.enable = true;
-    systemd.user.services.gammastep.environment.WAYLAND_DISPLAY = "wayland-1";
+    # systemd.user.services.gammastep.environment.WAYLAND_DISPLAY = "wayland-1";
 
     security.polkit.agent.enable = true;
     services.tumbler.enable = true;
@@ -65,8 +78,6 @@ in
       brightnessctl
     ];
 
-    systemd.user.services.xss-lock.restartIfChanged = true;
-
     environment.etc."sway/config".text =
       with pkgs.custom.colors.colors;
       lib.mkForce ''
@@ -79,7 +90,7 @@ in
 
         bar {
           status_command ${lib.getExe pkgs.unstable.i3pystatus} -c $(sdw d root)/bin/_shortcuts/i3pystatus/main.py
-          # i3bar_command i3bar --transparency
+          i3bar_command i3bar --transparency
           font pango: Fira Code 10
           hidden_state show
           position top
@@ -172,10 +183,10 @@ in
         bindsym $mod+v split v
 
         bindsym $mod+w layout tabbed
-        bindsym $mod+Ctrl+Right resize shrink width 1 px or 1 ppt
-        bindsym $mod+Ctrl+Up resize grow height 1 px or 1 ppt
-        bindsym $mod+Ctrl+Down resize shrink height 1 px or 1 ppt
-        bindsym $mod+Ctrl+Left resize grow width 1 px or 1 ppt
+        bindsym $mod+Ctrl+Right=resize shrink width 1 px or 1 ppt
+        bindsym $mod+Ctrl+Up=resize grow height 1 px or 1 ppt
+        bindsym $mod+Ctrl+Down=resize shrink height 1 px or 1 ppt
+        bindsym $mod+Ctrl+Left=resize grow width 1 px or 1 ppt
 
         # custom keys
         bindsym XF86AudioRaiseVolume exec sdw utils i3wm audio up
@@ -195,6 +206,9 @@ in
 
         bindsym $mod+l exec sdw utils i3wm lock-screen
         bindsym $mod+n exec sdw utils i3wm modn
+        bindsym $mod+z exec sdw utils i3wm tagged-workspaces
+        bindsym $mod+Shift+z exec sdw utils i3wm tagged-workspaces --move
+
 
         bindsym $mod+b exec sdw utils i3wm goto-new-ws
         bindsym $mod+Shift+b exec sdw utils i3wm goto-new-ws window
@@ -205,7 +219,7 @@ in
         exec --no-startup-id ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1
 
         # exec_always feh --bg-fill --no-xinerama --no-fehbg '/etc/wallpaper'
-        # exec_always feh --bg-fill --no-fehbg '/etc/wallpaper'
+        exec_always feh --bg-fill --no-fehbg '/etc/wallpaper'
 
         exec_always systemctl restart --user nm-applet.service blueberry-tray.service kdeconnect.service kdeconnect-indicator.service
 

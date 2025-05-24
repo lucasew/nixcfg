@@ -36,7 +36,7 @@ in
 lib.mkIf (config.programs.xss-lock.enable && config.services.xserver.windowManager.i3.enable) {
   programs.xss-lock = {
     lockerCommand = lib.mkDefault ''
-      ${i3lock-color}/bin/i3lock-color ${concatStringsSep " " (map toString locker-params)}
+      ${lib.getExe i3lock-color} ${lib.escapeShellArgs locker-params}
     '';
     extraOptions = [ ];
   };
