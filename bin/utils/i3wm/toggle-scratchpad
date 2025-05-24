@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 
-i3-msg scratchpad show
+function rpc-msg {
+  if [ -v WAYLAND_DISPLAY ]; then
+    sway-msg "$@"
+  else
+    i3wm "$@"
+  fi
+}
+
+sd utils i3wm rpc scratchpad show
 sd utils i3wm brightnessctl status
 sd utils i3wm audio status
 sd utils i3wm playerctl show

@@ -62,6 +62,7 @@ in
         temp-day = cfg.temperature.day;
         temp-night = cfg.temperature.night;
       };
+      location-provider = "manual";
       manual = {
         lat = config.location.latitude;
         lon = config.location.longitude;

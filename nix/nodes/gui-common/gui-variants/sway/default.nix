@@ -90,7 +90,6 @@ in
 
         bar {
           status_command ${lib.getExe pkgs.unstable.i3pystatus} -c $(sdw d root)/bin/_shortcuts/i3pystatus/main.py
-          i3bar_command i3bar --transparency
           font pango: Fira Code 10
           hidden_state show
           position top
@@ -183,10 +182,10 @@ in
         bindsym $mod+v split v
 
         bindsym $mod+w layout tabbed
-        bindsym $mod+Ctrl+Right=resize shrink width 1 px or 1 ppt
-        bindsym $mod+Ctrl+Up=resize grow height 1 px or 1 ppt
-        bindsym $mod+Ctrl+Down=resize shrink height 1 px or 1 ppt
-        bindsym $mod+Ctrl+Left=resize grow width 1 px or 1 ppt
+        bindsym $mod+Ctrl+Right resize shrink width 1 px or 1 ppt
+        bindsym $mod+Ctrl+Up    resize grow height 1 px or 1 ppt
+        bindsym $mod+Ctrl+Down  resize shrink height 1 px or 1 ppt
+        bindsym $mod+Ctrl+Left  resize grow width 1 px or 1 ppt
 
         # custom keys
         bindsym XF86AudioRaiseVolume exec sdw utils i3wm audio up

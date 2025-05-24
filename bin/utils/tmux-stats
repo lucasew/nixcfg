@@ -10,6 +10,6 @@ tmux new-window -t $SESSION_NAME:421 -n htop_whiterun ssh -t whiterun htop
 tmux new-window -t $SESSION_NAME:422 -n nvtop_whiterun ssh -t whiterun nvtop
 tmux kill-window -t $SESSION_NAME:0 # delete initial window
 
-i3-msg move scratchpad # hehe boy
+sd utils i3wm rpc move scratchpad # hehe boy
 
 tmux a -t $SESSION_NAME

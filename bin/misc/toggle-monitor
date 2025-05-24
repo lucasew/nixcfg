@@ -18,7 +18,7 @@ function handler {
 			fi
 		fi
 		sleep 1
-		i3-msg -t command restart
+		sd utils i3wm rpc -t command restart
 	else
 		xrandr --output HDMI-1 --off
 	fi

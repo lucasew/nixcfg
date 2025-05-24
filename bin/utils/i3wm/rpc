@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [ -v WAYLAND_DISPLAY ]; then
+	swaymsg "$@"
+else
+	i3-msg "$@"
+fi

@@ -11,7 +11,7 @@ echo $last_ws
 echo $last_ws >$wsfile
 
 if [ "$1" == "window" ]; then
-	i3-msg move container to workspace number $last_ws
+	sd utils i3wm rpc move container to workspace number $last_ws
 fi
 
-i3-msg workspace number $last_ws
+sd utils i3wm rpc workspace number $last_ws
