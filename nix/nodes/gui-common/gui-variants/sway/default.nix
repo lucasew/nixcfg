@@ -69,6 +69,7 @@ in
       script = "blueberry-tray; while true; do sleep 3600; done";
     };
     environment.systemPackages = with pkgs; [
+      wlr-randr
       eog # eye of gnome
       xfce.ristretto
       pcmanfm
