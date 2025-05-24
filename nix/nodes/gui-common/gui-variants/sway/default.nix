@@ -56,7 +56,6 @@ in
     services.xserver.enable = true;
     # systemd.user.services.gammastep.environment.WAYLAND_DISPLAY = "wayland-1";
 
-    security.polkit.agent.enable = true;
     services.tumbler.enable = true;
     programs.kdeconnect.enable = true;
     services.gammastep.enable = true;
@@ -218,8 +217,6 @@ in
 
 
         bindsym --release Print exec org.flameshot.Flameshot gui
-
-        exec --no-startup-id ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1
 
         # exec_always feh --bg-fill --no-xinerama --no-fehbg '/etc/wallpaper'
         exec_always feh --bg-fill --no-fehbg '/etc/wallpaper'
