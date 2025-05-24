@@ -92,10 +92,8 @@ in
         }
 
         bar {
-          tray {
-            icon_theme Paper
-          }
-          status_command ${lib.getExe pkgs.unstable.i3pystatus} -c $(sdw d root)/bin/_shortcuts/i3pystatus/main.py
+          swaybar_command ${lib.getExe pkgs.waybar}
+          # status_command ${lib.getExe pkgs.unstable.i3pystatus} -c $(sdw d root)/bin/_shortcuts/i3pystatus/main.py
           font pango: Fira Code 10
           hidden_state show
           position top
