@@ -39,9 +39,6 @@ in
 
   pythonPackagesExtensions = [
     (final: prev: {
-      pyctcdecode = final.callPackage ./pkgs/python/pyctcdecode { };
-      kenlm = final.callPackage ./pkgs/python/kenlm { };
-      pyvirtualcam = final.callPackage ./pkgs/python/pyvirtualcam { };
     })
   ];
 
