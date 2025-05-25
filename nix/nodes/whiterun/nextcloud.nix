@@ -37,7 +37,7 @@ in
 
     users.groups.admin-password = { };
 
-    services.nextcloud.package = pkgs.nextcloud30;
+    services.nextcloud.package = pkgs.nextcloud31;
     users.users.nextcloud = {
       extraGroups = [
         "admin-password"

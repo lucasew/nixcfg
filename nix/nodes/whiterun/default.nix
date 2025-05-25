@@ -151,8 +151,9 @@ in
 
   services.sunshine.enable = true;
 
-  services.xserver.windowManager.i3.enable = true;
+  # services.xserver.windowManager.i3.enable = true;
   # programs.hyprland.enable = true;
+  programs.sway.enable = true;
 
   services.hardware.openrgb.enable = true;
 

@@ -13,7 +13,7 @@
   ];
 
   hardware.nvidia = {
-    package = config.boot.kernelPackages.nvidiaPackages.production; # slightly older, doesn't require to be the open
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
     nvidiaSettings = true;
     open = true;
     # nvidiaPersistenced = true;
