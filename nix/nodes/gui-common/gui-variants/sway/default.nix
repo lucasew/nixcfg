@@ -256,7 +256,7 @@ in
         bindsym XF86MonBrightnessDown exec sdw utils i3wm brightnessctl down
 
         bindsym $mod+Shift+m move workspace to output left
-        bindsym $mod+m focus output next
+        bindsym $mod+m focus output right
 
         bindsym $mod+l exec sdw utils i3wm lock-screen
         bindsym $mod+n exec sdw utils i3wm modn
@@ -279,11 +279,11 @@ in
 
         # announce a running sway session to systemd
         # https://discourse.nixos.org/t/xdg-desktop-portal-not-working-on-wayland-while-kde-is-installed/20919/3
-        exec systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP WAYLAND_DISPLAY DISPLAY
-        exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+        exec_always systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP WAYLAND_DISPLAY DISPLAY
+        exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
         exec_always systemctl restart --user nm-applet.service blueberry-tray.service kdeconnect.service kdeconnect-indicator.service dunst.service swayidle.service
-        exec_always sd is riverwood &&  wlr-randr --output eDP-1 --left-of HDMI-A-1
+        exec_always sh -c 'sdw is riverwood &&  wlr-randr --output eDP-1 --left-of HDMI-A-1'
       '';
   };
 }
