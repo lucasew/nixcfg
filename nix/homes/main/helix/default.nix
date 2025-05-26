@@ -7,7 +7,6 @@
 {
   config = lib.mkIf config.programs.helix.enable {
     home.packages = with pkgs.unstable; [
-      lsp-ai
       typos-lsp
       yaml-language-server
       docker-compose-language-service
