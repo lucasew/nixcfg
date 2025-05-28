@@ -120,6 +120,7 @@ in
     };
     environment.systemPackages = with pkgs; [
       wlr-randr
+      wl-clipboard
       eog # eye of gnome
       xfce.ristretto
       pcmanfm
