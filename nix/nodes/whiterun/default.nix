@@ -26,7 +26,6 @@ in
     ./nextcloud.nix
     ./sshfs.nix
     ./zfs.nix
-    ./escrivao.nix
     # ./container-inet-rdp.nix
     ./container-nat.nix
     ./rtorrent.nix
@@ -77,33 +76,12 @@ in
 
   services.guix.enable = true;
 
-  services.escrivao.enable = true;
-
   services.postgresql = {
     enable = true;
     enableTCPIP = true;
     userSpecificDatabases = {
       test = [ "demo" ];
     };
-  };
-
-  systemd.services.${config.services.python-microservices.services.stt-ptbr.unitName} = {
-    environment = {
-      LD_LIBRARY_PATH = builtins.concatStringsSep ":" [
-        "/run/opengl-driver/lib"
-        "${pkgs.ffmpeg.lib}/lib"
-      ];
-    };
-  };
-  services.python-microservices.services.stt-ptbr = {
-    script = builtins.readFile ./python-microservice-stt-ptbr.py;
-    python = pkgs.python3.withPackages (
-      p: with p; [
-        transformers
-        torchaudio
-        pytorch
-      ]
-    );
   };
 
   services.ollama.enable = true;
