@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+PATH=$PATH:/run/current-system/sw/bin
+
 if [[ "$1" =~ ^[0-9]*$ ]] && [[ "$#" -gt 0 ]]; then
 	export JOB_LABEL="review #$1 $*"
 

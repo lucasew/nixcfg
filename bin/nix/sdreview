@@ -11,6 +11,7 @@ systemd-run \
 	-P \
 	--unit "nixpkgs-review-$PR" \
 	--collect \
+	-E PATH=/run/current-system/sw/bin \
 	-p KillSignal=SIGINT \
 	-p TimeoutStopSec=infinity \
 	\
