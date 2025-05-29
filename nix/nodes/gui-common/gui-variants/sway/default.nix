@@ -79,6 +79,7 @@ in
       path = with pkgs; [ swayidle ];
       restartIfChanged = true;
       script = ''
+        PATH=$PATH:/run/current-system/sw/bin
         exec swayidle -w -d \
           timeout 300 'swaymsg "output * dpms off"' \
           timeout 305 'loginctl lock-session' \
@@ -280,7 +281,7 @@ in
 
         # announce a running sway session to systemd
         # https://discourse.nixos.org/t/xdg-desktop-portal-not-working-on-wayland-while-kde-is-installed/20919/3
-        exec_always systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP WAYLAND_DISPLAY DISPLAY
+        exec_always systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP WAYLAND_DISPLAY DISPLAY SWAYSOCK
         exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
         exec_always systemctl restart --user nm-applet.service blueberry-tray.service kdeconnect.service kdeconnect-indicator.service dunst.service swayidle.service
