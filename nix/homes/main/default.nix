@@ -37,7 +37,7 @@ in
   # services.espanso.enable = true;
   programs.man.enable = true;
 
-  programs.qutebrowser.enable = true;
+  # programs.qutebrowser.enable = true;
 
   home = {
     homeDirectory = /home/lucasew;
@@ -56,7 +56,6 @@ in
     devenv
     dotenv
     jless # json viewer
-    rustdesk # remote desktop for many systems
     feh
     fortune
     graphviz
@@ -75,10 +74,8 @@ in
     sshpass
 
     # media
-    vlc
     nbr.wine-apps._7zip
     xxd
-    pavucontrol # controle de volume
 
     # dev
     conda
