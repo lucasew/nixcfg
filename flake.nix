@@ -194,7 +194,6 @@
         selectedDesktopEnvironment = "i3";
         environmentShell = ''
           source ${self}/bin/source_me
-          export NIX_PATH=nixpkgs=${defaultNixpkgs}:nixpkgs-overlays=$NIXCFG_ROOT_PATH/nix/compat/overlay.nix:home-manager=${home-manager}:nur=${nur}
         '';
       };
 
