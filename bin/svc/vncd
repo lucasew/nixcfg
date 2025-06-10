@@ -4,7 +4,9 @@
 # spawns an unauthenticated VNC server
 
 if [[ -v WAYLAND_DISPLAY ]]; then
+	echo Starting xvnc wayland
 	sd svc .vncd-wayland --really "$@"
 else
+	echo Starting xvnc xorg
 	sd svc .vncd-xorg --really "$@"
 fi
