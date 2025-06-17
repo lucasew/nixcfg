@@ -17,6 +17,7 @@ lib.mkIf config.programs.nix-ld.enable {
       alsa-lib
       openblas
       glib
+      libbsd
     ]
     ++ (appimageTools.defaultFhsEnvArgs.targetPkgs pkgs);
 
