@@ -18,6 +18,7 @@ lib.mkIf config.programs.nix-ld.enable {
       openblas
       glib
       libbsd
+      libGL
     ]
     ++ (appimageTools.defaultFhsEnvArgs.targetPkgs pkgs);
 
