@@ -270,7 +270,7 @@ in
         bindsym $mod+Shift+b exec sdw utils i3wm goto-new-ws window
 
 
-        bindsym --release Print exec org.flameshot.Flameshot gui
+        bindsym --release Print exec be.alexandervanhee.gradia --screenshot
 
         # exec_always feh --bg-fill --no-xinerama --no-fehbg '/etc/wallpaper'
         exec_always feh --bg-fill --no-fehbg '/etc/wallpaper'
@@ -278,8 +278,6 @@ in
         default_border pixel 2
         hide_edge_borders smart
         focus_on_window_activation urgent
-
-        for_window [app_id="flameshot"] border pixel 0, floating enable, fullscreen disable, move absolute position 0 0
 
         # announce a running sway session to systemd
         # https://discourse.nixos.org/t/xdg-desktop-portal-not-working-on-wayland-while-kde-is-installed/20919/3
