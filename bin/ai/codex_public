@@ -1,6 +1,8 @@
 #!/usr/bin/env -S sd nix shell
 #! nix-shell -p nodejs -i bash
 
+# Roda Open Codex com uma chave Open Router sem saldo pra usar com modelos gratuitos e projetos de código aberto.
+
 set -euo pipefail
 
 export OPENROUTER_API_KEY=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 # valid key but with spend limit 0
