@@ -12,14 +12,9 @@ lib.mkIf config.programs.nix-ld.enable {
     with pkgs;
     [
       fuse
-      xorg.libXi
-      wayland
-      alsa-lib
-      openblas
-      glib
       libbsd
-      libGL
     ]
-    ++ (appimageTools.defaultFhsEnvArgs.targetPkgs pkgs);
+    ++ (appimageTools.defaultFhsEnvArgs.targetPkgs pkgs)
+    ++ (appimageTools.defaultFhsEnvArgs.multiPkgs pkgs);
 
 }
