@@ -52,8 +52,9 @@ let
       };
 
     swaylock-list-args = lib.pipe dict-args [
-      (builtins.mapAttrs (k: v: "--${k} ${v}"))
+      (builtins.mapAttrs (k: v: ["--${k}" "${v}"]))
       (builtins.attrValues)
+      (lib.flatten)
     ];
   in swaylock-list-args;
 in
