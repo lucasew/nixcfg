@@ -107,10 +107,10 @@ in
 
   services.xserver.xkb.model = "acer_laptop";
 
-  services.simple-dashboardd = {
-    enable = true;
-    openFirewall = true;
-  };
+  # services.simple-dashboardd = {
+  #   enable = true;
+  #   openFirewall = true;
+  # };
 
   virtualisation.kvmgt.enable = false;
   virtualisation.spiceUSBRedirection.enable = true;
