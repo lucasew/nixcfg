@@ -5,5 +5,15 @@
   ],
   "nix": {
     "enabled": true
-  }
+  },
+  "packageRules": [
+    {
+      "matchDepTypes": "required_provider",
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "automerge": true
+    }
+  ]
 }
