@@ -8,6 +8,9 @@
   },
   "packageRules": [
     {
+      "matchManagers": [
+        "terraform"
+      ],
       "matchDepTypes": "required_provider",
       "matchUpdateTypes": [
         "minor",
