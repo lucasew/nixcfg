@@ -13,6 +13,7 @@ lib.mkIf config.programs.nix-ld.enable {
     [
       fuse
       libbsd
+      curl
     ]
     ++ (appimageTools.defaultFhsEnvArgs.targetPkgs pkgs)
     ++ (appimageTools.defaultFhsEnvArgs.multiPkgs pkgs);
