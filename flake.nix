@@ -126,6 +126,9 @@
 
     src-cached-nix-shell.url = "github:xzfc/cached-nix-shell";
     src-cached-nix-shell.flake = false;
+
+    phpelo.url = "github:lucasew/phpelo";
+    phpelo.flake = false;
   };
 
   outputs =

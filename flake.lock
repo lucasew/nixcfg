@@ -783,6 +783,22 @@
         "type": "github"
       }
     },
+    "phpelo": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1753119412,
+        "narHash": "sha256-W748F91qBvXwVTcwDREF/fBUnFgBj0xJiawE6+ljp00=",
+        "owner": "lucasew",
+        "repo": "phpelo",
+        "rev": "b118117d0358633fd381cc7dbbee6435e2176014",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lucasew",
+        "repo": "phpelo",
+        "type": "github"
+      }
+    },
     "redial-proxy": {
       "flake": false,
       "locked": {
@@ -846,6 +862,7 @@
         "nixpkgs-lib": "nixpkgs-lib_2",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nur": "nur",
+        "phpelo": "phpelo",
         "redial-proxy": "redial-proxy",
         "regex101": "regex101",
         "rust-overlay": "rust-overlay",

@@ -21,6 +21,6 @@
     ./ts-proxy.nix
     ./ngircd.nix
     ./minecraft.nix
-    ./phputils
+    ./phpelo.nix
   ];
 }
