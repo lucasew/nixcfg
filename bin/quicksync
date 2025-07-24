@@ -31,6 +31,12 @@ function sync_private_repo {
 	popd >/dev/null
 	popd >/dev/null
 }
+
+if ! sd is riverwood; then
+	ssh lucasew@riverwood sdw quicksync
+fi
+
+
 erros=()
 
 sync_private_repo personal-keepass || erros+=(personal-keepass) || true
