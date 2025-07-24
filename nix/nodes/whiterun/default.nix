@@ -156,8 +156,6 @@ in
   virtualisation.oci-containers.backend = "docker";
   virtualisation.containerd.enable = true;
 
-  services.kubo.enable = true;
-
   services.telegram-sendmail.enable = true;
 
   services.cloud-savegame = {

@@ -20,7 +20,6 @@ in
     ./adb.nix
     ./vbox.nix
     ./tuning.nix
-    ./ipfs.nix
     ./gamemode.nix
     ./sunshine.nix
     ./wallpaper.nix
