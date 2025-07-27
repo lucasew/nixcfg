@@ -23,6 +23,11 @@ in
       url = "https://facebook.com";
       profile = "facebook";
     };
+    pocketcasts = {
+      desktopName = "PocketCasts";
+      url = "https://pocketcasts.com";
+      icon = "sound";
+    };
     twitter = {
       # https://chrome.google.com/webstore/detail/control-panel-for-twitter/kpmjjdhbcfebfjgdnpjagcndoelnidfj
       desktopName = "Twitter"; # no need for web containers lol
