@@ -4,7 +4,7 @@ lib.mkIf config.services.cockpit.enable {
   networking.ports.cockpit.enable = true;
 
   services.cockpit = {
-    inherit (config.networking.ports.cockpit) port;
+    # inherit (config.networking.ports.cockpit) port;
     # settings = {
     #   WebService = {
     #     Origins = lib.mkForce builtins.concatStringsSep " " [
