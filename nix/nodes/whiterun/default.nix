@@ -74,8 +74,6 @@ in
 
   services.fusionsolar-reporter.enable = true;
 
-  services.guix.enable = true;
-
   services.postgresql = {
     enable = true;
     enableTCPIP = true;

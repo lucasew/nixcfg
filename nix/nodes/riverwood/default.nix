@@ -50,8 +50,6 @@ in
     calendar = "00/6:00:01";
   };
 
-  services.guix.enable = true;
-
   services.python-microservices.services = {
     teste = {
       script = ''
