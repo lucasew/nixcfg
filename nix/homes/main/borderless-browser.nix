@@ -10,6 +10,11 @@ in
       desktopName = "Teste";
       url = "https://google.com";
     };
+    element = {
+      desktopName = "Element Matrix";
+      url = "https://app.element.io";
+      profile = "element";
+    };
     reemo = {
       desktopName = "Remote control";
       url = "https://reemo.io";
