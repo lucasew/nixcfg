@@ -28,7 +28,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Setup build disk space
         uses: lucasew/action-i-only-care-about-nix@main
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Setup stuff
         run: |
           sudo mkdir -p /nix/build
