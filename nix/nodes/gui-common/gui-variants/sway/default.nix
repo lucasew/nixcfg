@@ -285,7 +285,7 @@ in
         exec_always systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP WAYLAND_DISPLAY DISPLAY SWAYSOCK
         exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
-        exec_always systemctl restart --user nm-applet.service blueberry-tray.service kdeconnect.service kdeconnect-indicator.service dunst.service swayidle.service
+        exec_always systemctl restart --user xss-lock nm-applet.service blueberry-tray.service kdeconnect.service kdeconnect-indicator.service dunst.service swayidle.service
         exec_always sh -c 'sdw is riverwood &&  wlr-randr --output eDP-1 --left-of HDMI-A-1'
       '';
   };
