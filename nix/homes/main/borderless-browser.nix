@@ -6,6 +6,12 @@ in
   # TODO: automate installation of extensions
   # CHROME_DONT_BORDERLESS=1 runs them borderfull
   borderless-browser.apps = {
+    castable-iframe = {
+      # extension: https://chromewebstore.google.com/detail/ignore-x-frame-headers/gleekbfjekiniecknbkamfmkohkpodhe
+      desktopName = "Castable Iframe";
+      url = "https://castable-iframe.vercel.app/";
+      profile = "castable-iframe"; # I don't want that extension globally for security reasons
+    };
     teste = {
       desktopName = "Teste";
       url = "https://google.com";

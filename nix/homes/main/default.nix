@@ -60,6 +60,7 @@ in
     fortune
     graphviz
     github-cli
+    google-cloud-sdk
     libnotify
     ncdu
     # nix-option
