@@ -187,14 +187,4 @@ in
   regex101 = prev.callPackage flake.inputs.regex101 { };
 
   elixir_edge = final.unstable.elixir.override { erlang = final.unstable.erlang_27; };
-
-  conda = prev.conda.override {
-    extraPkgs = with final; [
-      libGL
-      libGLU
-      xorg.libX11
-      xorg.libXi
-      qt5.qtbase
-    ];
-  };
 }

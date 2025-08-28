@@ -78,8 +78,6 @@ in
     nbr.wine-apps._7zip
     xxd
 
-    # dev
-    conda
     # custom.vscode.programming
     # (custom.neovim.override { inherit colors; })
     # (custom.emacs.override { inherit colors; })
