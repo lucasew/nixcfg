@@ -26,6 +26,8 @@ in
     ./zen-browser.nix
   ];
 
+  stylix.enable = true;
+
   borderless-browser.chromium = lib.getExe pkgs.brave;
 
   # programs.ghostty.enable = true;
@@ -145,6 +147,125 @@ in
     enable = true;
     config = {
       ytdl-raw-options = "format-sort=\"vcodec:h264,res,acodec:m4a\"";
+    };
+  };
+
+  programs.waybar = {
+    enable = true;
+    settings = {   
+      settings = {
+        layer = "top"; # Waybar at top layer
+        position = "top"; # Waybar position (top|bottom|left|right)
+        height = 10; # Waybar height (to be removed for auto height)
+        width = 1280; # Waybar width
+        spacing = 1; # Gaps between modules (4px)
+        # modules-left = ["hyprland/workspaces"];
+        modules-left = ["sway/workspaces" "sway/mode"];
+        modules-center = ["hyprland/window"];
+        modules-right = [
+          "idle_inhibitor"
+          "pulseaudio"
+          "backlight"
+          "network"
+          "custom/updates"
+          "cpu"
+          "memory"
+          "temperature"
+          "battery"
+          "tray"
+          "clock"
+        ];
+        keyboard-state = {
+            numlock = false;
+            capslock = false;
+            format = "{name} {icon}";
+            format-icons = {
+                locked = "🔒";
+                unlocked = "🔓";
+            };
+        };
+        "hyprland/window" = {
+            max-length = 50;
+            separate-outputs = true;
+        };
+        idle_inhibitor = {
+            format = "{icon}";
+            format-icons = {
+                activated = "☕";
+                deactivated = "💤";
+            };
+        };
+        tray = {
+            # "icon-size": 21,
+            spacing = 5;
+        };
+        clock = {
+            timezone = "America/Sao_Paulo";
+            tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+            format-alt = "{:%Y-%m-%d}";
+        };
+        cpu = {
+            format = "{usage}%";
+            tooltip = false;
+        };
+        memory = {
+            format = "{}%";
+        };
+        temperature = {
+            # "thermal-zone": 2,
+            # "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+            critical-threshold = 70;
+            format-critical = "{temperatureC}°C!";
+            format = "{temperatureC}°C";
+        };
+        battery = {
+            states = {
+                # "good": 95,
+                warning = 30;
+                critical = 15;
+            };
+            format = "{capacity}% {icon}";
+            format-charging = "{capacity}% ⚡";
+            format-discharging = "{capacity}% 🔋";
+            format-plugged = "{capacity}% 🔌";
+            format-full = "CARREGADO";
+            format-alt = "{time} {icon}";
+            # "format-good": "", // An empty format will hide the module
+            # "format-full": "",
+            format-icons = ["" "" "" "" ""];
+        };
+        "battery#bat2" = {
+            bat = "BAT2";
+        };
+        network = {
+            # "interface": "*", // (Optional) To force the use of this interface
+            format-wifi = "{essid} 🛜";
+            format-ethernet = "🔗";
+            tooltip-format = "{ifname} via {gwaddr} {ipaddr}/{cidr}";
+            format-linked = "{ifname} (No IP)";
+            format-disconnected = "Desconectado 🦖";
+            format-alt = "{ifname}: {ipaddr}/{cidr}";
+        };
+        pulseaudio = {
+            # "scroll-step": 10, // %, can be a float
+            format = "{volume}%{icon} {format_source}";
+            format-bluetooth = "{volume}% {icon} {format_source}";
+            format-bluetooth-muted = "🔇 {icon} {format_source}";
+            format-muted = "🔇 {format_source}";
+            format-source = "{volume}% 🎙️";
+            format-source-muted = "🔇";
+            format-icons = {
+                headphone = "🎧";
+                hands-free = "";
+                headset = "";
+                phone = "📱";
+                portable = "";
+                car = "";
+                default = ["" "" ""];
+            };
+            on-click = "pavucontrol";
+        };
+      };
     };
   };
 }

@@ -77,7 +77,7 @@ in
   # Enable CUPS to print documents.
   services.printing.enable = lib.mkDefault true;
 
-  qt.platformTheme.name = lib.mkDefault "qt5ct";
+  # qt.platformTheme.name = lib.mkDefault "qt5ct";
 
   # https://github.com/NixOS/nixpkgs/pull/297434#issuecomment-2348783988
   systemd.services.display-manager.environment.XDG_CURRENT_DESKTOP = "X-NIXOS-SYSTEMD-AWARE";

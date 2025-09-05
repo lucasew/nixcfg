@@ -2,6 +2,7 @@
   flake,
   extraArgs,
   nodes,
+  extraModules ? []
 }:
 let
   hmConf =
@@ -14,7 +15,7 @@ let
       inherit pkgs;
       extraSpecialArgs = extraArgs // extraSpecialArgs // { inherit pkgs; };
       configuration = {
-        imports = modules;
+        imports = modules ++ extraModules;
       };
     };
 in

@@ -135,6 +135,8 @@ in
       brightnessctl
     ];
 
+    programs.waybar.enable = true;
+
     environment.etc."sway/config".text =
       with pkgs.custom.colors.colors;
       lib.mkForce ''

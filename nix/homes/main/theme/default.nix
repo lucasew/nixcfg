@@ -8,30 +8,37 @@ let
 in
 {
   imports = [
-    ./terminator.nix
-    ./telegram
-    ./obsidian
-    ./discord
-    ./qtct.nix
-    ./ghostty.nix
+    # ./terminator.nix
+    # ./telegram
+    # ./obsidian
+    # ./discord
+    # ./qtct.nix
+    # ./ghostty.nix
   ];
+
   home.packages = with pkgs; [
     lxappearance
     colorpipe
   ];
+
+  stylix = {
+    polarity = if colors.isDark then "dark" else "light";
+    base16Scheme = colors.colors;
+  };
+
   gtk = {
-    theme = {
-      package = gtkThemeFromScheme { scheme = colors; };
-      name = colors.slug;
-    };
-    cursorTheme = {
-      package = pkgs.paper-icon-theme;
-      name = "Paper";
-    };
-    iconTheme = {
-      package = pkgs.paper-icon-theme;
-      name = "Paper";
-    };
+    # theme = {
+    #   package = gtkThemeFromScheme { scheme = colors; };
+    #   name = colors.slug;
+    # };
+    # cursorTheme = {
+    #   package = pkgs.paper-icon-theme;
+    #   name = "Paper";
+    # };
+    # iconTheme = {
+    #   package = pkgs.paper-icon-theme;
+    #   name = "Paper";
+    # };
   };
   programs.bash.bashrcExtra = ''
     function setup_colors {

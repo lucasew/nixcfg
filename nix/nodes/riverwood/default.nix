@@ -18,11 +18,13 @@ in
 
     ./kvm.nix
     ./networking.nix
-    ./plymouth.nix
+    # ./plymouth.nix
     ./remote-build.nix
     ./tuning.nix
     ./test_socket_activated
   ];
+
+  stylix.enable = true;
 
   boot = {
     extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];

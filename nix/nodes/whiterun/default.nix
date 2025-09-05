@@ -32,6 +32,8 @@ in
     ./transmission.nix
   ];
 
+  stylix.enable = true;
+
   services.slurm = {
     server.enable = true;
     client.enable = true;

@@ -20,6 +20,11 @@
     nixpkgs.url = "nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
 
+    stylix = {
+      url = "github:nix-community/stylix/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
 
     home-manager.url = "home-manager/release-25.05";
@@ -370,7 +375,10 @@
       nixosConfigurations = import ./nix/nodes {
         inherit extraArgs system;
         path = inputs.nixpkgs;
-        extraModules = [ inputs.fusionsolar-bot.nixosModules.${system}.default ];
+        extraModules = [
+          inputs.fusionsolar-bot.nixosModules.${system}.default
+          inputs.stylix.nixosModules.stylix
+        ];
         nodes = {
           ravenrock = {
             modules = [ ./nix/nodes/ravenrock ];
@@ -401,6 +409,9 @@
 
       homeConfigurations = pkgs.callPackage ./nix/homes {
         inherit extraArgs;
+        extraModules = [
+          inputs.stylix.homeModules.stylix
+        ];
         nodes = {
           main = {
             modules = [ ./nix/homes/main ];
