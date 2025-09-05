@@ -14,17 +14,13 @@ in
     # ./discord
     # ./qtct.nix
     # ./ghostty.nix
+    ../../../stylix.nix
   ];
 
   home.packages = with pkgs; [
     lxappearance
     colorpipe
   ];
-
-  stylix = {
-    polarity = if colors.isDark then "dark" else "light";
-    base16Scheme = colors.colors;
-  };
 
   gtk = {
     # theme = {

@@ -19,7 +19,7 @@ in
 {
   imports = [
     ./bash-extra.nix
-    ./colors.nix
+    ../../stylix.nix
     ./ccache.nix
     ./dotfiles-dir.nix
     ./rev.nix

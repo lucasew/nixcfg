@@ -148,7 +148,7 @@ in
         }
 
         bar {
-          swaybar_command ${lib.getExe pkgs.waybar}
+          # swaybar_command ${lib.getExe pkgs.waybar}
           # status_command ${lib.getExe pkgs.unstable.i3pystatus} -c $(sdw d root)/bin/_shortcuts/i3pystatus/main.py
           font pango: Fira Code 10
           hidden_state show
@@ -287,7 +287,7 @@ in
         exec_always systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP WAYLAND_DISPLAY DISPLAY SWAYSOCK PATH
         exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
-        exec_always systemctl restart --user xss-lock nm-applet.service blueberry-tray.service kdeconnect.service kdeconnect-indicator.service dunst.service swayidle.service
+        exec_always systemctl restart --user xss-lock nm-applet.service blueberry-tray.service kdeconnect.service kdeconnect-indicator.service dunst.service swayidle.service waybar.service
         exec_always sh -c 'sdw is riverwood &&  wlr-randr --output eDP-1 --left-of HDMI-A-1'
         exec_always systemctl --user restart xdg-desktop-portal
       '';
