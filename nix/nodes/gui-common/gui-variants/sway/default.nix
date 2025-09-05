@@ -151,11 +151,12 @@ in
           # swaybar_command ${lib.getExe pkgs.waybar}
           # status_command ${lib.getExe pkgs.unstable.i3pystatus} -c $(sdw d root)/bin/_shortcuts/i3pystatus/main.py
           font pango: Fira Code 10
-          hidden_state show
+          hidden_state hide
+          mode hide
           position top
           # output primary
-          tray_output primary
-          workspace_buttons yes
+          # tray_output primary
+          # workspace_buttons yes
 
           colors {
             # background #00${base00}
