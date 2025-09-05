@@ -282,11 +282,12 @@ in
 
         # announce a running sway session to systemd
         # https://discourse.nixos.org/t/xdg-desktop-portal-not-working-on-wayland-while-kde-is-installed/20919/3
-        exec_always systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP WAYLAND_DISPLAY DISPLAY SWAYSOCK
+        exec_always systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP WAYLAND_DISPLAY DISPLAY SWAYSOCK PATH
         exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
         exec_always systemctl restart --user xss-lock nm-applet.service blueberry-tray.service kdeconnect.service kdeconnect-indicator.service dunst.service swayidle.service
         exec_always sh -c 'sdw is riverwood &&  wlr-randr --output eDP-1 --left-of HDMI-A-1'
+        exec_always systemctl --user restart xdg-desktop-portal
       '';
   };
 }
