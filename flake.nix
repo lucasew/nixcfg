@@ -359,7 +359,7 @@
       };
       colors =
         let
-          scheme = inputs.nix-colors.colorschemes."ayu-dark";
+          scheme = inputs.nix-colors.colorschemes."darkviolet";
         in
         scheme
         // {
