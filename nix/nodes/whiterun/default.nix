@@ -128,7 +128,6 @@ in
   # services.rtorrent.enableSandboxSample = true;
 
   programs.gamemode.enable = true;
-  services.cf-torrent.enable = true;
 
   boot.plymouth.enable = true;
 

@@ -108,9 +108,6 @@
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    cf-torrent.url = "github:lucasew/cf-torrent";
-    cf-torrent.flake = false;
-
     nixgram.url = "github:lucasew/nixgram";
     nixgram.flake = false;
 

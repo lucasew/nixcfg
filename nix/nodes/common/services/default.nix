@@ -1,7 +1,6 @@
 { ... }:
 {
   imports = [
-    ./cf-torrent.nix
     ./cloud-savegame.nix
     ./cockpit-extra.nix
     ./fusionsolar

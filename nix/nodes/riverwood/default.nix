@@ -45,8 +45,6 @@ in
 
   programs.nix-ld.enable = true;
 
-  services.cf-torrent.enable = true;
-
   services.rsyncnet-remote-backup = {
     enable = true;
     calendar = "00/6:00:01";

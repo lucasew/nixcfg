@@ -48,7 +48,6 @@ in
         nixpkgs = "https://github.com/search?q=repo%3ANixOS%2Fnixpkgs%20{}";
         options = "https://search.nixos.org/options?query={}";
         so = "https://stackoverflow.com/search?q={}";
-        cft = "http://cf-torrent.whiterun.lucao.net/search/torrent/result?use_google=1&use_duckduckgo=1&query={}";
         ml = "https://lista.mercadolivre.com.br/{}";
       };
       settings = {
