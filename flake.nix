@@ -31,7 +31,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
 
-    blender-bin.url = "blender-bin";
+    blender-bin.url = "github:edolstra/nix-warez?dir=blender";
     blender-bin.inputs.nixpkgs.follows = "nixpkgs";
 
     bumpkin.url = "github:lucasew/bumpkin";
