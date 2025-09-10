@@ -34,19 +34,6 @@ in
 
   stylix.enable = true;
 
-  services.slurm = {
-    server.enable = true;
-    client.enable = true;
-    clusterName = "lucaoenterprise";
-    controlMachine = "whiterun";
-    nodeName = [
-      "whiterun CPUs=12 State=UNKNOWN"
-    ];
-    partitionName = [
-      "standard Nodes=whiterun Default=YES MaxTime=INFINITE State=UP"
-    ];
-  };
-
   services.minecraft-server.enable = true;
 
   services.phpelo.enable = true;
