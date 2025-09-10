@@ -142,22 +142,6 @@
         "type": "github"
       }
     },
-    "cf-torrent": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1755642230,
-        "narHash": "sha256-n431ENae67ybRC5ijTIH3xnVvA3x/pBiux0oeWp/8fk=",
-        "owner": "lucasew",
-        "repo": "cf-torrent",
-        "rev": "57c8cafd690fc76b909f5777d2e2a25a0d514843",
-        "type": "github"
-      },
-      "original": {
-        "owner": "lucasew",
-        "repo": "cf-torrent",
-        "type": "github"
-      }
-    },
     "climod": {
       "flake": false,
       "locked": {
@@ -1000,7 +984,6 @@
         "blender-bin": "blender-bin",
         "borderless-browser": "borderless-browser",
         "bumpkin": "bumpkin",
-        "cf-torrent": "cf-torrent",
         "climod": "climod",
         "cloud-savegame": "cloud-savegame",
         "devenv": "devenv",

@@ -36,6 +36,8 @@ in
 
   services.minecraft-server.enable = true;
 
+  services.cf-torrent.enable = true;
+
   services.phpelo.enable = true;
 
   programs.nix-ld.enable = true;
