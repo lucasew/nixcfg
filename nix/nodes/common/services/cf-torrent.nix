@@ -12,6 +12,7 @@ let
     mkOption
     types
     mkIf
+    mkForce
     mkDefault
     ;
 in
@@ -71,7 +72,7 @@ in
       autoStart = false;
     };
 
-    systemd.services.cf-torrent.serviceConfig.Restart = "no";
+    systemd.services.cf-torrent.serviceConfig.Restart = mkForce "no";
 
   };
 }
