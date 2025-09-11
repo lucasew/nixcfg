@@ -1,0 +1,4 @@
+[tools]
+"github:lucasew/ts-proxy" = "latest"
+usage = "latest"
+yt-dlp = "latest"

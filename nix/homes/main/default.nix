@@ -24,6 +24,7 @@ in
     ./discord.nix
     ./qutebrowser.nix
     ./zen-browser.nix
+    ./mise.nix
   ];
 
   stylix.enable = true;
