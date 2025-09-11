@@ -68,14 +68,10 @@ in
       };
       pull = "always";
       serviceName = "cf-torrent";
-      extraOptions = [
-        "--preserve-fd=3"
-      ];
+      autoStart = false;
     };
 
-    systemd.services.cf-torrent.environment = {
-      PODMAN_SYSTEMD_UNIT = "cf-torrent.service";
-    };
+    systemd.services.cf-torrent.serviceConfig.Restart = "no";
 
   };
 }
