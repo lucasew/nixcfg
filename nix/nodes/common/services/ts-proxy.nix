@@ -22,7 +22,11 @@ in
         default = "/run/secrets/ts-proxy";
       };
 
-      package = lib.mkPackageOption pkgs "ts-proxy" { };
+      image = lib.mkOption {
+        description = "Which ts-proxy image to use";
+        default = "ghcr.io/lucasew/ts-proxy:latest";
+        type = lib.types.str;
+      };
 
       user = lib.mkOption {
         description = "Service user";
@@ -119,6 +123,33 @@ in
       MemoryMax = "384M";
     };
 
+    virtualisation.oci-containers.containers = lib.mkMerge (
+      builtins.attrValues (
+          builtins.mapAttrs (k: host: {
+            ${host.unitName} = {
+              inherit (cfg) image;
+              pull = "always";
+              serviceName = host.unitName;
+              extraOptions = [ "--network=host" ];
+              environmentFiles = [ cfg.environmentFile ];
+              volumes = [
+                "${cfg.dataDir}/tsproxy-${host.name}:/state"
+              ];
+              cmd = []
+                ++ ([ "-address" host.address ])
+                ++ (lib.optional host.enableFunnel "-f")
+                ++ (lib.optionals (host.listen != 0) [ "-listen" ":${toString host.listen}" ])
+                ++ ([ "-n" host.name ])
+                ++ (lib.optionals (host.network != "") [ "-net" host.network ])
+                ++ (lib.optional host.enableRaw "-raw")
+                ++ ([ "-s" "/state" ])
+                ++ (lib.optional host.enableTLS "-t")
+              ;
+            };
+          }) cfg.hosts
+        )
+    );
+
     systemd.services = lib.mkMerge (
       builtins.attrValues (
         builtins.mapAttrs (k: host: {
@@ -135,43 +166,11 @@ in
 
             serviceConfig = {
               Slice = "ts-proxy.slice";
-              User = cfg.user;
-              Group = cfg.group;
+              # User = cfg.user;
+              # Group = cfg.group;
               Restart = "always";
               RestartSec = "10s";
-              EnvironmentFile = cfg.environmentFile;
             };
-
-            script = ''
-              exec ${lib.getExe' pkgs.ts-proxy "ts-proxyd"} ${
-                lib.escapeShellArgs (
-                  [ ]
-                  ++ ([
-                    "-address"
-                    host.address
-                  ])
-                  ++ (lib.optional host.enableFunnel "-f")
-                  ++ (lib.optionals (host.listen != 0) [
-                    "-listen"
-                    ":${toString host.listen}"
-                  ])
-                  ++ ([
-                    "-n"
-                    host.name
-                  ])
-                  ++ (lib.optionals (host.network != "") [
-                    "-net"
-                    host.network
-                  ])
-                  ++ (lib.optional host.enableRaw "-raw")
-                  ++ ([
-                    "-s"
-                    "${cfg.dataDir}/tsproxy-${host.name}"
-                  ])
-                  ++ (lib.optional host.enableTLS "-t")
-                )
-              }
-            '';
           };
         }) cfg.hosts
       )
