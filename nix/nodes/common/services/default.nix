@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 {
   imports = [
     ./cloud-savegame.nix
@@ -23,4 +23,6 @@
     ./minecraft.nix
     ./phpelo.nix
   ];
+
+  virtualisation.oci-containers.backend = lib.mkDefault "podman";
 }
