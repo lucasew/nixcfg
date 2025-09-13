@@ -117,9 +117,6 @@
     telegram-sendmail.url = "github:lucasew/telegram-sendmail";
     telegram-sendmail.flake = false;
 
-    redial-proxy.url = "github:lucasew/redial_proxy";
-    redial-proxy.flake = false;
-
     climod.url = "github:nixosbrasil/climod";
     climod.flake = false;
 

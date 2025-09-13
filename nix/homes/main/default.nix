@@ -111,8 +111,6 @@ in
 
   # programs.hello-world.enable = true;
 
-  services.redial_proxy.enable = true;
-
   programs = {
     # adskipped-spotify.enable = true;
     jq.enable = true;

@@ -947,22 +947,6 @@
         "type": "github"
       }
     },
-    "redial-proxy": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1755176493,
-        "narHash": "sha256-UDPXYC/FWAEY7N5kyexzDlYpRTWKSpkjrTlZP7py6B0=",
-        "owner": "lucasew",
-        "repo": "redial_proxy",
-        "rev": "83d97d6adeccb60487e9c5cf9217c935b4d742dd",
-        "type": "github"
-      },
-      "original": {
-        "owner": "lucasew",
-        "repo": "redial_proxy",
-        "type": "github"
-      }
-    },
     "regex101": {
       "flake": false,
       "locked": {
@@ -1010,7 +994,6 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nur": "nur",
         "phpelo": "phpelo",
-        "redial-proxy": "redial-proxy",
         "regex101": "regex101",
         "rust-overlay": "rust-overlay",
         "send2kindle": "send2kindle",

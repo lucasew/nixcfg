@@ -93,7 +93,6 @@ in
   appimage-wrap = final.nbr.appimage-wrap;
 
   dotenv = cp flake.inputs.dotenv;
-  redial_proxy = cp flake.inputs.redial_proxy;
   send2kindle = cp flake.inputs.send2kindle;
   nixgram = cp flake.inputs.nixgram;
   go-annotation = cp flake.inputs.go-annotation;

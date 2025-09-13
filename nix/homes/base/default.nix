@@ -15,7 +15,6 @@ in
 {
   imports = [
     "${self.inputs.nixgram}/hmModule.nix"
-    "${self.inputs.redial-proxy}/hmModule.nix"
     "${self.inputs.borderless-browser}/home-manager.nix"
   ];
 
