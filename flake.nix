@@ -57,6 +57,7 @@
     go-annotation.flake = false;
 
     ts-proxy.url = "github:lucasew/ts-proxy";
+    ts-proxy.flake = false;
 
     nix-emacs.url = "github:nixosbrasil/nix-emacs";
     nix-emacs.flake = false;
