@@ -13,7 +13,6 @@
     ./nixgram.nix
     ./netusage
     ./restic-server.nix
-    ./ollama.nix
     ./python-microservices
     ./rtorrent.nix
     ./rsyncnet

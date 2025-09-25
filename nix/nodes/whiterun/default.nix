@@ -73,8 +73,6 @@ in
     };
   };
 
-  services.ollama.enable = true;
-
   networking.interfaces.enp5s0.wakeOnLan.enable = true;
 
   services.restic.server.enable = true;
