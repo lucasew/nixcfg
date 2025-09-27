@@ -203,7 +203,7 @@ jobs:
   build-x86_64-darwin:
     name: 'x86_64-darwin'
     if: ${{ github.event.inputs.x86_64-darwin == 'true' }}
-    runs-on: macos-14
+    runs-on: macos-15
 
     steps:
       - name: Try to fetch nixpkgs clone from cache
