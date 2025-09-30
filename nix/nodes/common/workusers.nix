@@ -3,23 +3,17 @@
 {
   users = {
     users = {
-      # reservado uid 2000
-      w_cilia = {
+      # vai incrementando
+      /*
+      w_you = {
         isNormalUser = true;
         extraGroups = [
           "work"
           "ssh"
         ];
-        uid = 2001;
+        uid = 2003;
       };
-      w_logito = {
-        isNormalUser = true;
-        extraGroups = [
-          "work"
-          "ssh"
-        ];
-        uid = 2002;
-      };
+      */
     };
     groups.work = {
       gid = 1999;
