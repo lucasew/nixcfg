@@ -29,7 +29,7 @@ in
 
   stylix.enable = true;
 
-  borderless-browser.chromium = lib.getExe pkgs.brave;
+  borderless-browser.chromium = lib.getExe pkgs.vivaldi;
 
   # programs.ghostty.enable = true;
 
@@ -54,7 +54,6 @@ in
     ruff
     mission-center
     blender-bin.blender_3_6
-    brave
     # custom.firefox # now I am using chromium
     cached-nix-shell
     devenv
