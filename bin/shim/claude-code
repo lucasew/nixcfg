@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+exec bunx @anthropic-ai/claude-code@latest -- "$@"
