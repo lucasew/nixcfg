@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+if sd is binary-available mise >/dev/null; then
+	exec mise exec yt-dlp@latest -- yt-dlp "$@"
+fi
 
 if ! sd is binary-available yt-dlp >/dev/null; then
 	ref="$(sd d root)#pkgs.yt-dlp"

@@ -25,12 +25,10 @@ in
   '';
 
   home.packages = with pkgs; [
-    yt-dlp # video downloader
     file # what file is it?
     neofetch # system info, arch linux friendly
     comma # like nix-shell but more convenient
     fzf # file finder and terminal based dmenu
-    ffmpeg # video converter
     send2kindle
     home-manager
   ];
