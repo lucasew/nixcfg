@@ -109,9 +109,6 @@
     nixgram.url = "github:lucasew/nixgram";
     nixgram.flake = false;
 
-    simple-dashboard.url = "github:lucasew/simple-dashboard";
-    simple-dashboard.flake = false;
-
     telegram-sendmail.url = "github:lucasew/telegram-sendmail";
     telegram-sendmail.flake = false;
 
@@ -375,10 +372,6 @@
             modules = [ ./nix/nodes/recovery ];
             inherit pkgs;
           };
-          # demo = {
-          #   modules = [ ./nix/nodes/demo ];
-          #   inherit pkgs;
-          # };
         };
       };
 

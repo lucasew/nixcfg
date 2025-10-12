@@ -18,10 +18,8 @@ in
 
     ./kvm.nix
     ./networking.nix
-    # ./plymouth.nix
     ./remote-build.nix
     ./tuning.nix
-    ./test_socket_activated
   ];
 
   stylix.enable = true;
@@ -50,23 +48,6 @@ in
     calendar = "00/6:00:01";
   };
 
-  services.python-microservices.services = {
-    teste = {
-      script = ''
-        from io import StringIO
-        from json import dump
-        def handler():
-          def _ret(self):
-            return dict(foi=True)
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            buf = StringIO()
-            dump(dict(foi=True), buf)
-            return buf
-          return _ret
-      '';
-    };
-  };
   # services.xserver.windowManager.i3.enable = true;
   # programs.hyprland.enable = true;
   programs.sway.enable = true;

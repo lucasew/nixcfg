@@ -25,7 +25,6 @@ in
     ./wallpaper.nix
     ./extra-fonts.nix
     ./polkit.nix
-    ./gui-variants
   ];
 
   systemd.extraConfig = ''

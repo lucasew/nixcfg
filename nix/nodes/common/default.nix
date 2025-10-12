@@ -13,7 +13,6 @@ in
     ../bootstrap
     ./cachix.nix
     ./hold-gc.nix
-    (inputs.simple-dashboard + /nixos-module.nix)
 
     ./ansible-python.nix
     ./services

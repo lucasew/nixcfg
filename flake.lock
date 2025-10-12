@@ -907,7 +907,6 @@
         "regex101": "regex101",
         "rust-overlay": "rust-overlay",
         "send2kindle": "send2kindle",
-        "simple-dashboard": "simple-dashboard",
         "sops-nix": "sops-nix",
         "src-cached-nix-shell": "src-cached-nix-shell",
         "stylix": "stylix",
@@ -962,22 +961,6 @@
       "original": {
         "owner": "lucasew",
         "repo": "send2kindle",
-        "type": "github"
-      }
-    },
-    "simple-dashboard": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1759891801,
-        "narHash": "sha256-QzmHKr5cam46QrfnS1AzuRyKWtDAPqaEJMjccsZOVVQ=",
-        "owner": "lucasew",
-        "repo": "simple-dashboard",
-        "rev": "3754a3dc60cc11816c25d1f6b044fcda407071e0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "lucasew",
-        "repo": "simple-dashboard",
         "type": "github"
       }
     },
