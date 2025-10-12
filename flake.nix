@@ -34,9 +34,6 @@
     blender-bin.url = "github:edolstra/nix-warez?dir=blender";
     blender-bin.inputs.nixpkgs.follows = "nixpkgs";
 
-    bumpkin.url = "github:lucasew/bumpkin";
-    bumpkin.inputs.nixpkgs.follows = "nixpkgs";
-
     cloud-savegame.url = "github:lucasew/cloud-savegame";
     cloud-savegame.flake = false;
 
@@ -134,7 +131,6 @@
   outputs =
     {
       self,
-      bumpkin,
       nix-index-database,
       nixpkgs,
       home-manager,
@@ -322,22 +318,6 @@
           name = "nixcfg-shell";
           buildInputs = with pkgs; [
             ctl
-            pyinfra
-            bumpkin.packages.${system}.default
-            (writeShellScriptBin "bumpkin-bump" ''
-              if [ -v NIXCFG_ROOT_PATH ]; then
-                  bumpkin eval -p -i "$NIXCFG_ROOT_PATH/bumpkin.json" -o "$NIXCFG_ROOT_PATH/bumpkin.json.lock" "$@"
-              else
-                exit 1
-              fi
-            '')
-            (writeShellScriptBin "bumpkin-list" ''
-              if [ -v NIXCFG_ROOT_PATH ]; then
-                bumpkin list -i "$NIXCFG_ROOT_PATH/bumpkin.json" -o "$NIXCFG_ROOT_PATH/bumpkin.json.lock" "$@"
-              else
-                exit 1
-              fi
-            '')
           ];
           shellHook = ''
             export NIXCFG_ROOT_PATH=$(pwd)

@@ -65,10 +65,7 @@ nix build .#release
 
 ```bash
 # Deploy to machines using the custom deploy script
-nix run .#deploy
-
-# Or use the script directory wrapper
-sdw d deploy riverwood,whiterun
+sd nix rrun .#deploy
 ```
 
 ### Development Shell
@@ -77,10 +74,7 @@ sdw d deploy riverwood,whiterun
 # Enter development shell with tools
 nix develop
 
-# This provides:
-# - ctl (custom CLI tool)
-# - pyinfra (for deployment)
-# - Custom environment via bin/source_me
+# This provides custom environment via bin/source_me
 ```
 
 ### Applying Changes
@@ -94,9 +88,6 @@ home-manager switch --flake .#main
 
 # Test configuration without switching
 sudo nixos-rebuild test --flake .
-
-# Deploy via pyinfra (used by bin/d/deploy)
-sdw d deploy riverwood,whiterun
 ```
 
 ### Script Directory Commands

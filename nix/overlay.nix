@@ -11,14 +11,6 @@ in
     inherit (prev) system;
   };
   inherit flake;
-  bumpkin = rec {
-    bumpkin = cp flake.inputs.bumpkin;
-    inputs = bumpkin.loadBumpkin {
-      inputFile = ../bumpkin.json;
-      outputFile = ../bumpkin.json.lock;
-    };
-    unpacked = (cp ./lib/unpackRecursive.nix) inputs;
-  };
 
   wallabag = prev.wallabag.overrideAttrs (old: {
     postFixup =
