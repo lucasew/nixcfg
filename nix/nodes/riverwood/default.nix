@@ -147,6 +147,13 @@ in
   environment.dotd."/etc/trab/nhaa".enable = true;
   services.screenkey.enable = true;
 
+  sops.secrets.claude-code = {
+    sopsFile = ../../../secrets/claude-code.env;
+    owner = config.users.users.lucasew.name;
+    group = config.users.users.lucasew.group;
+    format = "dotenv";
+  };
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
