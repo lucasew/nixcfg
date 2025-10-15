@@ -34,13 +34,15 @@ jobs:
           sudo mkdir -p /nix/build
           df -h
       - name: Install Nix
-        uses: cachix/install-nix-action@v31
+        uses: DeterminateSystems/nix-installer-action@v20
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
-          extra_nix_config: |
-            experimental-features = nix-command flakes
-            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          extra-conf: |
             build-dir = /nix/build
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: cachix/cachix-action@v16
         with:

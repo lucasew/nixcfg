@@ -30,6 +30,17 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v20
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Setup mise
+        uses: jdx/mise-action@v2
+
       - name: Run Claude Code
         id: claude
         uses: anthropics/claude-code-action@v1
