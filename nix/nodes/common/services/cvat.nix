@@ -144,6 +144,7 @@ in
         "--network=${networkName}"
         "--network-alias=cvat-server"
       ];
+      cmd = ["init" "run" "server"];
       volumes = [
         "${cfg.dataDir}/data:/home/django/data:Z"
         "${cfg.dataDir}/logs:/home/django/logs:Z"
