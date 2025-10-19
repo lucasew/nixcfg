@@ -6,58 +6,75 @@
 }:
 
 let
+  cfg = config.services.minecraft-server;
   inherit (config.networking.ports.minecraft) port;
+  dataDir = "/var/lib/minecraft";
 
 in
 {
-  config = lib.mkIf config.services.minecraft-server.enable {
+  config = lib.mkIf cfg.enable {
     networking.ports.minecraft.enable = true;
-    systemd.services.minecraft-server = {
-      wantedBy = lib.mkForce [ ]; # don't start on boot
+
+    # OCI container for Minecraft server
+    virtualisation.oci-containers.containers.minecraft = {
+      image = "itzg/minecraft-server:java8";
+      autoStart = false; # don't start on boot - only when manually started
+      volumes = [
+        "${dataDir}:/data"
+      ];
+      environment = {
+        EULA = "TRUE";
+        VERSION = "1.15.2";
+        TYPE = "VANILLA";
+        DIFFICULTY = "hard";
+        MODE = "survival";
+        MAX_PLAYERS = "10";
+        MOTD = "lucaocraft";
+        ONLINE_MODE = "FALSE";
+        SERVER_PORT = toString port;
+      };
+      ports = [
+        "127.0.0.1:${toString port}:${toString port}"
+      ];
+      extraOptions = [
+        "--pull=always" # always pull latest image
+      ];
     };
 
-    systemd.services.minecraft-server-backup = {
+    # Ensure data directory exists
+    systemd.tmpfiles.rules = [
+      "d ${dataDir} 0755 root root - -"
+    ];
+
+    # Backup service for Minecraft
+    systemd.services.minecraft-backup = {
       description = "Minecraft server backup";
-      path = [ pkgs.zip ];
+      path = [ pkgs.zip pkgs.podman ];
       script = ''
         function rcon {
-          if [[ -p /run/minecraft-server.stdin ]]; then
-            echo "$@" | tee /run/minecraft-server.stdin
-          fi
+          # Send RCON commands to the container
+          ${pkgs.podman}/bin/podman exec minecraft rcon-cli "$@" 2>/dev/null || true
         }
-        rcon /say Backup iniciado
-        rcon /save-off
-        rcon /save-all
+
+        rcon say Backup iniciado
+        rcon save-off
+        rcon save-all flush
         sleep 15
 
-        cd "${config.services.minecraft-server.dataDir}"
-        zip -9 -r /var/backup/minecraft.zip world || rcon /say Backup falhou, olha os logs carai
+        cd "${dataDir}"
+        zip -9 -r /var/backup/minecraft.zip world || rcon say Backup falhou, olha os logs carai
 
-        rcon /save-on
-        rcon /say Backup feito
+        rcon save-on
+        rcon say Backup feito
       '';
     };
 
-    services.minecraft-server = {
-      package = pkgs.unstable.minecraftServers.vanilla-1-15.override {
-        jre_headless = pkgs.unstable.openjdk8;
-      };
-      declarative = true;
-      eula = true;
-      serverProperties = {
-        server-port = port;
-        difficulty = 3;
-        gamemode = 0; # survival
-        max-players = 10;
-        motd = "lucaocraft";
-        online-mode = false;
-      };
-    };
+    # Configure ts-proxy to start/stop with Minecraft container
     services.ts-proxy.hosts.mc = {
       enableRaw = true;
       enableFunnel = true;
       address = "127.0.0.1:${toString port}";
-      proxies = [ "minecraft-server.service" ];
+      proxies = [ "podman-minecraft.service" ]; # link to container service
       listen = 10000;
     };
   };
