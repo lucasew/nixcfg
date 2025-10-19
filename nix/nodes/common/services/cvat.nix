@@ -7,7 +7,7 @@
 
 let
   cfg = config.services.cvat;
-  inherit (lib) mkEnableOption mkOption types mkIf mkDefault;
+  inherit (lib) mkEnableOption mkOption types mkIf mkDefault mkForce;
 
   # Helper to create container network name
   networkName = "cvat-network";
