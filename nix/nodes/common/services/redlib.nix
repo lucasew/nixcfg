@@ -9,6 +9,8 @@ let
   inherit (lib) mkEnableOption mkOption types mkIf mkDefault;
 in
 {
+  disabledModules = [ "services/misc/redlib.nix" ];
+
   options.services.redlib = {
     enable = mkEnableOption "redlib";
     image = mkOption {
