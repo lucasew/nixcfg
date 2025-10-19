@@ -9,9 +9,6 @@ let
   cfg = config.services.cvat;
   inherit (lib) mkEnableOption mkOption types mkIf mkDefault;
 
-  # CVAT image versions
-  cvatVersion = "v2.20.1";
-
   # Helper to create container network name
   networkName = "cvat-network";
 
@@ -20,18 +17,6 @@ in
 {
   options.services.cvat = {
     enable = mkEnableOption "CVAT annotation platform";
-
-    user = mkOption {
-      description = "Service user";
-      type = types.str;
-      default = "cvat";
-    };
-
-    group = mkOption {
-      description = "Service group";
-      type = types.str;
-      default = "cvat";
-    };
 
     dataDir = mkOption {
       description = "Data directory";
@@ -45,28 +30,36 @@ in
       type = types.port;
     };
 
-    serverImage = mkOption {
-      description = "CVAT server image";
-      default = "cvat/server:${cvatVersion}";
+    version = mkOption {
+      description = "CVAT version for server and UI images";
       type = types.str;
+      default = "v2.20.1";
     };
 
-    uiImage = mkOption {
-      description = "CVAT UI image";
-      default = "cvat/ui:${cvatVersion}";
-      type = types.str;
-    };
+    images = {
+      cvat = mkOption {
+        description = "CVAT server image";
+        default = "cvat/server:${cfg.version}";
+        type = types.str;
+      };
 
-    postgresImage = mkOption {
-      description = "PostgreSQL image";
-      default = "postgres:15-alpine";
-      type = types.str;
-    };
+      ui = mkOption {
+        description = "CVAT UI image";
+        default = "cvat/ui:${cfg.version}";
+        type = types.str;
+      };
 
-    redisImage = mkOption {
-      description = "Redis image";
-      default = "redis:7.2-alpine";
-      type = types.str;
+      postgres = mkOption {
+        description = "PostgreSQL image";
+        default = "postgres:15-alpine";
+        type = types.str;
+      };
+
+      redis = mkOption {
+        description = "Redis image";
+        default = "redis:7.2-alpine";
+        type = types.str;
+      };
     };
   };
 
@@ -74,25 +67,14 @@ in
     # Enable port allocation
     networking.ports.cvat.enable = mkDefault true;
 
-    # Create user and group
-    users.users.${cfg.user} = {
-      isSystemUser = true;
-      inherit (cfg) group;
-      uid = 2000; # Fixed UID for consistency
-    };
-
-    users.groups.${cfg.group} = {
-      gid = 2000; # Fixed GID for consistency
-    };
-
     # Create directory structure
     systemd.tmpfiles.rules = [
-      "d ${cfg.dataDir} 0755 ${cfg.user} ${cfg.group} - -"
-      "d ${cfg.dataDir}/data 0755 ${cfg.user} ${cfg.group} - -"
-      "d ${cfg.dataDir}/logs 0755 ${cfg.user} ${cfg.group} - -"
-      "d ${cfg.dataDir}/keys 0755 ${cfg.user} ${cfg.group} - -"
-      "d ${cfg.dataDir}/postgres 0755 ${cfg.user} ${cfg.group} - -"
-      "d ${cfg.dataDir}/redis 0755 ${cfg.user} ${cfg.group} - -"
+      "d ${cfg.dataDir} 0755 root root - -"
+      "d ${cfg.dataDir}/data 0755 root root - -"
+      "d ${cfg.dataDir}/logs 0755 root root - -"
+      "d ${cfg.dataDir}/keys 0755 root root - -"
+      "d ${cfg.dataDir}/postgres 0755 root root - -"
+      "d ${cfg.dataDir}/redis 0755 root root - -"
     ];
 
     # Create systemd slice with resource limits
@@ -120,7 +102,7 @@ in
 
     # PostgreSQL container
     virtualisation.oci-containers.containers.cvat-db = {
-      image = cfg.postgresImage;
+      image = cfg.images.postgres;
       autoStart = false;
       extraOptions = [
         "--network=${networkName}"
@@ -135,12 +117,11 @@ in
         POSTGRES_PASSWORD = "cvat_password";
         POSTGRES_HOST_AUTH_METHOD = "trust";
       };
-      user = "2000:2000";
     };
 
     # Redis container
     virtualisation.oci-containers.containers.cvat-redis = {
-      image = cfg.redisImage;
+      image = cfg.images.redis;
       autoStart = false;
       extraOptions = [
         "--network=${networkName}"
@@ -149,12 +130,11 @@ in
       volumes = [
         "${cfg.dataDir}/redis:/data:Z"
       ];
-      user = "2000:2000";
     };
 
     # CVAT Server container
     virtualisation.oci-containers.containers.cvat-server = {
-      image = cfg.serverImage;
+      image = cfg.images.cvat;
       autoStart = false;
       dependsOn = [
         "cvat-db"
@@ -182,12 +162,11 @@ in
         CVAT_SHARE_URL = "Mounted from /home/django/data directory";
         NUMPROCS = "2";
       };
-      user = "2000:2000";
     };
 
     # CVAT UI container
     virtualisation.oci-containers.containers.cvat-ui = {
-      image = cfg.uiImage;
+      image = cfg.images.ui;
       autoStart = false;
       dependsOn = [ "cvat-server" ];
       extraOptions = [
@@ -201,7 +180,7 @@ in
 
     # CVAT Worker - Low priority
     virtualisation.oci-containers.containers.cvat-worker-low = {
-      image = cfg.serverImage;
+      image = cfg.images.cvat;
       autoStart = false;
       dependsOn = [
         "cvat-db"
@@ -226,12 +205,11 @@ in
         NUMPROCS = "1";
       };
       cmd = [ "run" "worker.low" ];
-      user = "2000:2000";
     };
 
     # CVAT Worker - Default priority
     virtualisation.oci-containers.containers.cvat-worker-default = {
-      image = cfg.serverImage;
+      image = cfg.images.cvat;
       autoStart = false;
       dependsOn = [
         "cvat-db"
@@ -256,7 +234,6 @@ in
         NUMPROCS = "1";
       };
       cmd = [ "run" "worker.default" ];
-      user = "2000:2000";
     };
 
     # Configure systemd services for orchestration
@@ -346,73 +323,20 @@ in
           ExecStop = "${pkgs.coreutils}/bin/echo 'CVAT stopped'";
         };
       };
-
-      # Initialization service to run migrations and create superuser
-      cvat-init = {
-        description = "CVAT initialization (migrations and superuser)";
-        after = [
-          "podman-cvat-db.service"
-          "podman-cvat-redis.service"
-        ];
-        requires = [
-          "podman-cvat-db.service"
-          "podman-cvat-redis.service"
-        ];
-
-        path = [ pkgs.podman ];
-
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          User = cfg.user;
-          Group = cfg.group;
-        };
-
-        script = ''
-          set -e
-
-          # Wait for database to be ready
-          echo "Waiting for database to be ready..."
-          sleep 10
-
-          # Run migrations
-          echo "Running database migrations..."
-          podman exec cvat-server python3 manage.py migrate --noinput || true
-
-          # Create superuser if it doesn't exist
-          echo "Creating superuser if needed..."
-          podman exec cvat-server python3 manage.py shell << 'PYTHON_SCRIPT' || true
-from django.contrib.auth import get_user_model
-User = get_user_model()
-if not User.objects.filter(username='admin').exists():
-    User.objects.create_superuser('admin', 'admin@localhost', 'admin')
-    print('Superuser created: admin/admin')
-else:
-    print('Superuser already exists')
-PYTHON_SCRIPT
-
-          echo "CVAT initialization complete"
-        '';
-      };
     };
 
     # Create cvat-manage script wrapper for manage.py
     environment.systemPackages = [
       (pkgs.writeShellScriptBin "cvat-manage" ''
-        # Check if running as cvat user
-        if [ "$(whoami)" != "${cfg.user}" ]; then
-          exec sudo -u "${cfg.user}" "$0" "$@"
-        fi
-
         # Check if cvat-server container is running
-        if ! ${pkgs.podman}/bin/podman ps --format '{{.Names}}' | grep -q '^cvat-server$'; then
+        if ! sudo ${pkgs.podman}/bin/podman ps --format '{{.Names}}' | grep -q '^cvat-server$'; then
           echo "Error: cvat-server container is not running"
           echo "Start CVAT with: systemctl start cvat.service"
           exit 1
         fi
 
         # Execute manage.py in the container
-        exec ${pkgs.podman}/bin/podman exec -it cvat-server python3 manage.py "$@"
+        exec sudo ${pkgs.podman}/bin/podman exec -it cvat-server python3 manage.py "$@"
       '')
     ];
 
