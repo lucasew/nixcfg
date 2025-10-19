@@ -10,7 +10,7 @@ let
   inherit (lib) mkEnableOption mkOption types mkIf mkDefault mkForce;
 
   # Helper to create container network name
-  networkName = "cvat-network";
+  networkName = "cvat";
 
 in
 
@@ -33,7 +33,7 @@ in
     version = mkOption {
       description = "CVAT version for server and UI images";
       type = types.str;
-      default = "v2.20.1";
+      default = "v2.47.0";
     };
 
     images = {
@@ -95,8 +95,8 @@ in
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        ExecStart = "${pkgs.podman}/bin/podman network create ${networkName} || true";
-        ExecStop = "${pkgs.podman}/bin/podman network rm ${networkName} || true";
+        ExecStart = "/run/current-system/sw/bin/podman network create ${networkName}";
+        ExecStop = "/run/current-system/sw/bin/podman network rm ${networkName}";
       };
     };
 
@@ -263,6 +263,7 @@ in
         after = [
           "podman-cvat-db.service"
           "podman-cvat-redis.service"
+          "podman-network-${networkName}.service"
         ];
         serviceConfig = {
           Slice = "cvat.slice";
@@ -272,7 +273,9 @@ in
       podman-cvat-ui = {
         wantedBy = mkForce [ ];
         partOf = [ "cvat.service" ];
-        after = [ "podman-cvat-server.service" ];
+        after = [ "podman-cvat-server.service"
+          "podman-network-${networkName}.service"
+          ];
         serviceConfig = {
           Slice = "cvat.slice";
         };
@@ -284,6 +287,7 @@ in
         after = [
           "podman-cvat-db.service"
           "podman-cvat-redis.service"
+          "podman-network-${networkName}.service"
         ];
         serviceConfig = {
           Slice = "cvat.slice";
@@ -296,6 +300,7 @@ in
         after = [
           "podman-cvat-db.service"
           "podman-cvat-redis.service"
+          "podman-network-${networkName}.service"
         ];
         serviceConfig = {
           Slice = "cvat.slice";
@@ -314,6 +319,7 @@ in
           "podman-cvat-ui.service"
           "podman-cvat-worker-low.service"
           "podman-cvat-worker-default.service"
+          "podman-network-${networkName}.service"
         ];
 
         serviceConfig = {
