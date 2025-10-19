@@ -4,6 +4,7 @@
     ./cloud-savegame.nix
     ./cockpit-extra.nix
     ./cf-torrent.nix
+    ./cvat.nix
     ./fusionsolar
     ./magnetico.nix
     ./redlib.nix
