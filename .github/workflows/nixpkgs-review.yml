@@ -70,7 +70,7 @@ jobs:
     if: ${{ always() }}
     steps:
       - name: Fetch reports from runners
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           path: reports
           pattern: report-*
@@ -131,7 +131,7 @@ jobs:
           git config --global user.name "user"
           cd $GITHUB_WORKSPACE/nixpkgs
           nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell --eval local $EXTRA_ARGS
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: always()
         with:
           name: logs-x86_64-linux
@@ -139,7 +139,7 @@ jobs:
             ~/.cache/nixpkgs-review/*/logs
             /nix/var/log/nix/drvs
           include-hidden-files: true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: always()
         with:
           name: report-x86_64-linux
@@ -181,7 +181,7 @@ jobs:
           git config --global user.name "user"
           cd $GITHUB_WORKSPACE/nixpkgs
           nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell --eval local $EXTRA_ARGS
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: always()
         with:
           name: logs-aarch64-darwin
@@ -189,7 +189,7 @@ jobs:
             /nix/var/log/nix/drvs
             ~/.cache/nixpkgs-review/*/logs
           include-hidden-files: true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: always()
         with:
           name: report-aarch64-darwin
@@ -231,7 +231,7 @@ jobs:
           git config --global user.name "user"
           cd $GITHUB_WORKSPACE/nixpkgs
           nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell --eval local $EXTRA_ARGS
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: always()
         with:
           name: logs-x86_64-darwin
@@ -239,7 +239,7 @@ jobs:
             /nix/var/log/nix/drvs
             ~/.cache/nixpkgs-review/*/logs
           include-hidden-files: true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: always()
         with:
           name: report-x86_64-darwin
