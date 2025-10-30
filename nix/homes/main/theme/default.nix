@@ -1,5 +1,6 @@
 {
   pkgs,
+  config,
   ...
 }:
 let
@@ -38,7 +39,7 @@ in
   };
   programs.bash.bashrcExtra = ''
     function setup_colors {
-      ${shellThemeFromScheme { scheme = colors; }}
+      ${shellThemeFromScheme { scheme = config.stylix.generated // {slug = "stylix";}; }}
     }
     setup_colors
   '';
