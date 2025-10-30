@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, ... }:
 {
-  environment.etc.wallpaper.source = pkgs.custom.wallpaper;
+  environment.etc.wallpaper.source = config.stylix.image;
 }
