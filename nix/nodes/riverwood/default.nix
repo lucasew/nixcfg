@@ -20,6 +20,7 @@ in
     ./networking.nix
     ./remote-build.nix
     ./tuning.nix
+    ./earlyoom.nix
   ];
 
   stylix.enable = true;
