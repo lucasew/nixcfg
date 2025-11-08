@@ -44,6 +44,8 @@ in
 
   hardware.nvidia.modesetting.enable = false;
 
+  services.cvat.enable = true;
+
   gc-hold.enable = true;
 
   gc-hold.paths = with pkgs; [ blender-bin.blender_3_6 ];
