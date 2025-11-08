@@ -12,8 +12,5 @@
 
     # Threshold para enviar SIGKILL (5% de memória livre = 95% de uso)
     freeMemKillThreshold = 5;
-
-    # Habilitar notificações para informar sobre processos mortos
-    enableNotifications = true;
   };
 }
