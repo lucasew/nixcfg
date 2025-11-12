@@ -34,7 +34,7 @@ jobs:
           sudo mkdir -p /nix/build
           df -h
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v20
+        uses: DeterminateSystems/nix-installer-action@v21
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           extra-conf: |
