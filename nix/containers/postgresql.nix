@@ -13,12 +13,14 @@ let
         ensureDBOwnership = true;
       }];
       # É importante permitir conexões TCP/IP para que o contêiner do Nextcloud possa se conectar
+      # Esta configuração é para o pg_hba.conf
       authentication = ''
         host all all 0.0.0.0/0 md5
       '';
     };
+    # A imagem precisa de uma rede funcional e de um nome de host
     networking.hostName = "postgresql";
-    # Abrir a porta do postgresql no firewall do contêiner
+    # Abrir a porta do postgresql no firewall *dentro* do contêiner
     networking.firewall.allowedTCPPorts = [ 5432 ];
   };
 
@@ -27,8 +29,10 @@ let
     name = "nixos-postgresql";
     tag = "latest";
     config = {
+      # O comando padrão para iniciar o contêiner NixOS
       Cmd = [ "${pkgs.nixos-container}/bin/nixos-container" "run-unconfigured-container" ];
     };
+    # A configuração NixOS a ser usada para construir a imagem
     nixOSConfiguration = postgresql-nixos-config;
   };
 
@@ -38,6 +42,7 @@ in
   virtualisation.oci-containers.containers.postgresql = {
     imageFile = postgresql-image;
     ports = [ "5432:5432" ];
-    volumes = [ "/var/lib/postgresql_data:/var/lib/postgresql" ]; # Mapeia para um diretório de dados diferente no host para evitar conflitos
+    # Mapeia para um diretório de dados diferente no host para evitar conflitos com o postgresql do host
+    volumes = [ "/var/lib/postgresql_container_data:/var/lib/postgresql" ];
   };
 }
