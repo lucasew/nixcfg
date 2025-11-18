@@ -23,7 +23,9 @@ in
     ./nvidia.nix
 
     ./dlna.nix
-    ./nextcloud.nix
+    #./nextcloud.nix
+    ../../containers/nextcloud.nix
+    ../../containers/postgresql.nix
     ./sshfs.nix
     ./zfs.nix
     # ./container-inet-rdp.nix
@@ -159,7 +161,7 @@ in
     };
   };
 
-  services.nextcloud.enable = true;
+  # services.nextcloud.enable = true;
 
   services.cockpit.enable = true;
 
@@ -201,4 +203,6 @@ in
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.05"; # Did you read the comment?
+
+  virtualisation.oci-containers.containers.nextcloud.dependsOn = [ "postgresql" ];
 }
