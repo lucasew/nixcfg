@@ -41,6 +41,7 @@ in
     # Extra
     distrobox # plan b
     xorg.xkill
+    waypipe
   ];
 
   programs.dconf.enable = true;
