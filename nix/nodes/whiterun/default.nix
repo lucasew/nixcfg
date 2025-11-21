@@ -24,7 +24,6 @@ in
 
     ./dlna.nix
     ./nextcloud.nix
-    ./sshfs.nix
     ./zfs.nix
     # ./container-inet-rdp.nix
     ./container-nat.nix

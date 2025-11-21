@@ -18,6 +18,7 @@ in
 
     ./kvm.nix
     ./networking.nix
+    ./sshfs.nix
     ./remote-build.nix
     ./tuning.nix
     ./earlyoom.nix
