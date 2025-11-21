@@ -42,6 +42,7 @@ in
     distrobox # plan b
     xorg.xkill
     waypipe
+    xwayland-satellite
   ];
 
   programs.dconf.enable = true;
