@@ -2,7 +2,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License. See https://go.microsoft.com/fwlink/?linkid=2090316 for license information.
 #-------------------------------------------------------------------------------------------------------------
-FROM mcr.microsoft.com/oryx/build:vso-20200706.2 as kitchensink
+FROM mcr.microsoft.com/oryx/build:vso-20200706.2@sha256:d915cdc4645775eb1f3a36be2540b5d34cf34f5e7a770abbb51dd2b8e558acd3 as kitchensink
 
 ARG USERNAME=codespace
 ARG USER_UID=1000
