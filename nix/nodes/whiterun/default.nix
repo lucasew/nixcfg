@@ -43,6 +43,8 @@ in
 
   hardware.nvidia.modesetting.enable = false;
 
+  services.cvat.enable = true;
+
   gc-hold.enable = true;
 
   boot.kernel.sysctl = {
