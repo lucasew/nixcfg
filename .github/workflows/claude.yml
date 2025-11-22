@@ -26,12 +26,12 @@ jobs:
       actions: read # Required for Claude to read CI results on PRs
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
         with:
           fetch-depth: 1
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v21
+        uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a # v21
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -39,11 +39,11 @@ jobs:
         uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Setup mise
-        uses: jdx/mise-action@v3
+        uses: jdx/mise-action@d16887ba50704baed7de72bd1e82e04391e4457a # v3
 
       - name: Run Claude Code
         id: claude
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@f9b2917716eb547b52148c7805dffe3a57864094 # v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 

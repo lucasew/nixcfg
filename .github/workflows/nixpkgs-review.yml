@@ -70,7 +70,7 @@ jobs:
     if: ${{ always() }}
     steps:
       - name: Fetch reports from runners
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
         with:
           path: reports
           pattern: report-*
@@ -106,7 +106,7 @@ jobs:
           df -h
       - name: Try to fetch nixpkgs clone from cache
         id: git-nixpkgs
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
             nixpkgs
@@ -114,7 +114,7 @@ jobs:
       - name: Fetch nixpkgs from git if not
         if: steps.git-nixpkgs.outputs.cache-hit != 'true'
         run: git clone https://github.com/NixOS/nixpkgs nixpkgs
-      - uses: DeterminateSystems/nix-installer-action@v21
+      - uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a # v21
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           extra-conf: |
@@ -131,7 +131,7 @@ jobs:
           git config --global user.name "user"
           cd $GITHUB_WORKSPACE/nixpkgs
           nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell --eval local $EXTRA_ARGS
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         if: always()
         with:
           name: logs-x86_64-linux
@@ -139,7 +139,7 @@ jobs:
             ~/.cache/nixpkgs-review/*/logs
             /nix/var/log/nix/drvs
           include-hidden-files: true
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         if: always()
         with:
           name: report-x86_64-linux
@@ -158,7 +158,7 @@ jobs:
     steps:
       - name: Try to fetch nixpkgs clone from cache
         id: git-nixpkgs
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
             nixpkgs
@@ -166,7 +166,7 @@ jobs:
       - name: Fetch nixpkgs from git if not
         if: steps.git-nixpkgs.outputs.cache-hit != 'true'
         run: git clone https://github.com/NixOS/nixpkgs nixpkgs
-      - uses: DeterminateSystems/nix-installer-action@v21
+      - uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a # v21
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - uses: DeterminateSystems/magic-nix-cache-action@main
@@ -181,7 +181,7 @@ jobs:
           git config --global user.name "user"
           cd $GITHUB_WORKSPACE/nixpkgs
           nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell --eval local $EXTRA_ARGS
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         if: always()
         with:
           name: logs-aarch64-darwin
@@ -189,7 +189,7 @@ jobs:
             /nix/var/log/nix/drvs
             ~/.cache/nixpkgs-review/*/logs
           include-hidden-files: true
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         if: always()
         with:
           name: report-aarch64-darwin
@@ -208,7 +208,7 @@ jobs:
     steps:
       - name: Try to fetch nixpkgs clone from cache
         id: git-nixpkgs
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
             nixpkgs
@@ -216,7 +216,7 @@ jobs:
       - name: Fetch nixpkgs from git if not
         if: steps.git-nixpkgs.outputs.cache-hit != 'true'
         run: git clone https://github.com/NixOS/nixpkgs nixpkgs
-      - uses: DeterminateSystems/nix-installer-action@v21
+      - uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a # v21
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - uses: DeterminateSystems/magic-nix-cache-action@main
@@ -231,7 +231,7 @@ jobs:
           git config --global user.name "user"
           cd $GITHUB_WORKSPACE/nixpkgs
           nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell --eval local $EXTRA_ARGS
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         if: always()
         with:
           name: logs-x86_64-darwin
@@ -239,7 +239,7 @@ jobs:
             /nix/var/log/nix/drvs
             ~/.cache/nixpkgs-review/*/logs
           include-hidden-files: true
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         if: always()
         with:
           name: report-x86_64-darwin
