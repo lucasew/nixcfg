@@ -1,0 +1,47 @@
+name: autorelease
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '**.nix'
+      - 'flake.lock'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  autorelease:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup build disk space
+        uses: lucasew/action-i-only-care-about-nix@main
+
+      - uses: actions/checkout@v4
+
+      - name: Setup stuff
+        run: |
+          sudo mkdir -p /nix/build
+          df -h
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          extra-conf: |
+            build-dir = /nix/build
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - uses: cachix/cachix-action@v15
+        with:
+          name: lucasew-personal
+          authToken: '${{ secrets.CACHIX_TOKEN }}'
+
+      - name: Build release
+        run: |
+          nix build .#release --keep-going --accept-flake-config
