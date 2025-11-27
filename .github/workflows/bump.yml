@@ -48,21 +48,12 @@ jobs:
           authToken: '${{ secrets.CACHIX_TOKEN }}'
       - name: Bump
         run: nix flake update
-      - name: Cook
-        run: |
-          { while true; do df -h; uptime; sleep 60; done } &
-          nix build .#release --keep-going
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
-        with:
-          name: build-logs
-          path: /nix/var/log/nix/drvs
-          include-hidden-files: true
       - name: Serve
         uses: peter-evans/create-pull-request@84ae59a2cdc2258d6fa0732dd66352dddae2a412 # v7
         with:
           title: "The flake bump is ready"
           body: |
-            I updated your flake and built all the stuff to the binary cache.
+            I updated your flake.
 
             Apply when you want, or don't apply, I don't mind. I am not Microsoft
             Windows that forces you to do what you don't want to.
