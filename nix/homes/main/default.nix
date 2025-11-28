@@ -63,6 +63,7 @@ in
     graphviz
     github-cli
     google-cloud-sdk
+    htop
     libnotify
     ncdu
     # nix-option
@@ -116,13 +117,7 @@ in
       package = pkgs.obs-studio;
       enable = true;
     };
-    htop = {
-      enable = true;
-      settings = {
-        hideThreads = true;
-        treeView = true;
-      };
-    };
+    
   };
 
   gtk = {

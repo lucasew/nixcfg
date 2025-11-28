@@ -1,0 +1,27 @@
+hide_threads=1
+tree_view=1
+# Meters displayed in the header
+field_0=PERCENT_CPU
+field_1=PERCENT_MEM
+field_2=PID
+field_3=USER
+field_4=TIME
+field_5=COMMAND
+# Sort order
+sort_key=PERCENT_CPU
+sort_direction=-1
+# Colors
+color_scheme=0
+# Other settings
+show_program_path=1
+shadow_other_users=0
+show_thread_names=0
+highlight_base_name=1
+highlight_megabytes=1
+highlight_threads=0
+tree_view_always_by_pid=0
+header_margin=1
+detailed_cpu_time=0
+cpu_count_from_one=0
+update_process_names=0
+account_guest_in_cpu_meter=0
