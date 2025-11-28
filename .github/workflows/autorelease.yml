@@ -20,7 +20,7 @@ jobs:
       - name: Setup build disk space
         uses: lucasew/action-i-only-care-about-nix@main
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Setup stuff
         run: |
@@ -37,7 +37,7 @@ jobs:
       - name: Setup Nix cache
         uses: DeterminateSystems/magic-nix-cache-action@main
 
-      - uses: cachix/cachix-action@v15
+      - uses: cachix/cachix-action@ad2ddac53f961de1989924296a1f236fcfbaa4fc # v15
         with:
           name: lucasew-personal
           authToken: '${{ secrets.CACHIX_TOKEN }}'
@@ -46,7 +46,7 @@ jobs:
         run: |
           nix build .#release --keep-going --accept-flake-config
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: failure()
         with:
           name: build-logs
