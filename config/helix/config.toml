@@ -1,0 +1,7 @@
+theme = "stylix"
+[editor.cursor-shape]
+insert = "bar"
+
+[editor.lsp]
+display-messages = true
+

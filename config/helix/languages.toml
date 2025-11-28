@@ -1,0 +1,25 @@
+[[language]]
+language-servers = ["bash-language-server", "typos-lsp"]
+name = "bash"
+
+[[language]]
+language-servers = ["ltex-ls", "typos-lsp"]
+name = "markdown"
+
+[[language]]
+language-servers = ["nil", "typos-lsp"]
+name = "nix"
+
+[[language]]
+language-servers = ["typescript-language-server", "typos-lsp"]
+name = "javascript"
+
+[[language]]
+language-servers = ["jedi-language-server", "ruff", "pylsp", "typos-lsp"]
+name = "python"
+
+[language-server.ltex-ls]
+command = "ltex-ls"
+
+[language-server.typos-lsp]
+command = "typos-lsp"
