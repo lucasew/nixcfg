@@ -15,7 +15,6 @@ in
     ./gui.nix
     ./networking.nix
     ./steam.nix
-    ./git.nix
     ./gammastep.nix
     ./adb.nix
     ./vbox.nix
