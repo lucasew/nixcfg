@@ -10,7 +10,6 @@
       script = ''
         mkdir ~/.config/waybar -p
         cat $(sdw d root)/nix/nodes/gui-common/gui-variants/hyprland/waybar/style.css | colorpipe > ~/.config/waybar/style.css
-        cat $(sdw d root)/nix/nodes/gui-common/gui-variants/hyprland/waybar/config | colorpipe > ~/.config/waybar/config
       '';
       restartTriggers = [
         ./hyprland/waybar/style.css
