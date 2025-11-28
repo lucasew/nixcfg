@@ -18,9 +18,8 @@
       gopls
       ltex-ls
       jdt-language-server
+
+      pkgs.unstable.helix
     ];
-    programs.helix = {
-      package = pkgs.unstable.helix;
-    };
   };
 }

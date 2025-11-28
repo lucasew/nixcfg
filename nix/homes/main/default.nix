@@ -2,13 +2,9 @@
   global,
   pkgs,
   lib,
-  self,
   ...
 }:
-let
-  inherit (lib.hm.gvariant) mkTuple;
-  inherit (pkgs.custom) colors;
-in
+
 {
 
   imports = [
@@ -37,7 +33,6 @@ in
 
   programs.zen-browser.enable = true;
   programs.vscode.enable = true;
-  programs.helix.enable = true;
   # services.espanso.enable = true;
   programs.man.enable = true;
 
