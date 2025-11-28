@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Função para criar links simbólicos da pasta config/
+create_config_symlinks() {
+    local dotfiles_root=$(sd d root)
+    local config_dir="$HOME/.config"
+    
+    if [ ! -d "$dotfiles_root/config" ]; then
+        echo "Directory $dotfiles_root/config not found, skipping config symlinks"
+        return 0
+    fi
+    
+    echo "[*] Creating config symlinks from $dotfiles_root/config"
+    
+    # Usar find para todos os arquivos (não diretórios) recursivamente
+    find "$dotfiles_root/config" -type f | while read -r source_file; do
+        relative_path="${source_file#$dotfiles_root/config/}"
+        target_file="$config_dir/$relative_path"
+        
+        target_dir="${target_file%/*}"
+        mkdir -p "$target_dir"
+        
+        ln -sf "$source_file" "$target_file"
+        echo "  → $target_file"
+    done
+}
+
+# Função para configurar shortcuts no termux (só se for phone)
+setup_termux_shortcuts() {
+    # Condicional crucial: só executa se estiver no phone
+    if ! sd is phone; then
+        return 0
+    fi
+    
+    echo "[*] Setting up termux shortcuts"
+    
+    mkdir -p ~/.shortcuts
+    rm ~/.shortcuts/*
+    
+    for shortcut in $(ls $(sd d root)/bin/_shortcuts/termux); do
+        echo "[*] Installing shortcut $shortcut"
+        {
+            echo '#!/data/data/com.termux/files/usr/bin/bash'
+            echo 'export LD_PRELOAD="/data/data/com.termux/files/usr/lib/libtermux-exec.so"'
+            echo 'export PATH="/data/data/com.termux/files/usr/bin"'
+            echo bash ~/.dotfiles/bin/source_me sd _shortcuts termux "$shortcut" '"$@"'
+        } >~/.shortcuts/$shortcut
+        chmod +x ~/.shortcuts/$shortcut
+    done
+}
+
+# Executar funções
+create_config_symlinks
+setup_termux_shortcuts
+
+echo "[*] apply-dotfiles completed"
