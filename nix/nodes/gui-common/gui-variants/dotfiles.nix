@@ -13,7 +13,6 @@
       '';
       restartTriggers = [
         ./hyprland/waybar/style.css
-        ./hyprland/waybar/config
       ];
       wantedBy = [ "default.target" ];
     };

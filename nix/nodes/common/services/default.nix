@@ -11,6 +11,7 @@
     ./telegram_sendmail.nix
     ./postgresql.nix
     ./nixgram.nix
+    ./nomad.nix
     ./netusage
     ./restic-server.nix
     ./python-microservices

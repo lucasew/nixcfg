@@ -160,6 +160,8 @@ in
 
   services.cockpit.enable = true;
 
+  services.nomad.enable = true;
+
   # services.magnetico.enable = true;
 
   boot = {
