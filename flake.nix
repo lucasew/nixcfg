@@ -43,10 +43,6 @@
     devenv.url = "github:cachix/devenv";
     devenv.flake = false;
 
-    fusionsolar-bot.url = "github:lucasew/fusionsolar-bot";
-    fusionsolar-bot.inputs.nixpkgs.follows = "nixpkgs";
-    fusionsolar-bot.inputs.flake-utils.follows = "flake-utils";
-
     send2kindle.url = "github:lucasew/send2kindle";
     send2kindle.flake = false;
 
@@ -348,7 +344,6 @@
         inherit extraArgs system;
         path = inputs.nixpkgs;
         extraModules = [
-          inputs.fusionsolar-bot.nixosModules.${system}.default
           inputs.stylix.nixosModules.stylix
         ];
         nodes = {

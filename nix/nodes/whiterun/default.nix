@@ -60,8 +60,6 @@ in
 
   services.wallabag.enable = true;
 
-  services.fusionsolar-reporter.enable = true;
-
   services.postgresql = {
     enable = true;
     enableTCPIP = true;

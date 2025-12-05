@@ -293,29 +293,6 @@
         "type": "github"
       }
     },
-    "fusionsolar-bot": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1763947724,
-        "narHash": "sha256-I63iK6kRwbUdgmPVgHSoTJsi44iJe5ixpYkJc2g0F8g=",
-        "owner": "lucasew",
-        "repo": "fusionsolar-bot",
-        "rev": "1306c5952829807c96fc2957d8adc9b0eb6a367d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "lucasew",
-        "repo": "fusionsolar-bot",
-        "type": "github"
-      }
-    },
     "gnome-shell": {
       "flake": false,
       "locked": {
@@ -884,7 +861,6 @@
         "devenv": "devenv",
         "dotenv": "dotenv",
         "flake-utils": "flake-utils",
-        "fusionsolar-bot": "fusionsolar-bot",
         "go-annotation": "go-annotation",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
