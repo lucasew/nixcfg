@@ -19,7 +19,15 @@
         plugin = [
           {
             nomad-driver-podman = {
-              config = {};
+              config = {
+              };
+            };
+          }
+          {
+            nomad-device-nvidia = {
+              config = {
+                enabled = true;
+              };
             };
           }
         ];
