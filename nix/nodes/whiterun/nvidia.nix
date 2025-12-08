@@ -22,6 +22,15 @@
   hardware.nvidia-container-toolkit.enable =
     config.virtualisation.docker.enable || config.virtualisation.podman.enable;
 
+  virtualisation.docker = {
+    daemon.settings = {
+      runtimes = {
+        nvidia = {
+          path = "${pkgs.nvidia-container-toolkit}/bin/nvidia-container-runtime";
+        };
+      };
+    };
+  };
   # boot.initrd.kernelModules = [ "nvidia" ];
   # boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
 

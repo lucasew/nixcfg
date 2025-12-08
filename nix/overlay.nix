@@ -113,9 +113,12 @@ in
     vendorHash = "sha256-m5aF0pAmh1OnfJrgGHInLrQ9pCU/PasO4BrWfKzk8Ug=";
 
     postFixup = ''
-      mv $out/bin/cmd $out/bin/nomad-device-nvidia
-      wrapProgram $out/bin/nomad-device-nvidia \
-        --prefix LD_LIBRARY_PATH /run/opengl-driver/lib
+      mkdir -p $out/libexec
+      mv $out/bin/cmd $out/libexec/nomad-device-nvidia
+      makeWrapper $out/libexec/nomad-device-nvidia $out/bin/nomad-device-nvidia \
+        --prefix LD_LIBRARY_PATH : /run/opengl-driver/lib \
+        --prefix LD_PRELOAD : /run/opengl-driver/lib/libnvidia-ml.so \
+        --prefix PATH : /run/current-system/sw/bin
     '';
 
     CGO_ENABLED = 1;

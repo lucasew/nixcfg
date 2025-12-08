@@ -10,8 +10,14 @@
       settings = {
         datacenter = lib.mkDefault "br_home_local";
         bind_addr = "{{ GetInterfaceIP \"tailscale0\" }}"; # Dynamically binds to Tailscale IP
+        "advertise" = {
+          "http" = "{{ GetInterfaceIP \"tailscale0\" }}";
+          "rpc" = "{{ GetInterfaceIP \"tailscale0\" }}";
+          "serf" = "{{ GetInterfaceIP \"tailscale0\" }}";
+        };
         client = {
           enabled = true;
+          network_interface = "tailscale0";
           host_volume."consul-data" = {
             path      = "/var/lib/nomad/consul";
             read_only = false;
