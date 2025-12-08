@@ -5,10 +5,14 @@
     services.nomad = {
       extraSettingsPlugins = [ pkgs.nomad-driver-podman ];
       settings = {
-        datacenter = lib.mkDefault "local.home.br";
+        datacenter = lib.mkDefault "br_home_local";
         bind_addr = "{{ GetInterfaceIP \"tailscale0\" }}"; # Dynamically binds to Tailscale IP
         client = {
           enabled = true;
+          host_volume."consul-data" = {
+            path      = "/var/lib/nomad/consul";
+            read_only = false;
+          };
           alloc_mounts_dir = "/var/lib/nomad/alloc_mounts";
           server_join = {
             retry_join = [
