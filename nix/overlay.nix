@@ -100,6 +100,30 @@ in
   #   });
   # };
 
+  nomad-driver-nvidia =  prev.buildGoModule rec {
+    pname = "nomad-driver-nvidia";
+    version = "1.1.0";
+
+    src = prev.fetchFromGitHub {
+      owner = "hashicorp";
+      repo = "nomad-device-nvidia";
+      tag = "v${version}";
+      hash = "sha256-vjLI/WkeKEM8Gbt/P8cilyZ2A9oNOyqDRw0v6kp3D1M=";
+    };
+    vendorHash = "sha256-m5aF0pAmh1OnfJrgGHInLrQ9pCU/PasO4BrWfKzk8Ug=";
+
+    postFixup = ''
+      mv $out/bin/cmd $out/bin/nomad-device-nvidia
+      wrapProgram $out/bin/nomad-device-nvidia \
+        --prefix LD_LIBRARY_PATH /run/opengl-driver/lib
+    '';
+
+    CGO_ENABLED = 1;
+
+    nativeBuildInputs = [ prev.autoAddDriverRunpath prev.makeWrapper ];
+
+    doCheck = false;
+  };
   nur = import flake.inputs.nur { pkgs = prev; };
 
   custom = rec {

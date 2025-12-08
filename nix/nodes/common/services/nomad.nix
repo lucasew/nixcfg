@@ -3,7 +3,10 @@
 {
   config = lib.mkIf config.services.nomad.enable {
     services.nomad = {
-      extraSettingsPlugins = [ pkgs.nomad-driver-podman ];
+      extraSettingsPlugins = [
+        pkgs.nomad-driver-podman
+        pkgs.nomad-driver-nvidia
+      ];
       settings = {
         datacenter = lib.mkDefault "br_home_local";
         bind_addr = "{{ GetInterfaceIP \"tailscale0\" }}"; # Dynamically binds to Tailscale IP
