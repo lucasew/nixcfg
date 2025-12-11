@@ -823,11 +823,11 @@
     "phpelo": {
       "flake": false,
       "locked": {
-        "lastModified": 1757787790,
-        "narHash": "sha256-kNJhv47s/BtEFpVQyaMZN0lCH82ttzmXweAuXAZBKIg=",
+        "lastModified": 1765482261,
+        "narHash": "sha256-oebMF382FWGm1S5Pk7+9xkMSp1CK7eIY2m+sTwk/ETU=",
         "owner": "lucasew",
         "repo": "phpelo",
-        "rev": "792c6ec95a14ddcc73aeea5647528cc5789c21b3",
+        "rev": "3001cbd8be18a5bcb15b4dd97b92bebe8ee9ff78",
         "type": "github"
       },
       "original": {
