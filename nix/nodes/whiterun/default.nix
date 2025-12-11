@@ -23,7 +23,6 @@ in
     ./nvidia.nix
 
     ./dlna.nix
-    ./nextcloud.nix
     ./zfs.nix
     # ./container-inet-rdp.nix
     ./container-nat.nix
@@ -34,8 +33,6 @@ in
   stylix.enable = true;
 
   services.minecraft-server.enable = true;
-
-  services.cf-torrent.enable = true;
 
   services.phpelo.enable = true;
 
@@ -57,8 +54,6 @@ in
   services.ngircd = {
     enable = true;
   };
-
-  services.wallabag.enable = true;
 
   services.postgresql = {
     enable = true;
@@ -126,8 +121,6 @@ in
 
   boot.plymouth.enable = true;
 
-  services.redlib.enable = true;
-
   # services.boinc.enable = true;
 
   services.flatpak.enable = true;
@@ -153,8 +146,6 @@ in
       };
     };
   };
-
-  services.nextcloud.enable = true;
 
   services.cockpit.enable = true;
 

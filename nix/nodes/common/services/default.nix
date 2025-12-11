@@ -3,9 +3,7 @@
   imports = [
     ./cloud-savegame.nix
     ./cockpit-extra.nix
-    ./cf-torrent.nix
     ./magnetico.nix
-    ./redlib.nix
     ./transmission.nix
     ./telegram_sendmail.nix
     ./postgresql.nix
@@ -16,7 +14,6 @@
     ./python-microservices
     ./rtorrent.nix
     ./rsyncnet
-    ./wallabag.nix
     ./ts-proxy.nix
     ./ngircd.nix
     ./minecraft.nix

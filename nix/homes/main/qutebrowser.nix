@@ -35,7 +35,6 @@ in
         nixos-options = "https://search.nixos.org/options";
         miniflux = "http://miniflux.app.lew.tec.br";
         whiterun = "http://whiterun.lucao.net";
-        nc = "http://nextcloud.whiterun.lucao.net/apps/files/";
         grafana = "http://grafana.whiterun.lucao.net/dashboards";
       };
       searchEngines = {

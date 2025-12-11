@@ -19,20 +19,20 @@
     # nvidiaPersistenced = true;
   };
 
-  hardware.nvidia-container-toolkit.enable =
-    config.virtualisation.docker.enable || config.virtualisation.podman.enable;
+  hardware.nvidia-container-toolkit = {
+    enable =
+      config.virtualisation.docker.enable || config.virtualisation.podman.enable;
+    package = pkgs.unstable.nvidia-container-toolkit;
+  };
+
 
   virtualisation.docker = {
     daemon.settings = {
-      runtimes = {
-        nvidia = {
-          path = "${pkgs.nvidia-container-toolkit}/bin/nvidia-container-runtime";
-        };
+      runtimes.nvidia = {
+        path = "${pkgs.nvidia-container-toolkit.tools}/bin/nvidia-container-runtime";
       };
-    };
+    };   
   };
-  # boot.initrd.kernelModules = [ "nvidia" ];
-  # boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
 
   environment.systemPackages = [ pkgs.nvtopPackages.full ];
 }
