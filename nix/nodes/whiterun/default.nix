@@ -15,7 +15,6 @@ in
   imports = [
     ./hardware-configuration.nix
     ../gui-common
-    ./monitoring
 
     "${self.inputs.nixos-hardware}/common/cpu/amd/pstate.nix"
     "${self.inputs.nixos-hardware}/common/gpu/amd"
@@ -46,21 +45,8 @@ in
     "vfs.zfs.arc_sys_free" = 4 * 1024 * 1024 * 1024; # make ZFS free arc before hitting swap
   };
 
-  services.rsyncnet-remote-backup = {
-    enable = true;
-    calendar = "03/6:00:01";
-  };
-
   services.ngircd = {
     enable = true;
-  };
-
-  services.postgresql = {
-    enable = true;
-    enableTCPIP = true;
-    userSpecificDatabases = {
-      test = [ "demo" ];
-    };
   };
 
   networking.interfaces.enp5s0.wakeOnLan.enable = true;

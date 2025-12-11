@@ -8,7 +8,6 @@
     ./nginx.nix
     ./node-exporter.nix
     ./zfs.nix
-    ./postgres.nix
     ./nvidia.nix
   ];
 

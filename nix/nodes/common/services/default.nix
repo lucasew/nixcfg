@@ -6,14 +6,12 @@
     ./magnetico.nix
     ./transmission.nix
     ./telegram_sendmail.nix
-    ./postgresql.nix
     ./nixgram.nix
     ./nomad.nix
     ./netusage
     ./restic-server.nix
     ./python-microservices
     ./rtorrent.nix
-    ./rsyncnet
     ./ts-proxy.nix
     ./ngircd.nix
     ./minecraft.nix

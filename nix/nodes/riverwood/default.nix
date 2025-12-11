@@ -45,11 +45,6 @@ in
 
   programs.nix-ld.enable = true;
 
-  services.rsyncnet-remote-backup = {
-    enable = true;
-    calendar = "00/6:00:01";
-  };
-
   # services.xserver.windowManager.i3.enable = true;
   # programs.hyprland.enable = true;
   programs.sway.enable = true;
