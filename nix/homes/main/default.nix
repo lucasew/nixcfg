@@ -17,7 +17,6 @@
     ./dconf.nix
     ./borderless-browser.nix
     ./theme
-    ./discord.nix
     ./qutebrowser.nix
     ./zen-browser.nix
     ./mise.nix
@@ -31,8 +30,8 @@
 
   programs.atuin.enable = true;
 
-  programs.discord-custom.enable = true;
-  programs.zen-browser-custom.enable = true;
+  programs.discord.enable = true;
+  # programs.zen-browser.enable = true; # Handled unconditionally in zen-browser.nix
   programs.vscode.enable = true;
   # services.espanso.enable = true;
   programs.man.enable = true;
