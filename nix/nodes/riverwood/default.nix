@@ -40,7 +40,6 @@ in
     gparted
     git-annex
     git-remote-gcrypt
-    appimage-wrap
   ];
 
   programs.nix-ld.enable = true;
