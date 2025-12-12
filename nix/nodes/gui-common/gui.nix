@@ -7,7 +7,7 @@
   fonts.packages = with pkgs; [
     siji
     noto-fonts
-    noto-fonts-emoji
+    noto-fonts-color-emoji
     fira-code
   ];
 

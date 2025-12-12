@@ -31,7 +31,8 @@
 
   programs.atuin.enable = true;
 
-  programs.zen-browser.enable = true;
+  programs.discord-custom.enable = true;
+  programs.zen-browser-custom.enable = true;
   programs.vscode.enable = true;
   # services.espanso.enable = true;
   programs.man.enable = true;
