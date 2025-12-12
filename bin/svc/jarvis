@@ -4,13 +4,15 @@
 
 # simple jarvis like bot with custom statements and using the phone voice recognition using Llhamalab Automate
 
+import os
 from flask import Flask, jsonify, request
 from flask_jwt_extended import jwt_required, JWTManager
 from json import loads
 from unidecode import unidecode
 
 app = Flask(__name__)
-app.config["JWT_SECRET_KEY"] = "nhaa"
+# 🛡️ Sentinel: Removed hardcoded secret. Using env var or random generation.
+app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY") or os.urandom(24).hex()
 jwt = JWTManager(app)
 
 class jwt():
@@ -92,4 +94,9 @@ print(skillset)
 if __name__ == "__main__":
     with app.app_context():
         print(f"Token: {jwt.generate()}")
-    app.run(host="0.0.0.0", debug=True)
+
+    # 🛡️ Sentinel: Disabled debug mode by default to prevent RCE.
+    # Use FLASK_DEBUG=1 to enable debug mode.
+    debug = os.environ.get("FLASK_DEBUG", "0") == "1"
+    host = os.environ.get("HOST", "0.0.0.0")
+    app.run(host=host, debug=debug)
