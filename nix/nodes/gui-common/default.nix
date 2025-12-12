@@ -26,9 +26,9 @@ in
     ./polkit.nix
   ];
 
-  systemd.extraConfig = ''
-    DefaultTimeoutStartSec=10s
-  '';
+  systemd.settings.Manager = {
+    DefaultTimeoutStartSec = "10s";
+  };
 
   environment.systemPackages = with pkgs; [
     parallel
