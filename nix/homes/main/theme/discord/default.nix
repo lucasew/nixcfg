@@ -7,7 +7,7 @@
 }:
 
 {
-  config = lib.mkIf config.programs.discord-custom.enable (
+  config = lib.mkIf config.programs.discord.enable (
     let
       pluginRepo = builtins.filterSource (
         path: type: type == "directory" || ((builtins.match ''.*\.plugin.js'' path) != null)
