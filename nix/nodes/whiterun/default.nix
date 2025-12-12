@@ -157,7 +157,7 @@ in
     rocmPackages.rocm-runtime
     rocmPackages.clr
   ];
-  hardware.opengl.extraPackages32 = with pkgs; [ driversi686Linux.amdvlk ];
+  hardware.graphics.extraPackages32 = with pkgs; [ ];
 
   programs.steam.enable = true;
 

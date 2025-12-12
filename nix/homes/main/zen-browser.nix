@@ -6,11 +6,11 @@
 }:
 
 let
-  cfg = config.programs.zen-browser;
+  cfg = config.programs.zen-browser-custom;
 in
 
 {
-  options.programs.zen-browser.enable = lib.mkEnableOption "zen browser";
+  options.programs.zen-browser-custom.enable = lib.mkEnableOption "zen browser";
 
   config = lib.mkIf cfg.enable {
     home.activation = {

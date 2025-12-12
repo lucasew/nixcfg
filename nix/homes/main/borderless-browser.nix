@@ -107,7 +107,7 @@ in
       icon =
         (fetchurl {
           url = "https://www.planttext.com/images/blue_gray.png";
-          sha256 = "0n1p8g7gjxdp06fh36yqb10jvcbhxfc129xpvi1b10k1qb1vlj1h";
+          sha256 = "sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=";
         }).outPath;
     };
     rainmode = {

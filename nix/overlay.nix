@@ -12,7 +12,7 @@ in
   };
   inherit flake;
 
-  nbr = import "${flake.inputs.nbr}" { pkgs = final; };
+  nbr = import "${flake.inputs.nbr}" { pkgs = final // { buildFHSUserEnv = final.buildFHSEnv; }; };
 
   blender-bin = flake.inputs.blender-bin.packages.${prev.system};
 
@@ -54,6 +54,8 @@ in
       climod = cp flake.inputs.climod;
     }
   );
+
+  buildFHSUserEnv = prev.buildFHSEnv;
 
   devenv = final.writeShellScriptBin "devenv" ''
     nix run ${flake.inputs.devenv} -- "$@"
@@ -110,7 +112,7 @@ in
         --prefix PATH : /run/current-system/sw/bin
     '';
 
-    CGO_ENABLED = 1;
+    env.CGO_ENABLED = 1;
 
     nativeBuildInputs = [ prev.autoAddDriverRunpath prev.makeWrapper ];
 
@@ -136,7 +138,7 @@ in
     vscode = cp ./pkgs/custom/vscode;
     rofi_xorg = cp ./pkgs/custom/rofi.nix;
     rofi = final.custom.rofi_xorg;
-    rofi_wayland = prev.callPackage ./pkgs/custom/rofi.nix { rofi = final.rofi-wayland; };
+    rofi_wayland = prev.callPackage ./pkgs/custom/rofi.nix { rofi = final.rofi; };
     pidgin = cp ./pkgs/custom/pidgin.nix;
     send2kindle = cp ./pkgs/custom/send2kindle.nix;
     retroarch = cp ./pkgs/custom/retroarch.nix;

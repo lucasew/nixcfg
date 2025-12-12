@@ -6,7 +6,7 @@
 }:
 
 {
-  options.programs.discord.enable = lib.mkEnableOption "discord-desktop";
+  options.programs.discord-custom.enable = lib.mkEnableOption "discord-desktop";
 
-  config = lib.mkIf config.programs.discord.enable { home.packages = [ pkgs.discord ]; };
+  config = lib.mkIf config.programs.discord-custom.enable { home.packages = [ pkgs.discord ]; };
 }
