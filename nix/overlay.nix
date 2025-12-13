@@ -163,7 +163,5 @@ in
     };
   });
 
-  cached-nix-shell = callPackage flake.inputs.src-cached-nix-shell { pkgs = prev; };
-
   elixir_edge = final.unstable.elixir.override { erlang = final.unstable.erlang_27; };
 }
