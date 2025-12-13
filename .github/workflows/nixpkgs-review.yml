@@ -131,7 +131,7 @@ jobs:
           git config --global user.name "user"
           cd $GITHUB_WORKSPACE/nixpkgs
           nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell --eval local $EXTRA_ARGS
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()
         with:
           name: logs-x86_64-linux
@@ -139,7 +139,7 @@ jobs:
             ~/.cache/nixpkgs-review/*/logs
             /nix/var/log/nix/drvs
           include-hidden-files: true
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()
         with:
           name: report-x86_64-linux
@@ -181,7 +181,7 @@ jobs:
           git config --global user.name "user"
           cd $GITHUB_WORKSPACE/nixpkgs
           nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell --eval local $EXTRA_ARGS
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()
         with:
           name: logs-aarch64-darwin
@@ -189,7 +189,7 @@ jobs:
             /nix/var/log/nix/drvs
             ~/.cache/nixpkgs-review/*/logs
           include-hidden-files: true
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()
         with:
           name: report-aarch64-darwin
@@ -231,7 +231,7 @@ jobs:
           git config --global user.name "user"
           cd $GITHUB_WORKSPACE/nixpkgs
           nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell --eval local $EXTRA_ARGS
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()
         with:
           name: logs-x86_64-darwin
@@ -239,7 +239,7 @@ jobs:
             /nix/var/log/nix/drvs
             ~/.cache/nixpkgs-review/*/logs
           include-hidden-files: true
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()
         with:
           name: report-x86_64-darwin
