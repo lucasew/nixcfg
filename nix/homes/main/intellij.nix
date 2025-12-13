@@ -1,59 +1,7 @@
 { pkgs, ... }:
-let
-  ideaVmOptions = ''
-    -Xms1024m
-    -Xmx3072m
-    -Xss64m
-    -XX:ReservedCodeCacheSize=512m
-    -XX:+UseCompressedOops
-    -XX:NewRatio=2
-    -Dfile.encoding=UTF-8
-    -XX:SoftRefLRUPolicyMSPerMB=250
-    -XX:NewSize=512m
-    -XX:MaxNewSize=512m
-    -XX:PermSize=512m
-    -XX:MaxPermSize=1024m
-    -XX:MaxTenuringThreshold=1
-    -XX:SurvivorRatio=8
-    -XX:+UseCodeCacheFlushing
-    -XX:+AggressiveOpts
-    -XX:+CMSClassUnloadingEnabled
-    -XX:+CMSIncrementalMode
-    -XX:+CMSIncrementalPacing
-    -XX:+CMSParallelRemarkEnabled
-    -XX:CMSInitiatingOccupancyFraction=65
-    -XX:+CMSScavengeBeforeRemark
-    -XX:+UseCMSInitiatingOccupancyOnly
-    -XX:-TraceClassUnloading
-    -XX:+AlwaysPreTouch
-    -XX:+TieredCompilation
-    -XX:+DoEscapeAnalysis
-    -XX:+UnlockExperimentalVMOptions
-    -XX:LargePageSizeInBytes=256m
-    -XX:+PrintFlagsFinal
-    -XX:+HeapDumpOnOutOfMemoryError
-    -XX:+CMSPermGenSweepingEnabled
-    -XX:+UseSplitVerifier
-    -XX:CompileThreshold=10000
-    -XX:+UseCompressedStrings
-    -XX:+OptimizeStringConcat
-    -XX:+UseStringCache
-    -XX:+UseFastAccessorMethods
-    -XX:+UnlockDiagnosticVMOptions
-    -ea
-    -Dsun.io.useCanonCaches=false
-    -Djava.net.preferIPv4Stack=true
-    -XX:-OmitStackTraceInFastThrow
-    -Xverify:none
-
-    -XX:ErrorFile=$USER_HOME/java_error_in_idea_%p.log
-    -XX:HeapDumpPath=$USER_HOME/java_error_in_idea.hprof
-    -Dide.no.platform.update=true
-  '';
-in
 {
   home.file = {
-    ".var/app/com.jetbrains.IntelliJ-IDEA-Community/config/idea64.vmoptions".text = ideaVmOptions;
-    ".var/app/com.jetbrains.IntelliJ-IDEA-Ultimate/config/idea64.vmoptions".text = ideaVmOptions;
+    ".var/app/com.jetbrains.IntelliJ-IDEA-Community/config/idea64.vmoptions".source = ../../../config/intellij/idea64.vmoptions;
+    ".var/app/com.jetbrains.IntelliJ-IDEA-Ultimate/config/idea64.vmoptions".source = ../../../config/intellij/idea64.vmoptions;
   };
 }
