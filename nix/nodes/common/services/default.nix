@@ -3,10 +3,8 @@
   imports = [
     ./cloud-savegame.nix
     ./cockpit-extra.nix
-    ./magnetico.nix
     ./transmission.nix
     ./telegram_sendmail.nix
-    # ./nixgram.nix
     ./nomad.nix
     ./netusage
     ./restic-server.nix
