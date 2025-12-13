@@ -14,9 +14,9 @@ in
 
   nbr = import "${flake.inputs.nbr}" { pkgs = final // { buildFHSUserEnv = final.buildFHSEnv; }; };
 
-  blender-bin = flake.inputs.blender-bin.packages.${prev.system};
+  # blender-bin = flake.inputs.blender-bin.packages.${prev.system};
 
-  inherit (flake.inputs.nix-alien.packages.${prev.system}) nix-alien;
+  # inherit (flake.inputs.nix-alien.packages.${prev.system}) nix-alien;
 
   pythonPackagesExtensions = [
     (final: prev: {
@@ -51,15 +51,15 @@ in
     final: prev: {
       jpg2png = cp ./lib/jpg2png.nix;
       buildDockerEnv = cp ./lib/buildDockerEnv.nix;
-      climod = cp flake.inputs.climod;
+      # climod = cp flake.inputs.climod;
     }
   );
 
   buildFHSUserEnv = prev.buildFHSEnv;
 
-  devenv = final.writeShellScriptBin "devenv" ''
-    nix run ${flake.inputs.devenv} -- "$@"
-  '';
+  # devenv = final.writeShellScriptBin "devenv" ''
+  #   nix run ${flake.inputs.devenv} -- "$@"
+  # '';
 
   ctl = cp ./pkgs/ctl;
 
@@ -71,15 +71,15 @@ in
   home-manager = cp "${flake.inputs.home-manager}/home-manager";
 
   prev = prev;
-  requireFileSources = [ flake.inputs.nix-requirefile-data ];
+  requireFileSources = [ ];
 
-  dotenv = cp flake.inputs.dotenv;
-  send2kindle = cp flake.inputs.send2kindle;
-  nixgram = cp flake.inputs.nixgram;
-  go-annotation = cp flake.inputs.go-annotation;
-  ts-proxy = flake.inputs.ts-proxy.packages.${prev.system}.default;
-  wrapVSCode = args: import flake.inputs.nix-vscode (args // { pkgs = prev; });
-  wrapEmacs = args: import flake.inputs.nix-emacs (args // { pkgs = prev; });
+  # dotenv = cp flake.inputs.dotenv;
+  # send2kindle = cp flake.inputs.send2kindle;
+  # nixgram = cp flake.inputs.nixgram;
+  # go-annotation = cp flake.inputs.go-annotation;
+  # ts-proxy = flake.inputs.ts-proxy.packages.${prev.system}.default;
+  # wrapVSCode = args: import flake.inputs.nix-vscode (args // { pkgs = prev; });
+  # wrapEmacs = args: import flake.inputs.nix-emacs (args // { pkgs = prev; });
 
   # nix-option = callPackage "${flake.inputs.nix-option}" {
   #   nixos-option = (callPackage "${flake.inputs.nixpkgs}/nixos/modules/installer/tools/nixos-option" { }).overrideAttrs (attrs: attrs // {
@@ -191,7 +191,7 @@ in
 
   cached-nix-shell = callPackage flake.inputs.src-cached-nix-shell { pkgs = prev; };
 
-  regex101 = prev.callPackage flake.inputs.regex101 { };
+  # regex101 = prev.callPackage flake.inputs.regex101 { };
 
   elixir_edge = final.unstable.elixir.override { erlang = final.unstable.erlang_27; };
 }

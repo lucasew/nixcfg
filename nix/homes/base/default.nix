@@ -13,8 +13,8 @@ let
 in
 {
   imports = [
-    "${self.inputs.nixgram}/hmModule.nix"
-    "${self.inputs.borderless-browser}/home-manager.nix"
+    # "${self.inputs.nixgram}/hmModule.nix"
+    # "${self.inputs.borderless-browser}/home-manager.nix"
   ];
 
   programs.bash.bashrcExtra = ''
@@ -28,7 +28,7 @@ in
     neofetch # system info, arch linux friendly
     comma # like nix-shell but more convenient
     fzf # file finder and terminal based dmenu
-    send2kindle
+    # send2kindle
     home-manager
   ];
 

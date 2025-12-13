@@ -6,7 +6,8 @@
   ...
 }:
 let
-  inherit (pkgs) callPackage dotenv fetchFromGitHub;
+  inherit (pkgs) callPackage fetchFromGitHub;
+  # inherit (pkgs) dotenv; # Removed dotenv input
   inherit (lib)
     mkEnableOption
     types
@@ -47,7 +48,9 @@ in
         serviceConfig = {
           Type = "simple";
           Restart = "always";
-          ExecStart = "${dotenv}/bin/dotenv '@${module.secretsDotenv}' -- ${alibot}/bin/alibot -d '${module.stateStore}'";
+          # ExecStart = "${dotenv}/bin/dotenv '@${module.secretsDotenv}' -- ${alibot}/bin/alibot -d '${module.stateStore}'";
+          # dotenv usage removed, user must adapt secrets loading if this service is re-enabled
+          ExecStart = "${alibot}/bin/alibot -d '${module.stateStore}'";
         };
         wantedBy = [ "default.target" ];
       };

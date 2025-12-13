@@ -50,8 +50,8 @@
     mission-center
     # custom.firefox # now I am using chromium
     cached-nix-shell
-    devenv
-    dotenv
+    # devenv
+    # dotenv
     jless # json viewer
     feh
     fortune
