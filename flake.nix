@@ -55,9 +55,6 @@
     nix-emacs.url = "github:nixosbrasil/nix-emacs";
     nix-emacs.flake = false;
 
-    nix-option.url = "github:lucasew/nix-option";
-    nix-option.flake = false;
-
     nix-index-database.url = "github:Mic92/nix-index-database";
 
 
@@ -82,9 +79,6 @@
 
     nix-vscode.url = "github:nixosbrasil/nix-vscode";
     nix-vscode.flake = false;
-
-    nix-requirefile.url = "github:lucasew/nix-requirefile";
-    nix-requirefile.flake = false;
 
     nix-requirefile-data.url = "github:lucasew/nix-requirefile/data";
     nix-requirefile-data.flake = false;
