@@ -31,41 +31,11 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
 
-    blender-bin.url = "github:edolstra/nix-warez?dir=blender";
-    blender-bin.inputs.nixpkgs.follows = "nixpkgs";
-
     cloud-savegame.url = "github:lucasew/cloud-savegame";
     cloud-savegame.flake = false;
 
-    dotenv.url = "github:lucasew/dotenv";
-    dotenv.flake = false;
-
-    devenv.url = "github:cachix/devenv";
-    devenv.flake = false;
-
-    send2kindle.url = "github:lucasew/send2kindle";
-    send2kindle.flake = false;
-
-    go-annotation.url = "github:lucasew/go-annotation";
-    go-annotation.flake = false;
-
-    ts-proxy.url = "github:lucasew/ts-proxy";
-    ts-proxy.flake = false;
-
-    nix-emacs.url = "github:nixosbrasil/nix-emacs";
-    nix-emacs.flake = false;
-
-    nix-option.url = "github:lucasew/nix-option";
-    nix-option.flake = false;
-
     nix-index-database.url = "github:Mic92/nix-index-database";
 
-
-    nix-alien.url = "github:thiagokokada/nix-alien";
-    nix-alien.inputs.nixpkgs.follows = "nixpkgs";
-    nix-alien.inputs.nix-index-database.follows = "nix-index-database";
-
-    impermanence.url = "github:nix-community/impermanence";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
@@ -75,46 +45,19 @@
 
     nur.url = "github:nix-community/nur";
 
-    nix-on-droid.url = "github:t184256/nix-on-droid";
-    nix-on-droid.inputs.home-manager.follows = "home-manager";
-    nix-on-droid.inputs.nixpkgs.follows = "nixpkgs";
-
-    nix-vscode.url = "github:nixosbrasil/nix-vscode";
-    nix-vscode.flake = false;
-
-    nix-requirefile.url = "github:lucasew/nix-requirefile";
-    nix-requirefile.flake = false;
-
-    nix-requirefile-data.url = "github:lucasew/nix-requirefile/data";
-    nix-requirefile-data.flake = false;
-
     borderless-browser.url = "github:lucasew/borderless-browser.nix";
     borderless-browser.flake = false;
 
     nix-colors.url = "github:Misterio77/nix-colors";
     nix-colors.inputs.nixpkgs-lib.follows = "nixpkgs-lib";
 
-    rust-overlay.url = "github:oxalica/rust-overlay";
-
     flake-utils.url = "github:numtide/flake-utils";
 
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    nixgram.url = "github:lucasew/nixgram";
-    nixgram.flake = false;
-
     telegram-sendmail.url = "github:lucasew/telegram-sendmail";
     telegram-sendmail.flake = false;
-
-    climod.url = "github:nixosbrasil/climod";
-    climod.flake = false;
-
-    regex101.url = "github:lucasew/regex101";
-    regex101.flake = false;
-
-    src-cached-nix-shell.url = "github:xzfc/cached-nix-shell";
-    src-cached-nix-shell.flake = false;
 
     phpelo.url = "github:lucasew/phpelo";
     phpelo.flake = false;
@@ -126,7 +69,6 @@
       nix-index-database,
       nixpkgs,
       home-manager,
-      impermanence,
       nbr,
       nur,
       nixos-hardware,
@@ -329,7 +271,6 @@
       overlays = {
         # nix-requirefile = import "${inputs.nix-requirefile}/overlay.nix";
         borderless-browser = import "${inputs.borderless-browser}/overlay.nix";
-        rust-overlay = final: prev: import "${inputs.rust-overlay}/default.nix" final prev;
         zzzthis = import ./nix/overlay.nix self;
       };
       colors =
@@ -381,16 +322,6 @@
           main = {
             modules = [ ./nix/homes/main ];
             inherit pkgs;
-          };
-        };
-      };
-
-      nixOnDroidConfigurations = pkgs.callPackage ./nix/nixOnDroid {
-        inherit extraArgs mkPkgs;
-        nodes = {
-          default = {
-            modules = [ ./nix/nixOnDroid/default ];
-            system = "aarch64-linux";
           };
         };
       };
