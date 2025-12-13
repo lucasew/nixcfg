@@ -274,7 +274,6 @@
       overlays = {
         # nix-requirefile = import "${inputs.nix-requirefile}/overlay.nix";
         borderless-browser = import "${inputs.borderless-browser}/overlay.nix";
-        # rust-overlay = final: prev: import "${inputs.rust-overlay}/default.nix" final prev;
         zzzthis = import ./nix/overlay.nix self;
       };
       colors =
@@ -329,16 +328,6 @@
           };
         };
       };
-
-      # nixOnDroidConfigurations = pkgs.callPackage ./nix/nixOnDroid {
-      #   inherit extraArgs mkPkgs;
-      #   nodes = {
-      #     default = {
-      #       modules = [ ./nix/nixOnDroid/default ];
-      #       system = "aarch64-linux";
-      #     };
-      #   };
-      # };
 
       containers = pkgs.callPackage ./nix/containers { inherit self; };
     };

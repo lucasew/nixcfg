@@ -1,7 +1,7 @@
 { ... }:
 {
   imports = [
-    ./alibot.nix
+    # ./alibot.nix
     ./pgbackup.nix
     ./vaultwarden.nix
     ./domain.nix

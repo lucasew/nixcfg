@@ -50,8 +50,6 @@
     mission-center
     # custom.firefox # now I am using chromium
     cached-nix-shell
-    # devenv
-    # dotenv
     jless # json viewer
     feh
     fortune
@@ -61,7 +59,6 @@
     htop
     libnotify
     ncdu
-    # nix-option
     nix-prefetch-scripts
     nix-output-monitor
     pkg
@@ -75,10 +72,6 @@
     # media
     nbr.wine-apps._7zip
     xxd
-
-    # custom.vscode.programming
-    # (custom.neovim.override { inherit colors; })
-    # (custom.emacs.override { inherit colors; })
 
     # LSPs
     nil

@@ -26,8 +26,6 @@ in
       experimental-features = [
         "nix-command"
         "flakes"
-        "impure-derivations"
-        "ca-derivations"
       ];
     };
   };

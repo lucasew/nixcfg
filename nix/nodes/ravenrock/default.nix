@@ -7,7 +7,6 @@
   ...
 }:
 let
-  # inherit (pkgs) dotenv;
   inherit (global) username rootPath;
   inherit (lib) mkOverride;
 in
@@ -53,7 +52,6 @@ in
 
   networking.hostName = "ravenrock";
   environment.systemPackages = with pkgs; [
-    # dotenv
     htop
     neofetch
   ];

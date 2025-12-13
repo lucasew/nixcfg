@@ -6,8 +6,6 @@
 }:
 
 lib.mkIf config.programs.nix-ld.enable {
-  # environment.systemPackages = [ pkgs.nix-alien ];
-
   programs.nix-ld.libraries =
     with pkgs;
     [
