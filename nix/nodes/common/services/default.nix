@@ -6,7 +6,7 @@
     ./magnetico.nix
     ./transmission.nix
     ./telegram_sendmail.nix
-    ./nixgram.nix
+    # ./nixgram.nix
     ./nomad.nix
     ./netusage
     ./restic-server.nix

@@ -37,8 +37,6 @@
     nix-index-database.url = "github:Mic92/nix-index-database";
 
 
-    impermanence.url = "github:nix-community/impermanence";
-
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     nbr.url = "github:nixosbrasil/nixpkgs-brasil";
@@ -71,7 +69,6 @@
       nix-index-database,
       nixpkgs,
       home-manager,
-      impermanence,
       nbr,
       nur,
       nixos-hardware,
