@@ -62,7 +62,6 @@ in
   home-manager = cp "${flake.inputs.home-manager}/home-manager";
 
   prev = prev;
-  requireFileSources = [ ];
 
   nomad-driver-nvidia =  prev.buildGoModule rec {
     pname = "nomad-driver-nvidia";
