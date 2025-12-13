@@ -64,7 +64,6 @@
     nix-alien.url = "github:thiagokokada/nix-alien";
     nix-alien.inputs.nixpkgs.follows = "nixpkgs";
     nix-alien.inputs.nix-index-database.follows = "nix-index-database";
-    nix-alien.inputs.flake-utils.follows = "flake-utils";
 
     impermanence.url = "github:nix-community/impermanence";
 

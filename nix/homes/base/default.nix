@@ -39,8 +39,8 @@ in
     tmux.enable = true;
     git = {
       enable = true;
-      userName = global.username;
-      userEmail = global.email;
+      settings.user.name = global.username;
+      settings.user.email = global.email;
       package = mkDefault pkgs.gitMinimal;
     };
   };
