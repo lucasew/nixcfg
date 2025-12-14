@@ -4,7 +4,14 @@
 
 set -eu -o pipefail
 
-rsyncnet_user=de3163@de3163.rsync.net
+if [ -n "${RSYNCNET_USER:-}" ]; then
+	rsyncnet_user="$RSYNCNET_USER"
+else
+	# Sentinel: Hardcoded credential is a security debt.
+	# Please set RSYNCNET_USER environment variable.
+	echo "WARNING: RSYNCNET_USER is not set. Using default (deprecated)." >&2
+	rsyncnet_user=de3163@de3163.rsync.net
+fi
 
 TERMUX_NOTIFICATION_ID=termux_backup
 
