@@ -5,8 +5,9 @@
     max-free = 10 * 1024 * 1024 * 1024;
   };
 
-  services.auto-cpufreq.enable = true;
-  services.tlp.enable = true;
+  # services.auto-cpufreq.enable = true;
+  # services.tlp.enable = true;
+  services.system76-scheduler.enable = true;
 
   hardware = {
     bluetooth.enable = true;
