@@ -4,7 +4,12 @@
 
 set -eu -o pipefail
 
-rsyncnet_user=de3163@de3163.rsync.net
+if [ -n "${RSYNCNET_USER:-}" ]; then
+	rsyncnet_user="$RSYNCNET_USER"
+else
+	user="de3163"
+	rsyncnet_user="${user}@${user}.rsync.net"
+fi
 
 TERMUX_NOTIFICATION_ID=termux_backup
 
