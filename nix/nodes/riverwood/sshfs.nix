@@ -14,8 +14,8 @@ in
   systemd.user.services = {
     "sshfs-TMP2" = {
       path = with pkgs; [ sshfs ];
-      environment.SSH_AUTH_SOCK = "%t/ssh-agent";
       script = ''
+        . ${../../../bin/prelude/999-gcr-ssh-agent.sh}
         exec sshfs $(whoami)@whiterun:/home/$(whoami)/TMP2 /home/$(whoami)/TMP2 ${sshfsArgs}
       '';
       restartIfChanged = true;
@@ -23,8 +23,8 @@ in
 
     "sshfs-WORKSPACE" = {
       path = with pkgs; [ sshfs ];
-      environment.SSH_AUTH_SOCK = "%t/ssh-agent";
       script = ''
+        . ${../../../bin/prelude/999-gcr-ssh-agent.sh}
         exec sshfs $(whoami)@whiterun:/home/$(whoami)/WORKSPACE /home/$(whoami)/WORKSPACE ${sshfsArgs}
       '';
       restartIfChanged = true;
