@@ -2,12 +2,8 @@
 
 set -eu -o pipefail
 
-if [ -n "${RSYNCNET_USER:-}" ]; then
-	rsyncnet_user="$RSYNCNET_USER"
-else
-	user="de3163"
-	rsyncnet_user="${user}@${user}.rsync.net"
-fi
+user="de3163"
+rsyncnet_user="${RSYNCNET_USER:-$user@$user.rsync.net}"
 
 function update_status {
 	sd source_me notification --id $$ --title "Sincronização rápida" --message "$*"
