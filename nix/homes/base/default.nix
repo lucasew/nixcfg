@@ -34,7 +34,6 @@ in
   home.enableNixpkgsReleaseCheck = false;
 
   programs = {
-    tmux.enable = true;
     git = {
       enable = true;
       settings.user.name = global.username;
