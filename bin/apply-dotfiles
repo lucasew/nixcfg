@@ -2,11 +2,33 @@
 
 set -euo pipefail
 
+link_file() {
+    local source_file="$1"
+    local target_file="$2"
+
+    local target_dir="${target_file%/*}"
+    mkdir -p "$target_dir"
+
+    if [ -L "$target_file" ]; then
+        local current_link
+        current_link=$(readlink "$target_file")
+        if [ "$current_link" = "$source_file" ]; then
+            return 0
+        fi
+        rm "$target_file"
+    elif [ -e "$target_file" ]; then
+        rm "$target_file"
+    fi
+
+    ln -s "$source_file" "$target_file"
+    echo "  → $target_file"
+}
+
 # Função para criar links simbólicos da pasta config/
 create_config_symlinks() {
     local dotfiles_root=$(sd d root)
-    local config_dir="$HOME/.config"
-    
+    local config_dir="$HOME"
+
     if [ ! -d "$dotfiles_root/config" ]; then
         echo "Directory $dotfiles_root/config not found, skipping config symlinks"
         return 0
@@ -19,11 +41,7 @@ create_config_symlinks() {
         relative_path="${source_file#$dotfiles_root/config/}"
         target_file="$config_dir/$relative_path"
         
-        target_dir="${target_file%/*}"
-        mkdir -p "$target_dir"
-        
-        ln -sf "$source_file" "$target_file"
-        echo "  → $target_file"
+        link_file "$source_file" "$target_file"
     done
 }
 
