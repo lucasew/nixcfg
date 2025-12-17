@@ -12,7 +12,6 @@
     ./atuin.nix
     ./dlna.nix
     ./helix
-    ./intellij.nix
     ./ghostty.nix
     ./espanso.nix
     ./dconf.nix

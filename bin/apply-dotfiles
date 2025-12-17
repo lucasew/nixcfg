@@ -27,6 +27,30 @@ create_config_symlinks() {
     done
 }
 
+# Função para criar links simbólicos da pasta flatpak/
+create_flatpak_symlinks() {
+    local dotfiles_root=$(sd d root)
+    local flatpak_dir="$HOME/.var/app"
+
+    if [ ! -d "$dotfiles_root/flatpak" ]; then
+        echo "Directory $dotfiles_root/flatpak not found, skipping flatpak symlinks"
+        return 0
+    fi
+
+    echo "[*] Creating flatpak symlinks from $dotfiles_root/flatpak"
+
+    find "$dotfiles_root/flatpak" -type f | while read -r source_file; do
+        relative_path="${source_file#$dotfiles_root/flatpak/}"
+        target_file="$flatpak_dir/$relative_path"
+
+        target_dir="${target_file%/*}"
+        mkdir -p "$target_dir"
+
+        ln -sf "$source_file" "$target_file"
+        echo "  → $target_file"
+    done
+}
+
 # Função para configurar shortcuts no termux (só se for phone)
 setup_termux_shortcuts() {
     # Condicional crucial: só executa se estiver no phone
@@ -53,6 +77,7 @@ setup_termux_shortcuts() {
 
 # Executar funções
 create_config_symlinks
+create_flatpak_symlinks
 setup_termux_shortcuts
 
 echo "[*] apply-dotfiles completed"
