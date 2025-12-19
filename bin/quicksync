@@ -2,7 +2,13 @@
 
 set -eu -o pipefail
 
-rsyncnet_user=de3163@de3163.rsync.net
+rsyncnet_user="${RSYNCNET_USER:-}"
+if [ -z "$rsyncnet_user" ]; then
+	echo "WARNING: Using hardcoded rsync.net credentials. Set RSYNCNET_USER to override." >&2
+	rsyncnet_user=de3163@de3163.rsync.net
+fi
+
+rsyncnet_git_base="${RSYNCNET_GIT_BASE:-/data2/home/de3163/git-personal}"
 
 function update_status {
 	sd source_me notification --id $$ --title "Sincronização rápida" --message "$*"
@@ -14,7 +20,11 @@ function _sync_private_repo {
 	shift
 	repo_dir=~/.personal
 	update_status "Sincronizando $repo"
-	remote_url="ssh://$rsyncnet_user/data2/home/de3163/git-personal/$repo"
+	remote_url="ssh://$rsyncnet_user/$rsyncnet_git_base/$repo"
+	# Fix double slashes if any, though ssh/rsync usually handle them
+	remote_url="${remote_url//\/\//\/}"
+	remote_url="${remote_url/ssh:\//ssh:\/\/}"
+
 	mkdir -p "$repo_dir"
 	pushd "$repo_dir" >/dev/null
 	if [ ! -d "$repo_dir/$repo" ]; then
