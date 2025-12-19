@@ -7,7 +7,9 @@
         pkgs.nomad-driver-podman
         pkgs.nomad-driver-nvidia
       ];
+      dropPrivileges = false;
       settings = {
+        data_dir = "/var/lib/private/nomad";
         datacenter = lib.mkDefault "br_home_local";
         bind_addr = "{{ GetInterfaceIP \"tailscale0\" }}"; # Dynamically binds to Tailscale IP
         "advertise" = {
