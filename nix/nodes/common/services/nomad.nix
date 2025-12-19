@@ -22,7 +22,7 @@
             path      = "/var/lib/nomad/consul";
             read_only = false;
           };
-          alloc_mounts_dir = "/var/lib/nomad/alloc_mounts";
+          alloc_mounts_dir = "/var/lib/private/nomad/alloc_mounts";
           server_join = {
             retry_join = [
               "ravenrock:4647"
