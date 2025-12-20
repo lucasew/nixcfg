@@ -9,3 +9,4 @@
 **Vulnerability:** Enabled SSH password authentication combined with a known/weak initial password ("changeme").
 **Learning:** Default configurations or initial setups sometimes default to permissive settings which can be dangerous if not tightened, especially when combined with weak secrets.
 **Prevention:** Explicitly disable password-based authentication for critical services like SSH and enforce key-based authentication.
+**Update:** The user has explicitly rejected the fix (disabling password authentication) and requested to stop flagging this issue. The risk is accepted. Do not flag the weak initial password in `nix/nodes/bootstrap/user.nix` or the enabled password authentication in `nix/nodes/bootstrap/ssh.nix` in the future.
