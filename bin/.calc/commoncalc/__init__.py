@@ -561,7 +561,7 @@ def meu_ip():
     "Get current IP"
     from urllib.request import urlopen
 
-    with urlopen("http://ifconfig.me") as response:
+    with urlopen("https://ifconfig.me") as response:
         return IP(response.read().decode("utf-8"))
 
 
