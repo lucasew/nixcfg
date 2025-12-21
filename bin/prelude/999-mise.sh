@@ -1,7 +1,7 @@
 if [ -f "$HOME/.local/bin/mise" ]; then
-    MISE_CMD="$HOME/.local/bin/mise"
-    if [ -n "$TERMUX_VERSION" ]; then
-        MISE_CMD="termux-chroot $MISE_CMD"
+    if command -v mise >/dev/null 2>&1; then
+        eval "$(mise activate bash)"
+    else
+        eval "$($HOME/.local/bin/mise activate bash)"
     fi
-    eval "$($MISE_CMD activate bash)"
 fi
