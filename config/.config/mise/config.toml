@@ -6,7 +6,6 @@ bun = true
 
 [tools]
 aqua = "latest"
-cmdx = "latest"
 "github:bytecodealliance/javy" = "latest"
 "github:lewtec/rotulador" = "0.2.2"
 "github:lucasew/go-annotation" = "latest"
