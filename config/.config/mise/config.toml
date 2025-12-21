@@ -5,7 +5,6 @@ idiomatic_version_file_enable_tools = ["python"]
 bun = true
 
 [tools]
-aqua = "latest"
 "github:bytecodealliance/javy" = "latest"
 "github:lewtec/rotulador" = "0.2.2"
 "github:lucasew/go-annotation" = "latest"
