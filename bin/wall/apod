@@ -2,6 +2,9 @@
 # fetch one image from NASA and apply as wallpaper
 set -eu
 
-OUT_FILE=/tmp/wall.jpg
-curl "$(curl -L "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=1" | jq .[0].hdurl -r)" --output $OUT_FILE
-sd wall change $OUT_FILE
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/wall"
+mkdir -p "$CACHE_DIR"
+OUT_FILE="$CACHE_DIR/apod.jpg"
+
+curl "$(curl -L "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=1" | jq .[0].hdurl -r)" --output "$OUT_FILE"
+sd wall change "$OUT_FILE"
