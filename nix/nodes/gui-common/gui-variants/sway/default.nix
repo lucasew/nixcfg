@@ -68,6 +68,8 @@ in
   config = lib.mkIf config.programs.sway.enable {
     systemd.user.services.xss-lock.restartIfChanged = true;
 
+    programs.ssh.startAgent = true;
+
     programs.xss-lock = {
       enable = true;
       lockerCommand = lib.mkDefault ''
