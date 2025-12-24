@@ -5,7 +5,15 @@
 
 set -euo pipefail
 
-export OPENROUTER_API_KEY=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 # valid key but with spend limit 0
+# Sentinel: Removed hardcoded API key.
+# Please set OPENROUTER_API_KEY in your environment.
+
+if [[ -z "${OPENROUTER_API_KEY:-}" ]]; then
+    echo "Error: OPENROUTER_API_KEY is not set." >&2
+    echo "Please set it in your environment." >&2
+    exit 1
+fi
+
 export CODEX_MODEL=deepseek/deepseek-chat-v3-0324:free
 
 npx open-codex --model "$CODEX_MODEL" "$@"
