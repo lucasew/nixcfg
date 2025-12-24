@@ -7,7 +7,6 @@
 
   # services.auto-cpufreq.enable = true;
   # services.tlp.enable = true;
-  services.system76-scheduler.enable = true;
 
   hardware = {
     bluetooth.enable = true;
