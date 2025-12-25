@@ -5,7 +5,17 @@
 
 set -euo pipefail
 
-export OPENROUTER_API_KEY=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 # valid key but with spend limit 0
+# Sentinel: Hardcoded keys are discouraged. Using environment variable is preferred.
+# This fallback is provided per user comment that the key has 0 spend limit.
+FALLBACK_KEY="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"
+
+if [[ -z "${OPENROUTER_API_KEY:-}" ]]; then
+    echo "⚠️  Warning: OPENROUTER_API_KEY not set. Using hardcoded public key." >&2
+    echo "   This key is rate-limited and intended for testing only." >&2
+    echo "   Please set OPENROUTER_API_KEY in your environment for personal use." >&2
+    export OPENROUTER_API_KEY="$FALLBACK_KEY"
+fi
+
 export CODEX_MODEL=deepseek/deepseek-chat-v3-0324:free
 
 npx open-codex --model "$CODEX_MODEL" "$@"
