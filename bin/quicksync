@@ -2,7 +2,11 @@
 
 set -eu -o pipefail
 
-rsyncnet_user=de3163@de3163.rsync.net
+rsyncnet_user="${RSYNCNET_USER:-}"
+if [ -z "$rsyncnet_user" ]; then
+	echo "WARNING: Using hardcoded rsync.net credentials. Set RSYNCNET_USER to override." >&2
+	rsyncnet_user=de3163@de3163.rsync.net
+fi
 
 function update_status {
 	sd source_me notification --id $$ --title "Sincronização rápida" --message "$*"
