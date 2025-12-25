@@ -2,7 +2,7 @@
 
 set -eu
 
-CACHE_DIR="$(realpath "$(mktemp -d)/../nixcfg-cached-eval")"
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/nixcfg-cached-eval"
 mkdir -p "$CACHE_DIR"
 
 FLAKE_REF="$1"
