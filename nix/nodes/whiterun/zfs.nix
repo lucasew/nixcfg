@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 # syncing to backup zpool
 #   syncoid storage/vmiso archive/downloads/vmiso
@@ -12,6 +12,7 @@
     pools = [ "zroot" ];
   };
   boot.zfs = {
+    package = pkgs.zfs_2_4;
     forceImportRoot = false;
     requestEncryptionCredentials = [ "zroot" ];
     allowHibernation = true;

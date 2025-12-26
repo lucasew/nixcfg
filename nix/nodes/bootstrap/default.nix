@@ -38,6 +38,7 @@ in
     ./nix-tmp.nix
     ./last-generation.nix
     ./dotd.nix
+    ./kernel.nix
   ];
 
   networking.firewall.allowedTCPPorts = [
