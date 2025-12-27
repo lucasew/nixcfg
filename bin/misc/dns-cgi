@@ -35,4 +35,13 @@ function has_binary() {
 		sudo arp-scan -localnet | grep -v -e '.*\t.*$' | sed 's;\t; ;g' | grep -v 'Unknown' | awk 'length($0) > 5 {split($3, a, " "); print $1 " " a[1] ".net" }'
 	fi
 
-} | grep -v -e '^[ \t]*$' | sed "s;$;$PREFIX;" | grep -v -e "^[a-z\.]*$PREFIX$"
+} | awk -v suffix="$PREFIX" '
+    /^[ \t]*$/ { next }
+    {
+        line = $0 suffix
+        # Mimic original grep: excludes lines matching ^[a-z\.]*suffix$
+        if (line !~ "^[a-z\\.]*" suffix "$") {
+            print line
+        }
+    }
+'
