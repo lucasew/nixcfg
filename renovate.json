@@ -1,24 +1,24 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "branchNameStrict": true,
   "extends": [
-    "github>lewtec/renovate-config:base",
-    "config:recommended"
+    "config:recommended",
+    "github>lewtec/renovate-config:base"
   ],
   "nix": {
     "enabled": true
   },
-  "branchNameStrict": true,
   "packageRules": [
     {
+      "automerge": true,
+      "matchDepTypes": "required_provider",
       "matchManagers": [
         "terraform"
       ],
-      "matchDepTypes": "required_provider",
       "matchUpdateTypes": [
         "minor",
         "patch"
-      ],
-      "automerge": true
+      ]
     }
   ]
 }
