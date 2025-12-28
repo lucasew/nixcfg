@@ -42,14 +42,6 @@ if sd is phone; then
 		backup "$database" backup/lucasew/WhatsApp
 	done
 
-	mkdir -p ~/.cache/backup
-
-	# for appfolder in Tachiyomi RetroArch; do
-	#   tar -cvf ~/.cache/backup/$appfolder.tar /sdcard/$appfolder
-	#   backup ~/.cache/backup/$appfolder.tar backup/lucasew
-	#   rm ~/.cache/backup/$appfolder.tar
-	# done
-
 	mkdir -p ~/.cache/backup/termux
 	dpkg-query -f '${binary:Package}\n' -W >~/.cache/backup/termux/packages.txt
 	for item in .bashrc .bash_history .config .termux workspace; do
@@ -63,19 +55,7 @@ fi
 if sd is whiterun; then
 	true
 	# there is a specific service for this
-	# backup /var/backup/postgresql/ backup/lucasew/homelab/postgres
 fi
-
-# deleting empty files
-# ssh "$rsyncnet_user" find backup -size 0 -delete
-
-# mirroring of git repos -- new ones using git clone --mirror
-# TODO: is this the right way?
-# export GIT_TERMINAL_PROMPT=0
-# for repo in $(ssh "$rsyncnet_user" ls git); do
-#   echo "[*] Syncando mirror do repo em 'git/$repo'"
-#   ssh "$rsyncnet_user" -o SendEnv=GIT_TERMINAL_PROMPT git --git-dir "git/$repo" fetch --all --prune
-# done
 
 last_notification_file=$(mktemp)
 {
