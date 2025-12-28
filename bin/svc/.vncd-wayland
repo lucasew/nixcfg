@@ -2,4 +2,11 @@
 #!nix-shell -i bash -p wayvnc
 #! vim:ft=bash
 
-wayvnc 0.0.0.0
+HOST="${WAYVNC_HOST:-127.0.0.1}"
+
+if [ "$HOST" != "127.0.0.1" ] && [ "$HOST" != "localhost" ]; then
+    echo "⚠️  WARNING: You are exposing wayvnc to '$HOST'. This is insecure as it has no authentication!" >&2
+    echo "   Use WAYVNC_HOST=127.0.0.1 (default) to bind to localhost only." >&2
+fi
+
+wayvnc "$HOST"
