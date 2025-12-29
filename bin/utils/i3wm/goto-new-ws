@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-wsfile="/tmp/.i3_last_ws"
+# Sentinel: Use XDG_RUNTIME_DIR or ~/.cache to prevent /tmp symlink attacks
+wsfile="${XDG_RUNTIME_DIR:-$HOME/.cache}/i3_last_ws"
 
 last_ws=10
 if [ -f $wsfile ]; then
