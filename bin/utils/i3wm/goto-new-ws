@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
-# Sentinel: Use XDG_RUNTIME_DIR or ~/.cache to prevent /tmp symlink attacks
-wsfile="${XDG_RUNTIME_DIR:-$HOME/.cache}/i3_last_ws"
+# Sentinel: Use XDG_RUNTIME_DIR or secure /tmp dir to prevent symlink attacks.
+# Must be wiped on boot, so avoid ~/.cache.
+rundir="${XDG_RUNTIME_DIR:-/tmp/i3-utils-$USER}"
+if [ ! -d "$rundir" ]; then
+    mkdir -p -m 700 "$rundir"
+fi
+wsfile="$rundir/i3_last_ws"
 
 last_ws=10
 if [ -f $wsfile ]; then
