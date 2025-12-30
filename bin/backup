@@ -52,10 +52,6 @@ if sd is phone; then
 	done
 fi
 
-if sd is whiterun; then
-	true
-	# there is a specific service for this
-fi
 
 last_notification_file=$(mktemp)
 {
