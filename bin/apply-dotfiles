@@ -55,7 +55,7 @@ setup_termux_shortcuts() {
     echo "[*] Setting up termux shortcuts"
     
     mkdir -p ~/.shortcuts
-    rm ~/.shortcuts/*
+    rm -f ~/.shortcuts/*
     
     for shortcut in $(ls $(sd d root)/bin/_shortcuts/termux); do
         echo "[*] Installing shortcut $shortcut"
