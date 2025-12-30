@@ -8,6 +8,8 @@ if [ -z "$rsyncnet_user" ]; then
 	rsyncnet_user=de3163@de3163.rsync.net
 fi
 
+quicksync_remote_path="${QUICKSYNC_REMOTE_PATH:-/data2/home/de3163/git-personal}"
+
 function update_status {
 	sd source_me notification --id $$ --title "Sincronização rápida" --message "$*"
 	echo '[*]' "$@" >&2
@@ -18,7 +20,7 @@ function _sync_private_repo {
 	shift
 	repo_dir=~/.personal
 	update_status "Sincronizando $repo"
-	remote_url="ssh://$rsyncnet_user/data2/home/de3163/git-personal/$repo"
+	remote_url="ssh://$rsyncnet_user/$quicksync_remote_path/$repo"
 	mkdir -p "$repo_dir"
 	pushd "$repo_dir" >/dev/null
 	if [ ! -d "$repo_dir/$repo" ]; then
