@@ -14,8 +14,10 @@ def define_command():
 @define_command()
 def repl(*args):
     "Read eval print loop, standard stuff"
-    for arg in args:
-        exec(arg)
+    # Sentinel: Removed argument execution to prevent command injection
+    if args:
+        print("Warning: Arguments ignored for security reasons. Use the REPL interactively.")
+
     import readline, rlcompleter
     from code import InteractiveConsole
 
