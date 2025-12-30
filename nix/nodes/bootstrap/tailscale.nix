@@ -5,6 +5,11 @@
   ...
 }:
 {
+  sops.secrets.tailscale-authkey = {
+    sopsFile = ../../../secrets/tailscale-authkey.env;
+    neededForUsers = true;
+  };
+
   services.tailscale.enable = lib.mkDefault true;
 
   networking.firewall = lib.mkIf config.services.tailscale.enable {
@@ -45,7 +50,7 @@
 
       # otherwise authenticate with tailscale
       # PLEASE DON'T USE A PREAUTHORIZED KEY HERE. Reusable is nice :thumbs_up:
-      ${tailscale}/bin/tailscale up -authkey tskey-auth-kS8RZ4QHJm11CNTRL-3Z1nwteVWDcNjhQZKvqHCcntgpFA7MW7
+      ${tailscale}/bin/tailscale up -authkey "$(cat ${config.sops.secrets.tailscale-authkey.path})"
     '';
   };
 }
