@@ -4,11 +4,7 @@
 
 set -eu -o pipefail
 
-rsyncnet_user="${RSYNCNET_USER:-}"
-if [ -z "$rsyncnet_user" ]; then
-	echo "WARNING: Using hardcoded rsync.net credentials. Set RSYNCNET_USER to override." >&2
-	rsyncnet_user=de3163@de3163.rsync.net
-fi
+rsyncnet_user="${RSYNCNET_USER:?ERROR: RSYNCNET_USER environment variable is not set.}"
 
 TERMUX_NOTIFICATION_ID=termux_backup
 
