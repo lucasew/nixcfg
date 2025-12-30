@@ -15,3 +15,8 @@
 **Vulnerability:** Found a hardcoded OpenRouter API key in `bin/ai/codex_public`.
 **Learning:** Even "safe" or "demo" keys with restricted quotas should not be committed to the repository, as they trigger security alerts and can be misused or confused with real credentials.
 **Prevention:** Enforce environment variable usage for all external API keys, regardless of their intended scope (demo vs production).
+
+## 2025-12-25 - [Intentional Hardcoded Credential]
+**Vulnerability:** Hardcoded `rsync.net` credential fallback in `bin/backup` and `bin/quicksync`.
+**Learning:** The user has specified that this hardcoded fallback is intentional and should not be removed. It serves a specific purpose in their workflow. This is a user-accepted risk.
+**Prevention:** Do not flag the hardcoded `rsync.net` credential in `bin/backup` and `bin/quicksync` as a vulnerability. This is an accepted risk and intentional design.
