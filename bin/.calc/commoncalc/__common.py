@@ -14,13 +14,14 @@ def define_command():
 @define_command()
 def repl(*args):
     "Read eval print loop, standard stuff"
-    for arg in args:
-        exec(arg)
+    # The original implementation of this function used exec() on command-line
+    # arguments, which is a major security vulnerability. This has been removed.
     import readline, rlcompleter
     from code import InteractiveConsole
 
     readline.parse_and_bind("tab: complete")
-    InteractiveConsole({**globals(), **commands}).interact()
+    console = InteractiveConsole(locals={**globals(), **commands})
+    console.interact()
 
 
 @define_command()
