@@ -33,11 +33,14 @@ function ssh_run {
 
 BUILD_UUID=$(uuidgen)
 
-ssh_run -t mkdir -p /tmp/rbuild-outputs >&2
+# Sentinel: Use XDG_RUNTIME_DIR (wiped on reboot) or fallback to user cache
+REMOTE_CACHE_DIR='"${XDG_RUNTIME_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}}/rbuild-outputs"'
 
-ssh_run -t nom build "$repo#$item" --out-link /tmp/rbuild-outputs/$BUILD_UUID --show-trace >&2
+ssh_run -t mkdir -p "$REMOTE_CACHE_DIR" >&2
 
-RESULT_OUTPUT="$(ssh_run realpath /tmp/rbuild-outputs/$BUILD_UUID)"
+ssh_run -t nom build "$repo#$item" --out-link "$REMOTE_CACHE_DIR/$BUILD_UUID" --show-trace >&2
+
+RESULT_OUTPUT="$(ssh_run realpath "$REMOTE_CACHE_DIR/$BUILD_UUID")"
 
 echo "[*] Copying result back: \"$RESULT_OUTPUT\"" >&2
 
