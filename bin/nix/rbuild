@@ -33,8 +33,8 @@ function ssh_run {
 
 BUILD_UUID=$(uuidgen)
 
-# Sentinel: Use user-specific cache directory to avoid shared /tmp security risks
-REMOTE_CACHE_DIR='"${XDG_CACHE_HOME:-$HOME/.cache}/rbuild-outputs"'
+# Sentinel: Use XDG_RUNTIME_DIR (wiped on reboot) or fallback to user cache
+REMOTE_CACHE_DIR='"${XDG_RUNTIME_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}}/rbuild-outputs"'
 
 ssh_run -t mkdir -p "$REMOTE_CACHE_DIR" >&2
 
