@@ -44,7 +44,6 @@
   };
 
   home.packages = with pkgs; [
-    unstable.zed-editor
     uv
     ruff
     mission-center
