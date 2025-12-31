@@ -47,11 +47,18 @@ function sync_private_repo {
 	fi
 }
 
-if ! sd is riverwood; then
-	ssh lucasew@riverwood sdw quicksync
-fi
+function run_remote_sync {
+	quicksync_remote_ssh_target="${QUICKSYNC_REMOTE_SSH_TARGET:-}"
+	if [ -z "$quicksync_remote_ssh_target" ]; then
+		echo "WARNING: Using hardcoded quicksync ssh target. Set QUICKSYNC_REMOTE_SSH_TARGET to override." >&2
+		quicksync_remote_ssh_target=lucasew@riverwood
+	fi
+	if ! sd is riverwood; then
+		ssh "$quicksync_remote_ssh_target" sdw quicksync
+	fi
+}
 
-
+run_remote_sync
 
 sync_private_repo personal-keepass
 sync_private_repo personal-beancount
@@ -60,8 +67,6 @@ sync_private_repo personal-zettel-obsidian
 sync_private_repo personal-zettel-org
 sync_private_repo personal-decsync
 
-if ! sd is riverwood; then
-	ssh lucasew@riverwood sdw quicksync
-fi
+run_remote_sync
 
 update_status "Sincronização concluída. Jobs falhos: ${erros[@]}"
