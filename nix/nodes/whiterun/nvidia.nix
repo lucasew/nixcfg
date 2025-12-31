@@ -8,9 +8,11 @@
   imports = [ "${self.inputs.nixos-hardware}/common/gpu/nvidia" ];
 
   services.xserver.videoDrivers = [
-    "modesetting"
     "nvidia"
+    "modesetting"
   ];
+
+  boot.blacklistedKernelModules = [ "nvidiafb" "nouveau" "nova_core" ]; # CUDA ou GTFO
 
   hardware.nvidia = {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
