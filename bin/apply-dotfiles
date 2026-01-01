@@ -57,15 +57,19 @@ setup_termux_shortcuts() {
     mkdir -p ~/.shortcuts
     rm -f ~/.shortcuts/*
     
-    for shortcut in $(ls $(sd d root)/bin/_shortcuts/termux); do
+    local shortcut_dir
+    shortcut_dir=$(sd d root)/bin/_shortcuts/termux
+    for shortcut_path in "$shortcut_dir"/*; do
+        local shortcut
+        shortcut=$(basename "$shortcut_path")
         echo "[*] Installing shortcut $shortcut"
         {
             echo '#!/data/data/com.termux/files/usr/bin/bash'
             echo 'export LD_PRELOAD="/data/data/com.termux/files/usr/lib/libtermux-exec.so"'
             echo 'export PATH="/data/data/com.termux/files/usr/bin"'
             echo bash ~/.dotfiles/bin/source_me sd _shortcuts termux "$shortcut" '"$@"'
-        } >~/.shortcuts/$shortcut
-        chmod +x ~/.shortcuts/$shortcut
+        } >~/.shortcuts/"$shortcut"
+        chmod +x ~/.shortcuts/"$shortcut"
     done
 }
 
