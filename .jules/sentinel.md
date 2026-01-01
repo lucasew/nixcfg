@@ -20,3 +20,8 @@
 **Vulnerability:** Hardcoded `rsync.net` credential fallback in `bin/backup` and `bin/quicksync`.
 **Learning:** The user has specified that this hardcoded fallback is intentional and should not be removed. It serves a specific purpose in their workflow. This is a user-accepted risk.
 **Prevention:** Do not flag the hardcoded `rsync.net` credential in `bin/backup` and `bin/quicksync` as a vulnerability. This is an accepted risk and intentional design.
+
+## 2024-05-23 - [Insecure Default Network Binding]
+**Vulnerability:** The Wayland VNC server script (`bin/svc/.vncd-wayland`) was binding to `0.0.0.0` by default, exposing the service to all network interfaces.
+**Learning:** Network services should always default to the most secure configuration. Binding to `127.0.0.1` (localhost) by default prevents unintentional exposure to untrusted networks.
+**Prevention:** Always explicitly define the binding address for network services, defaulting to localhost unless external access is an explicit requirement. Provide a secure way to override the default, such as through an environment variable.
