@@ -2,4 +2,7 @@
 #!nix-shell -i bash -p wayvnc
 #! vim:ft=bash
 
-wayvnc 0.0.0.0
+# Default to localhost for security; WAYVNC_HOST can override if needed.
+# Binding to 0.0.0.0 would expose the VNC server to all network interfaces.
+# If remote access is required, consider using an SSH tunnel or a secure VPN like Tailscale.
+wayvnc "${WAYVNC_HOST:-127.0.0.1}"
