@@ -7,9 +7,9 @@ mkdir -p "$CACHE_DIR"
 OUT_FILE="$CACHE_DIR/apod.jpg"
 
 if [[ -z "${NASA_API_KEY:-}" ]]; then
-    echo "⚠️  Warning: NASA_API_KEY not set. Using 'DEMO_KEY'." >&2
-    echo "   Please set NASA_API_KEY in your environment to avoid rate limits." >&2
-    NASA_API_KEY="DEMO_KEY"
+    echo "🚨 Error: NASA_API_KEY is not set." >&2
+    echo "   Please obtain an API key from https://api.nasa.gov/ and set it as an environment variable." >&2
+    exit 1
 fi
 
 curl "$(curl -L "https://api.nasa.gov/planetary/apod?api_key=$NASA_API_KEY&count=1" | jq .[0].hdurl -r)" --output "$OUT_FILE"
