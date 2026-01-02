@@ -29,7 +29,7 @@ in
       custom_rofi
     ];
 
-    services.xserver.displayManager.lightdm.enable = true;
+    services.displayManager.lightdm.enable = true;
 
     services.xserver.windowManager.i3 = {
       configFile = "/etc/i3config";
