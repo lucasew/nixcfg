@@ -46,10 +46,10 @@ if sd is phone; then
 	dpkg-query -f '${binary:Package}\n' -W >~/.cache/backup/termux/packages.txt
 	for item in .bashrc .bash_history .config .termux workspace; do
 		rsync -avP ~/$item ~/.cache/backup/termux
-		tar -cvf ~/.cache/backup/termux.tar ~/.cache/backup/termux
-		backup ~/.cache/backup/termux.tar backup/lucasew
-		rm ~/.cache/backup/termux* -rf
 	done
+	tar -cvf ~/.cache/backup/termux.tar ~/.cache/backup/termux
+	backup ~/.cache/backup/termux.tar backup/lucasew
+	rm ~/.cache/backup/termux* -rf
 fi
 
 
