@@ -107,7 +107,7 @@ in
       # wlr.settings.screencast = { output_name = "DP-2"; chooser_type = "simple"; chooser_cmd = "${pkgs.slurp}/bin/slurp -f %o -or"; };
     };
     services.displayManager.sessionData.autologinSession = lib.mkDefault "sway";
-    services.displayManager.lightdm.enable = true;
+    services.xserver.displayManager.lightdm.enable = true;
     services.xserver.enable = true;
     # systemd.user.services.gammastep.environment.WAYLAND_DISPLAY = "wayland-1";
 
