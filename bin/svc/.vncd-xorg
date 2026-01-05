@@ -2,6 +2,12 @@
 #!nix-shell -i bash -p tigervnc
 #! vim:ft=bash
 
-# I don't care about password in this case because 5900 will only be achievable inside my Tailscale network
-# If you are exposing to your local net or the Internet please don't do this -SecurityTypes None thing
-x0vncserver -display=:0 -SecurityTypes None -ImprovedHextile=1 -RawKeyboard=1
+# VNC password authentication is required.
+# Before running this script, you must create a VNC password file using the vncpasswd utility:
+#
+#   vncpasswd ~/.vnc/passwd
+#
+# The VNC server will then use this file to authenticate clients.
+# While the VNC port (5900) should ideally be restricted to a secure network (e.g., Tailscale),
+# enforcing password authentication provides an essential layer of defense-in-depth.
+x0vncserver -display=:0 -PasswordFile ~/.vnc/passwd -ImprovedHextile=1 -RawKeyboard=1
