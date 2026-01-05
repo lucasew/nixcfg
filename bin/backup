@@ -53,18 +53,17 @@ if sd is phone; then
 fi
 
 
-last_notification_file=$(mktemp)
-{
-	echo Backup finalizado
-
+final_message_block=$(
+	echo "Backup finalizado"
 	update_status 'Listando snapshots...'
 	ssh "$rsyncnet_user" ls .zfs/snapshot | sed 's;custom_;;' | tr '\n' ' '
 	echo
-
 	update_status 'Listando cota...'
 	ssh "$rsyncnet_user" quota
+)
 
-} | tee $last_notification_file
+# Print the captured output to the console
+echo "$final_message_block"
 
-update_status "$(cat $last_notification_file)"
-rm $last_notification_file
+# Send the captured output as the final notification
+update_status "$final_message_block"
