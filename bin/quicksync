@@ -10,6 +10,12 @@ fi
 
 quicksync_remote_path="${QUICKSYNC_REMOTE_PATH:-/data2/home/de3163/git-personal}"
 
+quicksync_ssh_target="${QUICKSYNC_SSH_TARGET:-}"
+if [ -z "$quicksync_ssh_target" ]; then
+	echo "WARNING: Using hardcoded quicksync SSH target. Set QUICKSYNC_SSH_TARGET to override." >&2
+	quicksync_ssh_target=lucasew@riverwood
+fi
+
 function update_status {
 	sd source_me notification --id $$ --title "Sincronização rápida" --message "$*"
 	echo '[*]' "$@" >&2
@@ -48,7 +54,7 @@ function sync_private_repo {
 }
 
 if ! sd is riverwood; then
-	ssh lucasew@riverwood sdw quicksync
+	ssh "$quicksync_ssh_target" sdw quicksync
 fi
 
 
@@ -61,7 +67,7 @@ sync_private_repo personal-zettel-org
 sync_private_repo personal-decsync
 
 if ! sd is riverwood; then
-	ssh lucasew@riverwood sdw quicksync
+	ssh "$quicksync_ssh_target" sdw quicksync
 fi
 
 update_status "Sincronização concluída. Jobs falhos: ${erros[@]}"
