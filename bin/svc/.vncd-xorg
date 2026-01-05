@@ -2,6 +2,8 @@
 #!nix-shell -i bash -p tigervnc
 #! vim:ft=bash
 
-# I don't care about password in this case because 5900 will only be achievable inside my Tailscale network
-# If you are exposing to your local net or the Internet please don't do this -SecurityTypes None thing
-x0vncserver -display=:0 -SecurityTypes None -ImprovedHextile=1 -RawKeyboard=1
+# Always require a password for VNC.
+# Relying solely on network-level security (like a VPN) is not sufficient.
+# This follows the principle of "defense in depth". If the network layer is ever
+# compromised, the service itself should still be secure.
+x0vncserver -display=:0 -PasswordFile ~/.vnc/passwd -ImprovedHextile=1 -RawKeyboard=1
