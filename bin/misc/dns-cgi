@@ -23,9 +23,17 @@ function has_binary() {
 
 	if [[ -v ZEROTIER_TOKEN ]]; then
 		log "Fetching zerotier nodes"
+		# Create a temporary file to securely store the authorization header
+		# and ensure it's cleaned up when the script exits.
+		auth_header_file=$(mktemp)
+		trap 'rm -f "$auth_header_file"' EXIT
+		echo "Authorization: bearer $ZEROTIER_TOKEN" >"$auth_header_file"
+
 		if [[ -v ZEROTIER_NETWORKS ]]; then
 			for network in $(echo "$ZEROTIER_NETWORKS" | sed 's; ;\n;g'); do
-				curl "https://my.zerotier.com/api/network/$network/member" -H "Authorization: bearer $ZEROTIER_TOKEN" | jq '. | map(select(.online == true and .config.authorized == true)) | map((if .name != "" then .name else .nodeId end) as $name | .config.ipAssignments | map("\(.) \($name)")) | flatten | join("\n")' -r | sed 's;$;.zt;'
+				# Use the @-syntax with curl to read the header from the file,
+				# preventing the token from appearing in the process list.
+				curl "https://my.zerotier.com/api/network/$network/member" -H @"$auth_header_file" | jq '. | map(select(.online == true and .config.authorized == true)) | map((if .name != "" then .name else .nodeId end) as $name | .config.ipAssignments | map("\(.) \($name)")) | flatten | join("\n")' -r | sed 's;$;.zt;'
 			done
 		fi
 	fi
