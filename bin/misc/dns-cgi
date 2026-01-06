@@ -32,7 +32,10 @@ function has_binary() {
 
 	if has_binary arp-scan; then
 		log "Fetching local network with arp-scan"
-		sudo arp-scan -localnet | grep -v -e '.*\t.*$' | sed 's;\t; ;g' | grep -v 'Unknown' | awk 'length($0) > 5 {split($3, a, " "); print $1 " " a[1] ".net" }'
+		# --numeric prevents arp-scan from performing DNS lookups on resolved IPs, hardening against DNS-based attacks.
+		# The awk script ensures that only lines starting with a valid IP are processed and sanitizes the vendor string
+		# to prevent command injection from malicious network device names.
+		sudo arp-scan --localnet --numeric | awk -F'\t' '/^([0-9]{1,3}\.){3}[0-9]{1,3}\t/ && $3 != "(Unknown)" { split($3, a, " "); gsub(/[^a-zA-Z0-9-]/, "", a[1]); if (a[1] != "") print $1 " " tolower(a[1]) ".net" }'
 	fi
 
 } | grep -v -e '^[ \t]*$' | sed "s;$;$PREFIX;" | grep -v -e "^[a-z\.]*$PREFIX$"
