@@ -10,6 +10,11 @@ if [ -z "$rsyncnet_user" ]; then
 	rsyncnet_user=de3163@de3163.rsync.net
 fi
 
+if [[ "$rsyncnet_user" == -* ]]; then
+	echo "ERROR: Invalid RSYNCNET_USER: must not start with -" >&2
+	exit 1
+fi
+
 TERMUX_NOTIFICATION_ID=termux_backup
 
 function update_status {
