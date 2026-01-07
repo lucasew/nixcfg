@@ -47,11 +47,13 @@ function sync_private_repo {
 	fi
 }
 
-if ! sd is riverwood; then
-	ssh lucasew@riverwood sdw quicksync
-fi
+function sync_on_riverwood_if_needed {
+	if ! sd is riverwood; then
+		ssh lucasew@riverwood sdw quicksync
+	fi
+}
 
-
+sync_on_riverwood_if_needed
 
 sync_private_repo personal-keepass
 sync_private_repo personal-beancount
@@ -60,8 +62,6 @@ sync_private_repo personal-zettel-obsidian
 sync_private_repo personal-zettel-org
 sync_private_repo personal-decsync
 
-if ! sd is riverwood; then
-	ssh lucasew@riverwood sdw quicksync
-fi
+sync_on_riverwood_if_needed
 
 update_status "Sincronização concluída. Jobs falhos: ${erros[@]}"
