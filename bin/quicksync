@@ -47,8 +47,14 @@ function sync_private_repo {
 	fi
 }
 
+quicksync_remote_host="${QUICKSYNC_REMOTE_HOST:-}"
+if [ -z "$quicksync_remote_host" ]; then
+	echo "WARNING: Using hardcoded quicksync remote host. Set QUICKSYNC_REMOTE_HOST to override." >&2
+	quicksync_remote_host="lucasew@riverwood"
+fi
+
 if ! sd is riverwood; then
-	ssh lucasew@riverwood sdw quicksync
+	ssh "$quicksync_remote_host" sdw quicksync
 fi
 
 
@@ -61,7 +67,7 @@ sync_private_repo personal-zettel-org
 sync_private_repo personal-decsync
 
 if ! sd is riverwood; then
-	ssh lucasew@riverwood sdw quicksync
+	ssh "$quicksync_remote_host" sdw quicksync
 fi
 
 update_status "Sincronização concluída. Jobs falhos: ${erros[@]}"
