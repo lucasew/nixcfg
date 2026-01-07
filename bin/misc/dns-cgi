@@ -24,7 +24,7 @@ function has_binary() {
 	if [[ -v ZEROTIER_TOKEN ]]; then
 		log "Fetching zerotier nodes"
 		if [[ -v ZEROTIER_NETWORKS ]]; then
-			for network in $(echo "$ZEROTIER_NETWORKS" | sed 's; ;\n;g'); do
+			echo "$ZEROTIER_NETWORKS" | sed 's; ;\n;g' | while read -r network; do
 				curl "https://my.zerotier.com/api/network/$network/member" -H "Authorization: bearer $ZEROTIER_TOKEN" | jq '. | map(select(.online == true and .config.authorized == true)) | map((if .name != "" then .name else .nodeId end) as $name | .config.ipAssignments | map("\(.) \($name)")) | flatten | join("\n")' -r | sed 's;$;.zt;'
 			done
 		fi
