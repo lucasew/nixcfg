@@ -33,7 +33,7 @@ if sd is riverwood; then
 	backup ~/WORKSPACE/CANTGIT/ backup/lucasew/CANTGIT
 fi
 
-if sd is phone; then
+function backup_phone {
 	backup /sdcard/DCIM/Camera/ backup/lucasew/camera --exclude=.thumbnails
 	backup /sdcard/Pictures/ backup/lucasew/pictures --exclude=.thumbnails
 	backup /sdcard/Android/media/com.whatsapp/WhatsApp/Media/ backup/lucasew/WhatsApp --exclude=.Links --exclude=.Statuses
@@ -50,6 +50,10 @@ if sd is phone; then
 	tar -cvf ~/.cache/backup/termux.tar ~/.cache/backup/termux
 	backup ~/.cache/backup/termux.tar backup/lucasew
 	rm ~/.cache/backup/termux* -rf
+}
+
+if sd is phone; then
+	backup_phone
 fi
 
 
