@@ -1,0 +1,16 @@
+name: MiseCI Turbo
+
+on:
+  workflow_dispatch:
+jobs:
+  work:
+    name: "Work"
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: jdx/mise-action@146a28175021df8ca24f8ee1828cc2a60f980bd5 # v3
+    - name: "Run worker"
+      run: mise exec github:lucasew/mise-ci -- mise-ci dispatcher
+      env:
+        MISE_CI_TOKEN: ${{ secrets.MISE_CI_TOKEN }}
+        MISE_CI_CALLBACK: ${{ secrets.MISE_CI_CALLBACK }}
