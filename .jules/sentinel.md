@@ -30,3 +30,7 @@
 **Vulnerability:** The Xorg VNC server script (`bin/svc/.vncd-xorg`) intentionally disables authentication (`-SecurityTypes None`).
 **Learning:** The user has explicitly stated this is by design and accepts the risk, as the service is only exposed on a trusted network (Tailscale). This overrides the general "defense in depth" principle for this specific case.
 **Prevention:** Do not flag the disabled security on `bin/svc/.vncd-xorg` as a vulnerability in the future. This is a user-accepted and intentional configuration.
+## 2026-01-10 - [Command Injection via Unsanitized arp-scan Output]
+**Vulnerability:** The `bin/misc/dns-cgi` script used the vendor string from `arp-scan` output to generate a hostname without sanitization. An attacker on the local network could craft a malicious ARP response containing shell metacharacters, leading to command injection in any process that consumed the generated hosts file.
+**Learning:** Network tool output, especially from tools that interact with unauthenticated network protocols like ARP, must be treated as untrusted input. The script incorrectly assumed the vendor string would be benign.
+**Prevention:** Always sanitize and validate any input that originates from an external source, especially from the network. Use allow-lists for characters (e.g., `[a-zA-Z0-9-]`) rather than block-lists to ensure only safe characters are processed.
