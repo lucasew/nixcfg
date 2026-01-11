@@ -107,7 +107,6 @@ in
     emacs = cp ./pkgs/custom/emacs;
     firefox = cp ./pkgs/custom/firefox;
     tixati = cp ./pkgs/custom/tixati.nix;
-    vscode = cp ./pkgs/custom/vscode;
     rofi_xorg = cp ./pkgs/custom/rofi.nix;
     rofi = final.custom.rofi_xorg;
     rofi_wayland = prev.callPackage ./pkgs/custom/rofi.nix { rofi = final.rofi; };

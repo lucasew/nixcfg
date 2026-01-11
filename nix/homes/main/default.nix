@@ -30,9 +30,7 @@
 
   programs.atuin.enable = true;
 
-  programs.discord.enable = true;
   # programs.zen-browser.enable = true; # Handled unconditionally in zen-browser.nix
-  programs.vscode.enable = true;
   # services.espanso.enable = true;
   programs.man.enable = true;
 
