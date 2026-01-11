@@ -15,5 +15,6 @@ jobs:
         MISE_CI_CALLBACK: ${{ secrets.MISE_CI_CALLBACK }}
       run: |
         while true; do
-          docker run -ti --rm -e "MISE_CI_TOKEN=$MISE_CI_TOKEN" -e "MISE_CI_CALLBACK=$MISE_CI_CALLBACK" ghcr.io/lucasew/mise-ci:latest worker
+          echo Starting run
+          docker run -i --rm -e "MISE_CI_TOKEN=$MISE_CI_TOKEN" -e "MISE_CI_CALLBACK=$MISE_CI_CALLBACK" ghcr.io/lucasew/mise-ci:latest worker
         done
