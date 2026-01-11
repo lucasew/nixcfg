@@ -10,7 +10,10 @@ jobs:
     steps:
     - uses: jdx/mise-action@146a28175021df8ca24f8ee1828cc2a60f980bd5 # v3
     - name: "Run worker"
-      run: mise exec github:lucasew/mise-ci -- mise-ci dispatcher --max-empty-polls 60 --poll-interval 5s
       env:
         MISE_CI_TOKEN: ${{ secrets.MISE_CI_TOKEN }}
         MISE_CI_CALLBACK: ${{ secrets.MISE_CI_CALLBACK }}
+      run: |
+        while true; do
+          docker run -ti --rm -e "MISE_CI_TOKEN=$MISE_CI_TOKEN" -e "MISE_CI_CALLBACK=$MISE_CI_CALLBACK" ghcr.io/lucasew/mise-ci:latest worker
+        done

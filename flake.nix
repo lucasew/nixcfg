@@ -178,9 +178,11 @@
                 whiterun_cmd=$DEPLOY_CMD
               fi
 
+              notify-send  -t 10000 "NixOS Deploy" "Build terminado" || true
+
                ssh -t riverwood ${home}/bin/home-manager-generation 
                ssh -t whiterun ${home}/bin/home-manager-generation 
-               
+
                if [[ "${riverwood}" != "$(ssh riverwood realpath /run/current-system)" ]]; then
                  ssh -t riverwood sudo ${riverwood}/bin/switch-to-configuration $riverwood_cmd
                else
