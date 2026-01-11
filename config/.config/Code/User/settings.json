@@ -14,7 +14,7 @@
   "scm.inputFontSize": 14.857142857142858,
   "screencastMode.fontSize": 64.0,
   "terminal.integrated.fontSize": 16.0,
-  "workbench.colorTheme": "Stylix",
+  "workbench.colorTheme": "Atom One Dark",
   "sonarlint.connectedMode.connections.sonarqube": [
     {
       "serverUrl": "https://sonarqube.app.lew.tec.br",
