@@ -1,9 +1,2 @@
 #!/usr/bin/env bash
-
-if ! sd is binary-available rclone >/dev/null; then
-	ref="$(sd d root)#pkgs.rclone"
-	export PATH=$PATH:$(sd nix cached-eval $ref)/bin
-	# echo $python_out
-fi
-
-exec $(sd is binary-available rclone) "$@"
+mise exec rclone -- rclone "$@"

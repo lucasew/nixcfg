@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-if ! sd is binary-available elixir >/dev/null; then
-	ref="$(sd d root)#pkgs.elixir"
-	export PATH=$PATH:$(sd nix cached-eval $ref)/bin
-fi
-
-exec $(sd is binary-available elixir) "$@"

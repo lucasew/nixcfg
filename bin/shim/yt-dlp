@@ -1,11 +1,3 @@
 #!/usr/bin/env bash
-if sd is binary-available mise >/dev/null; then
-	exec mise exec yt-dlp@latest -- yt-dlp "$@"
-fi
 
-if ! sd is binary-available yt-dlp >/dev/null; then
-	ref="$(sd d root)#pkgs.yt-dlp"
-	export PATH=$PATH:$(sd nix cached-eval $ref)/bin
-fi
-
-exec $(sd is binary-available yt-dlp) "$@"
+mise exec uv -- uv run --with yt-dlp yt-dlp "$@"

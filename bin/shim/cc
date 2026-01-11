@@ -1,8 +1,2 @@
 #!/usr/bin/env bash
-
-if ! sd is binary-available cc >/dev/null; then
-	ref="$(sd d root)#pkgs.stdenv.cc"
-	export PATH=$PATH:$(sd nix cached-eval $ref)/bin
-fi
-
-exec $(sd is binary-available cc) "$@"
+mise exec vfox:clang -- clang "$@"
