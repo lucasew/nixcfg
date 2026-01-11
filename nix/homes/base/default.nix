@@ -28,17 +28,9 @@ in
     comma # like nix-shell but more convenient
     fzf # file finder and terminal based dmenu
     home-manager
+    gitMinimal
   ];
 
   home.stateVersion = mkDefault "22.11";
   home.enableNixpkgsReleaseCheck = false;
-
-  programs = {
-    git = {
-      enable = true;
-      settings.user.name = global.username;
-      settings.user.email = global.email;
-      package = mkDefault pkgs.gitMinimal;
-    };
-  };
 }
