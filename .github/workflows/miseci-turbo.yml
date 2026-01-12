@@ -16,6 +16,7 @@ jobs:
       run: |
         while true; do
           echo Starting run
-          docker run --rm -e "MISE_CI_TOKEN=$MISE_CI_TOKEN" -e "MISE_CI_CALLBACK=$MISE_CI_CALLBACK" ghcr.io/lucasew/mise-ci:latest worker
+          version=$(curl -fsSL "$MISE_CI_CALLBACK/version.txt")
+          docker run --rm -e "MISE_CI_TOKEN=$MISE_CI_TOKEN" -e "MISE_CI_CALLBACK=$MISE_CI_CALLBACK" "ghcr.io/lucasew/mise-ci:$version" worker || exit 0
           echo Exit code: $?
         done
