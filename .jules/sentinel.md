@@ -30,3 +30,8 @@
 **Vulnerability:** The Xorg VNC server script (`bin/svc/.vncd-xorg`) intentionally disables authentication (`-SecurityTypes None`).
 **Learning:** The user has explicitly stated this is by design and accepts the risk, as the service is only exposed on a trusted network (Tailscale). This overrides the general "defense in depth" principle for this specific case.
 **Prevention:** Do not flag the disabled security on `bin/svc/.vncd-xorg` as a vulnerability in the future. This is a user-accepted and intentional configuration.
+
+## 2024-05-25 - [Fix Command Injection in backup and quicksync scripts]
+**Vulnerability:** The `backup` and `quicksync` scripts were vulnerable to command injection. They used the `RSYNCNET_USER` environment variable directly in `ssh`, `rsync`, and `git` commands without proper validation.
+**Learning:** This allowed a malicious user to inject arbitrary command-line options by crafting a malicious user string (e.g., `-oProxyCommand=...`), leading to command execution. This highlighted the critical need for robust input validation, especially for environment variables that can be controlled by users.
+**Prevention:** To mitigate this, I implemented a validation check to ensure that the `RSYNCNET_USER` variable does not start with a hyphen (`-`). This simple yet effective measure prevents the injection of malicious options, ensuring that the scripts handle user-provided data securely.
