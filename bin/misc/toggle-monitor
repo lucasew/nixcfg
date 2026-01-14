@@ -25,4 +25,6 @@ function handler {
 	xrandr --output eDP-1 --dpi 100
 	notify-send "Configuração finalizada"
 }
-handler $(xrandr --query --verbose | awk '$1 == "HDMI-1" { print $5 " " $2 " " NF}')
+xrandr --query --verbose | awk '$1 == "HDMI-1" { print $5 " " $2 " " NF}' | while read -r mode state num_fields; do
+	handler "$mode" "$state" "$num_fields"
+done

@@ -30,3 +30,8 @@
 **Vulnerability:** The Xorg VNC server script (`bin/svc/.vncd-xorg`) intentionally disables authentication (`-SecurityTypes None`).
 **Learning:** The user has explicitly stated this is by design and accepts the risk, as the service is only exposed on a trusted network (Tailscale). This overrides the general "defense in depth" principle for this specific case.
 **Prevention:** Do not flag the disabled security on `bin/svc/.vncd-xorg` as a vulnerability in the future. This is a user-accepted and intentional configuration.
+
+## 2024-05-25 - [Command Injection via Unquoted Command Substitution]
+**Vulnerability:** The `bin/misc/toggle-monitor` script used unquoted command substitution to pass output from `xrandr` and `awk` directly to a function. This could allow an attacker to execute arbitrary commands if the output of `xrandr` is manipulated to contain malicious strings.
+**Learning:** Never trust the output of external commands, especially when they reflect system state that could potentially be influenced by an attacker (e.g., malicious hardware). Unquoted command substitution is a common source of shell injection vulnerabilities.
+**Prevention:** Always quote variables and use secure methods like `while read` loops to process multi-line or space-separated output from other commands. This treats the output as data, not as executable code.
