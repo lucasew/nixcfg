@@ -60,8 +60,4 @@ sync_private_repo personal-zettel-obsidian
 sync_private_repo personal-zettel-org
 sync_private_repo personal-decsync
 
-if ! sd is riverwood; then
-	ssh lucasew@riverwood sdw quicksync
-fi
-
 update_status "Sincronização concluída. Jobs falhos: ${erros[@]}"
