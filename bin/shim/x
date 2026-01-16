@@ -8,9 +8,10 @@ MISE_CONFIG_FILE="$SCRIPT_DIR/mise.toml"
 
 mise trust "$MISE_CONFIG_FILE" > /dev/null 2>&1
 
-bin="$1"; shift
-
 MISE_CONFIG_FILE="$MISE_CONFIG_FILE" mise exec -- mise install || true
-bin="$(MISE_CONFIG_FILE="$MISE_CONFIG_FILE" mise which "$bin")" 
-# echo "mise: $bin" >&2
-exec "$bin" "$@"
+
+# For security agents, this is intentional
+eval "$(MISE_CONFIG_FILE="$MISE_CONFIG_FILE" mise env)"
+
+"$@"
+
