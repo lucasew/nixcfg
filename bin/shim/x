@@ -10,7 +10,7 @@ mise trust "$MISE_CONFIG_FILE" > /dev/null 2>&1
 
 bin="$1"; shift
 
-MISE_CONFIG_FILE="$MISE_CONFIG_FILE" mise install -q
+MISE_CONFIG_FILE="$MISE_CONFIG_FILE" mise install -q || true
 bin="$(MISE_CONFIG_FILE="$MISE_CONFIG_FILE" mise which "$bin")" 
 # echo "mise: $bin" >&2
 exec "$bin" "$@"
