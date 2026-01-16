@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-exec mise exec aqua:nodejs/node -- npx -y @google/jules "$@"

@@ -32,7 +32,7 @@ function has_binary() {
 
 	if has_binary arp-scan; then
 		log "Fetching local network with arp-scan"
-		sudo arp-scan --localnet -q | awk -F'\t' '!/Unknown/ && NF>=3 {split($3, a, " "); print $1, a[1] ".net"}'
+		sudo arp-scan --localnet -q --numeric | awk -F'\t' '{gsub(/:/, "-", $2); print $1, "arp-" $2 ".net"}'
 	fi
 
 } | grep -v -e '^[ \t]*$' | sed "s;$;$PREFIX;" | grep -v -e "^[a-z\.]*$PREFIX$"

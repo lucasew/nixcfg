@@ -35,3 +35,8 @@
 **Vulnerability:** The `backup` and `quicksync` scripts were vulnerable to command injection. They used the `RSYNCNET_USER` environment variable directly in `ssh`, `rsync`, and `git` commands without proper validation.
 **Learning:** This allowed a malicious user to inject arbitrary command-line options by crafting a malicious user string (e.g., `-oProxyCommand=...`), leading to command execution. This highlighted the critical need for robust input validation, especially for environment variables that can be controlled by users.
 **Prevention:** To mitigate this, I implemented a validation check to ensure that the `RSYNCNET_USER` variable does not start with a hyphen (`-`). This simple yet effective measure prevents the injection of malicious options, ensuring that the scripts handle user-provided data securely.
+
+## 2024-05-27 - [Command Injection via arp-scan output]
+**Vulnerability:** A command injection risk existed in the `bin/misc/dns-cgi` script. The script used the vendor string from `arp-scan`'s output to generate hostnames. An attacker on the local network could spoof their MAC address vendor to include shell metacharacters, which could be executed by a downstream consumer of the generated hosts file.
+**Learning:** All output from network scanning tools must be treated as untrusted input. Relying on descriptive but potentially user-controllable fields for generating identifiers is a security risk.
+**Prevention:** Sanitize all input from external network sources. When possible, use non-descriptive, machine-generated identifiers like MAC addresses (as implemented in the fix) instead of potentially malicious strings. Use flags like `--numeric` to suppress resolution of identifiers to potentially unsafe strings.
