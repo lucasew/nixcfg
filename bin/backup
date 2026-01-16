@@ -62,8 +62,5 @@ final_message_block=$(
 	ssh "$rsyncnet_user" quota
 )
 
-# Print the captured output to the console
-echo "$final_message_block"
-
 # Send the captured output as the final notification
 update_status "$final_message_block"
