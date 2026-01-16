@@ -4,7 +4,14 @@
 
 [tools]
 "aqua:nodejs/node" = "25.2.1"
+bun = "1.3.5"
+"github:anomalyco/opencode" = "1.1.16"
 "github:docker/docker-language-server" = "0.20.1"
+"github:ffbinaries/ffbinaries-prebuilt" = "6.1"
+"github:helix-editor/helix" = "25.07.1"
 "github:lewtec/rotulador" = "0.2.2"
 "npm:bash-language-server" = "5.6.0"
 "npm:vscode-langservers-extracted" = "4.10.0"
+rclone = "1.72.1"
+"vfox:clang" = "18.1.8"
+yt-dlp = "2025.10.22"

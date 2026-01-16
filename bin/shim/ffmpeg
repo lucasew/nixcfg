@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-if ! sd is binary-available ffmpeg >/dev/null; then
-	ref="$(sd d root)#pkgs.ffmpeg"
-	export PATH=$PATH:$(sd nix cached-eval $ref)/bin
-	# echo $python_out
-fi
-
-exec $(sd is binary-available ffmpeg) "$@"

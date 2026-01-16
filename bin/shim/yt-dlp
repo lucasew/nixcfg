@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-mise exec uv -- uv run --with yt-dlp yt-dlp "$@"
