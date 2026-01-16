@@ -4,5 +4,4 @@ idiomatic_version_file_enable_tools = ["python"]
 [settings.npm]
 bun = true
 
-[tools]
-"github:lewtec/rotulador" = "0.2.2"
+

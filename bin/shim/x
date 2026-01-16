@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+MISE_CONFIG_FILE="$SCRIPT_DIR/mise.toml"
+
+mise trust "$MISE_CONFIG_FILE"
+
+exec mise exec -- "$@"
+
