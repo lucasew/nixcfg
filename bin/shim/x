@@ -9,6 +9,8 @@ MISE_CONFIG_FILE="$SCRIPT_DIR/mise.toml"
 mise trust "$MISE_CONFIG_FILE" > /dev/null 2>&1
 
 bin="$1"; shift
-bin="$(MISE_CONFIG_FILE="$MISE_CONFIG_FILE" mise which "$bin")"
+
+MISE_CONFIG_FILE="$MISE_CONFIG_FILE" mise install -q
+bin="$(MISE_CONFIG_FILE="$MISE_CONFIG_FILE" mise which "$bin")" 
 # echo "mise: $bin" >&2
 exec "$bin" "$@"
