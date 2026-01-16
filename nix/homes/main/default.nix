@@ -11,7 +11,6 @@
     ../base/default.nix
     ./atuin.nix
     ./dlna.nix
-    ./helix
     ./ghostty.nix
     ./espanso.nix
     ./dconf.nix
