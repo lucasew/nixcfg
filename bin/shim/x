@@ -2,44 +2,13 @@
 
 set -euo pipefail
 
-# Try to find mise executable
-if ! command -v mise &> /dev/null; then
-    if [ -f "$HOME/.local/bin/mise" ]; then
-        export PATH="$HOME/.local/bin:$PATH"
-    fi
-fi
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-if ! command -v mise &> /dev/null; then
-    echo "Error: mise not found" >&2
-    exit 1
-fi
+MISE_CONFIG_FILE="$SCRIPT_DIR/mise.toml"
 
-# Find dotfiles root
-dotfilesFolder=
-if [ -d ~/.dotfiles ]; then
-	dotfilesFolder=~/.dotfiles
-elif [ -d /home/lucasew/.dotfiles ]; then
-	dotfilesFolder=/home/lucasew/.dotfiles
-elif [ -d /etc/.dotfiles ]; then
-	dotfilesFolder=/etc/.dotfiles
-fi
-
-# Default to current directory if dotfiles not found
-MISE_CONFIG_FILE="./mise.toml"
-if [ -n "$dotfilesFolder" ]; then
-    if [ -f "$dotfilesFolder/mise.toml" ]; then
-        MISE_CONFIG_FILE="$(realpath "$dotfilesFolder/mise.toml")"
-    fi
-fi
-
-if [ ! -f "$MISE_CONFIG_FILE" ]; then
-    echo "Error: mise.toml not found at $MISE_CONFIG_FILE" >&2
-    exit 1
-fi
-
-# Trust the config file
 mise trust "$MISE_CONFIG_FILE" > /dev/null 2>&1
 
-# Execute the command in the mise environment
-export MISE_CONFIG_FILE="$MISE_CONFIG_FILE"
-exec mise exec -- "$@"
+bin="$1"; shift
+bin="$(MISE_CONFIG_FILE="$MISE_CONFIG_FILE" mise which "$bin")"
+echo "mise: $bin" >&2
+exec "$bin" "$@"
