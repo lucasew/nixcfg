@@ -12,5 +12,20 @@ if [[ -z "${NASA_API_KEY:-}" ]]; then
     NASA_API_KEY="DEMO_KEY"
 fi
 
-curl "$(curl -L "https://api.nasa.gov/planetary/apod?api_key=$NASA_API_KEY&count=1" | jq .[0].hdurl -r)" --output "$OUT_FILE"
+# Create a temporary config file for curl to prevent API key leakage in process list
+CURL_CONFIG=$(mktemp)
+trap 'rm -f "$CURL_CONFIG"' EXIT
+
+# Write the URL with the secret key to the config file
+# This prevents the key from appearing in 'ps aux' output
+cat <<EOF > "$CURL_CONFIG"
+url = "https://api.nasa.gov/planetary/apod?api_key=$NASA_API_KEY&count=1"
+EOF
+
+# Fetch the JSON using the config file
+IMG_URL=$(curl -K "$CURL_CONFIG" -L -s | jq .[0].hdurl -r)
+
+# Download the image
+curl "$IMG_URL" --output "$OUT_FILE"
+
 sd wall change "$OUT_FILE"

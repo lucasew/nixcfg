@@ -40,3 +40,8 @@
 **Vulnerability:** A command injection risk existed in the `bin/misc/dns-cgi` script. The script used the vendor string from `arp-scan`'s output to generate hostnames. An attacker on the local network could spoof their MAC address vendor to include shell metacharacters, which could be executed by a downstream consumer of the generated hosts file.
 **Learning:** All output from network scanning tools must be treated as untrusted input. Relying on descriptive but potentially user-controllable fields for generating identifiers is a security risk.
 **Prevention:** Sanitize all input from external network sources. When possible, use non-descriptive, machine-generated identifiers like MAC addresses (as implemented in the fix) instead of potentially malicious strings. Use flags like `--numeric` to suppress resolution of identifiers to potentially unsafe strings.
+
+## 2026-01-18 - [Prevent API Key Leak in Process List]
+**Vulnerability:** The `bin/wall/apod` script exposed the `NASA_API_KEY` in the process list (`ps aux`) by passing it as a query parameter in the `curl` command line arguments.
+**Learning:** Secrets passed as command-line arguments are visible to all users on the system. This allows any user (or malware) to capture sensitive keys by monitoring the process table.
+**Prevention:** Use configuration files to pass secrets to tools like `curl`. Create a secure temporary file (e.g., with `mktemp` which defaults to 0600 permissions), write the configuration there, and pass the file path to the tool. Ensure the temporary file is securely deleted using `trap ... EXIT`.
