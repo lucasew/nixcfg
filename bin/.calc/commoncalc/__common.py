@@ -14,8 +14,6 @@ def define_command():
 @define_command()
 def repl(*args):
     "Read eval print loop, standard stuff"
-    for arg in args:
-        exec(arg)
     import readline, rlcompleter
     from code import InteractiveConsole
 
