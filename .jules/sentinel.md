@@ -40,3 +40,8 @@
 **Vulnerability:** A command injection risk existed in the `bin/misc/dns-cgi` script. The script used the vendor string from `arp-scan`'s output to generate hostnames. An attacker on the local network could spoof their MAC address vendor to include shell metacharacters, which could be executed by a downstream consumer of the generated hosts file.
 **Learning:** All output from network scanning tools must be treated as untrusted input. Relying on descriptive but potentially user-controllable fields for generating identifiers is a security risk.
 **Prevention:** Sanitize all input from external network sources. When possible, use non-descriptive, machine-generated identifiers like MAC addresses (as implemented in the fix) instead of potentially malicious strings. Use flags like `--numeric` to suppress resolution of identifiers to potentially unsafe strings.
+
+## 2026-01-18 - [Fix Process List Secret Exposure in dns-cgi]
+**Vulnerability:** The `bin/misc/dns-cgi` script passed the `ZEROTIER_TOKEN` directly in the command arguments (`curl -H "Authorization: ..."`). This exposed the secret token to any user on the system capable of listing processes (e.g., via `ps` or `top`).
+**Learning:** Passing secrets as command-line arguments is insecure because process lists are often visible to other users or logged. Secrets should always be passed via files (secured with restrictive permissions), environment variables (though `environ` can sometimes be read), or stdin.
+**Prevention:** Used `mktemp` to create a temporary configuration file with secure permissions, wrote the header to it, and used `curl -K` to read the configuration. Added a `trap` to ensure the temporary file is securely deleted on exit.
