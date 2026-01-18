@@ -12,10 +12,8 @@ if [[ "$SD_ROOT" =~ "/nix" ]]; then
 	fi
 fi
 
-# i=0
-for script in $(ls $SD_ROOT/prelude | sort); do
-	# i=$((i+1))
-	. "$SD_ROOT/prelude/$script"
+for script in "$SD_ROOT/prelude/"*; do
+	. "$script"
 done
 
 (return 0 2>/dev/null) || "$@"
