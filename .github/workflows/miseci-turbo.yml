@@ -16,15 +16,29 @@ jobs:
       run: |
         version=$(curl -fsSL "$MISE_CI_CALLBACK/version.txt")
         docker pull "ghcr.io/lucasew/mise-ci:$version"
+
         for i in $(seq 4); do
-          while true; do
-            echo Starting run
-            docker run --rm -e "MISE_CI_TOKEN=$MISE_CI_TOKEN" -e "MISE_CI_CALLBACK=$MISE_CI_CALLBACK" "ghcr.io/lucasew/mise-ci:$version" worker || exit 0
-            err="$?"
-            if [ $err != 0 ]; then
+          sudo systemd-run \
+            --unit="miseci-$i" \
+            --property=Restart=on-success \
+            --property=RestartSec=0s \
+            docker run --rm \
+              -e "MISE_CI_TOKEN=$MISE_CI_TOKEN" \
+              -e "MISE_CI_CALLBACK=$MISE_CI_CALLBACK" \
+              "ghcr.io/lucasew/mise-ci:$version" worker
+        done
+
+        sudo journalctl -f -u "miseci-*" &
+        
+        echo "Workers started. Waiting for them to finish (they stop on error)..."
+        while true; do
+          if ! systemctl is-active --quiet "miseci-1" "miseci-2" "miseci-3" "miseci-4"; then
+            # Se alguma não está ativa, verificamos se TODAS pararam
+            active_count=$(systemctl is-active "miseci-1" "miseci-2" "miseci-3" "miseci-4" | grep -c "^active" || true)
+            if [ "$active_count" -eq 0 ]; then
               break
             fi
-            echo Exit code: $err
-          done 2>&1 | while read line; do echo $i: $line; done &
-          wait
+          fi
+          sleep 10
         done
+        echo "All workers stopped."
