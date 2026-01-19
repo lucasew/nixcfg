@@ -14,9 +14,16 @@ jobs:
         MISE_CI_TOKEN: ${{ secrets.MISE_CI_TOKEN }}
         MISE_CI_CALLBACK: ${{ secrets.MISE_CI_CALLBACK }}
       run: |
-        while true; do
-          echo Starting run
-          version=$(curl -fsSL "$MISE_CI_CALLBACK/version.txt")
-          docker run --rm -e "MISE_CI_TOKEN=$MISE_CI_TOKEN" -e "MISE_CI_CALLBACK=$MISE_CI_CALLBACK" "ghcr.io/lucasew/mise-ci:$version" worker || exit 0
-          echo Exit code: $?
+        version=$(curl -fsSL "$MISE_CI_CALLBACK/version.txt")
+        docker pull version=$(curl -fsSL "$MISE_CI_CALLBACK/version.txt")
+        for i in $(seq 4); do
+          while true; do
+            echo Starting run
+            docker run --rm -e "MISE_CI_TOKEN=$MISE_CI_TOKEN" -e "MISE_CI_CALLBACK=$MISE_CI_CALLBACK" "ghcr.io/lucasew/mise-ci:$version" worker || exit 0
+            err="$?"
+            if [ $err != 0 ]; then
+              break
+            fi
+            echo Exit code: $err
+          done 2>&1 | while read line; do echo $i: $line; done &
         done
