@@ -15,7 +15,7 @@ jobs:
         MISE_CI_CALLBACK: ${{ secrets.MISE_CI_CALLBACK }}
       run: |
         version=$(curl -fsSL "$MISE_CI_CALLBACK/version.txt")
-        docker pull version=$(curl -fsSL "$MISE_CI_CALLBACK/version.txt")
+        docker pull "ghcr.io/lucasew/mise-ci:$version"
         for i in $(seq 4); do
           while true; do
             echo Starting run
@@ -26,4 +26,5 @@ jobs:
             fi
             echo Exit code: $err
           done 2>&1 | while read line; do echo $i: $line; done &
+          wait
         done
