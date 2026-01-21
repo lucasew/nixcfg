@@ -1,4 +1,4 @@
-name: MiseCI Turbo
+name: Ciborg Turbo
 
 on:
   workflow_dispatch:
@@ -15,7 +15,8 @@ jobs:
         MISE_CI_CALLBACK: ${{ secrets.MISE_CI_CALLBACK }}
       run: |
         version=$(curl -fsSL "$MISE_CI_CALLBACK/version.txt")
-        docker pull "ghcr.io/lucasew/mise-ci:$version"
+        image="ghcr.io/lewtec/ciborg:$version"
+        docker pull $image
 
         for i in $(seq 4); do
           sudo systemd-run \
@@ -25,7 +26,7 @@ jobs:
             docker run --rm \
               -e "MISE_CI_TOKEN=$MISE_CI_TOKEN" \
               -e "MISE_CI_CALLBACK=$MISE_CI_CALLBACK" \
-              "ghcr.io/lucasew/mise-ci:$version" worker
+              $image worker
         done
 
         sudo journalctl -f -u "miseci-*" &
