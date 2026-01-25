@@ -1,10 +1,23 @@
 #!/usr/bin/env bash
 
+# /**
+#  * Resolves SSH connection parameters for a given node/host.
+#  *
+#  * This script queries the SSH configuration (via secrets and hardcoded lists)
+#  * to find the user, host, and port for a specific node name.
+#  * It outputs shell variable assignments (eval-ready) with the resolved values.
+#  *
+#  * Output format:
+#  * <VAR_PREFIX>_USER=<user>
+#  * <VAR_PREFIX>_HOST=<host>
+#  * <VAR_PREFIX>_PORT=<port>
+#  *
+#  * @param var_prefix The prefix for the output variables (e.g., "REMOTE").
+#  * @param node The node name or SSH alias to resolve.
+#  */
+
 set -eu
 
-# get ssh params from the host list
-#
-# $this var_prefix node
 var_prefix="$1"
 shift
 node="$1"

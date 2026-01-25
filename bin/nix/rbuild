@@ -1,5 +1,21 @@
 #!/usr/bin/env bash
 
+# /**
+#  * Performs a remote build of a Nix flake reference.
+#  *
+#  * This script offloads the build process to a remote machine (`NIX_RBUILD_TARGET`).
+#  * 1. Resolves the local flake reference.
+#  * 2. Copies the build closure to the remote host.
+#  * 3. Triggers the build on the remote host (using `nom build` if available).
+#  * 4. Copies the build result back to the local machine.
+#  *
+#  * It uses a temporary directory on the remote host for build outputs to avoid
+#  * cluttering the store or persistent paths.
+#  *
+#  * Configuration:
+#  * - `NIX_RBUILD_TARGET`: The SSH host to use for building (default: whiterun).
+#  */
+
 set -euo pipefail
 
 if [ ! -v NIX_RBUILD_TARGET ]; then
@@ -27,6 +43,11 @@ nix-copy-closure -s --to "$NIX_RBUILD_TARGET" "$repo"
 
 echo "[*] Evaluating ref \"$ref\"" >&2
 
+# /**
+#  * Executes a command on the remote build target via SSH.
+#  *
+#  * @param args Command to execute.
+#  */
 function ssh_run {
 	ssh "$NIX_RBUILD_TARGET" "$@"
 }

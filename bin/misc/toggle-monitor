@@ -1,6 +1,23 @@
 #!/usr/bin/env bash
-# my custom way of setting a second monitor on my laptop with one keystroke
 
+# /**
+#  * Toggles the secondary monitor configuration.
+#  *
+#  * This script detects the state of the HDMI-1 output (via `xrandr`) and applies
+#  * the appropriate layout:
+#  * - If connected: Enables HDMI-1, places it right of eDP-1, sets DPI, and handles rotation.
+#  * - If disconnected: Turns off HDMI-1.
+#  *
+#  * It is designed to be bound to a keystroke for quick toggling.
+#  */
+
+# /**
+#  * Applies the monitor configuration based on detected state.
+#  *
+#  * @param mode The xrandr mode/orientation (e.g., "normal", "right").
+#  * @param state Connection state ("connected" or "disconnected").
+#  * @param num_fields Number of fields in the xrandr output line (used to infer rotation state/capabilities).
+#  */
 function handler {
 	mode=$1
 	state=$2
