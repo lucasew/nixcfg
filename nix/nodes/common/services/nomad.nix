@@ -45,6 +45,13 @@
               };
             };
           }
+          {
+            docker = {
+              config = {
+                image_pull_timeout = "30m";
+              };
+            };
+          }
         ];
       };
     };
