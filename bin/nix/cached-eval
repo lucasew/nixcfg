@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# /**
+#  * Caches the result of a Nix evaluation to avoid re-evaluating unchanged flakes.
+#  *
+#  * This script computes an MD5 hash of the flake reference and stores the evaluation
+#  * result (output path) in a cache directory (`$XDG_CACHE_HOME/nixcfg-cached-eval`).
+#  *
+#  * If the cache entry exists and the path it points to is valid, it returns the
+#  * cached path. Otherwise, it triggers `nix eval`, caches the result, and returns it.
+#  */
+
 set -eu
 
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/nixcfg-cached-eval"

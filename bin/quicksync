@@ -1,5 +1,22 @@
 #!/usr/bin/env bash
 
+# /**
+#  * Performs a "quick sync" of critical private repositories.
+#  *
+#  * This script ensures that essential private data (like passwords, finances, notes)
+#  * is synchronized between the local machine and a central remote storage (rsync.net).
+#  * It handles:
+#  * - Cloning the repo if missing.
+#  * - Committing local changes (checkpointing) if the index is dirty.
+#  * - Pulling (rebase) and pushing to the remote.
+#  *
+#  * It can also trigger the sync on a remote node (`riverwood`) via SSH.
+#  *
+#  * Configuration:
+#  * - `RSYNCNET_USER`: Remote user@host.
+#  * - `QUICKSYNC_REMOTE_PATH`: Path on the remote server where repos are stored.
+#  */
+
 set -eu -o pipefail
 
 rsyncnet_user="${RSYNCNET_USER:-}"
@@ -15,11 +32,21 @@ fi
 
 quicksync_remote_path="${QUICKSYNC_REMOTE_PATH:-/data2/home/de3163/git-personal}"
 
+# /**
+#  * Sends a notification and logs status.
+#  */
 function update_status {
 	sd source_me notification --id $$ --title "Sincronização rápida" --message "$*"
 	echo '[*]' "$@" >&2
 }
 
+# /**
+#  * Synchronizes a single private repository.
+#  *
+#  * Cloning, committing (if dirty), pulling, and pushing.
+#  *
+#  * @param repo The name of the repository to sync.
+#  */
 function _sync_private_repo {
 	repo="$1"
 	shift

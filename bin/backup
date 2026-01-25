@@ -1,6 +1,24 @@
 #!/usr/bin/env bash
 
-# runs the backup for the current node
+# /**
+#  * Orchestrates the backup process for the current node.
+#  *
+#  * This script handles backing up data to a remote rsync.net server.
+#  * It automatically detects the current host (using `sd is ...`) and applies
+#  * host-specific backup logic:
+#  * - `riverwood`: Backs up specific workspace directories.
+#  * - `phone` (Termux): Backs up photos, WhatsApp data, and Termux configuration,
+#  *   staging some files in `~/.cache/backup` first.
+#  *
+#  * Configuration:
+#  * - `RSYNCNET_USER`: The remote user@host for rsync.net (defaults to hardcoded value).
+#  *
+#  * Dependencies:
+#  * - `sd` (system dispatcher/helper)
+#  * - `rsync`
+#  * - `ssh`
+#  * - `quicksync` (invoked as a sub-task)
+#  */
 
 set -eu -o pipefail
 
@@ -17,11 +35,23 @@ fi
 
 TERMUX_NOTIFICATION_ID=termux_backup
 
+# /**
+#  * Sends a notification and prints a status message to stderr.
+#  *
+#  * @param args The message to display/log.
+#  */
 function update_status {
 	sd source_me notification --id $$ --title Backup --message "$*"
 	echo '[*]' "$@" >&2
 }
 
+# /**
+#  * Performs an rsync backup from a local path to a remote path.
+#  *
+#  * @param from Local source path.
+#  * @param to Remote destination path (relative to the rsync.net home).
+#  * @param args Additional arguments passed to `rsync`.
+#  */
 function backup {
 	from="$1"
 	shift

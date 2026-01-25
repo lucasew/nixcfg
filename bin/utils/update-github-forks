@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+# /**
+#  * Synchronizes forked GitHub repositories with their upstream default branches.
+#  *
+#  * This script uses the GitHub CLI (`gh`) to:
+#  * 1. List all forked repositories owned by the current user.
+#  * 2. Identify the upstream default branch for each fork.
+#  * 3. Sync (fast-forward) the fork with the upstream.
+#  * 4. Also explicitly includes `lucasew/nixpkgs` (staging branch) in the sync list.
+#  *
+#  * Notifications are sent for each updated repository.
+#  */
+
 set -euo pipefail
 gh auth status
 
