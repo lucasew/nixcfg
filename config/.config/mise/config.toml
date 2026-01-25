@@ -4,6 +4,9 @@ idiomatic_version_file_enable_tools = ["python"]
 [settings.npm]
 bun = true
 
+[settings.python]
+uv_venv_auto = true
+
 [tools]
 
 
