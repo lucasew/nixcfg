@@ -62,18 +62,14 @@ function backup {
 	rsync -avP "${from}" "${to}" "$@"
 }
 
-# /**
-#  * Host-specific backup logic for 'riverwood'.
-#  */
-function backup_riverwood {
+sd quicksync
+
+if sd is riverwood; then
 	update_status "Iniciando backup Riverwood..."
 	backup ~/WORKSPACE/CANTGIT/ backup/lucasew/CANTGIT
-}
+fi
 
-# /**
-#  * Host-specific backup logic for 'phone' (Termux).
-#  */
-function backup_termux {
+if sd is phone; then
 	update_status "Iniciando backup Termux..."
 	backup /sdcard/DCIM/Camera/ backup/lucasew/camera --exclude=.thumbnails
 	backup /sdcard/Pictures/ backup/lucasew/pictures --exclude=.thumbnails
@@ -91,16 +87,6 @@ function backup_termux {
 	tar -cvf ~/.cache/backup/termux.tar ~/.cache/backup/termux
 	backup ~/.cache/backup/termux.tar backup/lucasew
 	rm ~/.cache/backup/termux* -rf
-}
-
-sd quicksync
-
-if sd is riverwood; then
-	backup_riverwood
-fi
-
-if sd is phone; then
-	backup_termux
 fi
 
 
