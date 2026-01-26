@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 export NIX_SHELL_PRESERVE_PROMPT="1"
 export PS1='\u@\h \w $?\$ \[$(tput sgr0)\]'
 

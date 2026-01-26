@@ -1,8 +1,8 @@
+# shellcheck shell=bash
 if [[ -S "${SSH_AUTH_SOCK:-}" ]]; then
-  return
+	return
 fi
 
 if [[ -S "$XDG_RUNTIME_DIR/gcr/ssh" ]]; then
-  export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gcr/ssh"
+	export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gcr/ssh"
 fi
-

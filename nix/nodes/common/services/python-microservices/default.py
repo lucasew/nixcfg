@@ -1,5 +1,3 @@
-from io import StringIO
-from json import dump
 
 
 def handle():

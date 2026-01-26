@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 if [ $TERM != dumb ]; then
 
 	if [ ! -v SD_CMD ]; then

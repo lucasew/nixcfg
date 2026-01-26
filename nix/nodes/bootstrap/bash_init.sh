@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # load set-environment on shell start
 if test -f /etc/set-environment; then
 	. /etc/set-environment

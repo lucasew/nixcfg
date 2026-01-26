@@ -4,17 +4,17 @@
 # Must be wiped on boot, so avoid ~/.cache.
 rundir="${XDG_RUNTIME_DIR:-/tmp/i3-utils-$USER}"
 if [ ! -d "$rundir" ]; then
-    mkdir -p -m 700 "$rundir"
+	mkdir -p -m 700 "$rundir"
 fi
 wsfile="$rundir/i3_last_ws"
 
 last_ws=10
-if [ -f $wsfile ]; then
+if [ -f "$wsfile" ]; then
 	last_ws="$(cat "$wsfile")"
 fi
 last_ws=$((last_ws + 1))
-echo $last_ws
-echo $last_ws >$wsfile
+echo "$last_ws"
+echo "$last_ws" >"$wsfile"
 
 if [ "$1" == "window" ]; then
 	sd utils i3wm rpc move container to workspace number $last_ws

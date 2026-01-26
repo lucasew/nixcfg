@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 #vim:ft=bash
 $DRY_RUN_CMD mkdir -p ~/.config/BetterDiscord/data/stable
 if [ -L ~/.config/BetterDiscord/data/stable/custom.css ]; then

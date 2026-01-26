@@ -26,7 +26,7 @@ let
 in builtins.toFile "loc.txt" (concatStringsSep "\n" [
 EOF
 
-	for item in $@; do
+	for item in "$@"; do
 		echo "(printPosition ["
 		echo "$item" | sed 's;\.;\n;g' | while read line; do printf '"%s"\n' "$line"; done
 		echo "] rootScope)"

@@ -4,8 +4,8 @@ TARGET="$1"
 shift
 
 # Carregar módulo no CLIENTE (local) para receber áudio
-pactl list modules short | grep -q module-native-protocol-tcp || \
-    pactl load-module module-native-protocol-tcp auth-ip-acl=100.64.0.0/10
+pactl list modules short | grep -q module-native-protocol-tcp ||
+	pactl load-module module-native-protocol-tcp auth-ip-acl=100.64.0.0/10
 
 # Pegar IP local do Tailscale
 LOCAL_IP=$(tailscale ip -4)

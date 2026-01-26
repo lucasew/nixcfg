@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-FILEPATH="$(realpath "$1")"; shift
+FILEPATH="$(realpath "$1")"
+shift
 PATH_HASH="$(echo "$FILEPATH" | md5sum)"
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/latex-cache"
 mkdir -p "$CACHE_DIR"
