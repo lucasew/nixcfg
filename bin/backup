@@ -29,8 +29,8 @@ if [ -z "$rsyncnet_user" ]; then
 fi
 
 if [[ "$rsyncnet_user" == -* ]]; then
-    echo "ERROR: Invalid RSYNCNET_USER: cannot start with a hyphen." >&2
-    exit 1
+	echo "ERROR: Invalid RSYNCNET_USER: cannot start with a hyphen." >&2
+	exit 1
 fi
 
 TERMUX_NOTIFICATION_ID=termux_backup
@@ -53,22 +53,28 @@ function update_status {
 #  * @param args Additional arguments passed to `rsync`.
 #  */
 function backup {
-	from="$1"
+	local from="$1"
 	shift
-	to="${rsyncnet_user}:$1"
+	local to="${rsyncnet_user}:$1"
 	shift
 
 	update_status rsync: "'$from' -> '$to'"
 	rsync -avP "${from}" "${to}" "$@"
 }
 
-sd quicksync
-
-if sd is riverwood; then
+# /**
+#  * Host-specific backup logic for 'riverwood'.
+#  */
+function backup_riverwood {
+	update_status "Iniciando backup Riverwood..."
 	backup ~/WORKSPACE/CANTGIT/ backup/lucasew/CANTGIT
-fi
+}
 
-if sd is phone; then
+# /**
+#  * Host-specific backup logic for 'phone' (Termux).
+#  */
+function backup_termux {
+	update_status "Iniciando backup Termux..."
 	backup /sdcard/DCIM/Camera/ backup/lucasew/camera --exclude=.thumbnails
 	backup /sdcard/Pictures/ backup/lucasew/pictures --exclude=.thumbnails
 	backup /sdcard/Android/media/com.whatsapp/WhatsApp/Media/ backup/lucasew/WhatsApp --exclude=.Links --exclude=.Statuses
@@ -85,6 +91,16 @@ if sd is phone; then
 	tar -cvf ~/.cache/backup/termux.tar ~/.cache/backup/termux
 	backup ~/.cache/backup/termux.tar backup/lucasew
 	rm ~/.cache/backup/termux* -rf
+}
+
+sd quicksync
+
+if sd is riverwood; then
+	backup_riverwood
+fi
+
+if sd is phone; then
+	backup_termux
 fi
 
 
