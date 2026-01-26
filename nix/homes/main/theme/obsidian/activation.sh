@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 #vim:ft=bash
 $DRY_RUN_CMD mkdir -p ~/WORKSPACE/ZETTEL/obsidian/content/.obsidian/themes/
 if [ -L ~/WORKSPACE/ZETTEL/obsidian/content/.obsidian/themes/base16.css ]; then

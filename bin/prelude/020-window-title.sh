@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 function title() {
 	if [[ -z "$ORIG" ]]; then
 		ORIG=$PS1

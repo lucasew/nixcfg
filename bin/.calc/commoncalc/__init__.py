@@ -4,11 +4,10 @@
 
 # utility functions to calculate stuff
 
-from .__common import define_command
-
-import os
-import sys
 import math
+import sys
+
+from .__common import define_command
 
 
 @define_command()
@@ -57,7 +56,7 @@ def urldecode(data):
 
 
 def debug_mode():
-    return getenv("DEBUG") != None
+    return getenv("DEBUG") is not None
 
 
 def eval_print(stmt, globals=globals(), locals=locals()):
@@ -137,7 +136,8 @@ def simplex(num_vars, obj_type, obj, *restrictions):
 
         def construct_matrix_from_constraints(self):
             num_s_vars = 0  # number of slack and surplus variables
-            num_r_vars = 0  # number of additional variables to balance equality and less than equal to
+            # number of additional variables to balance equality and less than equal to
+            num_r_vars = 0
             for expression in self.constraints:
                 if ">=" in expression:
                     num_s_vars += 1
@@ -195,7 +195,7 @@ def simplex(num_vars, obj_type, obj, *restrictions):
             r_index = self.num_vars + self.num_s_vars
             for i in range(r_index, len(self.coeff_matrix[0]) - 1):
                 self.coeff_matrix[0][i] = Fraction("-1")
-            coeff_0 = 0
+            # coeff_0 = 0  # Unused
             for i in self.r_rows:
                 self.coeff_matrix[0] = add_row(
                     self.coeff_matrix[0], self.coeff_matrix[i]
@@ -212,7 +212,7 @@ def simplex(num_vars, obj_type, obj, *restrictions):
             key_column = max_index(self.coeff_matrix[0])
             condition = self.coeff_matrix[0][key_column] > 0
 
-            while condition is True:
+            while condition:
                 key_row = self.find_key_row(key_column=key_column)
                 self.basic_vars[key_row] = key_column
                 pivot = self.coeff_matrix[key_row][key_column]
@@ -292,7 +292,7 @@ def simplex(num_vars, obj_type, obj, *restrictions):
             key_column = max_index(self.coeff_matrix[0])
             condition = self.coeff_matrix[0][key_column] > 0
 
-            while condition == True:
+            while condition:
                 key_row = self.find_key_row(key_column=key_column)
                 self.basic_vars[key_row] = key_column
                 pivot = self.coeff_matrix[key_row][key_column]
@@ -328,7 +328,7 @@ def simplex(num_vars, obj_type, obj, *restrictions):
             key_column = min_index(self.coeff_matrix[0])
             condition = self.coeff_matrix[0][key_column] < 0
 
-            while condition == True:
+            while condition:
                 key_row = self.find_key_row(key_column=key_column)
                 self.basic_vars[key_row] = key_column
                 pivot = self.coeff_matrix[key_row][key_column]
@@ -414,13 +414,13 @@ class IP:
     "Calculations around IPv4 addresses"
 
     def __init__(self, expr, try_binary=False):
-        if type(expr) == list and len(expr) == 4:
+        if isinstance(expr, list) and len(expr) == 4:
             self._ip = [int(str(v)) for v in expr]
             self._validate_input()
             return
-        if type(expr) == int:
+        if isinstance(expr, int):
             expr = pad_bin(expr, zfill=32)
-        if type(expr) == str and len(expr) == 32:
+        if isinstance(expr, str) and len(expr) == 32:
             new_expr = []
             for i in range(0, 32):
                 if i in [8, 16, 24]:
@@ -428,7 +428,7 @@ class IP:
                 new_expr.append(expr[i])
             expr = "".join(new_expr)
             try_binary = True
-        if type(expr) == str:
+        if isinstance(expr, str):
             dotsplit = expr.split(".")
             if len(dotsplit) == 4:
                 ip = []
@@ -540,10 +540,10 @@ class IP:
 @define_command()
 def subrede(level):
     "Get the subnet mask from the slash part of a IP"
-    if type(level) == int and level > 0 and level < 32:
-        ones = level
-        zeroes = 32 - level
-        from itertools import repeat
+    if isinstance(level, int) and level > 0 and level < 32:
+        # ones = level
+        # zeroes = 32 - level
+        # from itertools import repeat
 
         ret = []
         for i in range(0, 32):
@@ -566,7 +566,7 @@ def meu_ip():
 
 
 def benchmark(iters, fn, *args):
-    assert type(iters) == int
+    assert isinstance(iters, int)
     from timeit import timeit
 
     def call(fn, *args):
@@ -584,7 +584,7 @@ def frac(*args):
 
 
 def is_list(e):
-    return type(e) == list
+    return isinstance(e, list)
 
 
 def expand_list(*elems):

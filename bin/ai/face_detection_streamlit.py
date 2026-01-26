@@ -1,5 +1,5 @@
 #!/usr/bin/env -S sd nix shell
-#!nix-shell -i python3 -p python3PackagesBin.matplotlib python3PackagesBin.facenet-pytorch python3PackagesBin.tqdm python3PackagesBin.opencv4 python3PackagesBin.pandas python3PackagesBin.scikit-learn python3PackagesBin.streamlit
+#!nix-shell -i python3 -p python3PackagesBin.matplotlib python3PackagesBin.facenet-pytorch python3PackagesBin.tqdm python3PackagesBin.opencv4 python3PackagesBin.pandas python3PackagesBin.scikit-learn python3PackagesBin.streamlit  # noqa: E501
 
 # The idea here is to cluster a set of images of faces
 # ~stolen~ inspired from https://pyimagesearch.com/2018/07/09/face-clustering-with-python/
@@ -20,9 +20,8 @@ import streamlit as st
 from streamlit import runtime
 
 if not runtime.exists():
-    from streamlit.web import cli as stcli
-    from shutil import which
     import os
+    from shutil import which
 
     args = [which("streamlit"), "run", __file__, "--", *sys.argv[1:]]
     print(args[0], args, flush=True)
@@ -30,23 +29,15 @@ if not runtime.exists():
 
 from streamlit.runtime.scriptrunner.script_run_context import get_script_run_ctx
 
-
 print(get_script_run_ctx())
 
 
-from facenet_pytorch import MTCNN, InceptionResnetV1
-from matplotlib import pyplot as plt
-
+from sys import stderr
 
 import cv2
-from tqdm import tqdm
-from pathlib import Path
-import re
 import numpy as np
-import pandas as pd
-from argparse import ArgumentParser
-from sys import stderr, stdout
 import torch
+from facenet_pytorch import MTCNN
 
 print("chegou AAAAA")
 

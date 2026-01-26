@@ -26,8 +26,8 @@ if [ -z "$rsyncnet_user" ]; then
 fi
 
 if [[ "$rsyncnet_user" == -* ]]; then
-    echo "ERROR: Invalid RSYNCNET_USER: cannot start with a hyphen." >&2
-    exit 1
+	echo "ERROR: Invalid RSYNCNET_USER: cannot start with a hyphen." >&2
+	exit 1
 fi
 
 quicksync_remote_path="${QUICKSYNC_REMOTE_PATH:-/data2/home/de3163/git-personal}"
@@ -83,8 +83,6 @@ if ! sd is riverwood; then
 	ssh lucasew@riverwood sdw quicksync
 fi
 
-
-
 sync_private_repo personal-keepass
 sync_private_repo personal-beancount
 sync_private_repo personal-bookmarks
@@ -96,4 +94,4 @@ if ! sd is riverwood; then
 	ssh lucasew@riverwood sdw quicksync
 fi
 
-update_status "Sincronização concluída. Jobs falhos: ${erros[@]}"
+update_status "Sincronização concluída. Jobs falhos: ${erros[*]}"

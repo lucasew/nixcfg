@@ -21,5 +21,5 @@ gh auth status
 } | while read repo; do
 	sd source_me notification --id $$ --title GitHub fork update --message "Updating $repo"
 	echo "[*] gh repo sync $repo"
-	gh repo sync $repo
+	gh repo sync "$repo"
 done

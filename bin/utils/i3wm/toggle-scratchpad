@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 function rpc-msg {
-  if [ -v WAYLAND_DISPLAY ]; then
-    sway-msg "$@"
-  else
-    i3wm "$@"
-  fi
+	if [ -v WAYLAND_DISPLAY ]; then
+		sway-msg "$@"
+	else
+		i3wm "$@"
+	fi
 }
 
 sd utils i3wm rpc scratchpad show

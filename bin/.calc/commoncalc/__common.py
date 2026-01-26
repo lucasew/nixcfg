@@ -28,7 +28,7 @@ def repl(*args):
     """
     for arg in args:
         exec(arg)
-    import readline, rlcompleter
+    import readline
     from code import InteractiveConsole
 
     readline.parse_and_bind("tab: complete")

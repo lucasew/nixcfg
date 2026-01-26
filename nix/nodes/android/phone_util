@@ -3,10 +3,10 @@
 # WORK IN PROGRESS: Will eat your cat
 set -euf -o pipefail
 function bold {
-	echo -e "$(tput bold)$@$(tput sgr0)"
+	echo -e "$(tput bold)$*$(tput sgr0)"
 }
 function red {
-	echo -e "\033[0;31m$@\033[0m"
+	echo -e "\033[0;31m$*\033[0m"
 }
 
 command=$1

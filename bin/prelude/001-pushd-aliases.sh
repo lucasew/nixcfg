@@ -1,7 +1,8 @@
+# shellcheck shell=bash
 function _conditional_pushd {
 	while [ $# -gt 0 ]; do
 		if [ -d "$1" ]; then
-			pushd "$1" 2>&1 >/dev/null
+			pushd "$1" >/dev/null 2>&1
 			return 0
 		else
 			shift

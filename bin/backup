@@ -29,8 +29,8 @@ if [ -z "$rsyncnet_user" ]; then
 fi
 
 if [[ "$rsyncnet_user" == -* ]]; then
-    echo "ERROR: Invalid RSYNCNET_USER: cannot start with a hyphen." >&2
-    exit 1
+	echo "ERROR: Invalid RSYNCNET_USER: cannot start with a hyphen." >&2
+	exit 1
 fi
 
 TERMUX_NOTIFICATION_ID=termux_backup
@@ -86,7 +86,6 @@ if sd is phone; then
 	backup ~/.cache/backup/termux.tar backup/lucasew
 	rm ~/.cache/backup/termux* -rf
 fi
-
 
 final_message_block=$(
 	echo "Backup finalizado"

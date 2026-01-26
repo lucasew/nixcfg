@@ -1,2 +1,36 @@
 [tools]
 sops = "3.11.0"
+ruff = "latest"
+shfmt = "latest"
+shellcheck = "latest"
+
+[tasks.lint]
+description = "Run all linters"
+depends = ["lint:nix", "lint:sh", "lint:py"]
+
+[tasks."lint:nix"]
+description = "Lint Nix files"
+run = "nix fmt -- --check"
+
+[tasks."lint:sh"]
+description = "Lint Shell scripts"
+run = """
+    shfmt -d .
+    shellcheck $(shfmt -f .)
+"""
+
+[tasks."lint:py"]
+description = "Lint Python files"
+run = "ruff check ."
+
+[tasks.test]
+description = "Run tests"
+run = "nix flake check"
+
+[tasks.ci]
+description = "Run CI pipeline locally"
+depends = ["lint", "test"]
+
+[tasks.install]
+description = "Install dependencies"
+run = "echo 'Managed by Nix'"

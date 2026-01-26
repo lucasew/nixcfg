@@ -11,12 +11,12 @@ except NameError:
     PORT = 4200
 
 import http.server
-import socketserver
+import io
+import json
 import logging
 import os
-import io
 import socket
-import json
+import socketserver
 import traceback
 
 logging.basicConfig(level=logging.DEBUG)

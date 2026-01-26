@@ -32,7 +32,7 @@ function fetch_file() {
 		log "[W] Hash for downloaded file is missing, this can be potentially dangerous"
 	fi
 	log "[*] Downloading '$url'"
-	wr nix-prefetch-url ${extra_args[@]} --print-path | tail -n +2
+	wr nix-prefetch-url "${extra_args[@]}" --print-path | tail -n +2
 }
 
 log "[*] Initializing..."
@@ -52,11 +52,11 @@ for item in "${!fdroid_repos[@]}"; do
 	repo_url="${fdroid_repos[$item]}"
 	log "[*] Fetching repo '$item' ($repo_url)..."
 
-	index_hash="$(curl $repo_url/repo/entry.json | jq .index.sha256 -r)"
+	index_hash="$(curl "$repo_url"/repo/entry.json | jq .index.sha256 -r)"
 
 	url="${fdroid_repos[$item]}/repo/index-v2.json"
 
-	fdroid_repos_data[$item]="$(fetch_file $url sha256 $index_hash)"
+	fdroid_repos_data[$item]="$(fetch_file "$url" sha256 "$index_hash")"
 done
 
 function install_apk() {
@@ -74,12 +74,12 @@ function install_fdroid_app() {
 	log "[*] Getting F-Droid app '$app_id' from '$repo'"
 
 	# Errors in this jq command may mean that the app does not exist
-	item_payload="$(cat $repo_data | jq ".packages.\"$app_id\".versions[]" | jq -cs '.[0]')" || log "[X] App $app_id may not exist in the $repo F-Droid repo"
-	item_name="$(echo $item_payload | jq -r .file.name)"
-	item_sha256="$(echo $item_payload | jq -r .file.sha256)"
+	item_payload="$(cat "$repo_data" | jq ".packages.\"$app_id\".versions[]" | jq -cs '.[0]')" || log "[X] App $app_id may not exist in the $repo F-Droid repo"
+	item_name="$(echo "$item_payload" | jq -r .file.name)"
+	item_sha256="$(echo "$item_payload" | jq -r .file.sha256)"
 
 	final_url="${fdroid_repos[$repo]}/repo$item_name"
-	install_apk "$(fetch_file "$final_url" sha256 $item_sha256)"
+	install_apk "$(fetch_file "$final_url" sha256 "$item_sha256")"
 }
 
 function install_apk_from_url() {
@@ -165,12 +165,12 @@ if [ $dry_run == 0 ]; then
 	read
 fi
 
-for apk in ${apks_to_install[@]}; do
+for apk in "${apks_to_install[@]}"; do
 	log "[*] Installing '$apk'"
-	wr adb install $apk || true
+	wr adb install "$apk" || true
 done
 
-for app in ${apps_to_grant_clipboard_access[@]}; do
+for app in "${apps_to_grant_clipboard_access[@]}"; do
 	log "[*] Granting clipboard watch permission for $app"
 	wr adb shell appops set org.kde.kdeconnect_tp SYSTEM_ALERT_WINDOW allow
 	wr adb shell pm grant org.kde.kdeconnect_tp android.permission.READ_LOGS

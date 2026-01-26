@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 alias la='ls -lha'
 alias l='ls'
 alias cd..='cd ..'

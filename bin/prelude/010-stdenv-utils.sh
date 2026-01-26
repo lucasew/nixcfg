@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 substituteStream() {
 	local var=$1
 	local description=$2

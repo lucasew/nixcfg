@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 function bold {
 	printf "$(tput bold)$*$(tput sgr0)"
 }

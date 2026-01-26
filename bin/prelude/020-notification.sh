@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 function notification {
 	local notification_id="$RANDOM"
 	# echo $notification_id
