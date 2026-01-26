@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
-# [EXPERIMENT] generate hosts file from context
+
+# /**
+#  * Generates a dynamic hosts file from various network sources.
+#  *
+#  * This script aggregates hostname-to-IP mappings from:
+#  * - Docker containers (appending `.docker`).
+#  * - ZeroTier members (if `ZEROTIER_TOKEN` is set, appending `.zt`).
+#  * - Local network devices via `arp-scan` (appending `.arp-MAC-SUFFIX.net`).
+#  *
+#  * It outputs a hosts-file compatible format.
+#  *
+#  * @param prefix Optional domain suffix for filtered entries (default: `.local`).
+#  */
 
 set -eu
 PREFIX=.local
