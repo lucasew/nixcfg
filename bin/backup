@@ -22,28 +22,10 @@
 
 set -eu -o pipefail
 
-rsyncnet_user="${RSYNCNET_USER:-}"
-if [ -z "$rsyncnet_user" ]; then
-	echo "WARNING: Using hardcoded rsync.net credentials. Set RSYNCNET_USER to override." >&2
-	rsyncnet_user=de3163@de3163.rsync.net
-fi
-
-if [[ "$rsyncnet_user" == -* ]]; then
-    echo "ERROR: Invalid RSYNCNET_USER: cannot start with a hyphen." >&2
-    exit 1
-fi
+NOTIFICATION_TITLE="Backup"
+source "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/lib/rsyncnet.sh"
 
 TERMUX_NOTIFICATION_ID=termux_backup
-
-# /**
-#  * Sends a notification and prints a status message to stderr.
-#  *
-#  * @param args The message to display/log.
-#  */
-function update_status {
-	sd source_me notification --id $$ --title Backup --message "$*"
-	echo '[*]' "$@" >&2
-}
 
 # /**
 #  * Performs an rsync backup from a local path to a remote path.
