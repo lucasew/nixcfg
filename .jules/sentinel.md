@@ -45,3 +45,8 @@
 **Vulnerability:** The `bin/ssh/_meta` script was vulnerable to command injection. It generated shell assignment code by blindly interpolating the `${var_prefix}` variable and the values of `$user`, `$port`, and `$host` into a `cat <<EOF` block. A malicious `var_prefix` or hostname (e.g., `'host"; echo PWNED; "'`) would result in arbitrary command execution when the output was `eval`'d by the calling script (`bin/ssh/c`).
 **Learning:** Generating code (like shell assignments) from untrusted or semi-trusted input requires strict sanitization. Blind string interpolation is almost always unsafe when the output is interpreted as code.
 **Prevention:** Use `printf %q` to automatically escape shell variables when generating shell code. This ensures that the output is treated as a string literal by the shell, neutralizing any injected commands. Additionally, validate variable names (like `var_prefix`) to ensure they are safe identifiers.
+
+## 2026-01-26 - [Remote Command Injection in rbuild]
+**Vulnerability:** The `bin/nix/rbuild` script was vulnerable to remote command injection. It passed user-controlled input (the flake reference item) directly to `ssh` without proper escaping. This allowed a malicious user (or malicious flake reference) to execute arbitrary commands on the remote build host.
+**Learning:** When executing commands via SSH, arguments are joined by spaces and interpreted by the remote shell. Passing unescaped variables directly to `ssh` allows argument injection and command execution (e.g., using semicolons).
+**Prevention:** Always construct the remote command string locally using `printf %q` to ensure all arguments are properly escaped before passing the resulting string as a single argument to `ssh`.
