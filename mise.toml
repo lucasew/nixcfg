@@ -1,12 +1,12 @@
 [tools]
 sops = "3.11.0"
-ruff = "latest"
-shfmt = "latest"
-shellcheck = "latest"
+ruff = "0.14.14"
+shfmt = "3.12.0"
+shellcheck = "0.11.0"
 
 [tasks.lint]
 description = "Run all linters"
-depends = ["lint:nix", "lint:sh", "lint:py"]
+depends = ["lint:*"]
 
 [tasks."lint:nix"]
 description = "Lint Nix files"
