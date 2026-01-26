@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
-# [EXPERIMENT] nix-build but uses callPackage to import the nix file instead of only importing it
+
+# /**
+#  * Builds a Nix file using `callPackage` semantics.
+#  *
+#  * Unlike standard `nix-build` which imports the file directly, this script
+#  * wraps the import in `pkgs.callPackage`. This allows the Nix file to declare
+#  * dependencies as arguments, which are then automatically injected from `nixpkgs`.
+#  *
+#  * @param filename The Nix file to build (defaults to `default.nix`).
+#  * @param args Additional arguments passed to `nix-build`.
+#  */
 
 FILENAME="$1"
 if [ -z "$FILENAME" ]; then

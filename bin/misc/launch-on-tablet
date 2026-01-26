@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
-# use kdeconnect to lauch a website on a device
+
+# /**
+#  * Opens a URL or the local IP address on a connected KDE Connect device (Tablet).
+#  *
+#  * If a URL is provided as an argument, it sends it to the device.
+#  * If no argument is provided, it detects the local network IP and shares it (port 42069).
+#  *
+#  * @param url Optional URL to open.
+#  */
 
 TABLET_ID="5d4ff2e96ea80ec1"
 
