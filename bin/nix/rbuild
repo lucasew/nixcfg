@@ -59,7 +59,9 @@ REMOTE_CACHE_DIR='"${XDG_RUNTIME_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}}/rbuild-ou
 
 ssh_run -t mkdir -p "$REMOTE_CACHE_DIR" >&2
 
-ssh_run -t nom build "$repo#$item" --out-link "$REMOTE_CACHE_DIR/$BUILD_UUID" --show-trace >&2
+# Escape the flake reference to prevent command injection
+safe_ref=$(printf "%q" "$repo#$item")
+ssh_run -t nom build "$safe_ref" --out-link "$REMOTE_CACHE_DIR/$BUILD_UUID" --show-trace >&2
 
 RESULT_OUTPUT="$(ssh_run realpath "$REMOTE_CACHE_DIR/$BUILD_UUID")"
 
