@@ -256,10 +256,10 @@ in
         bindsym XF86AudioLowerVolume exec sdw utils i3wm audio down
         bindsym XF86AudioMute exec sdw utils i3wm audio mute
 
-        bindsym XF86AudioNext exec  workspaced media next
-        bindsym XF86AudioPrev exec  workspaced media previous
-        bindsym XF86AudioPlay exec  workspaced media play-pause
-        bindsym XF86AudioPause exec workspaced media play-pause
+        bindsym XF86AudioNext exec  workspaced dispatch media next
+        bindsym XF86AudioPrev exec  workspaced dispatch media previous
+        bindsym XF86AudioPlay exec  workspaced dispatch media play-pause
+        bindsym XF86AudioPause exec workspaced dispatch media play-pause
 
         bindsym XF86MonBrightnessUp   exec sdw utils i3wm brightnessctl up
         bindsym XF86MonBrightnessDown exec sdw utils i3wm brightnessctl down
@@ -268,8 +268,8 @@ in
         bindsym $mod+m focus output right
 
         bindsym $mod+l exec sdw utils i3wm lock-screen
-        bindsym $mod+n exec workspaced modn
-        bindsym $mod+z exec workspaced rofi
+        bindsym $mod+n exec workspaced dispatch modn
+        bindsym $mod+z exec workspaced dispatch workspace
         bindsym $mod+Shift+z exec workspaced rofi --move
 
 
