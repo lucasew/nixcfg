@@ -2,12 +2,16 @@ package screen
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"workspaced/pkg/common"
 )
 
 func Lock(ctx context.Context) error {
-	return common.RunCmd(ctx, "loginctl", "lock-session").Run()
+	if err := common.RunCmd(ctx, "loginctl", "lock-session").Run(); err != nil {
+		return err
+	}
+	return SetDPMS(ctx, false)
 }
 
 func SetDPMS(ctx context.Context, on bool) error {
@@ -51,4 +55,22 @@ func IsDPMSOn(ctx context.Context) (bool, error) {
 		return false, err
 	}
 	return strings.Contains(string(out), "Monitor is On"), nil
+}
+
+func Reset(ctx context.Context) error {
+	if common.IsRiverwood() {
+		// xrandr --output eDP-1 --mode 1366x768
+		// xrandr --output HDMI-1 --mode 1366x768 --left-of eDP-1
+		if err := common.RunCmd(ctx, "xrandr", "--output", "eDP-1", "--mode", "1366x768").Run(); err != nil {
+			return err
+		}
+		return common.RunCmd(ctx, "xrandr", "--output", "HDMI-1", "--mode", "1366x768", "--left-of", "eDP-1").Run()
+	}
+
+	if common.IsWhiterun() {
+		// xrandr --output HDMI-1 --mode 1368x768
+		return common.RunCmd(ctx, "xrandr", "--output", "HDMI-1", "--mode", "1368x768").Run()
+	}
+
+	return fmt.Errorf("no reset logic for this host")
 }

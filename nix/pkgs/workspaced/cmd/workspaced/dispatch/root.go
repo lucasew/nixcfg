@@ -3,8 +3,10 @@ package dispatch
 import (
 	"workspaced/cmd/workspaced/dispatch/audio"
 	"workspaced/cmd/workspaced/dispatch/brightness"
+	"workspaced/cmd/workspaced/dispatch/is"
 	"workspaced/cmd/workspaced/dispatch/media"
 	"workspaced/cmd/workspaced/dispatch/menu"
+	"workspaced/cmd/workspaced/dispatch/power"
 	"workspaced/cmd/workspaced/dispatch/screen"
 	"workspaced/cmd/workspaced/dispatch/screenshot"
 	"workspaced/cmd/workspaced/dispatch/wallpaper"
@@ -22,8 +24,10 @@ var Command = &cobra.Command{
 func init() {
 	Command.AddCommand(audio.Command)
 	Command.AddCommand(brightness.Command)
+	Command.AddCommand(is.Command)
 	Command.AddCommand(media.Command)
 	Command.AddCommand(menu.Command)
+	Command.AddCommand(power.Command)
 	Command.AddCommand(screen.Command)
 	Command.AddCommand(screenshot.Command)
 	Command.AddCommand(wallpaper.Command)

@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
-
-[[ "$(hostname)" == "whiterun" ]]
+workspaced dispatch is whiterun "$@"

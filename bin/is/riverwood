@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
-
-[[ "$(hostname)" == "riverwood" ]]
+workspaced dispatch is riverwood "$@"

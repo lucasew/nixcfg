@@ -50,10 +50,41 @@ func GetDotfilesRoot() (string, error) {
 	return "", fmt.Errorf("could not find dotfiles root")
 }
 
+func IsRiverwood() bool {
+	hostname, _ := os.Hostname()
+	return hostname == "riverwood"
+}
+
+func IsWhiterun() bool {
+	hostname, _ := os.Hostname()
+	return hostname == "whiterun"
+}
+
+func IsPhone() bool {
+	return os.Getenv("TERMUX_VERSION") != ""
+}
+
+func IsBinaryAvailable(ctx context.Context, name string) bool {
+	// similar logic to bin/is/binary-available: filter out shims
+	// For simplicity in Go, we just check if it's in PATH and not our own shim
+	// but LookPath is usually enough.
+	_, err := exec.LookPath(name)
+	return err == nil
+}
+
+func IsInStore() bool {
+	root, err := GetDotfilesRoot()
+	if err != nil {
+		return false
+	}
+	return strings.HasPrefix(root, "/nix/store")
+}
+
 type GlobalConfig struct {
-	Workspaces map[string]int   `toml:"workspaces"`
-	Wallpaper  WallpaperConfig  `toml:"wallpaper"`
-	Screenshot ScreenshotConfig `toml:"screenshot"`
+	Workspaces map[string]int    `toml:"workspaces"`
+	Wallpaper  WallpaperConfig   `toml:"wallpaper"`
+	Screenshot ScreenshotConfig  `toml:"screenshot"`
+	Hosts      map[string]string `toml:"hosts"`
 }
 
 type WallpaperConfig struct {

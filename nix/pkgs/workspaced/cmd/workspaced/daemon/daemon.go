@@ -9,10 +9,13 @@ import (
 	"net"
 	"os"
 	"path/filepath"
+	"strings"
+	"time"
 
 	"github.com/coreos/go-systemd/v22/activation"
 	"github.com/spf13/cobra"
 	"workspaced/cmd/workspaced/dispatch"
+	"workspaced/pkg/drivers/screen"
 	"workspaced/pkg/types"
 )
 
@@ -54,6 +57,9 @@ func RunDaemon() error {
 
 	slog.Info("listening", "address", listener.Addr())
 
+	// Start background tasks
+	go monitorCapsLock()
+
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
@@ -62,6 +68,40 @@ func RunDaemon() error {
 		}
 		slog.Info("accepted connection", "remote", conn.RemoteAddr())
 		go handleConnection(conn)
+	}
+}
+
+func monitorCapsLock() {
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	// Find capslock files
+	matches, _ := filepath.Glob("/sys/class/leds/*capslock/brightness")
+	if len(matches) == 0 {
+		slog.Warn("no capslock leds found for monitoring")
+		return
+	}
+
+	lastActive := false
+
+	for range ticker.C {
+		active := false
+		for _, m := range matches {
+			data, err := os.ReadFile(m)
+			if err == nil && strings.TrimSpace(string(data)) == "1" {
+				active = true
+				break
+			}
+		}
+
+		if active && !lastActive {
+			slog.Info("capslock activated, turning off screen")
+			ctx := context.Background()
+			if err := screen.SetDPMS(ctx, false); err != nil {
+				slog.Error("failed to turn off screen from capslock", "error", err)
+			}
+		}
+		lastActive = active
 	}
 }
 

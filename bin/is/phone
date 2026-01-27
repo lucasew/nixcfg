@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
-
-[[ -v TERMUX_VERSION ]]
+workspaced dispatch is phone "$@"
