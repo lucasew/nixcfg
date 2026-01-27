@@ -65,9 +65,6 @@ func IsPhone() bool {
 }
 
 func IsBinaryAvailable(ctx context.Context, name string) bool {
-	// similar logic to bin/is/binary-available: filter out shims
-	// For simplicity in Go, we just check if it's in PATH and not our own shim
-	// but LookPath is usually enough.
 	_, err := exec.LookPath(name)
 	return err == nil
 }
@@ -85,6 +82,8 @@ type GlobalConfig struct {
 	Wallpaper  WallpaperConfig   `toml:"wallpaper"`
 	Screenshot ScreenshotConfig  `toml:"screenshot"`
 	Hosts      map[string]string `toml:"hosts"`
+	Backup     BackupConfig      `toml:"backup"`
+	QuickSync  QuickSyncConfig   `toml:"quicksync"`
 }
 
 type WallpaperConfig struct {
@@ -94,6 +93,16 @@ type WallpaperConfig struct {
 
 type ScreenshotConfig struct {
 	Dir string `toml:"dir"`
+}
+
+type BackupConfig struct {
+	RsyncnetUser string `toml:"rsyncnet_user"`
+	RemotePath   string `toml:"remote_path"`
+}
+
+type QuickSyncConfig struct {
+	RepoDir    string `toml:"repo_dir"`
+	RemotePath string `toml:"remote_path"`
 }
 
 func LoadConfig() (*GlobalConfig, error) {
@@ -116,6 +125,17 @@ func LoadConfig() (*GlobalConfig, error) {
 		Screenshot: ScreenshotConfig{
 			Dir: filepath.Join(home, "Pictures/Screenshots"),
 		},
+		Backup: BackupConfig{
+			RsyncnetUser: "de3163@de3163.rsync.net",
+			RemotePath:   "backup/lucasew",
+		},
+		QuickSync: QuickSyncConfig{
+			RepoDir:    filepath.Join(home, ".personal"),
+			RemotePath: "/data2/home/de3163/git-personal",
+		},
+		Hosts: map[string]string{
+			"whiterun": "a8:a1:59:9c:ab:32",
+		},
 	}
 
 	if _, err := os.Stat(settingsPath); err == nil {
@@ -127,6 +147,7 @@ func LoadConfig() (*GlobalConfig, error) {
 	// Expand paths
 	config.Wallpaper.Dir = ExpandPath(config.Wallpaper.Dir)
 	config.Screenshot.Dir = ExpandPath(config.Screenshot.Dir)
+	config.QuickSync.RepoDir = ExpandPath(config.QuickSync.RepoDir)
 
 	return config, nil
 }

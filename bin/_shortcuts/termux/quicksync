@@ -1,5 +1,2 @@
 #!/usr/bin/env bash
-
-set -euo pipefail
-
-sd quicksync
+exec workspaced dispatch backup sync

@@ -1,5 +1,2 @@
 #!/usr/bin/env bash
-
-set -euo pipefail
-
-sd backup
+exec workspaced dispatch backup run

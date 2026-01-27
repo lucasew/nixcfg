@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"strings"
 	"workspaced/pkg/common"
+	"workspaced/pkg/drivers/notification"
 )
 
-const NotificationID = "28419485"
+var n = &notification.Notification{}
 
 func SetBrightness(ctx context.Context, arg string) error {
 	if arg != "" {
@@ -33,12 +34,9 @@ func ShowStatus(ctx context.Context) error {
 		devname := parts[0]
 		level := parts[3]
 
-		notifyArgs := []string{
-			fmt.Sprintf("☀️ %s", devname),
-			"-h", fmt.Sprintf("int:value:%s", strings.TrimSuffix(level, "%")),
-			"-r", NotificationID,
-		}
-		common.RunCmd(ctx, "notify-send", notifyArgs...).Run()
+		n.Title = fmt.Sprintf("☀️ %s", devname)
+		n.Hint = fmt.Sprintf("int:value:%s", strings.TrimSuffix(level, "%"))
+		n.Notify(ctx)
 	}
 	return nil
 }

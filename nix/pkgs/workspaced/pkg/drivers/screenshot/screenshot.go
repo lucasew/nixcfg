@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"time"
 	"workspaced/pkg/common"
+	"workspaced/pkg/drivers/notification"
 )
 
 func Capture(ctx context.Context, area bool) (string, error) {
@@ -21,7 +22,7 @@ func Capture(ctx context.Context, area bool) (string, error) {
 		return "", fmt.Errorf("failed to create screenshot dir: %w", err)
 	}
 
-	timestamp := time.Now().Format("2006-01-27_15-04-05")
+	timestamp := time.Now().Format("2006-01-02_15-04-05")
 	filename := fmt.Sprintf("Screenshot_%s.png", timestamp)
 	path := filepath.Join(dir, filename)
 
@@ -91,9 +92,19 @@ func captureX11(ctx context.Context, path string, area bool) (string, error) {
 }
 
 func notifyMissing(ctx context.Context, tool string) {
-	common.RunCmd(ctx, "notify-send", "-u", "critical", "Screenshot Error", fmt.Sprintf("Missing tool: %s", tool)).Run()
+	n := &notification.Notification{
+		Title:   "Screenshot Error",
+		Message: fmt.Sprintf("Missing tool: %s", tool),
+		Urgency: "critical",
+	}
+	n.Notify(ctx)
 }
 
 func notifySaved(ctx context.Context, path string) {
-	common.RunCmd(ctx, "notify-send", "Screenshot Saved", path, "-i", "camera-photo").Run()
+	n := &notification.Notification{
+		Title:   "Screenshot Saved",
+		Message: path,
+		Icon:    "camera-photo",
+	}
+	n.Notify(ctx)
 }

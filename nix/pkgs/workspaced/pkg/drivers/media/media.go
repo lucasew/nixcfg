@@ -6,7 +6,10 @@ import (
 	"strings"
 	"time"
 	"workspaced/pkg/common"
+	"workspaced/pkg/drivers/notification"
 )
+
+var n = &notification.Notification{}
 
 func RunAction(ctx context.Context, action string) error {
 	if action != "show" {
@@ -51,13 +54,10 @@ func ShowStatus(ctx context.Context) error {
 		emoji = "⏹️"
 	}
 
-	notifyArgs := []string{
-		fmt.Sprintf("%s %s", emoji, player),
-		fmt.Sprintf("%s - %s", artist, title),
-		"-h", fmt.Sprintf("int:value:%s", parts[5]),
-		"-i", icon,
-		"-r", "28693965",
-	}
+	n.Title = fmt.Sprintf("%s %s", emoji, player)
+	n.Message = fmt.Sprintf("%s - %s", artist, title)
+	n.Hint = fmt.Sprintf("int:value:%s", parts[5])
+	n.Icon = icon
 
-	return common.RunCmd(ctx, "notify-send", notifyArgs...).Run()
+	return n.Notify(ctx)
 }

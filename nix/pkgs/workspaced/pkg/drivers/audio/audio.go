@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"strings"
 	"workspaced/pkg/common"
+	"workspaced/pkg/drivers/notification"
 )
 
-const NotificationID = "25548177"
+var n = &notification.Notification{
+	Icon: "audio",
+}
 
 func SetVolume(ctx context.Context, arg string) error {
 	sink := "@DEFAULT_SINK@"
@@ -41,13 +44,9 @@ func ShowStatus(ctx context.Context) error {
 	sinkNameOut, _ := common.RunCmd(ctx, "pactl", "get-default-sink").Output()
 	sinkName := strings.TrimSpace(string(sinkNameOut))
 
-	notifyArgs := []string{
-		fmt.Sprintf("%s Volume", emoji),
-		sinkName,
-		"-h", fmt.Sprintf("int:value:%s", level),
-		"-i", "audio",
-		"-r", NotificationID,
-	}
+	n.Title = fmt.Sprintf("%s Volume", emoji)
+	n.Message = sinkName
+	n.Hint = fmt.Sprintf("int:value:%s", level)
 
-	return common.RunCmd(ctx, "notify-send", notifyArgs...).Run()
+	return n.Notify(ctx)
 }
