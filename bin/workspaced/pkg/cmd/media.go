@@ -1,23 +1,11 @@
-package main
+package cmd
 
 import (
 	"fmt"
 	"os/exec"
 	"strings"
 	"time"
-
-	"github.com/spf13/cobra"
 )
-
-var mediaCmd = &cobra.Command{
-	Use:   "media",
-	Short: "Control media playback",
-	Run: func(cmd *cobra.Command, args []string) {
-		runOrRoute("media", args, func() (string, error) {
-			return RunMedia(args)
-		})
-	},
-}
 
 func RunMedia(args []string) (string, error) {
 	if len(args) == 0 {

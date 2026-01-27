@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"encoding/json"
@@ -6,17 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"time"
-
-	"github.com/spf13/cobra"
 )
-
-var modnCmd = &cobra.Command{
-	Use:   "modn",
-	Short: "Rotate workspaces across outputs",
-	Run: func(cmd *cobra.Command, args []string) {
-		runOrRoute("modn", args, RunModn)
-	},
-}
 
 type Workspace struct {
 	Name    string `json:"name"`

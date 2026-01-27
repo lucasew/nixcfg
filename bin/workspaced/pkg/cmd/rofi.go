@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"fmt"
@@ -9,18 +9,7 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
-	"github.com/spf13/cobra"
 )
-
-var rofiCmd = &cobra.Command{
-	Use:   "rofi",
-	Short: "Rofi workspace switcher",
-	Run: func(cmd *cobra.Command, args []string) {
-		runOrRoute("rofi", args, func() (string, error) {
-			return RunRofi(args, os.Environ())
-		})
-	},
-}
 
 type Config struct {
 	Workspaces map[string]int `toml:"workspaces"`

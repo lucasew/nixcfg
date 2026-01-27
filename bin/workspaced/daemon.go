@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/coreos/go-systemd/v22/activation"
+	"workspaced/pkg/cmd"
 )
 
 func getSocketPath() string {
@@ -72,11 +73,11 @@ func handleConnection(conn net.Conn) {
 func ExecuteCommand(req Request) (string, error) {
 	switch req.Command {
 	case "modn":
-		return RunModn()
+		return cmd.RunModn()
 	case "media":
-		return RunMedia(req.Args)
+		return cmd.RunMedia(req.Args)
 	case "rofi":
-		return RunRofi(req.Args, req.Env)
+		return cmd.RunRofi(req.Args, req.Env)
 	default:
 		return "", fmt.Errorf("unknown command: %s", req.Command)
 	}

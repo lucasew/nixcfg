@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"workspaced/pkg/cmd"
 )
 
 var rootCmd = &cobra.Command{
@@ -15,7 +16,7 @@ var rootCmd = &cobra.Command{
 var daemonCmd = &cobra.Command{
 	Use:   "daemon",
 	Short: "Run the workspaced daemon",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(c *cobra.Command, args []string) {
 		if err := RunDaemon(); err != nil {
 			fmt.Fprintf(os.Stderr, "Daemon error: %v\n", err)
 			os.Exit(1)
@@ -58,4 +59,32 @@ func runOrRoute(cmdName string, args []string, localFunc func() (string, error))
 		fmt.Fprintf(os.Stderr, "Local error: %v\n", err)
 		os.Exit(1)
 	}
+}
+
+var modnCmd = &cobra.Command{
+	Use:   "modn",
+	Short: "Rotate workspaces across outputs",
+	Run: func(c *cobra.Command, args []string) {
+		runOrRoute("modn", args, cmd.RunModn)
+	},
+}
+
+var mediaCmd = &cobra.Command{
+	Use:   "media",
+	Short: "Control media playback",
+	Run: func(c *cobra.Command, args []string) {
+		runOrRoute("media", args, func() (string, error) {
+			return cmd.RunMedia(args)
+		})
+	},
+}
+
+var rofiCmd = &cobra.Command{
+	Use:   "rofi",
+	Short: "Rofi workspace switcher",
+	Run: func(c *cobra.Command, args []string) {
+		runOrRoute("rofi", args, func() (string, error) {
+			return cmd.RunRofi(args, os.Environ())
+		})
+	},
 }
