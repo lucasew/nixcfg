@@ -55,30 +55,17 @@ func handleConnection(conn net.Conn) {
 	decoder := json.NewDecoder(conn)
 	encoder := json.NewEncoder(conn)
 
-	var req Request
+	var req cmd.Request
 	if err := decoder.Decode(&req); err != nil {
 		encoder.Encode(Response{Error: fmt.Sprintf("invalid request: %v", err)})
 		return
 	}
 
-	output, err := ExecuteCommand(req)
+	output, err := cmd.ExecuteCommand(req)
 	resp := Response{Output: output}
 	if err != nil {
 		resp.Error = err.Error()
 	}
 
 	encoder.Encode(resp)
-}
-
-func ExecuteCommand(req Request) (string, error) {
-	switch req.Command {
-	case "modn":
-		return cmd.RunModn()
-	case "media":
-		return cmd.RunMedia(req.Args)
-	case "rofi":
-		return cmd.RunRofi(req.Args, req.Env)
-	default:
-		return "", fmt.Errorf("unknown command: %s", req.Command)
-	}
 }
