@@ -242,7 +242,8 @@ in
         bindsym $mod+Shift+m move workspace to output left
         bindsym $mod+m focus output next
 
-        bindsym $mod+l exec sdw utils i3wm lock-screen
+        bindsym $mod+l exec workspaced dispatch screen lock
+        bindsym $mod+Shift+l exec workspaced dispatch screen toggle
         bindsym $mod+n exec workspaced dispatch workspace modn
         bindsym $mod+z exec workspaced dispatch workspace search
         bindsym $mod+Shift+z exec workspaced dispatch workspace search --move
