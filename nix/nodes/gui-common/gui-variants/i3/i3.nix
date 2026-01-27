@@ -18,6 +18,9 @@ let
   };
 in
 {
+  imports = [
+    ../../workspaced.nix
+  ];
 
   config = lib.mkIf config.services.xserver.windowManager.i3.enable {
     xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
@@ -228,10 +231,10 @@ in
         bindsym XF86AudioLowerVolume exec sdw utils i3wm audio down
         bindsym XF86AudioMute exec sdw utils i3wm audio mute
 
-        bindsym XF86AudioNext exec  sdw utils i3wm playerctl next
-        bindsym XF86AudioPrev exec  sdw utils i3wm playerctl previous
-        bindsym XF86AudioPlay exec  sdw utils i3wm playerctl play-pause
-        bindsym XF86AudioPause exec sdw utils i3wm playerctl play-pause
+        bindsym XF86AudioNext exec  workspaced media next
+        bindsym XF86AudioPrev exec  workspaced media previous
+        bindsym XF86AudioPlay exec  workspaced media play-pause
+        bindsym XF86AudioPause exec workspaced media play-pause
 
         bindsym XF86MonBrightnessUp   exec sdw utils i3wm brightnessctl up
         bindsym XF86MonBrightnessDown exec sdw utils i3wm brightnessctl down
@@ -240,9 +243,9 @@ in
         bindsym $mod+m focus output next
 
         bindsym $mod+l exec sdw utils i3wm lock-screen
-        bindsym $mod+n exec sdw utils i3wm modn
-        bindsym $mod+z exec sdw utils i3wm tagged-workspaces
-        bindsym $mod+Shift+z exec sdw utils i3wm tagged-workspaces --move
+        bindsym $mod+n exec workspaced modn
+        bindsym $mod+z exec workspaced rofi
+        bindsym $mod+Shift+z exec workspaced rofi --move
 
 
         bindsym $mod+b exec sdw utils i3wm goto-new-ws
