@@ -13,6 +13,7 @@ import (
 )
 
 func SetStatic(ctx context.Context, path string) error {
+	logger := common.GetLogger(ctx)
 	if path == "" {
 		config, err := common.LoadConfig()
 		if err != nil {
@@ -24,6 +25,8 @@ func SetStatic(ctx context.Context, path string) error {
 		}
 		path = files[rand.Intn(len(files))]
 	}
+
+	logger.Info("setting wallpaper", "path", path)
 
 	rpc := common.GetRPC(ctx)
 	if rpc == "swaymsg" {
@@ -45,11 +48,13 @@ type APODResponse struct {
 }
 
 func SetAPOD(ctx context.Context) error {
+	logger := common.GetLogger(ctx)
 	apiKey := os.Getenv("NASA_API_KEY")
 	if apiKey == "" {
 		apiKey = "DEMO_KEY"
 	}
 
+	logger.Info("fetching NASA Astronomy Picture of the Day")
 	resp, err := http.Get(fmt.Sprintf("https://api.nasa.gov/planetary/apod?api_key=%s", apiKey))
 	if err != nil {
 		return err

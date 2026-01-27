@@ -1,7 +1,6 @@
 package is
 
 import (
-	"fmt"
 	"os"
 	"workspaced/pkg/common"
 
@@ -12,16 +11,17 @@ var knownNodeCmd = &cobra.Command{
 	Use:   "known-node",
 	Short: "Check if host is a known node",
 	Run: func(c *cobra.Command, args []string) {
+		logger := common.GetLogger(c.Context())
 		if common.IsRiverwood() {
-			fmt.Println("riverwood")
+			logger.Info("riverwood")
 			return
 		}
 		if common.IsWhiterun() {
-			fmt.Println("whiterun")
+			logger.Info("whiterun")
 			return
 		}
 		if common.IsPhone() {
-			fmt.Println("phone")
+			logger.Info("phone")
 			return
 		}
 		os.Exit(1)

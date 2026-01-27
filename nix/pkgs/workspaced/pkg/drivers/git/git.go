@@ -3,7 +3,6 @@ package git
 import (
 	"context"
 	"fmt"
-	"log/slog"
 	"os"
 	"path/filepath"
 	"workspaced/pkg/common"
@@ -16,6 +15,7 @@ func QuickSync(ctx context.Context) error {
 		return err
 	}
 
+	logger := common.GetLogger(ctx)
 	repoDir := config.QuickSync.RepoDir
 	entries, err := os.ReadDir(repoDir)
 	if err != nil {
@@ -26,9 +26,9 @@ func QuickSync(ctx context.Context) error {
 		if entry.IsDir() {
 			repoPath := filepath.Join(repoDir, entry.Name())
 			if _, err := os.Stat(filepath.Join(repoPath, ".git")); err == nil {
-				slog.Info("syncing repository", "repo", entry.Name())
+				logger.Info("syncing repository", "repo", entry.Name())
 				if err := SyncRepo(ctx, repoPath); err != nil {
-					slog.Error("failed to sync repo", "repo", entry.Name(), "error", err)
+					logger.Error("failed to sync repo", "repo", entry.Name(), "error", err)
 					n := &notification.Notification{
 						Title:   "Sincronização Falhou",
 						Message: fmt.Sprintf("Conflito ou erro em %s. Intervenção manual necessária.", entry.Name()),

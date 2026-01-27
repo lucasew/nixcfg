@@ -3,6 +3,7 @@ package common
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -11,6 +12,13 @@ import (
 
 	"github.com/BurntSushi/toml"
 )
+
+func GetLogger(ctx context.Context) *slog.Logger {
+	if logger, ok := ctx.Value(types.LoggerKey).(*slog.Logger); ok {
+		return logger
+	}
+	return slog.Default()
+}
 
 func RunCmd(ctx context.Context, name string, args ...string) *exec.Cmd {
 	cmd := exec.CommandContext(ctx, name, args...)

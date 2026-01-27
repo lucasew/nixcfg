@@ -37,6 +37,7 @@ func ShowStatus(ctx context.Context) error {
 		n.Title = fmt.Sprintf("☀️ %s", devname)
 		n.Hint = fmt.Sprintf("int:value:%s", strings.TrimSuffix(level, "%"))
 		n.Notify(ctx)
+		common.GetLogger(ctx).Info("brightness updated", "device", devname, "level", level)
 	}
 	return nil
 }

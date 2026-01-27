@@ -59,5 +59,7 @@ func ShowStatus(ctx context.Context) error {
 	n.Hint = fmt.Sprintf("int:value:%s", parts[5])
 	n.Icon = icon
 
+	common.GetLogger(ctx).Info("media status", "player", player, "state", state, "artist", artist, "title", title)
+
 	return n.Notify(ctx)
 }

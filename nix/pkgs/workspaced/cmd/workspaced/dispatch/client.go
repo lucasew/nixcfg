@@ -1,6 +1,7 @@
 package dispatch
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log/slog"
@@ -98,15 +99,42 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 		return "", true, fmt.Errorf("failed to send request: %w", err)
 	}
 
-	var resp types.Response
 	decoder := json.NewDecoder(conn)
-	if err := decoder.Decode(&resp); err != nil {
-		return "", true, fmt.Errorf("failed to decode response: %w", err)
-	}
+	for {
+		var packet types.StreamPacket
+		if err := decoder.Decode(&packet); err != nil {
+			return "", true, fmt.Errorf("failed to decode response: %w", err)
+		}
 
-	if resp.Error != "" {
-		return resp.Output, true, fmt.Errorf(resp.Error)
+		switch packet.Type {
+		case "log":
+			var entry types.LogEntry
+			if err := json.Unmarshal(packet.Payload, &entry); err != nil {
+				continue
+			}
+			level := slog.LevelInfo
+			switch entry.Level {
+			case "DEBUG":
+				level = slog.LevelDebug
+			case "WARN":
+				level = slog.LevelWarn
+			case "ERROR":
+				level = slog.LevelError
+			}
+			attrs := []any{}
+			for k, v := range entry.Attrs {
+				attrs = append(attrs, slog.Any(k, v))
+			}
+			slog.Log(context.Background(), level, entry.Message, attrs...)
+		case "result":
+			var resp types.Response
+			if err := json.Unmarshal(packet.Payload, &resp); err != nil {
+				return "", true, fmt.Errorf("failed to parse result: %w", err)
+			}
+			if resp.Error != "" {
+				return resp.Output, true, fmt.Errorf(resp.Error)
+			}
+			return resp.Output, true, nil
+		}
 	}
-
-	return resp.Output, true, nil
 }

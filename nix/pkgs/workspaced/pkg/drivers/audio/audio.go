@@ -48,5 +48,7 @@ func ShowStatus(ctx context.Context) error {
 	n.Message = sinkName
 	n.Hint = fmt.Sprintf("int:value:%s", level)
 
+	common.GetLogger(ctx).Info("volume updated", "level", level, "sink", sinkName)
+
 	return n.Notify(ctx)
 }

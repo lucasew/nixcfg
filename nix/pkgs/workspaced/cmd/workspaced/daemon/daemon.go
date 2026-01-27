@@ -105,6 +105,39 @@ func monitorCapsLock() {
 	}
 }
 
+type socketHandler struct {
+	encoder *json.Encoder
+}
+
+func (h *socketHandler) Enabled(ctx context.Context, level slog.Level) bool {
+	return true
+}
+
+func (h *socketHandler) Handle(ctx context.Context, r slog.Record) error {
+	entry := types.LogEntry{
+		Level:   r.Level.String(),
+		Message: r.Message,
+		Attrs:   make(map[string]any),
+	}
+	r.Attrs(func(a slog.Attr) bool {
+		entry.Attrs[a.Key] = a.Value.Any()
+		return true
+	})
+	payload, _ := json.Marshal(entry)
+	return h.encoder.Encode(types.StreamPacket{
+		Type:    "log",
+		Payload: payload,
+	})
+}
+
+func (h *socketHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
+	return h // Simplified for now
+}
+
+func (h *socketHandler) WithGroup(name string) slog.Handler {
+	return h // Simplified
+}
+
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
 	decoder := json.NewDecoder(conn)
@@ -113,26 +146,43 @@ func handleConnection(conn net.Conn) {
 	var req types.Request
 	if err := decoder.Decode(&req); err != nil {
 		slog.Warn("failed to decode request", "error", err)
-		encoder.Encode(types.Response{Error: fmt.Sprintf("invalid request: %v", err)})
+		payload, _ := json.Marshal(types.Response{Error: fmt.Sprintf("invalid request: %v", err)})
+		encoder.Encode(types.StreamPacket{
+			Type:    "result",
+			Payload: payload,
+		})
 		return
 	}
 
 	slog.Info("executing command", "command", req.Command, "args", req.Args)
 
-	output, err := ExecuteViaCobra(req)
+	// Create a logger that sends logs through the socket
+	handler := &socketHandler{encoder: encoder}
+	logger := slog.New(handler)
+
+	// Inject logger into context
+	ctx := context.WithValue(context.Background(), types.LoggerKey, logger)
+	// Add environment from request
+	env := append(req.Env, "WORKSPACED_DAEMON=1")
+	ctx = context.WithValue(ctx, types.EnvKey, env)
+	ctx = context.WithValue(ctx, types.DaemonModeKey, true)
+
+	output, err := ExecuteViaCobra(ctx, req)
+
 	resp := types.Response{Output: output}
 	if err != nil {
 		slog.Error("command failed", "command", req.Command, "args", req.Args, "error", err)
 		resp.Error = err.Error()
 	}
 
-	slog.Info("sending response", "output_len", len(output))
-	if err := encoder.Encode(resp); err != nil {
-		slog.Error("failed to encode response", "error", err)
-	}
+	payload, _ := json.Marshal(resp)
+	encoder.Encode(types.StreamPacket{
+		Type:    "result",
+		Payload: payload,
+	})
 }
 
-func ExecuteViaCobra(req types.Request) (string, error) {
+func ExecuteViaCobra(ctx context.Context, req types.Request) (string, error) {
 	targetCmd, targetArgs, err := dispatch.FindCommand(req.Command, req.Args)
 	if err != nil {
 		return "", err
@@ -142,11 +192,6 @@ func ExecuteViaCobra(req types.Request) (string, error) {
 	targetCmd.SetOut(buf)
 	targetCmd.SetErr(buf)
 	targetCmd.SetArgs(targetArgs)
-
-	// Prepare context
-	env := append(req.Env, "WORKSPACED_DAEMON=1")
-	ctx := context.WithValue(context.Background(), types.EnvKey, env)
-	ctx = context.WithValue(ctx, types.DaemonModeKey, true)
 
 	// Set context on the command
 	targetCmd.SetContext(ctx)

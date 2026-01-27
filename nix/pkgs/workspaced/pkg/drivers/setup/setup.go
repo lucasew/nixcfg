@@ -37,7 +37,7 @@ func SetupTermuxShortcuts(ctx context.Context) error {
 			if err := os.WriteFile(destPath, []byte(content), 0755); err != nil {
 				return fmt.Errorf("failed to write shortcut %s: %w", name, err)
 			}
-			fmt.Printf("Created shortcut: %s\n", name)
+			common.GetLogger(ctx).Info("created shortcut", "name", name)
 		}
 	}
 
