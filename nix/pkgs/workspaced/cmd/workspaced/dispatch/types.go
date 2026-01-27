@@ -10,3 +10,10 @@ type Response struct {
 	Output string `json:"output"`
 	Error  string `json:"error"`
 }
+
+type contextKey string
+
+const (
+	DaemonModeKey contextKey = "daemon_mode"
+	EnvKey        contextKey = "env"
+)

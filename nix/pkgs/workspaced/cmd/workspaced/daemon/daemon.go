@@ -59,6 +59,7 @@ func RunDaemon() error {
 			slog.Error("accept error", "error", err)
 			continue
 		}
+		slog.Info("accepted connection", "remote", conn.RemoteAddr())
 		go handleConnection(conn)
 	}
 }
@@ -70,7 +71,7 @@ func handleConnection(conn net.Conn) {
 
 	var req dispatch.Request
 	if err := decoder.Decode(&req); err != nil {
-		slog.Warn("invalid request", "error", err)
+		slog.Warn("failed to decode request", "error", err)
 		encoder.Encode(dispatch.Response{Error: fmt.Sprintf("invalid request: %v", err)})
 		return
 	}
@@ -80,30 +81,59 @@ func handleConnection(conn net.Conn) {
 	output, err := ExecuteViaCobra(req)
 	resp := dispatch.Response{Output: output}
 	if err != nil {
-		slog.Error("command failed", "command", req.Command, "error", err)
+		slog.Error("command failed", "command", req.Command, "args", req.Args, "error", err)
 		resp.Error = err.Error()
 	}
 
-	encoder.Encode(resp)
+	slog.Info("sending response", "output_len", len(output))
+	if err := encoder.Encode(resp); err != nil {
+		slog.Error("failed to encode response", "error", err)
+	}
 }
 
 func ExecuteViaCobra(req dispatch.Request) (string, error) {
-	fullArgs := append([]string{req.Command}, req.Args...)
+	targetCmd, targetArgs, err := dispatch.FindCommand(req.Command, req.Args)
+	if err != nil {
+		return "", err
+	}
 
-	root := dispatch.Command
 	buf := new(bytes.Buffer)
+	targetCmd.SetOut(buf)
+	targetCmd.SetErr(buf)
+	targetCmd.SetArgs(targetArgs)
 
-	root.SetOut(buf)
-	root.SetErr(buf)
-	root.SetArgs(fullArgs)
-
-	// Inject WORKSPACED_DAEMON to prevent recursion in child processes
+	// Prepare context
 	env := append(req.Env, "WORKSPACED_DAEMON=1")
+	ctx := context.WithValue(context.Background(), dispatch.EnvKey, env)
+	ctx = context.WithValue(ctx, dispatch.DaemonModeKey, true)
 
-	// Inject daemon_mode flag and environment
-	ctx := context.WithValue(context.Background(), "env", env)
-	ctx = context.WithValue(ctx, "daemon_mode", true)
+	// Set context on the command
+	targetCmd.SetContext(ctx)
 
-	err := root.ExecuteContext(ctx)
+	// Manually run PersistentPreRunE of the PARENTS from root down to target
+	var parents []*cobra.Command
+	for curr := targetCmd; curr != nil; curr = curr.Parent() {
+		parents = append([]*cobra.Command{curr}, parents...)
+	}
+
+	for _, p := range parents {
+		if p.PersistentPreRunE != nil {
+			if err := p.PersistentPreRunE(targetCmd, targetArgs); err != nil {
+				return buf.String(), err
+			}
+		} else if p.PersistentPreRun != nil {
+			p.PersistentPreRun(targetCmd, targetArgs)
+		}
+	}
+
+	// Run the command
+	if targetCmd.RunE != nil {
+		err = targetCmd.RunE(targetCmd, targetArgs)
+	} else if targetCmd.Run != nil {
+		targetCmd.Run(targetCmd, targetArgs)
+	} else {
+		err = fmt.Errorf("command has no run implementation")
+	}
+
 	return buf.String(), err
 }

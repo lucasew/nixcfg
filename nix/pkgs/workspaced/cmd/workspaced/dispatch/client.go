@@ -7,21 +7,29 @@ import (
 	"net"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/spf13/cobra"
 )
 
 func init() {
 	Command.PersistentPreRunE = func(c *cobra.Command, args []string) error {
-		// Detect if we are running INSIDE the daemon to avoid recursion/loops.
+		ctx := c.Context()
+		isDaemon := false
+
+		val := ctx.Value(DaemonModeKey)
+		slog.Debug("checking daemon mode", "command", c.Name(), "ctx_val", val, "env_var", os.Getenv("WORKSPACED_DAEMON"))
+
 		if os.Getenv("WORKSPACED_DAEMON") == "1" {
-			slog.Info("running inside daemon, skipping remote execution")
-			return nil
+			isDaemon = true
+		}
+		if val == true {
+			isDaemon = true
 		}
 
-		ctx := c.Context()
-		if ctx != nil && ctx.Value("daemon_mode") == true {
-			return nil // We are the daemon, proceed to local logic
+		if isDaemon {
+			slog.Info("running inside daemon, skipping remote execution", "command", c.Name())
+			return nil
 		}
 
 		// We are the client. Try to connect to daemon.
@@ -50,18 +58,25 @@ func getSocketPath() string {
 
 func TryRemote(c *cobra.Command, args []string) (string, bool, error) {
 	socketPath := getSocketPath()
-	slog.Info("connecting to daemon", "socket", socketPath, "command", c.Name())
+	fullPath := GetFullCommandPath(c)
+	if len(fullPath) == 0 {
+		return "", false, nil
+	}
+	slog.Info("connecting to daemon", "socket", socketPath, "path", fullPath, "args", args)
 
-	conn, err := net.Dial("unix", socketPath)
+	conn, err := net.DialTimeout("unix", socketPath, 5*time.Second)
 	if err != nil {
 		slog.Info("daemon not reachable, running locally", "error", err)
 		return "", false, nil
 	}
 	defer conn.Close()
 
+	// Set a read/write deadline to avoid hanging forever
+	conn.SetDeadline(time.Now().Add(30 * time.Second))
+
 	req := Request{
-		Command: c.Name(),
-		Args:    args,
+		Command: fullPath[0],
+		Args:    append(fullPath[1:], args...),
 		Env:     os.Environ(),
 	}
 

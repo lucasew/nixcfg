@@ -79,7 +79,7 @@ var rofiCmd = &cobra.Command{
 		ctx := c.Context()
 		var env []string
 		if ctx != nil {
-			env, _ = ctx.Value("env").([]string)
+			env, _ = ctx.Value(EnvKey).([]string)
 		}
 		rpc := getRPC(env)
 
