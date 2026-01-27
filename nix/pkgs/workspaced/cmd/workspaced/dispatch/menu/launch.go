@@ -6,14 +6,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var launchCmd = &cobra.Command{
-	Use:   "launch",
-	Short: "Application launcher",
-	RunE: func(c *cobra.Command, args []string) error {
-		return common.RunCmd(c.Context(), "rofi-launch").Run()
-	},
-}
-
 func init() {
-	Command.AddCommand(launchCmd)
+	Registry.Register(func(parent *cobra.Command) {
+		parent.AddCommand(&cobra.Command{
+			Use:   "launch",
+			Short: "Application launcher",
+			RunE: func(c *cobra.Command, args []string) error {
+				return common.RunCmd(c.Context(), "rofi-launch").Run()
+			},
+		})
+	})
 }

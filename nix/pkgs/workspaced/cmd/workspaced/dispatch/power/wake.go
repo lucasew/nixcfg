@@ -6,15 +6,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var wakeCmd = &cobra.Command{
-	Use:   "wake <host>",
-	Short: "Send Wake-on-LAN magic packet",
-	Args:  cobra.ExactArgs(1),
-	RunE: func(c *cobra.Command, args []string) error {
-		return power.Wake(c.Context(), args[0])
-	},
-}
-
 func init() {
-	Command.AddCommand(wakeCmd)
+	Registry.Register(func(parent *cobra.Command) {
+		parent.AddCommand(&cobra.Command{
+			Use:   "wake <host>",
+			Short: "Send Wake-on-LAN magic packet",
+			Args:  cobra.ExactArgs(1),
+			RunE: func(c *cobra.Command, args []string) error {
+				return power.Wake(c.Context(), args[0])
+			},
+		})
+	})
 }

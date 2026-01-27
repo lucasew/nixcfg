@@ -1,10 +1,17 @@
 package is
 
 import (
+	"workspaced/pkg/common/registry"
+
 	"github.com/spf13/cobra"
 )
 
-var Command = &cobra.Command{
-	Use:   "is",
-	Short: "Environment detection commands",
+var Registry registry.CommandRegistry
+
+func GetCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "is",
+		Short: "Environment detection commands",
+	}
+	return Registry.GetCommand(cmd)
 }

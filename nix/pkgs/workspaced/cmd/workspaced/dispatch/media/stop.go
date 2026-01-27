@@ -6,14 +6,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var stopCmd = &cobra.Command{
-	Use:   "stop",
-	Short: "Stop media",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return media.RunAction(cmd.Context(), "stop")
-	},
-}
-
 func init() {
-	Command.AddCommand(stopCmd)
+	Registry.Register(func(parent *cobra.Command) {
+		parent.AddCommand(&cobra.Command{
+			Use:   "stop",
+			Short: "Stop media",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				return media.RunAction(cmd.Context(), "stop")
+			},
+		})
+	})
 }

@@ -1,14 +1,18 @@
 package workspace
 
 import (
+	"workspaced/pkg/common/registry"
+
 	"github.com/spf13/cobra"
 )
 
-var Command = &cobra.Command{
-	Use:   "workspace",
-	Short: "Workspace management commands",
-}
+var Registry registry.CommandRegistry
 
-func init() {
-	Command.PersistentFlags().Bool("move", false, "Move container to workspace")
+func GetCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "workspace",
+		Short: "Workspace management commands",
+	}
+	cmd.PersistentFlags().Bool("move", false, "Move container to workspace")
+	return Registry.GetCommand(cmd)
 }

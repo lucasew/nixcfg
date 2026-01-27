@@ -1,10 +1,17 @@
 package wallpaper
 
 import (
+	"workspaced/pkg/common/registry"
+
 	"github.com/spf13/cobra"
 )
 
-var Command = &cobra.Command{
-	Use:   "wallpaper",
-	Short: "Wallpaper management",
+var Registry registry.CommandRegistry
+
+func GetCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "wallpaper",
+		Short: "Wallpaper management",
+	}
+	return Registry.GetCommand(cmd)
 }

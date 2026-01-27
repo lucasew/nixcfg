@@ -15,5 +15,7 @@ var muteCmd = &cobra.Command{
 }
 
 func init() {
-	Command.AddCommand(muteCmd)
+	Registry.Register(func(parent *cobra.Command) {
+		parent.AddCommand(muteCmd)
+	})
 }

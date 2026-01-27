@@ -1,10 +1,17 @@
 package menu
 
 import (
+	"workspaced/pkg/common/registry"
+
 	"github.com/spf13/cobra"
 )
 
-var Command = &cobra.Command{
-	Use:   "menu",
-	Short: "Interactive menus",
+var Registry registry.CommandRegistry
+
+func GetCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "menu",
+		Short: "Interactive menus",
+	}
+	return Registry.GetCommand(cmd)
 }

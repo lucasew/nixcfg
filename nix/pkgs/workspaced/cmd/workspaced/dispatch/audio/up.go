@@ -15,5 +15,7 @@ var upCmd = &cobra.Command{
 }
 
 func init() {
-	Command.AddCommand(upCmd)
+	Registry.Register(func(parent *cobra.Command) {
+		parent.AddCommand(upCmd)
+	})
 }

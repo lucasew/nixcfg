@@ -1,10 +1,17 @@
 package audio
 
 import (
+	"workspaced/pkg/common/registry"
+
 	"github.com/spf13/cobra"
 )
 
-var Command = &cobra.Command{
-	Use:   "audio",
-	Short: "Control audio volume",
+var Registry registry.CommandRegistry
+
+func GetCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "audio",
+		Short: "Control audio volume",
+	}
+	return Registry.GetCommand(cmd)
 }

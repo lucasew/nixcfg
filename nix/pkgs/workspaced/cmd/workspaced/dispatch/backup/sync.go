@@ -6,14 +6,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var syncCmd = &cobra.Command{
-	Use:   "sync",
-	Short: "QuickSync personal git repositories",
-	RunE: func(c *cobra.Command, args []string) error {
-		return git.QuickSync(c.Context())
-	},
-}
-
 func init() {
-	Command.AddCommand(syncCmd)
+	Registry.Register(func(parent *cobra.Command) {
+		parent.AddCommand(&cobra.Command{
+			Use:   "sync",
+			Short: "QuickSync personal git repositories",
+			RunE: func(c *cobra.Command, args []string) error {
+				return git.QuickSync(c.Context())
+			},
+		})
+	})
 }

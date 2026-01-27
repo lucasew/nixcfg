@@ -5,25 +5,25 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"workspaced/cmd/workspaced/dispatch"
 	"workspaced/cmd/workspaced/daemon"
+	"workspaced/cmd/workspaced/dispatch"
 )
 
-var RootCmd = &cobra.Command{
-	Use:   "workspaced",
-	Short: "Workspace daemon and client",
+func NewRootCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "workspaced",
+		Short: "Workspace daemon and client",
+	}
+	cmd.AddCommand(dispatch.NewCommand())
+	cmd.AddCommand(daemon.Command) // daemon is a global command instance, but its Run doesn't use shared state in a racey way
+	return cmd
 }
 
 func Execute() {
-	if err := RootCmd.Execute(); err != nil {
+	if err := NewRootCommand().Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
-}
-
-func init() {
-	RootCmd.AddCommand(dispatch.Command)
-	RootCmd.AddCommand(daemon.Command)
 }
 
 func main() {

@@ -6,14 +6,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var toggleCmd = &cobra.Command{
-	Use:   "toggle",
-	Short: "Toggle screen state (DPMS)",
-	RunE: func(c *cobra.Command, args []string) error {
-		return screen.ToggleDPMS(c.Context())
-	},
-}
-
 func init() {
-	Command.AddCommand(toggleCmd)
+	Registry.Register(func(parent *cobra.Command) {
+		parent.AddCommand(&cobra.Command{
+			Use:   "toggle",
+			Short: "Toggle screen state (DPMS)",
+			RunE: func(c *cobra.Command, args []string) error {
+				return screen.ToggleDPMS(c.Context())
+			},
+		})
+	})
 }
