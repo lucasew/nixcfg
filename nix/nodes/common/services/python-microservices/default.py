@@ -1,5 +1,3 @@
-
-
 def handle():
     def _result(self):
         # self.send_response(200)
