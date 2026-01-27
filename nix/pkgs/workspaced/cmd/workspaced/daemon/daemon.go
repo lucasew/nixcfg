@@ -10,15 +10,12 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
-	"time"
 
 	"github.com/coreos/go-systemd/v22/activation"
 	"github.com/gorilla/websocket"
 	"github.com/spf13/cobra"
 	"workspaced/cmd/workspaced/dispatch"
 	"workspaced/pkg/common"
-	"workspaced/pkg/drivers/screen"
 	"workspaced/pkg/types"
 )
 
@@ -60,43 +57,11 @@ func RunDaemon() error {
 
 	slog.Info("listening", "address", listener.Addr())
 
-	// Start background tasks
-	go monitorCapsLock()
-
 	server := &http.Server{
 		Handler: http.HandlerFunc(handleWS),
 	}
 
 	return server.Serve(listener)
-}
-
-func monitorCapsLock() {
-	ticker := time.NewTicker(1 * time.Second)
-	defer ticker.Stop()
-
-	matches, _ := filepath.Glob("/sys/class/leds/*capslock/brightness")
-	if len(matches) == 0 {
-		return
-	}
-
-	for range ticker.C {
-		capsActive := false
-		for _, m := range matches {
-			data, err := os.ReadFile(m)
-			if err == nil && strings.TrimSpace(string(data)) == "1" {
-				capsActive = true
-				break
-			}
-		}
-
-		screenActive, err := screen.IsDPMSOn(context.Background())
-		if err != nil {
-			slog.Error("on checking if screen is active", "error", err)
-		}
-		if !capsActive != screenActive {
-			screen.SetDPMS(context.Background(), !capsActive)
-		}
-	}
 }
 
 var upgrader = websocket.Upgrader{
