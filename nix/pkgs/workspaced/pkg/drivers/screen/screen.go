@@ -8,6 +8,7 @@ import (
 )
 
 func Lock(ctx context.Context) error {
+	common.GetLogger(ctx).Info("locking session")
 	if err := common.RunCmd(ctx, "loginctl", "lock-session").Run(); err != nil {
 		return err
 	}
@@ -20,6 +21,7 @@ func SetDPMS(ctx context.Context, on bool) error {
 		state = "on"
 	}
 
+	common.GetLogger(ctx).Info("setting DPMS", "state", state)
 	rpc := common.GetRPC(ctx)
 	if rpc == "swaymsg" {
 		return common.RunCmd(ctx, "swaymsg", "output * dpms "+state).Run()

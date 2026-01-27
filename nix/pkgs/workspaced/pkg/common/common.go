@@ -2,6 +2,7 @@ package common
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"os"
@@ -18,6 +19,50 @@ func GetLogger(ctx context.Context) *slog.Logger {
 		return logger
 	}
 	return slog.Default()
+}
+
+type ChannelLogHandler struct {
+	Out    chan<- types.StreamPacket
+	Parent slog.Handler
+	Ctx    context.Context
+}
+
+func (h *ChannelLogHandler) Enabled(ctx context.Context, level slog.Level) bool {
+	return true
+}
+
+func (h *ChannelLogHandler) Handle(ctx context.Context, r slog.Record) error {
+	entry := types.LogEntry{
+		Level:   r.Level.String(),
+		Message: r.Message,
+		Attrs:   make(map[string]any),
+	}
+	r.Attrs(func(a slog.Attr) bool {
+		entry.Attrs[a.Key] = a.Value.Any()
+		return true
+	})
+	payload, _ := json.Marshal(entry)
+
+	select {
+	case h.Out <- types.StreamPacket{Type: "log", Payload: payload}:
+	case <-h.Ctx.Done():
+		return h.Ctx.Err()
+	default:
+		// Drop log if channel is full to avoid deadlock
+	}
+
+	if h.Parent != nil {
+		return h.Parent.Handle(ctx, r)
+	}
+	return nil
+}
+
+func (h *ChannelLogHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
+	return &ChannelLogHandler{Out: h.Out, Parent: h.Parent.WithAttrs(attrs), Ctx: h.Ctx}
+}
+
+func (h *ChannelLogHandler) WithGroup(name string) slog.Handler {
+	return &ChannelLogHandler{Out: h.Out, Parent: h.Parent.WithGroup(name), Ctx: h.Ctx}
 }
 
 func RunCmd(ctx context.Context, name string, args ...string) *exec.Cmd {

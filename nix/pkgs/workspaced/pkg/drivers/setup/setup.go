@@ -29,6 +29,11 @@ func SetupTermuxShortcuts(ctx context.Context) error {
 	}
 
 	for _, entry := range entries {
+		// Check for context cancellation
+		if err := ctx.Err(); err != nil {
+			return err
+		}
+
 		if !entry.IsDir() {
 			name := entry.Name()
 			content := fmt.Sprintf("#!/usr/bin/env bash\nexec workspaced dispatch _shortcuts termux %s \"$@\"\n", name)

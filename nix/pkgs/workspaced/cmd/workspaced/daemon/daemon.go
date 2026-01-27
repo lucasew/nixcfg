@@ -7,14 +7,17 @@ import (
 	"fmt"
 	"log/slog"
 	"net"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/coreos/go-systemd/v22/activation"
+	"github.com/gorilla/websocket"
 	"github.com/spf13/cobra"
 	"workspaced/cmd/workspaced/dispatch"
+	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/screen"
 	"workspaced/pkg/types"
 )
@@ -60,30 +63,23 @@ func RunDaemon() error {
 	// Start background tasks
 	go monitorCapsLock()
 
-	for {
-		conn, err := listener.Accept()
-		if err != nil {
-			slog.Error("accept error", "error", err)
-			continue
-		}
-		slog.Info("accepted connection", "remote", conn.RemoteAddr())
-		go handleConnection(conn)
+	server := &http.Server{
+		Handler: http.HandlerFunc(handleWS),
 	}
+
+	return server.Serve(listener)
 }
 
 func monitorCapsLock() {
 	ticker := time.NewTicker(1 * time.Second)
 	defer ticker.Stop()
 
-	// Find capslock files
 	matches, _ := filepath.Glob("/sys/class/leds/*capslock/brightness")
 	if len(matches) == 0 {
-		slog.Warn("no capslock leds found for monitoring")
 		return
 	}
 
 	lastActive := false
-
 	for range ticker.C {
 		active := false
 		for _, m := range matches {
@@ -97,82 +93,62 @@ func monitorCapsLock() {
 		if active && !lastActive {
 			slog.Info("capslock activated, turning off screen")
 			ctx := context.Background()
-			if err := screen.SetDPMS(ctx, false); err != nil {
-				slog.Error("failed to turn off screen from capslock", "error", err)
-			}
+			screen.SetDPMS(ctx, false)
 		}
 		lastActive = active
 	}
 }
 
-type socketHandler struct {
-	encoder *json.Encoder
-	parent  slog.Handler
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool { return true },
 }
 
-func (h *socketHandler) Enabled(ctx context.Context, level slog.Level) bool {
-	return true
-}
-
-func (h *socketHandler) Handle(ctx context.Context, r slog.Record) error {
-	entry := types.LogEntry{
-		Level:   r.Level.String(),
-		Message: r.Message,
-		Attrs:   make(map[string]any),
+func handleWS(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		slog.Error("ws upgrade error", "error", err)
+		return
 	}
-	r.Attrs(func(a slog.Attr) bool {
-		entry.Attrs[a.Key] = a.Value.Any()
-		return true
-	})
-	payload, _ := json.Marshal(entry)
-	// Send to socket
-	h.encoder.Encode(types.StreamPacket{
-		Type:    "log",
-		Payload: payload,
-	})
-	// Also send to parent handler (daemon console)
-	if h.parent != nil {
-		return h.parent.Handle(ctx, r)
-	}
-	return nil
-}
-
-func (h *socketHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
-	return &socketHandler{encoder: h.encoder, parent: h.parent.WithAttrs(attrs)}
-}
-
-func (h *socketHandler) WithGroup(name string) slog.Handler {
-	return &socketHandler{encoder: h.encoder, parent: h.parent.WithGroup(name)}
-}
-
-func handleConnection(conn net.Conn) {
 	defer conn.Close()
-	decoder := json.NewDecoder(conn)
-	encoder := json.NewEncoder(conn)
 
+	ctx, cancel := context.WithCancel(r.Context())
+	defer cancel()
+
+	// Output channel
+	outCh := make(chan types.StreamPacket, 100)
+	done := make(chan struct{})
+
+	// Pump goroutine: channel -> websocket
+	go func() {
+		defer close(done)
+		for packet := range outCh {
+			if err := conn.WriteJSON(packet); err != nil {
+				slog.Error("ws write error", "error", err)
+				cancel()
+				return
+			}
+		}
+	}()
+
+	// Read request
 	var req types.Request
-	if err := decoder.Decode(&req); err != nil {
-		slog.Warn("failed to decode request", "error", err)
-		payload, _ := json.Marshal(types.Response{Error: fmt.Sprintf("invalid request: %v", err)})
-		encoder.Encode(types.StreamPacket{
-			Type:    "result",
-			Payload: payload,
-		})
+	if err := conn.ReadJSON(&req); err != nil {
+		slog.Warn("ws read request error", "error", err)
 		return
 	}
 
 	slog.Info("executing command", "command", req.Command, "args", req.Args)
 
-	// Create a logger that sends logs through the socket AND to the daemon console
-	handler := &socketHandler{
-		encoder: encoder,
-		parent:  slog.Default().Handler(),
+	// Create logger
+	handler := &common.ChannelLogHandler{
+		Out:    outCh,
+		Parent: slog.Default().Handler(),
+		Ctx:    ctx,
 	}
 	logger := slog.New(handler)
 
-	// Inject logger into context
-	ctx := context.WithValue(context.Background(), types.LoggerKey, logger)
-	// Add environment from request
+	// Build context
+	ctx = context.WithValue(ctx, types.LoggerKey, logger)
 	env := append(req.Env, "WORKSPACED_DAEMON=1")
 	ctx = context.WithValue(ctx, types.EnvKey, env)
 	ctx = context.WithValue(ctx, types.DaemonModeKey, true)
@@ -181,15 +157,18 @@ func handleConnection(conn net.Conn) {
 
 	resp := types.Response{Output: output}
 	if err != nil {
-		slog.Error("command failed", "command", req.Command, "args", req.Args, "error", err)
+		slog.Error("command failed", "command", req.Command, "error", err)
 		resp.Error = err.Error()
 	}
 
 	payload, _ := json.Marshal(resp)
-	encoder.Encode(types.StreamPacket{
+	outCh <- types.StreamPacket{
 		Type:    "result",
 		Payload: payload,
-	})
+	}
+
+	close(outCh)
+	<-done
 }
 
 func ExecuteViaCobra(ctx context.Context, req types.Request) (string, error) {
@@ -202,11 +181,8 @@ func ExecuteViaCobra(ctx context.Context, req types.Request) (string, error) {
 	targetCmd.SetOut(buf)
 	targetCmd.SetErr(buf)
 	targetCmd.SetArgs(targetArgs)
-
-	// Set context on the command
 	targetCmd.SetContext(ctx)
 
-	// Manually run PersistentPreRunE of the PARENTS from root down to target
 	var parents []*cobra.Command
 	for curr := targetCmd; curr != nil; curr = curr.Parent() {
 		parents = append([]*cobra.Command{curr}, parents...)
@@ -222,7 +198,6 @@ func ExecuteViaCobra(ctx context.Context, req types.Request) (string, error) {
 		}
 	}
 
-	// Run the command
 	if targetCmd.RunE != nil {
 		err = targetCmd.RunE(targetCmd, targetArgs)
 	} else if targetCmd.Run != nil {

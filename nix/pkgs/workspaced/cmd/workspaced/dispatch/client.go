@@ -11,6 +11,7 @@ import (
 	"time"
 	"workspaced/pkg/types"
 
+	"github.com/gorilla/websocket"
 	"github.com/spf13/cobra"
 )
 
@@ -34,8 +35,6 @@ func init() {
 			return nil
 		}
 
-		// We are the client. Try to connect to daemon.
-		// Use os.Args to capture raw flags and arguments
 		var remoteCmd string
 		var remoteArgs []string
 
@@ -59,7 +58,7 @@ func init() {
 			if err != nil {
 				return err
 			}
-			os.Exit(0) // Clean exit after remote execution
+			os.Exit(0)
 		}
 
 		return nil
@@ -78,15 +77,18 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 	socketPath := getSocketPath()
 	slog.Info("connecting to daemon", "socket", socketPath, "cmd", cmdName, "args", args)
 
-	conn, err := net.DialTimeout("unix", socketPath, 5*time.Second)
+	dialer := websocket.Dialer{
+		NetDial: func(network, addr string) (net.Conn, error) {
+			return net.DialTimeout("unix", socketPath, 5*time.Second)
+		},
+	}
+
+	conn, _, err := dialer.Dial("ws://localhost/ws", nil)
 	if err != nil {
 		slog.Info("daemon not reachable, running locally", "error", err)
 		return "", false, nil
 	}
 	defer conn.Close()
-
-	// Set a read/write deadline to avoid hanging forever
-	conn.SetDeadline(time.Now().Add(30 * time.Second))
 
 	req := types.Request{
 		Command: cmdName,
@@ -94,16 +96,14 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 		Env:     os.Environ(),
 	}
 
-	encoder := json.NewEncoder(conn)
-	if err := encoder.Encode(req); err != nil {
+	if err := conn.WriteJSON(req); err != nil {
 		return "", true, fmt.Errorf("failed to send request: %w", err)
 	}
 
-	decoder := json.NewDecoder(conn)
 	for {
 		var packet types.StreamPacket
-		if err := decoder.Decode(&packet); err != nil {
-			return "", true, fmt.Errorf("failed to decode response: %w", err)
+		if err := conn.ReadJSON(&packet); err != nil {
+			return "", true, fmt.Errorf("failed to read response: %w", err)
 		}
 
 		switch packet.Type {
