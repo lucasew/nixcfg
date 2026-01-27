@@ -107,6 +107,7 @@ func monitorCapsLock() {
 
 type socketHandler struct {
 	encoder *json.Encoder
+	parent  slog.Handler
 }
 
 func (h *socketHandler) Enabled(ctx context.Context, level slog.Level) bool {
@@ -124,18 +125,24 @@ func (h *socketHandler) Handle(ctx context.Context, r slog.Record) error {
 		return true
 	})
 	payload, _ := json.Marshal(entry)
-	return h.encoder.Encode(types.StreamPacket{
+	// Send to socket
+	h.encoder.Encode(types.StreamPacket{
 		Type:    "log",
 		Payload: payload,
 	})
+	// Also send to parent handler (daemon console)
+	if h.parent != nil {
+		return h.parent.Handle(ctx, r)
+	}
+	return nil
 }
 
 func (h *socketHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
-	return h // Simplified for now
+	return &socketHandler{encoder: h.encoder, parent: h.parent.WithAttrs(attrs)}
 }
 
 func (h *socketHandler) WithGroup(name string) slog.Handler {
-	return h // Simplified
+	return &socketHandler{encoder: h.encoder, parent: h.parent.WithGroup(name)}
 }
 
 func handleConnection(conn net.Conn) {
@@ -156,8 +163,11 @@ func handleConnection(conn net.Conn) {
 
 	slog.Info("executing command", "command", req.Command, "args", req.Args)
 
-	// Create a logger that sends logs through the socket
-	handler := &socketHandler{encoder: encoder}
+	// Create a logger that sends logs through the socket AND to the daemon console
+	handler := &socketHandler{
+		encoder: encoder,
+		parent:  slog.Default().Handler(),
+	}
 	logger := slog.New(handler)
 
 	// Inject logger into context
