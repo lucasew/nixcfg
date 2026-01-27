@@ -6,7 +6,8 @@ buildGoModule {
 
   src = ../../../bin/workspaced;
 
-  vendorHash = null;
+  # vendorHash = lib.fakeHash; # update this after first failed build
+  vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
 
   meta = with lib; {
     description = "Workspace manager daemon";
