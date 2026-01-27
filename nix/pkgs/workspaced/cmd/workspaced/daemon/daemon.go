@@ -5,10 +5,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net"
 	"os"
 	"path/filepath"
-	"sync"
 
 	"github.com/coreos/go-systemd/v22/activation"
 	"github.com/spf13/cobra"
@@ -20,21 +20,10 @@ var Command = &cobra.Command{
 	Short: "Run the workspaced daemon",
 	Run: func(c *cobra.Command, args []string) {
 		if err := RunDaemon(); err != nil {
-			fmt.Fprintf(os.Stderr, "Daemon error: %v\n", err)
+			slog.Error("daemon failure", "error", err)
 			os.Exit(1)
 		}
 	},
-}
-
-type Request struct {
-	Command string   `json:"command"`
-	Args    []string `json:"args"`
-	Env     []string `json:"env"`
-}
-
-type Response struct {
-	Output string `json:"output"`
-	Error  string `json:"error"`
 }
 
 func getSocketPath() string {
@@ -62,12 +51,12 @@ func RunDaemon() error {
 	}
 	defer listener.Close()
 
-	fmt.Printf("Listening on %s\n", listener.Addr())
+	slog.Info("listening", "address", listener.Addr())
 
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
-			fmt.Printf("Accept error: %v\n", err)
+			slog.Error("accept error", "error", err)
 			continue
 		}
 		go handleConnection(conn)
@@ -79,27 +68,26 @@ func handleConnection(conn net.Conn) {
 	decoder := json.NewDecoder(conn)
 	encoder := json.NewEncoder(conn)
 
-	var req Request
+	var req dispatch.Request
 	if err := decoder.Decode(&req); err != nil {
-		encoder.Encode(Response{Error: fmt.Sprintf("invalid request: %v", err)})
+		slog.Warn("invalid request", "error", err)
+		encoder.Encode(dispatch.Response{Error: fmt.Sprintf("invalid request: %v", err)})
 		return
 	}
 
+	slog.Info("executing command", "command", req.Command, "args", req.Args)
+
 	output, err := ExecuteViaCobra(req)
-	resp := Response{Output: output}
+	resp := dispatch.Response{Output: output}
 	if err != nil {
+		slog.Error("command failed", "command", req.Command, "error", err)
 		resp.Error = err.Error()
 	}
 
 	encoder.Encode(resp)
 }
 
-var execLock sync.Mutex
-
-func ExecuteViaCobra(req Request) (string, error) {
-	execLock.Lock()
-	defer execLock.Unlock()
-
+func ExecuteViaCobra(req dispatch.Request) (string, error) {
 	fullArgs := append([]string{req.Command}, req.Args...)
 
 	root := dispatch.Command
@@ -109,8 +97,11 @@ func ExecuteViaCobra(req Request) (string, error) {
 	root.SetErr(buf)
 	root.SetArgs(fullArgs)
 
-	// Inject daemon_mode flag to bypass client logic
-	ctx := context.WithValue(context.Background(), "env", req.Env)
+	// Inject WORKSPACED_DAEMON to prevent recursion in child processes
+	env := append(req.Env, "WORKSPACED_DAEMON=1")
+
+	// Inject daemon_mode flag and environment
+	ctx := context.WithValue(context.Background(), "env", env)
 	ctx = context.WithValue(ctx, "daemon_mode", true)
 
 	err := root.ExecuteContext(ctx)

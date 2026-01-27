@@ -2,7 +2,6 @@ package dispatch
 
 import (
 	"fmt"
-	"os/exec"
 	"strings"
 	"time"
 
@@ -23,17 +22,17 @@ func init() {
 		subCmd := &cobra.Command{
 			Use:   cmdName,
 			Short: fmt.Sprintf("%s media", cmdName),
-			RunE: func(c *cobra.Command, args []string) error {
-				return runMediaAction(cmdName)
+			RunE: func(cmd *cobra.Command, args []string) error {
+				return runMediaAction(cmd, cmdName)
 			},
 		}
 		mediaCmd.AddCommand(subCmd)
 	}
 }
 
-func runMediaAction(action string) error {
+func runMediaAction(c *cobra.Command, action string) error {
 	if action != "show" {
-		if err := exec.Command("playerctl", action).Run(); err != nil {
+		if err := runCmd(c, "playerctl", action).Run(); err != nil {
 			return fmt.Errorf("playerctl command failed: %w", err)
 		}
 	}
@@ -43,7 +42,7 @@ func runMediaAction(action string) error {
 	}
 
 	format := "{{playerName}};{{mpris:artUrl}};{{status}};{{artist}};{{title}};{{position*100/mpris:length}};"
-	out, err := exec.Command("playerctl", "metadata", "-f", format).Output()
+	out, err := runCmd(c, "playerctl", "metadata", "-f", format).Output()
 	if err != nil {
 		return fmt.Errorf("failed to get metadata: %w", err)
 	}
@@ -79,7 +78,7 @@ func runMediaAction(action string) error {
 		"-r", "28693965",
 	}
 
-	if err := exec.Command("notify-send", notifyArgs...).Run(); err != nil {
+	if err := runCmd(c, "notify-send", notifyArgs...).Run(); err != nil {
 		return fmt.Errorf("notify-send failed: %w", err)
 	}
 

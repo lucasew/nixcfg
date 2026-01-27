@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -21,7 +21,12 @@ type Output struct {
 	CurrentWorkspace string `json:"current_workspace"`
 }
 
-func getRPC() string {
+func getRPC(env []string) string {
+	for _, e := range env {
+		if strings.HasPrefix(e, "WAYLAND_DISPLAY=") {
+			return "swaymsg"
+		}
+	}
 	if os.Getenv("WAYLAND_DISPLAY") != "" {
 		return "swaymsg"
 	}
@@ -36,10 +41,17 @@ var modnCmd = &cobra.Command{
 	Use:   "modn",
 	Short: "Rotate workspaces across outputs",
 	RunE: func(c *cobra.Command, args []string) error {
-		rpc := getRPC()
+		ctx := c.Context()
+		var env []string
+		if ctx != nil {
+			env, _ = ctx.Value("env").([]string)
+		}
+
+		rpc := getRPC(env)
 
 		// Get Workspaces
-		out, err := exec.Command(rpc, "-t", "get_workspaces").Output()
+		cmd := runCmd(c, rpc, "-t", "get_workspaces")
+		out, err := cmd.Output()
 		if err != nil {
 			return fmt.Errorf("failed to get workspaces: %w", err)
 		}
@@ -57,7 +69,8 @@ var modnCmd = &cobra.Command{
 		}
 
 		// Get Outputs
-		out, err = exec.Command(rpc, "-t", "get_outputs").Output()
+		cmd = runCmd(c, rpc, "-t", "get_outputs")
+		out, err = cmd.Output()
 		if err != nil {
 			return fmt.Errorf("failed to get outputs: %w", err)
 		}
@@ -93,20 +106,20 @@ var modnCmd = &cobra.Command{
 			ws := workspaceScreens[fromScreen]
 
 			// i3/sway logic: focus workspace, then move it to output
-			exec.Command(rpc, "workspace", "number", ws).Run()
+			runCmd(c, rpc, "workspace", "number", ws).Run()
 			time.Sleep(100 * time.Millisecond)
-			exec.Command(rpc, "move", "workspace", "to", "output", toScreen).Run()
+			runCmd(c, rpc, "move", "workspace", "to", "output", toScreen).Run()
 			time.Sleep(100 * time.Millisecond)
 		}
 
 		// Refocus workspaces to clean up
 		for _, ws := range workspaceScreens {
-			exec.Command(rpc, "workspace", "number", ws).Run()
+			runCmd(c, rpc, "workspace", "number", ws).Run()
 			time.Sleep(100 * time.Millisecond)
 		}
 
 		if focusedWorkspace != "" {
-			exec.Command(rpc, "workspace", "number", focusedWorkspace).Run()
+			runCmd(c, rpc, "workspace", "number", focusedWorkspace).Run()
 		}
 
 		fmt.Println("Rotated workspaces")

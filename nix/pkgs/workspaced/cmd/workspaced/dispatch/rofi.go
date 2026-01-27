@@ -3,7 +3,6 @@ package dispatch
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -59,15 +58,8 @@ var rofiCmd = &cobra.Command{
 		}
 		sort.Strings(keys)
 
-		cmd := exec.Command("dmenu")
+		cmd := runCmd(c, "dmenu")
 		cmd.Stdin = strings.NewReader(strings.Join(keys, "\n"))
-
-		// Context env handling
-		ctx := c.Context()
-		env, _ := ctx.Value("env").([]string)
-		if len(env) > 0 {
-			cmd.Env = env
-		}
 
 		out, err := cmd.Output()
 		if err != nil {
@@ -84,13 +76,14 @@ var rofiCmd = &cobra.Command{
 			return fmt.Errorf("invalid selection")
 		}
 
-		rpc := getRPC() // Helper reused from modn.go (same package)
-
-		rpcCmd := exec.Command(rpc)
-		if len(env) > 0 {
-			rpcCmd.Env = env
+		ctx := c.Context()
+		var env []string
+		if ctx != nil {
+			env, _ = ctx.Value("env").([]string)
 		}
+		rpc := getRPC(env)
 
+		rpcCmd := runCmd(c, rpc)
 		if move {
 			rpcCmd.Args = append(rpcCmd.Args, "move", "container", "to", "workspace", "number", fmt.Sprintf("%d", workspaceNum))
 		} else {
