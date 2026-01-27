@@ -227,29 +227,29 @@ in
         bindsym $mod+Ctrl+Left=resize grow width 1 px or 1 ppt
 
         # custom keys
-        bindsym XF86AudioRaiseVolume exec sdw utils i3wm audio up
-        bindsym XF86AudioLowerVolume exec sdw utils i3wm audio down
-        bindsym XF86AudioMute exec sdw utils i3wm audio mute
+        bindsym XF86AudioRaiseVolume exec workspaced dispatch audio up
+        bindsym XF86AudioLowerVolume exec workspaced dispatch audio down
+        bindsym XF86AudioMute exec workspaced dispatch audio mute
 
-        bindsym XF86AudioNext exec  workspaced media next
-        bindsym XF86AudioPrev exec  workspaced media previous
-        bindsym XF86AudioPlay exec  workspaced media play-pause
-        bindsym XF86AudioPause exec workspaced media play-pause
+        bindsym XF86AudioNext exec  workspaced dispatch media next
+        bindsym XF86AudioPrev exec  workspaced dispatch media previous
+        bindsym XF86AudioPlay exec  workspaced dispatch media play-pause
+        bindsym XF86AudioPause exec workspaced dispatch media play-pause
 
-        bindsym XF86MonBrightnessUp   exec sdw utils i3wm brightnessctl up
-        bindsym XF86MonBrightnessDown exec sdw utils i3wm brightnessctl down
+        bindsym XF86MonBrightnessUp   exec workspaced dispatch brightness up
+        bindsym XF86MonBrightnessDown exec workspaced dispatch brightness down
 
         bindsym $mod+Shift+m move workspace to output left
         bindsym $mod+m focus output next
 
         bindsym $mod+l exec sdw utils i3wm lock-screen
-        bindsym $mod+n exec workspaced modn
-        bindsym $mod+z exec workspaced rofi
-        bindsym $mod+Shift+z exec workspaced rofi --move
+        bindsym $mod+n exec workspaced dispatch modn
+        bindsym $mod+z exec workspaced dispatch workspace search
+        bindsym $mod+Shift+z exec workspaced dispatch workspace search --move
 
 
-        bindsym $mod+b exec sdw utils i3wm goto-new-ws
-        bindsym $mod+Shift+b exec sdw utils i3wm goto-new-ws window
+        bindsym $mod+b exec workspaced dispatch workspace next
+        bindsym $mod+Shift+b exec workspaced dispatch workspace next --move
 
 
         bindsym --release Print exec org.flameshot.Flameshot gui

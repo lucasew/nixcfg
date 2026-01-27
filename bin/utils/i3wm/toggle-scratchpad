@@ -9,6 +9,6 @@ function rpc-msg {
 }
 
 sd utils i3wm rpc scratchpad show
-sd utils i3wm brightnessctl status
-sd utils i3wm audio status
-sd utils i3wm playerctl show
+workspaced dispatch brightness show
+workspaced dispatch audio show
+workspaced dispatch media show
