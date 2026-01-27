@@ -1,22 +1,21 @@
-package dispatch
+package brightness
 
 import (
 	"fmt"
 	"strings"
+	"workspaced/cmd/workspaced/dispatch/common"
 
 	"github.com/spf13/cobra"
 )
 
 const brightnessNotificationID = "28419485"
 
-var brightnessCmd = &cobra.Command{
+var Command = &cobra.Command{
 	Use:   "brightness",
 	Short: "Control screen brightness",
 }
 
 func init() {
-	Command.AddCommand(brightnessCmd)
-
 	actions := []struct {
 		name  string
 		short string
@@ -37,19 +36,19 @@ func init() {
 				return runBrightnessAction(c, action.name, action.arg)
 			},
 		}
-		brightnessCmd.AddCommand(subCmd)
+		Command.AddCommand(subCmd)
 	}
 }
 
 func runBrightnessAction(c *cobra.Command, name, arg string) error {
 	if arg != "" {
-		if err := runCmd(c, "brightnessctl", "s", arg).Run(); err != nil {
+		if err := common.RunCmd(c, "brightnessctl", "s", arg).Run(); err != nil {
 			return fmt.Errorf("failed to set brightness: %w", err)
 		}
 	}
 
 	// Get status using machine-readable output: brightnessctl -m
-	out, err := runCmd(c, "brightnessctl", "-m").Output()
+	out, err := common.RunCmd(c, "brightnessctl", "-m").Output()
 	if err != nil {
 		return fmt.Errorf("failed to get brightness status: %w", err)
 	}
@@ -70,7 +69,7 @@ func runBrightnessAction(c *cobra.Command, name, arg string) error {
 			"-r", brightnessNotificationID,
 		}
 
-		if err := runCmd(c, "notify-send", notifyArgs...).Run(); err != nil {
+		if err := common.RunCmd(c, "notify-send", notifyArgs...).Run(); err != nil {
 			return fmt.Errorf("failed to send notification: %w", err)
 		}
 		fmt.Printf("Brightness (%s): %s\n", devname, level)

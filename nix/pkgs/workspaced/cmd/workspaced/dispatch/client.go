@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+	"workspaced/cmd/workspaced/dispatch/types"
 
 	"github.com/spf13/cobra"
 )
@@ -17,7 +18,7 @@ func init() {
 		ctx := c.Context()
 		isDaemon := false
 
-		val := ctx.Value(DaemonModeKey)
+		val := ctx.Value(types.DaemonModeKey)
 		slog.Debug("checking daemon mode", "command", c.Name(), "ctx_val", val, "env_var", os.Getenv("WORKSPACED_DAEMON"))
 
 		if os.Getenv("WORKSPACED_DAEMON") == "1" {
@@ -86,7 +87,7 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 	// Set a read/write deadline to avoid hanging forever
 	conn.SetDeadline(time.Now().Add(30 * time.Second))
 
-	req := Request{
+	req := types.Request{
 		Command: cmdName,
 		Args:    args,
 		Env:     os.Environ(),
@@ -97,7 +98,7 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 		return "", true, fmt.Errorf("failed to send request: %w", err)
 	}
 
-	var resp Response
+	var resp types.Response
 	decoder := json.NewDecoder(conn)
 	if err := decoder.Decode(&resp); err != nil {
 		return "", true, fmt.Errorf("failed to decode response: %w", err)

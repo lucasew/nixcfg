@@ -1,21 +1,20 @@
-package dispatch
+package media
 
 import (
 	"fmt"
 	"strings"
 	"time"
+	"workspaced/cmd/workspaced/dispatch/common"
 
 	"github.com/spf13/cobra"
 )
 
-var mediaCmd = &cobra.Command{
+var Command = &cobra.Command{
 	Use:   "media",
 	Short: "Control media playback",
 }
 
 func init() {
-	Command.AddCommand(mediaCmd)
-
 	cmds := []string{"play-pause", "next", "previous", "stop", "show"}
 	for _, c := range cmds {
 		cmdName := c
@@ -26,13 +25,13 @@ func init() {
 				return runMediaAction(cmd, cmdName)
 			},
 		}
-		mediaCmd.AddCommand(subCmd)
+		Command.AddCommand(subCmd)
 	}
 }
 
 func runMediaAction(c *cobra.Command, action string) error {
 	if action != "show" {
-		if err := runCmd(c, "playerctl", action).Run(); err != nil {
+		if err := common.RunCmd(c, "playerctl", action).Run(); err != nil {
 			return fmt.Errorf("playerctl command failed: %w", err)
 		}
 	}
@@ -42,7 +41,7 @@ func runMediaAction(c *cobra.Command, action string) error {
 	}
 
 	format := "{{playerName}};{{mpris:artUrl}};{{status}};{{artist}};{{title}};{{position*100/mpris:length}};"
-	out, err := runCmd(c, "playerctl", "metadata", "-f", format).Output()
+	out, err := common.RunCmd(c, "playerctl", "metadata", "-f", format).Output()
 	if err != nil {
 		return fmt.Errorf("failed to get metadata: %w", err)
 	}
@@ -78,8 +77,8 @@ func runMediaAction(c *cobra.Command, action string) error {
 		"-r", "28693965",
 	}
 
-	if err := runCmd(c, "notify-send", notifyArgs...).Run(); err != nil {
-		return fmt.Errorf("notify-send failed: %w", err)
+	if err := common.RunCmd(c, "notify-send", notifyArgs...).Run(); err != nil {
+		return fmt.Errorf("failed to send notification: %w", err)
 	}
 
 	fmt.Printf("State: %s\n", state)

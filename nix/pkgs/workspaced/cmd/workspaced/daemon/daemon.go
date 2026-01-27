@@ -13,6 +13,7 @@ import (
 	"github.com/coreos/go-systemd/v22/activation"
 	"github.com/spf13/cobra"
 	"workspaced/cmd/workspaced/dispatch"
+	"workspaced/cmd/workspaced/dispatch/types"
 )
 
 var Command = &cobra.Command{
@@ -69,17 +70,17 @@ func handleConnection(conn net.Conn) {
 	decoder := json.NewDecoder(conn)
 	encoder := json.NewEncoder(conn)
 
-	var req dispatch.Request
+	var req types.Request
 	if err := decoder.Decode(&req); err != nil {
 		slog.Warn("failed to decode request", "error", err)
-		encoder.Encode(dispatch.Response{Error: fmt.Sprintf("invalid request: %v", err)})
+		encoder.Encode(types.Response{Error: fmt.Sprintf("invalid request: %v", err)})
 		return
 	}
 
 	slog.Info("executing command", "command", req.Command, "args", req.Args)
 
 	output, err := ExecuteViaCobra(req)
-	resp := dispatch.Response{Output: output}
+	resp := types.Response{Output: output}
 	if err != nil {
 		slog.Error("command failed", "command", req.Command, "args", req.Args, "error", err)
 		resp.Error = err.Error()
@@ -91,7 +92,7 @@ func handleConnection(conn net.Conn) {
 	}
 }
 
-func ExecuteViaCobra(req dispatch.Request) (string, error) {
+func ExecuteViaCobra(req types.Request) (string, error) {
 	targetCmd, targetArgs, err := dispatch.FindCommand(req.Command, req.Args)
 	if err != nil {
 		return "", err
@@ -104,8 +105,8 @@ func ExecuteViaCobra(req dispatch.Request) (string, error) {
 
 	// Prepare context
 	env := append(req.Env, "WORKSPACED_DAEMON=1")
-	ctx := context.WithValue(context.Background(), dispatch.EnvKey, env)
-	ctx = context.WithValue(ctx, dispatch.DaemonModeKey, true)
+	ctx := context.WithValue(context.Background(), types.EnvKey, env)
+	ctx = context.WithValue(ctx, types.DaemonModeKey, true)
 
 	// Set context on the command
 	targetCmd.SetContext(ctx)

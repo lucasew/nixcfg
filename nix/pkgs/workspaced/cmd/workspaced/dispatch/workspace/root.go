@@ -1,4 +1,4 @@
-package dispatch
+package workspace
 
 import (
 	"fmt"
@@ -7,6 +7,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"workspaced/cmd/workspaced/dispatch/common"
+	"workspaced/cmd/workspaced/dispatch/types"
 
 	"github.com/BurntSushi/toml"
 	"github.com/spf13/cobra"
@@ -16,7 +18,7 @@ type Config struct {
 	Workspaces map[string]int `toml:"workspaces"`
 }
 
-var workspaceCmd = &cobra.Command{
+var Command = &cobra.Command{
 	Use:   "workspace",
 	Short: "Workspace management commands",
 }
@@ -54,7 +56,7 @@ var workspaceSearchCmd = &cobra.Command{
 		}
 		sort.Strings(keys)
 
-		cmd := runCmd(c, "dmenu")
+		cmd := common.RunCmd(c, "dmenu")
 		cmd.Stdin = strings.NewReader(strings.Join(keys, "\n"))
 
 		out, err := cmd.Output()
@@ -112,13 +114,13 @@ func switchToWorkspace(c *cobra.Command, num int, move bool) error {
 	ctx := c.Context()
 	var env []string
 	if ctx != nil {
-		if val, ok := ctx.Value(EnvKey).([]string); ok {
+		if val, ok := ctx.Value(types.EnvKey).([]string); ok {
 			env = val
 		}
 	}
-	rpc := getRPC(env)
+	rpc := common.GetRPC(env)
 
-	rpcCmd := runCmd(c, rpc)
+	rpcCmd := common.RunCmd(c, rpc)
 	if move {
 		rpcCmd.Args = append(rpcCmd.Args, "move", "container", "to", "workspace", "number", strconv.Itoa(num))
 	} else {
@@ -134,8 +136,7 @@ func switchToWorkspace(c *cobra.Command, num int, move bool) error {
 }
 
 func init() {
-	workspaceCmd.PersistentFlags().Bool("move", false, "Move container to workspace")
-	workspaceCmd.AddCommand(workspaceSearchCmd)
-	workspaceCmd.AddCommand(workspaceNextCmd)
-	Command.AddCommand(workspaceCmd)
+	Command.PersistentFlags().Bool("move", false, "Move container to workspace")
+	Command.AddCommand(workspaceSearchCmd)
+	Command.AddCommand(workspaceNextCmd)
 }

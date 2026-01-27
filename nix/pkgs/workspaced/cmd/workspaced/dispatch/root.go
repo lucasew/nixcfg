@@ -1,7 +1,10 @@
 package dispatch
 
 import (
-	"os/exec"
+	"workspaced/cmd/workspaced/dispatch/audio"
+	"workspaced/cmd/workspaced/dispatch/brightness"
+	"workspaced/cmd/workspaced/dispatch/media"
+	"workspaced/cmd/workspaced/dispatch/workspace"
 
 	"github.com/spf13/cobra"
 )
@@ -12,25 +15,11 @@ var Command = &cobra.Command{
 	TraverseChildren: true,
 }
 
-func runCmd(c *cobra.Command, name string, args ...string) *exec.Cmd {
-	cmd := exec.Command(name, args...)
-	ctx := c.Context()
-	if ctx != nil {
-		if env, ok := ctx.Value(EnvKey).([]string); ok {
-			cmd.Env = env
-		}
-	}
-	return cmd
-}
-
-func GetFullCommandPath(c *cobra.Command) []string {
-	var path []string
-	curr := c
-	for curr != nil && curr.Name() != "dispatch" && curr.Name() != "workspaced" {
-		path = append([]string{curr.Name()}, path...)
-		curr = curr.Parent()
-	}
-	return path
+func init() {
+	Command.AddCommand(audio.Command)
+	Command.AddCommand(brightness.Command)
+	Command.AddCommand(media.Command)
+	Command.AddCommand(workspace.Command)
 }
 
 func FindCommand(name string, args []string) (*cobra.Command, []string, error) {

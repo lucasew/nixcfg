@@ -243,7 +243,7 @@ in
         bindsym $mod+m focus output next
 
         bindsym $mod+l exec sdw utils i3wm lock-screen
-        bindsym $mod+n exec workspaced dispatch modn
+        bindsym $mod+n exec workspaced dispatch workspace modn
         bindsym $mod+z exec workspaced dispatch workspace search
         bindsym $mod+Shift+z exec workspaced dispatch workspace search --move
 

@@ -1,4 +1,4 @@
-package dispatch
+package types
 
 type Request struct {
 	Command string   `json:"command"`
@@ -11,9 +11,9 @@ type Response struct {
 	Error  string `json:"error"`
 }
 
-type contextKey string
+type ContextKey string
 
 const (
-	DaemonModeKey contextKey = "daemon_mode"
-	EnvKey        contextKey = "env"
+	DaemonModeKey ContextKey = "daemon_mode"
+	EnvKey        ContextKey = "env"
 )
