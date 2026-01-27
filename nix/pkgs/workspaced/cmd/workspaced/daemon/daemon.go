@@ -79,23 +79,23 @@ func monitorCapsLock() {
 		return
 	}
 
-	lastActive := false
 	for range ticker.C {
-		active := false
+		capsActive := false
 		for _, m := range matches {
 			data, err := os.ReadFile(m)
 			if err == nil && strings.TrimSpace(string(data)) == "1" {
-				active = true
+				capsActive = true
 				break
 			}
 		}
 
-		if active && !lastActive {
-			slog.Info("capslock activated, turning off screen")
-			ctx := context.Background()
-			screen.SetDPMS(ctx, false)
+		screenActive, err := screen.IsDPMSOn(context.Background())
+		if err != nil {
+			slog.Error("on checking if screen is active", "error", err)
 		}
-		lastActive = active
+		if !capsActive != screenActive {
+			screen.SetDPMS(context.Background(), !capsActive)
+		}
 	}
 }
 
