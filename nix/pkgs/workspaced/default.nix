@@ -4,7 +4,7 @@ buildGoModule {
   pname = "workspaced";
   version = "0.0.1";
 
-  src = ../../../bin/workspaced;
+  src = ./.;
 
   # vendorHash = lib.fakeHash; # update this after first failed build
   vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
