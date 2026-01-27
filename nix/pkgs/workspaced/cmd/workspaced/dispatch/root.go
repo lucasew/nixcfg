@@ -7,8 +7,9 @@ import (
 )
 
 var Command = &cobra.Command{
-	Use:   "dispatch",
-	Short: "Dispatch workspace commands",
+	Use:              "dispatch",
+	Short:            "Dispatch workspace commands",
+	TraverseChildren: true,
 }
 
 func runCmd(c *cobra.Command, name string, args ...string) *exec.Cmd {

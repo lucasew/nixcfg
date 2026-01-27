@@ -33,7 +33,23 @@ func init() {
 		}
 
 		// We are the client. Try to connect to daemon.
-		output, connected, err := TryRemote(c, args)
+		// Use os.Args to capture raw flags and arguments
+		var remoteCmd string
+		var remoteArgs []string
+
+		for i, arg := range os.Args {
+			if arg == "dispatch" && i+1 < len(os.Args) {
+				remoteCmd = os.Args[i+1]
+				remoteArgs = os.Args[i+2:]
+				break
+			}
+		}
+
+		if remoteCmd == "" {
+			return nil
+		}
+
+		output, connected, err := TryRemoteRaw(remoteCmd, remoteArgs)
 		if connected {
 			if output != "" {
 				fmt.Print(output)
@@ -56,13 +72,9 @@ func getSocketPath() string {
 	return filepath.Join(runtimeDir, "workspaced.sock")
 }
 
-func TryRemote(c *cobra.Command, args []string) (string, bool, error) {
+func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 	socketPath := getSocketPath()
-	fullPath := GetFullCommandPath(c)
-	if len(fullPath) == 0 {
-		return "", false, nil
-	}
-	slog.Info("connecting to daemon", "socket", socketPath, "path", fullPath, "args", args)
+	slog.Info("connecting to daemon", "socket", socketPath, "cmd", cmdName, "args", args)
 
 	conn, err := net.DialTimeout("unix", socketPath, 5*time.Second)
 	if err != nil {
@@ -75,8 +87,8 @@ func TryRemote(c *cobra.Command, args []string) (string, bool, error) {
 	conn.SetDeadline(time.Now().Add(30 * time.Second))
 
 	req := Request{
-		Command: fullPath[0],
-		Args:    append(fullPath[1:], args...),
+		Command: cmdName,
+		Args:    args,
 		Env:     os.Environ(),
 	}
 

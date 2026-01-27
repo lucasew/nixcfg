@@ -16,20 +16,15 @@ type Config struct {
 }
 
 func init() {
-	Command.AddCommand(rofiCmd)
+	workspaceCmd.Flags().Bool("move", false, "Move container to workspace")
+	Command.AddCommand(workspaceCmd)
 }
 
-var rofiCmd = &cobra.Command{
-	Use:   "rofi",
-	Short: "Rofi workspace switcher",
+var workspaceCmd = &cobra.Command{
+	Use:   "workspace",
+	Short: "Workspace switcher using a menu (dmenu/rofi)",
 	RunE: func(c *cobra.Command, args []string) error {
-		// Args parsing: check for --move
-		move := false
-		for _, arg := range args {
-			if arg == "--move" {
-				move = true
-			}
-		}
+		move, _ := c.Flags().GetBool("move")
 
 		// Inlined logic
 		home, err := os.UserHomeDir()
