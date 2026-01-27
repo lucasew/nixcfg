@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"time"
-	"workspaced/cmd/workspaced/dispatch/types"
+	"workspaced/pkg/types"
 
 	"github.com/spf13/cobra"
 )

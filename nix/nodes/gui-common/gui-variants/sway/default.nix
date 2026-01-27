@@ -227,13 +227,13 @@ in
         bindsym $mod+Shift+f floating toggle
         bindsym $mod+Shift+s sticky toggle
 
-        bindsym $mod+minus exec sdw utils i3wm toggle-scratchpad
+        bindsym $mod+minus exec workspaced dispatch screen toggle
         bindsym $mod+Shift+minus move scratchpad
 
         bindsym $mod+Shift+q kill
         bindsym $mod+Shift+r restart
-        bindsym $mod+d exec rofi-launch
-        bindsym $mod+Shift+d exec rofi-window
+        bindsym $mod+d exec workspaced dispatch menu launch
+        bindsym $mod+Shift+d exec workspaced dispatch menu window
         bindsym $mod+e layout toggle split
 
         bindsym $mod+f fullscreen toggle
@@ -269,15 +269,18 @@ in
 
         bindsym $mod+l exec workspaced dispatch screen lock
         bindsym $mod+Shift+l exec workspaced dispatch screen toggle
-        bindsym $mod+n exec workspaced dispatch workspace modn
-        bindsym $mod+z exec workspaced dispatch workspace search
-        bindsym $mod+Shift+z exec workspaced dispatch workspace search --move
+        bindsym $mod+n exec workspaced dispatch workspace rotate
+        bindsym $mod+z exec workspaced dispatch menu workspace
+        bindsym $mod+Shift+z exec workspaced dispatch menu workspace --move
+
 
         bindsym $mod+b exec workspaced dispatch workspace next
         bindsym $mod+Shift+b exec workspaced dispatch workspace next --move
 
 
-        bindsym --release Print exec be.alexandervanhee.gradia --screenshot
+        bindsym --release Print exec workspaced dispatch screenshot full
+        bindsym $mod+Print exec workspaced dispatch screenshot select
+
 
         output * bg /etc/wallpaper fill
 

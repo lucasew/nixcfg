@@ -13,7 +13,7 @@ import (
 	"github.com/coreos/go-systemd/v22/activation"
 	"github.com/spf13/cobra"
 	"workspaced/cmd/workspaced/dispatch"
-	"workspaced/cmd/workspaced/dispatch/types"
+	"workspaced/pkg/types"
 )
 
 var Command = &cobra.Command{
