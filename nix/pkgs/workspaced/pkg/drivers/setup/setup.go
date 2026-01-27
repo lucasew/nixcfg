@@ -36,7 +36,7 @@ func SetupTermuxShortcuts(ctx context.Context) error {
 
 		if !entry.IsDir() {
 			name := entry.Name()
-			content := fmt.Sprintf("#!/usr/bin/env bash\nexec workspaced dispatch _shortcuts termux %s \"$@\"\n", name)
+			content := fmt.Sprintf("#!/usr/bin/env bash\nexec %s/bin/source_me workspaced dispatch _shortcuts termux %s \"$@\"\n", dotfiles, name)
 
 			destPath := filepath.Join(shortcutDir, name)
 			if err := os.WriteFile(destPath, []byte(content), 0755); err != nil {

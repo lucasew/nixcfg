@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Automatically generated workspaced shim
+
+# Find dotfiles root using the same logic as sd
+if [[ -d "$HOME/.dotfiles" ]]; then
+    DOTFILES_ROOT="$HOME/.dotfiles"
+elif [[ -d "/etc/.dotfiles" ]]; then
+    DOTFILES_ROOT="/etc/.dotfiles"
+else
+    # Try to use sd to find it if available
+    DOTFILES_ROOT=$(sd d root 2>/dev/null)
+fi
+
+SOURCE_DIR="$DOTFILES_ROOT/nix/pkgs/workspaced"
+
+if [[ -d "$SOURCE_DIR" ]]; then
+    # Hot build!
+    TEMP_BIN="${XDG_RUNTIME_DIR:-/tmp}/workspaced-hot"
+    (cd "$SOURCE_DIR" && go build -o "$TEMP_BIN" ./cmd/workspaced)
+    exec "$TEMP_BIN" "$@"
+fi
+
+# Fallback to pre-installed binary
+# We use -ap to find all occurrences and grep -v to skip this script itself
+REAL_BIN=$(type -ap workspaced | grep -v "$0" | head -n 1)
+
+if [[ -n "$REAL_BIN" ]]; then
+    exec "$REAL_BIN" "$@"
+fi
+
+echo "workspaced: source not found in $SOURCE_DIR and no binary found in PATH" >&2
+exit 1
