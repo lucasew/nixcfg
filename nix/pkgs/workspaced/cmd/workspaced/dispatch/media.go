@@ -9,13 +9,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var MediaCmd = &cobra.Command{
+var mediaCmd = &cobra.Command{
 	Use:   "media",
 	Short: "Control media playback",
 }
 
 func init() {
-	// Subcommands for media
+	Command.AddCommand(mediaCmd)
+
 	cmds := []string{"play-pause", "next", "previous", "stop", "show"}
 	for _, c := range cmds {
 		cmdName := c
@@ -26,24 +27,21 @@ func init() {
 				return runMediaAction(cmdName)
 			},
 		}
-		MediaCmd.AddCommand(subCmd)
+		mediaCmd.AddCommand(subCmd)
 	}
 }
 
 func runMediaAction(action string) error {
-	// Execute playerctl command (unless it's 'show', which implies just showing status)
 	if action != "show" {
 		if err := exec.Command("playerctl", action).Run(); err != nil {
 			return fmt.Errorf("playerctl command failed: %w", err)
 		}
 	}
 
-	// Wait logic from original script
 	if action != "play-pause" && action != "show" {
 		time.Sleep(2 * time.Second)
 	}
 
-	// Metadata format
 	format := "{{playerName}};{{mpris:artUrl}};{{status}};{{artist}};{{title}};{{position*100/mpris:length}};"
 	out, err := exec.Command("playerctl", "metadata", "-f", format).Output()
 	if err != nil {
