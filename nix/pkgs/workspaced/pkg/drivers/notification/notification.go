@@ -11,7 +11,7 @@ type Notification struct {
 	Message  string
 	Urgency  string // low, normal, critical
 	Icon     string
-	Progress int // 0-100, 0 means no progress
+	Progress float64 // 0.0-1.0, 0.0 means no progress
 }
 
 type Notifier interface {

@@ -1,10 +1,12 @@
 package backup
 
 import (
+	"bufio"
 	"context"
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/git"
 	"workspaced/pkg/drivers/notification"
@@ -36,7 +38,7 @@ func RunFullBackup(ctx context.Context) error {
 	updateProgress := func(msg string) {
 		currentStep++
 		n.Message = msg
-		n.Progress = (currentStep * 100) / totalSteps
+		n.Progress = float64(currentStep) / float64(totalSteps)
 		n.Notify(ctx)
 	}
 
@@ -50,14 +52,14 @@ func RunFullBackup(ctx context.Context) error {
 		home, _ := os.UserHomeDir()
 		src := filepath.Join(home, "WORKSPACE/CANTGIT/")
 		dst := config.Backup.RemotePath + "/CANTGIT"
-		if err := Rsync(ctx, src, dst); err != nil {
+		if _, err := Rsync(ctx, src, dst, n); err != nil {
 			return err
 		}
 	}
 
 	if common.IsPhone() {
 		logger.Info("host identified as phone, starting android backup")
-		if err := runPhoneBackup(ctx, config, updateProgress); err != nil {
+		if err := runPhoneBackup(ctx, config, updateProgress, n); err != nil {
 			return err
 		}
 	}
@@ -68,34 +70,65 @@ func RunFullBackup(ctx context.Context) error {
 	status, _ := getRemoteStatus(ctx, config)
 	n.Title = "Backup finalizado"
 	n.Message = status
-	n.Progress = 100
+	n.Progress = 1.0
 	n.Notify(ctx)
 
 	logger.Info("full backup completed")
 	return nil
 }
 
-func Rsync(ctx context.Context, src, dst string, extraArgs ...string) error {
+func Rsync(ctx context.Context, src, dst string, n *notification.Notification, extraArgs ...string) (string, error) {
 	config, _ := common.LoadConfig()
 	remote := fmt.Sprintf("%s:%s", config.Backup.RsyncnetUser, dst)
 
 	common.GetLogger(ctx).Info("rsync sync", "from", src, "to", remote)
 	args := append([]string{"-avP", src, remote}, extraArgs...)
-	return common.RunCmd(ctx, "rsync", args...).Run()
+	cmd := common.RunCmd(ctx, "rsync", args...)
+
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return "", err
+	}
+	cmd.Stderr = cmd.Stdout
+
+	if err := cmd.Start(); err != nil {
+		return "", err
+	}
+
+	lastLine := ""
+	scanner := bufio.NewScanner(stdout)
+	lastUpdate := time.Now()
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			lastLine = line
+		}
+		if time.Since(lastUpdate) > time.Second {
+			if n != nil {
+				n.Message = line
+				n.Notify(ctx)
+			}
+			lastUpdate = time.Now()
+		}
+	}
+
+	err = cmd.Wait()
+	return lastLine, err
 }
 
-func runPhoneBackup(ctx context.Context, config *common.GlobalConfig, updateProgress func(string)) error {
+func runPhoneBackup(ctx context.Context, config *common.GlobalConfig, updateProgress func(string), n *notification.Notification) error {
 	logger := common.GetLogger(ctx)
 	// Sync Camera and Pictures
 	logger.Info("syncing media and whatsapp")
 	updateProgress("Sincronizando Câmera...")
-	Rsync(ctx, "/sdcard/DCIM/Camera/", config.Backup.RemotePath+"/camera", "--exclude=.thumbnails")
+	Rsync(ctx, "/sdcard/DCIM/Camera/", config.Backup.RemotePath+"/camera", n, "--exclude=.thumbnails")
 	updateProgress("Sincronizando Fotos...")
-	Rsync(ctx, "/sdcard/Pictures/", config.Backup.RemotePath+"/pictures", "--exclude=.thumbnails")
+	Rsync(ctx, "/sdcard/Pictures/", config.Backup.RemotePath+"/pictures", n, "--exclude=.thumbnails")
 	updateProgress("Sincronizando Mídia WhatsApp...")
-	Rsync(ctx, "/sdcard/Android/media/com.whatsapp/WhatsApp/Media/", config.Backup.RemotePath+"/WhatsApp", "--exclude=.Links", "--exclude=.Statuses")
+	Rsync(ctx, "/sdcard/Android/media/com.whatsapp/WhatsApp/Media/", config.Backup.RemotePath+"/WhatsApp", n, "--exclude=.Links", "--exclude=.Statuses")
 	updateProgress("Sincronizando Backups WhatsApp...")
-	Rsync(ctx, "/sdcard/Android/media/com.whatsapp/WhatsApp/Backups/", config.Backup.RemotePath+"/WhatsApp")
+	Rsync(ctx, "/sdcard/Android/media/com.whatsapp/WhatsApp/Backups/", config.Backup.RemotePath+"/WhatsApp", n)
 
 	// Termux config staging
 	updateProgress("Sincronizando Configurações Termux...")
@@ -122,7 +155,8 @@ func runPhoneBackup(ctx context.Context, config *common.GlobalConfig, updateProg
 	logger.Info("creating tarball", "path", tarPath)
 	common.RunCmd(ctx, "tar", "-cvf", tarPath, "-C", filepath.Dir(cacheDir), "termux").Run()
 
-	return Rsync(ctx, tarPath, config.Backup.RemotePath)
+	_, err := Rsync(ctx, tarPath, config.Backup.RemotePath, n)
+	return err
 }
 
 func getRemoteStatus(ctx context.Context, config *common.GlobalConfig) (string, error) {

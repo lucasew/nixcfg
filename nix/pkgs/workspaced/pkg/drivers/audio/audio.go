@@ -48,7 +48,7 @@ func ShowStatus(ctx context.Context) error {
 	n.Title = fmt.Sprintf("%s Volume", emoji)
 	n.Message = sinkName
 	if l, err := strconv.Atoi(level); err == nil {
-		n.Progress = l
+		n.Progress = float64(l) / 100.0
 	}
 
 	common.GetLogger(ctx).Info("volume updated", "level", level, "sink", sinkName)

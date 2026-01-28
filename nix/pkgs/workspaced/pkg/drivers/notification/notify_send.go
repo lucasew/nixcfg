@@ -27,7 +27,7 @@ func (s *NotifySendNotifier) Notify(ctx context.Context, n *Notification) error 
 	}
 
 	if n.Progress > 0 {
-		args = append(args, "-h", fmt.Sprintf("int:value:%d", n.Progress))
+		args = append(args, "-h", fmt.Sprintf("int:value:%d", int(n.Progress*100)))
 	}
 
 	args = append(args, n.Title, n.Message)

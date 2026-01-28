@@ -35,9 +35,13 @@ func (t *TermuxNotifier) Notify(ctx context.Context, n *Notification) error {
 
 	message := n.Message
 	if n.Progress > 0 {
-		args = append(args, "--alert-once", "--ongoing")
+		if n.Progress < 1.0 {
+			args = append(args, "--ongoing")
+		}
+		args = append(args, "--alert-once")
 		width := 10
-		completed := (n.Progress * width) / 100
+		percent := int(n.Progress * 100)
+		completed := (percent * width) / 100
 		bar := ""
 		for i := 0; i < width; i++ {
 			if i < completed {
@@ -46,7 +50,7 @@ func (t *TermuxNotifier) Notify(ctx context.Context, n *Notification) error {
 				bar += "░"
 			}
 		}
-		message = fmt.Sprintf("%s\n%s %d%%", message, bar, n.Progress)
+		message = fmt.Sprintf("%s\n%s %d%%", message, bar, percent)
 	}
 
 	if message != "" {

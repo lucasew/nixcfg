@@ -38,7 +38,7 @@ func ShowStatus(ctx context.Context) error {
 		n.Title = fmt.Sprintf("☀️ %s", devname)
 		levelVal := strings.TrimSuffix(level, "%")
 		if l, err := strconv.Atoi(levelVal); err == nil {
-			n.Progress = l
+			n.Progress = float64(l) / 100.0
 		}
 		n.Notify(ctx)
 		common.GetLogger(ctx).Info("brightness updated", "device", devname, "level", level)

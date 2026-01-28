@@ -58,7 +58,7 @@ func ShowStatus(ctx context.Context) error {
 	n.Title = fmt.Sprintf("%s %s", emoji, player)
 	n.Message = fmt.Sprintf("%s - %s", artist, title)
 	if l, err := strconv.Atoi(parts[5]); err == nil {
-		n.Progress = l
+		n.Progress = float64(l) / 100.0
 	}
 	n.Icon = icon
 
