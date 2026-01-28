@@ -177,9 +177,9 @@ func ReplicateZFS(ctx context.Context) error {
 	logger := common.GetLogger(ctx)
 	// Ported from bin/misc/zfs-backup
 	logger.Info("replicating ZFS vms dataset")
-	if err := common.RunCmd(ctx, "sudo", "syncoid", "-r", "zroot/vms", "storage/backup/vms").Run(); err != nil {
+	if err := common.RunCmd(ctx, "pkexec", "syncoid", "-r", "zroot/vms", "storage/backup/vms").Run(); err != nil {
 		return err
 	}
 	logger.Info("replicating ZFS games dataset")
-	return common.RunCmd(ctx, "sudo", "syncoid", "-r", "zroot/games", "storage/games").Run()
+	return common.RunCmd(ctx, "pkexec", "syncoid", "-r", "zroot/games", "storage/games").Run()
 }

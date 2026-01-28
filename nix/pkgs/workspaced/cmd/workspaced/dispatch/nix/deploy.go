@@ -121,7 +121,7 @@ func deployNode(ctx context.Context, flake, node, action string) error {
 		}
 	}
 
-	switchCmdArgs := []string{"ssh", "-t", node, "sudo", fmt.Sprintf("%s/bin/switch-to-configuration", toplevel), action}
+	switchCmdArgs := []string{"ssh", "-t", node, "pkexec", fmt.Sprintf("%s/bin/switch-to-configuration", toplevel), action}
 	cmdSwitch := common.RunCmd(ctx, switchCmdArgs[0], switchCmdArgs[1:]...)
 	common.InheritContextWriters(ctx, cmdSwitch)
 	if err := cmdSwitch.Run(); err != nil {
