@@ -10,6 +10,9 @@ import (
 	"strings"
 	"time"
 	"workspaced/pkg/common"
+	"workspaced/pkg/drivers/audio"
+	"workspaced/pkg/drivers/brightness"
+	"workspaced/pkg/drivers/media"
 )
 
 type Workspace struct {
@@ -34,6 +37,16 @@ func SwitchToWorkspace(ctx context.Context, num int, move bool) error {
 func ToggleScratchpad(ctx context.Context) error {
 	rpc := common.GetRPC(ctx)
 	return common.RunCmd(ctx, rpc, "scratchpad", "show").Run()
+}
+
+func ToggleScratchpadWithInfo(ctx context.Context) error {
+	if err := ToggleScratchpad(ctx); err != nil {
+		return err
+	}
+	audio.ShowStatus(ctx)
+	brightness.ShowStatus(ctx)
+	media.ShowStatus(ctx)
+	return nil
 }
 
 func NextWorkspace(ctx context.Context, move bool) error {

@@ -227,7 +227,7 @@ in
         bindsym $mod+Shift+f floating toggle
         bindsym $mod+Shift+s sticky toggle
 
-        bindsym $mod+minus exec sdw utils i3wm toggle-scratchpad
+        bindsym $mod+minus exec workspaced dispatch workspace scratchpad
         bindsym $mod+equal exec workspaced dispatch screen toggle
         bindsym $mod+Shift+minus move scratchpad
 
