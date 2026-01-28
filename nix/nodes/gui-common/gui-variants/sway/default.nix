@@ -268,7 +268,6 @@ in
         bindsym $mod+m focus output right
 
         bindsym $mod+l exec workspaced dispatch screen lock
-        bindsym $mod+Shift+l exec workspaced dispatch screen toggle
         bindsym $mod+n exec workspaced dispatch workspace rotate
         bindsym $mod+z exec workspaced dispatch menu workspace
         bindsym $mod+Shift+z exec workspaced dispatch menu workspace --move

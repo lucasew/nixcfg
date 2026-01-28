@@ -6,17 +6,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var showCmd = &cobra.Command{
-	Use:     "show",
-	Aliases: []string{"status"},
-	Short:   "Show current brightness",
-	RunE: func(c *cobra.Command, args []string) error {
-		return brightness.ShowStatus(c.Context())
-	},
-}
-
 func init() {
 	Registry.Register(func(parent *cobra.Command) {
-		parent.AddCommand(showCmd)
+		parent.AddCommand(&cobra.Command{
+			Use:     "show",
+			Aliases: []string{"status"},
+			Short:   "Show current brightness",
+			RunE: func(c *cobra.Command, args []string) error {
+				return brightness.ShowStatus(c.Context())
+			},
+		})
 	})
 }
