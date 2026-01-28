@@ -14,6 +14,7 @@
       description = "Workspaced Daemon";
       wantedBy = [ "graphical-session.target" ];
       requires = [ "workspaced.socket" ];
+      restartTriggers = [ pkgs.workspaced ];
       serviceConfig = {
         ExecStart = "${pkgs.workspaced}/bin/workspaced daemon";
         Restart = "on-failure";
