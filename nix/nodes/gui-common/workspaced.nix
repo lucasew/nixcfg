@@ -1,7 +1,7 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
-  config = lib.mkIf (config.programs.sway.enable || config.services.xserver.windowManager.i3.enable) {
+  config = {
     environment.systemPackages = [ pkgs.workspaced ];
 
     systemd.user.sockets.workspaced = {
@@ -14,7 +14,6 @@
       description = "Workspaced Daemon";
       wantedBy = [ "graphical-session.target" ];
       requires = [ "workspaced.socket" ];
-      restartTriggers = [ pkgs.workspaced ];
       serviceConfig = {
         ExecStart = "${pkgs.workspaced}/bin/workspaced daemon";
         Restart = "on-failure";
