@@ -43,23 +43,17 @@ func ResolveFlakePath(ctx context.Context, repo string) (string, error) {
 		repo = root
 	}
 
-	// If it's a local path that exists, use it directly to avoid unnecessary evaluation just for the path
-	if filepath.IsAbs(repo) {
-		if _, err := os.Stat(repo); err == nil {
-			return repo, nil
-		}
-	}
-
-	out, err := common.RunCmd(ctx, "nix", "flake", "metadata", repo, "--json").Output()
+	// Use nix flake archive to ensure the source is in the Nix store and get its path
+	out, err := common.RunCmd(ctx, "nix", "flake", "archive", repo, "--json").Output()
 	if err != nil {
-		return "", fmt.Errorf("failed to resolve flake metadata for %s: %w", repo, err)
+		return "", fmt.Errorf("failed to archive flake %s to store: %w", repo, err)
 	}
 
 	var meta struct {
 		Path string `json:"path"`
 	}
 	if err := json.Unmarshal(out, &meta); err != nil {
-		return "", fmt.Errorf("failed to parse flake metadata: %w", err)
+		return "", fmt.Errorf("failed to parse flake archive output: %w", err)
 	}
 
 	return meta.Path, nil
@@ -121,17 +115,6 @@ func RemoteBuild(ctx context.Context, ref string, target string, copyBack bool) 
 
 	// 2. Sync source to target
 	updateProgress(fmt.Sprintf("Sincronizando fontes para %s...", target), 0.3)
-	// For remote build, we need the store path of the source to ensure it's available remotely
-	metadataOut, err := common.RunCmd(ctx, "nix", "flake", "metadata", repo, "--json").Output()
-	if err == nil {
-		var meta struct {
-			Path string `json:"path"`
-		}
-		if err := json.Unmarshal(metadataOut, &meta); err == nil {
-			sourcePath = meta.Path
-		}
-	}
-
 	if err := CopyClosure(ctx, target, sourcePath, To); err != nil {
 		return "", fmt.Errorf("failed to copy source to %s: %w", target, err)
 	}
@@ -190,25 +173,13 @@ func Build(ctx context.Context, ref string, useCache bool) (string, error) {
 
 	repo, item := parseFlakeRef(ref)
 
-	// Resolve the source path from Nix's perspective (store path or absolute path)
+	// Resolve the source path to a store path
 	sourcePath, err := ResolveFlakePath(ctx, repo)
 	if err != nil {
 		return "", err
 	}
 
-	// Always try to get the locked source path for the cache key to ensure correctness
-	cacheSourcePath := sourcePath
-	metadataOut, err := common.RunCmd(ctx, "nix", "flake", "metadata", repo, "--json").Output()
-	if err == nil {
-		var meta struct {
-			Path string `json:"path"`
-		}
-		if err := json.Unmarshal(metadataOut, &meta); err == nil {
-			cacheSourcePath = meta.Path
-		}
-	}
-
-	cacheKey := fmt.Sprintf("%s#%s", cacheSourcePath, item)
+	cacheKey := fmt.Sprintf("%s#%s", sourcePath, item)
 	if useCache {
 		if val, ok := buildCache.Load(cacheKey); ok {
 			resultPath := val.(string)
@@ -221,8 +192,8 @@ func Build(ctx context.Context, ref string, useCache bool) (string, error) {
 	}
 
 	logger.Info("performing nix build", "ref", ref)
-	// We use the original repo reference to let Nix handle it (it might be a registry entry or a local path)
-	cmd := common.RunCmd(ctx, "nix", "build", fmt.Sprintf("%s#%s", repo, item), "--no-link", "--print-out-paths")
+	// We use the store path of the source to ensure deterministic build and avoid re-evaluation if not needed
+	cmd := common.RunCmd(ctx, "nix", "build", fmt.Sprintf("%s#%s", sourcePath, item), "--no-link", "--print-out-paths")
 	out, err := cmd.Output()
 	if err != nil {
 		return "", fmt.Errorf("nix build failed: %w", err)
