@@ -21,9 +21,16 @@ func init() {
 			Args:               cobra.MinimumNArgs(1),
 			DisableFlagParsing: true,
 			RunE: func(cmd *cobra.Command, args []string) error {
+				if len(args) == 0 {
+					return fmt.Errorf("no flake reference provided")
+				}
 				ctx := cmd.Context()
 				ref := args[0]
 				runArgs := args[1:]
+
+				if len(runArgs) > 0 && runArgs[0] == "--" {
+					runArgs = runArgs[1:]
+				}
 
 				// Parse ref: repo#item/binary
 				parts := strings.Split(ref, "#")

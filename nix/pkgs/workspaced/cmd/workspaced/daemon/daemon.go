@@ -172,6 +172,9 @@ func ExecuteViaCobra(ctx context.Context, req types.Request, stdout, stderr io.W
 		return buf.String(), err
 	}
 	argList := targetCmd.Flags().Args()
+	if targetCmd.DisableFlagParsing {
+		argList = targetArgs
+	}
 
 	var parents []*cobra.Command
 	for curr := targetCmd; curr != nil; curr = curr.Parent() {
