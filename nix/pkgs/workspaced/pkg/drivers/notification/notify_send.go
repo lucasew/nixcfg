@@ -26,8 +26,8 @@ func (s *NotifySendNotifier) Notify(ctx context.Context, n *Notification) error 
 		args = append(args, "-i", n.Icon)
 	}
 
-	if n.Hint != "" {
-		args = append(args, "-h", n.Hint)
+	if n.Progress > 0 {
+		args = append(args, "-h", fmt.Sprintf("int:value:%d", n.Progress))
 	}
 
 	args = append(args, n.Title, n.Message)

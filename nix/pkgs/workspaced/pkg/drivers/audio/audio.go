@@ -3,6 +3,7 @@ package audio
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/notification"
@@ -46,7 +47,9 @@ func ShowStatus(ctx context.Context) error {
 
 	n.Title = fmt.Sprintf("%s Volume", emoji)
 	n.Message = sinkName
-	n.Hint = fmt.Sprintf("int:value:%s", level)
+	if l, err := strconv.Atoi(level); err == nil {
+		n.Progress = l
+	}
 
 	common.GetLogger(ctx).Info("volume updated", "level", level, "sink", sinkName)
 

@@ -20,16 +20,32 @@ func RunFullBackup(ctx context.Context) error {
 	logger.Info("starting full backup")
 
 	n := &notification.Notification{
-		Title:   "Backup Iniciado",
-		Message: "Sincronizando dados...",
-		Icon:    "drive-harddisk",
+		Title: "Backup em curso",
+		Icon:  "drive-harddisk",
 	}
-	n.Notify(ctx)
+
+	totalSteps := 2 // Git sync + Final report
+	if common.IsRiverwood() {
+		totalSteps++
+	}
+	if common.IsPhone() {
+		totalSteps += 5 // Camera, Pictures, WA Media, WA Backups, Termux
+	}
+
+	currentStep := 0
+	updateProgress := func(msg string) {
+		currentStep++
+		n.Message = msg
+		n.Progress = (currentStep * 100) / totalSteps
+		n.Notify(ctx)
+	}
 
 	// Always sync git repos first
+	updateProgress("Sincronizando repositórios Git...")
 	git.QuickSync(ctx)
 
 	if common.IsRiverwood() {
+		updateProgress("Sincronizando CANTGIT...")
 		logger.Info("host identified as riverwood, syncing CANTGIT")
 		home, _ := os.UserHomeDir()
 		src := filepath.Join(home, "WORKSPACE/CANTGIT/")
@@ -41,15 +57,18 @@ func RunFullBackup(ctx context.Context) error {
 
 	if common.IsPhone() {
 		logger.Info("host identified as phone, starting android backup")
-		if err := runPhoneBackup(ctx, config); err != nil {
+		if err := runPhoneBackup(ctx, config, updateProgress); err != nil {
 			return err
 		}
 	}
 
 	// Final report
+	updateProgress("Finalizando e obtendo status...")
 	logger.Info("fetching remote status from rsync.net")
 	status, _ := getRemoteStatus(ctx, config)
-	n.Message = "Backup finalizado.\n" + status
+	n.Title = "Backup finalizado"
+	n.Message = status
+	n.Progress = 100
 	n.Notify(ctx)
 
 	logger.Info("full backup completed")
@@ -65,16 +84,21 @@ func Rsync(ctx context.Context, src, dst string, extraArgs ...string) error {
 	return common.RunCmd(ctx, "rsync", args...).Run()
 }
 
-func runPhoneBackup(ctx context.Context, config *common.GlobalConfig) error {
+func runPhoneBackup(ctx context.Context, config *common.GlobalConfig, updateProgress func(string)) error {
 	logger := common.GetLogger(ctx)
 	// Sync Camera and Pictures
 	logger.Info("syncing media and whatsapp")
+	updateProgress("Sincronizando Câmera...")
 	Rsync(ctx, "/sdcard/DCIM/Camera/", config.Backup.RemotePath+"/camera", "--exclude=.thumbnails")
+	updateProgress("Sincronizando Fotos...")
 	Rsync(ctx, "/sdcard/Pictures/", config.Backup.RemotePath+"/pictures", "--exclude=.thumbnails")
+	updateProgress("Sincronizando Mídia WhatsApp...")
 	Rsync(ctx, "/sdcard/Android/media/com.whatsapp/WhatsApp/Media/", config.Backup.RemotePath+"/WhatsApp", "--exclude=.Links", "--exclude=.Statuses")
+	updateProgress("Sincronizando Backups WhatsApp...")
 	Rsync(ctx, "/sdcard/Android/media/com.whatsapp/WhatsApp/Backups/", config.Backup.RemotePath+"/WhatsApp")
 
 	// Termux config staging
+	updateProgress("Sincronizando Configurações Termux...")
 	logger.Info("staging termux configuration")
 	home, _ := os.UserHomeDir()
 	cacheDir := filepath.Join(home, ".cache/backup/termux")

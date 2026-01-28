@@ -6,12 +6,12 @@ import (
 )
 
 type Notification struct {
-	ID      uint32
-	Title   string
-	Message string
-	Urgency string // low, normal, critical
-	Icon    string
-	Hint    string // e.g. int:value:50 for progress bar
+	ID       uint32
+	Title    string
+	Message  string
+	Urgency  string // low, normal, critical
+	Icon     string
+	Progress int // 0-100, 0 means no progress
 }
 
 type Notifier interface {

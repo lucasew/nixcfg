@@ -3,6 +3,7 @@ package brightness
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/notification"
@@ -35,7 +36,10 @@ func ShowStatus(ctx context.Context) error {
 		level := parts[3]
 
 		n.Title = fmt.Sprintf("☀️ %s", devname)
-		n.Hint = fmt.Sprintf("int:value:%s", strings.TrimSuffix(level, "%"))
+		levelVal := strings.TrimSuffix(level, "%")
+		if l, err := strconv.Atoi(levelVal); err == nil {
+			n.Progress = l
+		}
 		n.Notify(ctx)
 		common.GetLogger(ctx).Info("brightness updated", "device", devname, "level", level)
 	}

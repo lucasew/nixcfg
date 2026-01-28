@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"hash/fnv"
 	"strconv"
-	"strings"
 	"workspaced/pkg/common"
 )
 
@@ -25,10 +24,6 @@ func (t *TermuxNotifier) Notify(ctx context.Context, n *Notification) error {
 		args = append(args, "-t", n.Title)
 	}
 
-	if n.Message != "" {
-		args = append(args, "-c", n.Message)
-	}
-
 	switch n.Urgency {
 	case "low":
 		args = append(args, "--priority", "low")
@@ -38,11 +33,24 @@ func (t *TermuxNotifier) Notify(ctx context.Context, n *Notification) error {
 		args = append(args, "--priority", "high")
 	}
 
-	if n.Hint != "" && strings.HasPrefix(n.Hint, "int:value:") {
-		valStr := strings.TrimPrefix(n.Hint, "int:value:")
-		if _, err := strconv.Atoi(valStr); err == nil {
-			args = append(args, "--progress", valStr)
+	message := n.Message
+	if n.Progress > 0 {
+		args = append(args, "--alert-once", "--ongoing")
+		width := 10
+		completed := (n.Progress * width) / 100
+		bar := ""
+		for i := 0; i < width; i++ {
+			if i < completed {
+				bar += "█"
+			} else {
+				bar += "░"
+			}
 		}
+		message = fmt.Sprintf("%s\n%s %d%%", message, bar, n.Progress)
+	}
+
+	if message != "" {
+		args = append(args, "-c", message)
 	}
 
 	_, err := common.RunCmd(ctx, "termux-notification", args...).Output()

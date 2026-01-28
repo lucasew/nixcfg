@@ -3,6 +3,7 @@ package media
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 	"workspaced/pkg/common"
@@ -56,7 +57,9 @@ func ShowStatus(ctx context.Context) error {
 
 	n.Title = fmt.Sprintf("%s %s", emoji, player)
 	n.Message = fmt.Sprintf("%s - %s", artist, title)
-	n.Hint = fmt.Sprintf("int:value:%s", parts[5])
+	if l, err := strconv.Atoi(parts[5]); err == nil {
+		n.Progress = l
+	}
 	n.Icon = icon
 
 	common.GetLogger(ctx).Info("media status", "player", player, "state", state, "artist", artist, "title", title)
