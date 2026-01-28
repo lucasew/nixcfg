@@ -8,11 +8,14 @@ import (
 	"io"
 	"os"
 	"strings"
+	"sync"
 	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/drivers/sudo"
 	"workspaced/pkg/types"
 )
+
+var buildCache sync.Map // key: sourcePath#attribute, value: resultPath
 
 type Direction int
 
@@ -156,6 +159,48 @@ func RemoteBuild(ctx context.Context, ref string, target string, copyBack bool) 
 	}
 
 	updateProgress("Build concluído com sucesso.", 1.0)
+	return resultPath, nil
+}
+
+func Build(ctx context.Context, ref string, useCache bool) (string, error) {
+	logger := common.GetLogger(ctx)
+
+	parts := strings.Split(ref, "#")
+	repo := parts[0]
+	item := ""
+	if len(parts) > 1 {
+		item = parts[1]
+	}
+
+	sourcePath, err := ResolveFlakePath(ctx, repo)
+	if err != nil {
+		return "", err
+	}
+
+	cacheKey := fmt.Sprintf("%s#%s", sourcePath, item)
+	if useCache {
+		if val, ok := buildCache.Load(cacheKey); ok {
+			resultPath := val.(string)
+			if _, err := os.Stat(resultPath); err == nil {
+				logger.Debug("build cache hit", "ref", ref, "path", resultPath)
+				return resultPath, nil
+			}
+			buildCache.Delete(cacheKey)
+		}
+	}
+
+	logger.Info("performing nix build", "ref", ref)
+	cmd := common.RunCmd(ctx, "nix", "build", fmt.Sprintf("%s#%s", sourcePath, item), "--no-link", "--print-out-paths")
+	out, err := cmd.Output()
+	if err != nil {
+		return "", fmt.Errorf("nix build failed: %w", err)
+	}
+
+	resultPath := strings.TrimSpace(string(out))
+	if useCache {
+		buildCache.Store(cacheKey, resultPath)
+	}
+
 	return resultPath, nil
 }
 
