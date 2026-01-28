@@ -18,6 +18,7 @@ import (
 	"workspaced/cmd/workspaced/dispatch/media"
 	"workspaced/cmd/workspaced/dispatch/menu"
 	"workspaced/cmd/workspaced/dispatch/nix"
+	"workspaced/cmd/workspaced/dispatch/notification"
 	"workspaced/cmd/workspaced/dispatch/power"
 	"workspaced/cmd/workspaced/dispatch/screen"
 	"workspaced/cmd/workspaced/dispatch/screenshot"
@@ -99,6 +100,7 @@ func NewCommand() *cobra.Command {
 	cmd.AddCommand(media.GetCommand())
 	cmd.AddCommand(menu.GetCommand())
 	cmd.AddCommand(nix.GetCommand())
+	cmd.AddCommand(notification.GetCommand())
 	cmd.AddCommand(power.GetCommand())
 	cmd.AddCommand(screen.GetCommand())
 	cmd.AddCommand(screenshot.GetCommand())
