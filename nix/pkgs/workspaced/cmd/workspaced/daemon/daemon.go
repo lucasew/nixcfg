@@ -148,6 +148,11 @@ func ExecuteViaCobra(ctx context.Context, req types.Request) (string, error) {
 	targetCmd.SetArgs(targetArgs)
 	targetCmd.SetContext(ctx)
 
+	if err := targetCmd.ParseFlags(targetArgs); err != nil {
+		return buf.String(), err
+	}
+	argList := targetCmd.Flags().Args()
+
 	var parents []*cobra.Command
 	for curr := targetCmd; curr != nil; curr = curr.Parent() {
 		parents = append([]*cobra.Command{curr}, parents...)
@@ -155,18 +160,18 @@ func ExecuteViaCobra(ctx context.Context, req types.Request) (string, error) {
 
 	for _, p := range parents {
 		if p.PersistentPreRunE != nil {
-			if err := p.PersistentPreRunE(targetCmd, targetArgs); err != nil {
+			if err := p.PersistentPreRunE(targetCmd, argList); err != nil {
 				return buf.String(), err
 			}
 		} else if p.PersistentPreRun != nil {
-			p.PersistentPreRun(targetCmd, targetArgs)
+			p.PersistentPreRun(targetCmd, argList)
 		}
 	}
 
 	if targetCmd.RunE != nil {
-		err = targetCmd.RunE(targetCmd, targetArgs)
+		err = targetCmd.RunE(targetCmd, argList)
 	} else if targetCmd.Run != nil {
-		targetCmd.Run(targetCmd, targetArgs)
+		targetCmd.Run(targetCmd, argList)
 	} else {
 		err = fmt.Errorf("command has no run implementation")
 	}
