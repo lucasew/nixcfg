@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"strings"
 	"workspaced/pkg/types"
 
@@ -86,13 +87,7 @@ func EnsureEssentialPaths(env []string) []string {
 			// Check which essential paths are missing and prepend them
 			for i := len(EssentialPaths) - 1; i >= 0; i-- {
 				p := EssentialPaths[i]
-				missing := true
-				for _, cp := range pathParts {
-					if cp == p {
-						missing = false
-						break
-					}
-				}
+				missing := !slices.Contains(pathParts, p)
 				if missing {
 					pathParts = append([]string{p}, pathParts...)
 				}

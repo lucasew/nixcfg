@@ -84,7 +84,18 @@ func init() {
 					if dryRun {
 						logger.Info("dry-run: skipping nixos-rebuild")
 					} else {
-						return nix.Rebuild(ctx, action, "")
+						flake := ""
+						if common.IsRiverwood() {
+							logger.Info("performing remote build for riverwood")
+							hostname := common.GetHostname()
+							ref := fmt.Sprintf(".#nixosConfigurations.%s.config.system.build.toplevel", hostname)
+							result, err := nix.RemoteBuild(ctx, ref, "whiterun", true)
+							if err != nil {
+								return fmt.Errorf("remote build failed: %w", err)
+							}
+							flake = result
+						}
+						return nix.Rebuild(ctx, action, flake)
 					}
 				}
 
