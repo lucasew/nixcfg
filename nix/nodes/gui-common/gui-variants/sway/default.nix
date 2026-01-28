@@ -71,6 +71,8 @@ in
 
     programs.ssh.startAgent = true;
 
+    security.soteria.enable = true;
+
     programs.xss-lock = {
       enable = true;
       lockerCommand = lib.mkDefault ''
