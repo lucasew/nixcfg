@@ -22,29 +22,53 @@ func QuickSync(ctx context.Context) error {
 		return fmt.Errorf("failed to read repo dir %s: %w", repoDir, err)
 	}
 
+	var repos []string
 	for _, entry := range entries {
+		if entry.IsDir() {
+			repoPath := filepath.Join(repoDir, entry.Name())
+			if _, err := os.Stat(filepath.Join(repoPath, ".git")); err == nil {
+				repos = append(repos, entry.Name())
+			}
+		}
+	}
+
+	total := len(repos)
+	if total == 0 {
+		return nil
+	}
+
+	n := &notification.Notification{
+		Title: "Sincronização Git",
+		Icon:  "git",
+	}
+
+	for i, repoName := range repos {
 		// Check for context cancellation
 		if err := ctx.Err(); err != nil {
 			return err
 		}
 
-		if entry.IsDir() {
-			repoPath := filepath.Join(repoDir, entry.Name())
-			if _, err := os.Stat(filepath.Join(repoPath, ".git")); err == nil {
-				logger.Info("syncing repository", "repo", entry.Name())
-				if err := SyncRepo(ctx, repoPath); err != nil {
-					logger.Error("failed to sync repo", "repo", entry.Name(), "error", err)
-					n := &notification.Notification{
-						Title:   "Sincronização Falhou",
-						Message: fmt.Sprintf("Conflito ou erro em %s. Intervenção manual necessária.", entry.Name()),
-						Urgency: "critical",
-						Icon:    "dialog-warning",
-					}
-					n.Notify(ctx)
-				}
+		repoPath := filepath.Join(repoDir, repoName)
+		n.Message = fmt.Sprintf("Sincronizando %s...", repoName)
+		n.Progress = float64(i) / float64(total)
+		n.Notify(ctx)
+
+		logger.Info("syncing repository", "repo", repoName)
+		if err := SyncRepo(ctx, repoPath); err != nil {
+			logger.Error("failed to sync repo", "repo", repoName, "error", err)
+			errN := &notification.Notification{
+				Title:   "Sincronização Falhou",
+				Message: fmt.Sprintf("Conflito ou erro em %s. Intervenção manual necessária.", repoName),
+				Urgency: "critical",
+				Icon:    "dialog-warning",
 			}
+			errN.Notify(ctx)
 		}
 	}
+
+	n.Message = "Sincronização concluída."
+	n.Progress = 1.0
+	n.Notify(ctx)
 
 	return nil
 }
