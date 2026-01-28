@@ -3,7 +3,6 @@ package nix
 import (
 	"context"
 	"fmt"
-	"log/slog"
 	"strings"
 	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/nix"
@@ -36,9 +35,10 @@ func init() {
 				action, _ := cmd.Flags().GetString("action")
 
 				for _, node := range nodes {
-					slog.Info("Deploying to node", "node", node)
+					logger := common.GetLogger(ctx).With("node", node)
+					logger.Info("Deploying to node")
 					if err := deployNode(ctx, flake, node, action); err != nil {
-						slog.Error("Failed to deploy to node", "node", node, "error", err)
+						logger.Error("Failed to deploy to node", "error", err)
 						return err
 					}
 				}
@@ -60,8 +60,9 @@ func init() {
 }
 
 func deployNode(ctx context.Context, flake, node, action string) error {
+	logger := common.GetLogger(ctx).With("node", node)
 	// 1. Build outputs
-	slog.Info("Building configuration for node", "node", node)
+	logger.Info("Building configuration for node")
 	toplevelPath := fmt.Sprintf("nixosConfigurations.%s.config.system.build.toplevel", node)
 	toplevel, err := nix.GetFlakeOutput(ctx, flake, toplevelPath)
 	if err != nil {
@@ -75,7 +76,7 @@ func deployNode(ctx context.Context, flake, node, action string) error {
 	}
 
 	// 2. Copy closures
-	slog.Info("Copying closures to node", "node", node)
+	logger.Info("Copying closures to node")
 	if err := nix.CopyClosure(ctx, node, toplevel, nix.To); err != nil {
 		return fmt.Errorf("failed to copy toplevel to %s: %w", node, err)
 	}
@@ -101,7 +102,7 @@ func deployNode(ctx context.Context, flake, node, action string) error {
 	}
 
 	// 4. Activate Home Manager
-	slog.Info("Activating Home Manager on node", "node", node)
+	logger.Info("Activating Home Manager on node")
 	cmdHM := common.RunCmd(ctx, "ssh", node, fmt.Sprintf("%s/bin/home-manager-generation", home))
 	common.InheritContextWriters(ctx, cmdHM)
 	if err := cmdHM.Run(); err != nil {
@@ -109,13 +110,13 @@ func deployNode(ctx context.Context, flake, node, action string) error {
 	}
 
 	// 5. Switch System Configuration
-	slog.Info("Switching system configuration on node", "node", node, "action", action)
+	logger.Info("Switching system configuration on node", "action", action)
 	// Check if already running
 	currentSystemOut, err := common.RunCmd(ctx, "ssh", node, "realpath /run/current-system").Output()
 	if err == nil {
 		currentSystem := strings.TrimSpace(string(currentSystemOut))
 		if currentSystem == toplevel {
-			slog.Info("Node already running the same configuration", "node", node)
+			logger.Info("Node already running the same configuration")
 			return nil
 		}
 	}

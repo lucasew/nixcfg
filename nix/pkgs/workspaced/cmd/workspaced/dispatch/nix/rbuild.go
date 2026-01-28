@@ -3,7 +3,6 @@ package nix
 import (
 	"crypto/rand"
 	"fmt"
-	"log/slog"
 	"os"
 	"strings"
 	"workspaced/pkg/common"
@@ -25,6 +24,7 @@ func init() {
 			Args:  cobra.ExactArgs(1),
 			RunE: func(cmd *cobra.Command, args []string) error {
 				ctx := cmd.Context()
+				logger := common.GetLogger(ctx)
 				ref := args[0]
 
 				if target == "" {
@@ -43,7 +43,7 @@ func init() {
 					n.Message = msg
 					n.Progress = prog
 					n.Notify(ctx)
-					slog.Info(msg, "progress", prog)
+					logger.Info(msg, "progress", prog)
 				}
 
 				// 1. Resolve source
@@ -112,7 +112,7 @@ func init() {
 				}
 
 				updateProgress("Build concluído com sucesso.", 1.0)
-				fmt.Println(resultPath)
+				cmd.Println(resultPath)
 
 				return nil
 			},

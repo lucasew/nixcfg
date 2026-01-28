@@ -48,8 +48,6 @@ func (h *ChannelLogHandler) Handle(ctx context.Context, r slog.Record) error {
 	case h.Out <- types.StreamPacket{Type: "log", Payload: payload}:
 	case <-h.Ctx.Done():
 		return h.Ctx.Err()
-	default:
-		// Drop log if channel is full to avoid deadlock
 	}
 
 	if h.Parent != nil {

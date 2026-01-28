@@ -95,7 +95,7 @@ func handleWS(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	// Output channel
-	outCh := make(chan types.StreamPacket, 100)
+	outCh := make(chan types.StreamPacket, 1000)
 	done := make(chan struct{})
 
 	// Pump goroutine: channel -> websocket
