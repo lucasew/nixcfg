@@ -7,7 +7,7 @@ buildGoModule {
   src = ./.;
 
   # vendorHash = lib.fakeHash; # update this after first failed build
-  vendorHash = "sha256-EuXLV+pBZxKrPjqyUYXkI9dJNeTIDvPVYOTO+CWr0mc=";
+  vendorHash = "sha256-qqCV2U3qd24QTW2EsCb7nn5Ulg+ffUspNZkvGrGhffU=";
 
   meta = with lib; {
     description = "Workspace manager daemon";
