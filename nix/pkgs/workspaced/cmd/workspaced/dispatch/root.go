@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+	"workspaced/cmd/workspaced/dispatch/apply"
 	"workspaced/cmd/workspaced/dispatch/audio"
 	"workspaced/cmd/workspaced/dispatch/backup"
 	"workspaced/cmd/workspaced/dispatch/brightness"
@@ -81,6 +82,7 @@ func NewCommand() *cobra.Command {
 		return nil
 	}
 
+	cmd.AddCommand(apply.GetCommand())
 	cmd.AddCommand(audio.GetCommand())
 	cmd.AddCommand(backup.GetCommand())
 	cmd.AddCommand(brightness.GetCommand())

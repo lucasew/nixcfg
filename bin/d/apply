@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-exec workspaced dispatch nix apply "$@"
+exec workspaced dispatch apply "$@"

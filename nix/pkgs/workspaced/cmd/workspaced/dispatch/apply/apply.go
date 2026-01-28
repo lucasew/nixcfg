@@ -1,0 +1,97 @@
+package apply
+
+import (
+	"fmt"
+	"workspaced/pkg/common"
+	"workspaced/pkg/drivers/apply"
+	"workspaced/pkg/drivers/nix"
+
+	"github.com/spf13/cobra"
+)
+
+func init() {
+	Registry.Register(func(parent *cobra.Command) {
+		cmd := &cobra.Command{
+			Use:   "apply [action]",
+			Short: "Declaratively apply system and user configurations",
+			Args:  cobra.MaximumNArgs(1),
+			RunE: func(cmd *cobra.Command, args []string) error {
+				ctx := cmd.Context()
+				logger := common.GetLogger(ctx)
+
+				action := "switch"
+				if len(args) > 0 {
+					action = args[0]
+				}
+
+				dryRun, _ := cmd.Flags().GetBool("dry-run")
+
+				// 1. Load state
+				state, err := apply.LoadState()
+				if err != nil {
+					return err
+				}
+
+				// 2. Collect desired state
+				providers := []apply.Provider{
+					&apply.SymlinkProvider{},
+					&apply.TermuxProvider{},
+				}
+
+				desired := []apply.DesiredState{}
+				for _, p := range providers {
+					d, err := p.GetDesiredState(ctx)
+					if err != nil {
+						return fmt.Errorf("provider %s failed: %w", p.Name(), err)
+					}
+					desired = append(desired, d...)
+				}
+
+				// 3. Plan
+				actions, err := apply.Plan(ctx, desired, state)
+				if err != nil {
+					return err
+				}
+
+				// 4. Show and execute
+				hasChanges := false
+				for _, a := range actions {
+					if a.Type != apply.ActionNoop {
+						hasChanges = true
+						cmd.Printf("[%s] %s\n", a.Type, a.Target)
+						if a.Type == apply.ActionUpdate || a.Type == apply.ActionCreate {
+							cmd.Printf("      -> %s\n", a.Desired.Source)
+						}
+					}
+				}
+
+				if !hasChanges {
+					logger.Info("no file changes needed")
+				} else if dryRun {
+					logger.Info("dry-run: skipping file execution")
+				} else {
+					if err := apply.Execute(ctx, actions, state); err != nil {
+						return err
+					}
+					if err := apply.SaveState(state); err != nil {
+						return err
+					}
+				}
+
+				// 5. System specific hooks
+				if common.IsNixOS() {
+					logger.Info("running NixOS rebuild", "action", action)
+					if dryRun {
+						logger.Info("dry-run: skipping nixos-rebuild")
+					} else {
+						return nix.Rebuild(ctx, action, "")
+					}
+				}
+
+				return nil
+			},
+		}
+		cmd.Flags().BoolP("dry-run", "d", false, "Only show what would be done")
+		parent.AddCommand(cmd)
+	})
+}

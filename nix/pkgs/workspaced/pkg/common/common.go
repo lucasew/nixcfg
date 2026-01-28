@@ -177,6 +177,11 @@ func IsInStore() bool {
 	return strings.HasPrefix(root, "/nix/store")
 }
 
+func IsNixOS() bool {
+	_, err := os.Stat("/etc/NIXOS")
+	return err == nil
+}
+
 type GlobalConfig struct {
 	Workspaces map[string]int    `toml:"workspaces"`
 	Wallpaper  WallpaperConfig   `toml:"wallpaper"`
