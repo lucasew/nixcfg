@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/git"
@@ -162,12 +163,14 @@ func runPhoneBackup(ctx context.Context, config *common.GlobalConfig, updateProg
 func getRemoteStatus(ctx context.Context, config *common.GlobalConfig) (string, error) {
 	user := config.Backup.RsyncnetUser
 
-	// Get snapshots
-	snapOut, _ := common.RunCmd(ctx, "ssh", user, "ls .zfs/snapshot").Output()
-	// Get quota
+	// Get quota (raw)
 	quotaOut, _ := common.RunCmd(ctx, "ssh", user, "quota").Output()
 
-	return string(snapOut) + "\n" + string(quotaOut), nil
+	// Get snapshots (flattened)
+	snapOut, _ := common.RunCmd(ctx, "ssh", user, "ls .zfs/snapshot").Output()
+	snapshots := strings.Join(strings.Fields(string(snapOut)), " ")
+
+	return string(quotaOut) + "\n" + snapshots, nil
 }
 
 func ReplicateZFS(ctx context.Context) error {
