@@ -2,9 +2,6 @@ package notification
 
 import (
 	"context"
-	"fmt"
-	"strconv"
-	"strings"
 	"workspaced/pkg/common"
 )
 
@@ -17,40 +14,16 @@ type Notification struct {
 	Hint    string // e.g. int:value:50 for progress bar
 }
 
+type Notifier interface {
+	Notify(ctx context.Context, n *Notification) error
+}
+
 func (n *Notification) Notify(ctx context.Context) error {
-	args := []string{}
-	if n.ID > 0 {
-		args = append(args, "-r", strconv.FormatUint(uint64(n.ID), 10))
+	var notifier Notifier
+	if common.IsBinaryAvailable(ctx, "termux-notification") {
+		notifier = &TermuxNotifier{}
 	} else {
-		args = append(args, "-p")
+		notifier = &NotifySendNotifier{}
 	}
-
-	if n.Urgency != "" {
-		args = append(args, "-u", n.Urgency)
-	}
-
-	if n.Icon != "" {
-		args = append(args, "-i", n.Icon)
-	}
-
-	if n.Hint != "" {
-		args = append(args, "-h", n.Hint)
-	}
-
-	args = append(args, n.Title, n.Message)
-
-	out, err := common.RunCmd(ctx, "notify-send", args...).Output()
-	if err != nil {
-		return fmt.Errorf("failed to send notification: %w", err)
-	}
-
-	if n.ID == 0 {
-		idStr := strings.TrimSpace(string(out))
-		id, err := strconv.ParseUint(idStr, 10, 32)
-		if err == nil {
-			n.ID = uint32(id)
-		}
-	}
-
-	return nil
+	return notifier.Notify(ctx, n)
 }
