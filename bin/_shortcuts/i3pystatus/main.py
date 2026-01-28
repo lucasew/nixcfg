@@ -11,10 +11,7 @@ status.register(
 status.register("tlp")
 
 status.register(
-    "mem",
-    format="{percent_used_mem}",
-    warn_percentage=80,
-    alert_percentage=90
+    "mem", format="{percent_used_mem}", warn_percentage=80, alert_percentage=90
 )
 
 status.register(

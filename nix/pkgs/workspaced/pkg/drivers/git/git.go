@@ -51,7 +51,7 @@ func QuickSync(ctx context.Context) error {
 		repoPath := filepath.Join(repoDir, repoName)
 		n.Message = fmt.Sprintf("Sincronizando %s...", repoName)
 		n.Progress = float64(i) / float64(total)
-		n.Notify(ctx)
+		_ = n.Notify(ctx)
 
 		logger.Info("syncing repository", "repo", repoName)
 		if err := SyncRepo(ctx, repoPath); err != nil {
@@ -62,13 +62,13 @@ func QuickSync(ctx context.Context) error {
 				Urgency: "critical",
 				Icon:    "dialog-warning",
 			}
-			errN.Notify(ctx)
+			_ = errN.Notify(ctx)
 		}
 	}
 
 	n.Message = "Sincronização concluída."
 	n.Progress = 1.0
-	n.Notify(ctx)
+	_ = n.Notify(ctx)
 
 	return nil
 }
@@ -96,7 +96,7 @@ func SyncRepo(ctx context.Context, path string) error {
 	// git pull --rebase
 	logger.Info("git pull --rebase", "path", path)
 	if err := common.RunCmd(ctx, "git", "-C", path, "pull", "--rebase").Run(); err != nil {
-		common.RunCmd(ctx, "git", "-C", path, "rebase", "--abort").Run()
+		_ = common.RunCmd(ctx, "git", "-C", path, "rebase", "--abort").Run()
 		return fmt.Errorf("git pull rebase failed (conflict?): %w", err)
 	}
 

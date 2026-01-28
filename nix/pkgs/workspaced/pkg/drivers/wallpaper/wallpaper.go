@@ -73,7 +73,7 @@ func SetAPOD(ctx context.Context) error {
 
 	home, _ := os.UserHomeDir()
 	cacheDir := filepath.Join(home, ".cache/workspaced")
-	os.MkdirAll(cacheDir, 0755)
+	_ = os.MkdirAll(cacheDir, 0755)
 	outPath := filepath.Join(cacheDir, "apod.jpg")
 
 	out, err := os.Create(outPath)

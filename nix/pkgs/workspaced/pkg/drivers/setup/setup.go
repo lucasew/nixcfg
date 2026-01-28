@@ -15,7 +15,7 @@ func SetupTermuxShortcuts(ctx context.Context) error {
 
 	home, _ := os.UserHomeDir()
 	shortcutDir := filepath.Join(home, ".shortcuts")
-	os.MkdirAll(shortcutDir, 0755)
+	_ = os.MkdirAll(shortcutDir, 0755)
 
 	dotfiles, err := common.GetDotfilesRoot()
 	if err != nil {

@@ -59,7 +59,7 @@ func captureWayland(ctx context.Context, path string, area bool) (string, error)
 
 	// Copy to clipboard
 	if _, err := exec.LookPath("wl-copy"); err == nil {
-		common.RunCmd(ctx, "sh", "-c", fmt.Sprintf("wl-copy < %s", path)).Run()
+		_ = common.RunCmd(ctx, "sh", "-c", fmt.Sprintf("wl-copy < %s", path)).Run()
 	}
 
 	notifySaved(ctx, path)
@@ -84,7 +84,7 @@ func captureX11(ctx context.Context, path string, area bool) (string, error) {
 
 	// Copy to clipboard
 	if _, err := exec.LookPath("xclip"); err == nil {
-		common.RunCmd(ctx, "sh", "-c", fmt.Sprintf("xclip -selection clipboard -t image/png < %s", path)).Run()
+		_ = common.RunCmd(ctx, "sh", "-c", fmt.Sprintf("xclip -selection clipboard -t image/png < %s", path)).Run()
 	}
 
 	notifySaved(ctx, path)
@@ -97,7 +97,7 @@ func notifyMissing(ctx context.Context, tool string) {
 		Message: fmt.Sprintf("Missing tool: %s", tool),
 		Urgency: "critical",
 	}
-	n.Notify(ctx)
+	_ = n.Notify(ctx)
 }
 
 func notifySaved(ctx context.Context, path string) {
@@ -106,5 +106,5 @@ func notifySaved(ctx context.Context, path string) {
 		Message: path,
 		Icon:    "camera-photo",
 	}
-	n.Notify(ctx)
+	_ = n.Notify(ctx)
 }

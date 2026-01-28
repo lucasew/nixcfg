@@ -54,7 +54,7 @@ func monitorCapsLock(ctx context.Context) {
 			}
 			if !capsActive != screenActive {
 				slog.Info("toggling screen", "active", !capsActive)
-				screen.SetDPMS(ctx, !capsActive)
+				_ = screen.SetDPMS(ctx, !capsActive)
 			}
 		}
 	}

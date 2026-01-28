@@ -7,6 +7,11 @@ on:
     paths:
       - '**.nix'
       - 'flake.lock'
+      - '**.go'
+      - '**.py'
+      - '**.sh'
+      - 'infra/**'
+      - 'mise.toml'
   workflow_dispatch:
 
 concurrency:
@@ -16,16 +21,19 @@ concurrency:
 jobs:
   autorelease:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Setup build disk space
         uses: lucasew/action-i-only-care-about-nix@main
 
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Setup stuff
-        run: |
-          sudo mkdir -p /nix/build
-          df -h
+      - name: Install Mise
+        uses: jdx/mise-action@v2
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
@@ -37,16 +45,52 @@ jobs:
       - name: Setup Nix cache
         uses: DeterminateSystems/magic-nix-cache-action@main
 
-      - uses: cachix/cachix-action@0fc020193b5a1fa3ac4575aa3a7d3aa6a35435ad # v16
+      - uses: cachix/cachix-action@v15
         with:
           name: lucasew-personal
           authToken: '${{ secrets.CACHIX_TOKEN }}'
 
-      - name: Build release
-        run: |
-          nix build .#release --keep-going --accept-flake-config
+      - name: Install Dependencies
+        run: mise run install
 
-      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+      - name: Codegen
+        run: mise run codegen
+
+      - name: Check for git changes
+        id: git-check
+        run: |
+          git diff --exit-code || echo "changes=true" >> $GITHUB_OUTPUT
+
+      - name: Create PR
+        if: steps.git-check.outputs.changes == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update generated code"
+          title: "chore: update generated code"
+          body: "Automated changes by `mise run codegen`."
+          branch: "chore/codegen-update"
+          delete-branch: true
+
+      - name: CI
+        run: mise run ci
+
+      - name: Build Release
+        if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
+        run: nix build .#release --keep-going --accept-flake-config
+
+      - name: Release
+        if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            gh release create ${GITHUB_REF#refs/tags/} result/ --generate-notes
+          else
+             echo "Not a tag, skipping release creation"
+          fi
+
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: build-logs

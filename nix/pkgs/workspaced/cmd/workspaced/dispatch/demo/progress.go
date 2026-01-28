@@ -23,12 +23,12 @@ func init() {
 					percent := i * 10
 					n.Message = fmt.Sprintf("Passo %d de 10...", i)
 					n.Progress = float64(percent) / 100.0
-					n.Notify(ctx)
+					_ = n.Notify(ctx)
 					time.Sleep(time.Second)
 				}
 				n.Message = "Demo concluída!"
 				n.Progress = 1.0
-				n.Notify(ctx)
+				_ = n.Notify(ctx)
 			},
 		})
 	})
