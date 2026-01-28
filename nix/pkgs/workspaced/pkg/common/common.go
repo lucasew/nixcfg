@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log/slog"
 	"os"
 	"os/exec"
@@ -73,6 +74,15 @@ func RunCmd(ctx context.Context, name string, args ...string) *exec.Cmd {
 	return cmd
 }
 
+func InheritContextWriters(ctx context.Context, cmd *exec.Cmd) {
+	if stdout, ok := ctx.Value(types.StdoutKey).(io.Writer); ok {
+		cmd.Stdout = stdout
+	}
+	if stderr, ok := ctx.Value(types.StderrKey).(io.Writer); ok {
+		cmd.Stderr = stderr
+	}
+}
+
 func GetRPC(ctx context.Context) string {
 	if env, ok := ctx.Value(types.EnvKey).([]string); ok {
 		for _, e := range env {
@@ -103,14 +113,17 @@ func GetDotfilesRoot() (string, error) {
 	return "", fmt.Errorf("could not find dotfiles root")
 }
 
-func IsRiverwood() bool {
+func GetHostname() string {
 	hostname, _ := os.Hostname()
-	return hostname == "riverwood"
+	return hostname
+}
+
+func IsRiverwood() bool {
+	return GetHostname() == "riverwood"
 }
 
 func IsWhiterun() bool {
-	hostname, _ := os.Hostname()
-	return hostname == "whiterun"
+	return GetHostname() == "whiterun"
 }
 
 func IsPhone() bool {

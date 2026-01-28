@@ -8,6 +8,8 @@ const (
 	DaemonModeKey ContextKey = "daemon_mode"
 	EnvKey        ContextKey = "env"
 	LoggerKey     ContextKey = "logger"
+	StdoutKey     ContextKey = "stdout"
+	StderrKey     ContextKey = "stderr"
 )
 
 type Request struct {
@@ -28,6 +30,6 @@ type LogEntry struct {
 }
 
 type StreamPacket struct {
-	Type    string          `json:"type"` // "log", "result"
+	Type    string          `json:"type"` // "log", "result", "stdout", "stderr"
 	Payload json.RawMessage `json:"payload"`
 }

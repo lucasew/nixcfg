@@ -90,7 +90,9 @@ func init() {
 					buildCmd, fmt.Sprintf("%q", safeRef), "--out-link", outLink, "--show-trace",
 				}
 
-				if err := common.RunCmd(ctx, "ssh", remoteArgs...).Run(); err != nil {
+				cmdBuild := common.RunCmd(ctx, "ssh", remoteArgs...)
+				common.InheritContextWriters(ctx, cmdBuild)
+				if err := cmdBuild.Run(); err != nil {
 					return fmt.Errorf("remote build failed: %w", err)
 				}
 

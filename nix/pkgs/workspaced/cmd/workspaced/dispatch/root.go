@@ -164,15 +164,25 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 				attrs = append(attrs, slog.Any(k, v))
 			}
 			slog.Log(context.Background(), level, entry.Message, attrs...)
+		case "stdout":
+			var out string
+			if err := json.Unmarshal(packet.Payload, &out); err == nil {
+				fmt.Print(out)
+			}
+		case "stderr":
+			var out string
+			if err := json.Unmarshal(packet.Payload, &out); err == nil {
+				fmt.Fprint(os.Stderr, out)
+			}
 		case "result":
 			var resp types.Response
 			if err := json.Unmarshal(packet.Payload, &resp); err != nil {
 				return "", true, fmt.Errorf("failed to parse result: %w", err)
 			}
 			if resp.Error != "" {
-				return resp.Output, true, fmt.Errorf(resp.Error)
+				return "", true, fmt.Errorf(resp.Error)
 			}
-			return resp.Output, true, nil
+			return "", true, nil
 		}
 	}
 }
