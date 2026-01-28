@@ -37,7 +37,7 @@ func init() {
 						}
 
 						slog.Info("renicing process", "pid", pid, "cmd", cmdline)
-						exec.CommandContext(ctx, "renice", "7", pid).Run()
+						_ = exec.CommandContext(ctx, "renice", "7", pid).Run()
 					}
 				}
 			},

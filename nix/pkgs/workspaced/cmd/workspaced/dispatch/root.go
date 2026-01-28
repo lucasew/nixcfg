@@ -168,7 +168,7 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 				return "", true, fmt.Errorf("failed to parse result: %w", err)
 			}
 			if resp.Error != "" {
-				return resp.Output, true, fmt.Errorf(resp.Error)
+				return resp.Output, true, fmt.Errorf("%s", resp.Error)
 			}
 			return resp.Output, true, nil
 		}

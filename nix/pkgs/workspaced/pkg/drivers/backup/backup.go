@@ -40,12 +40,12 @@ func RunFullBackup(ctx context.Context) error {
 		currentStep++
 		n.Message = msg
 		n.Progress = float64(currentStep) / float64(totalSteps)
-		n.Notify(ctx)
+		_ = n.Notify(ctx)
 	}
 
 	// Always sync git repos first
 	updateProgress("Sincronizando repositórios Git...")
-	git.QuickSync(ctx)
+	_ = git.QuickSync(ctx)
 
 	if common.IsRiverwood() {
 		updateProgress("Sincronizando CANTGIT...")
@@ -72,7 +72,7 @@ func RunFullBackup(ctx context.Context) error {
 	n.Title = "Backup finalizado"
 	n.Message = status
 	n.Progress = 1.0
-	n.Notify(ctx)
+	_ = n.Notify(ctx)
 
 	logger.Info("full backup completed")
 	return nil
@@ -108,7 +108,7 @@ func Rsync(ctx context.Context, src, dst string, n *notification.Notification, e
 		if time.Since(lastUpdate) > time.Second {
 			if n != nil {
 				n.Message = line
-				n.Notify(ctx)
+				_ = n.Notify(ctx)
 			}
 			lastUpdate = time.Now()
 		}
@@ -123,38 +123,38 @@ func runPhoneBackup(ctx context.Context, config *common.GlobalConfig, updateProg
 	// Sync Camera and Pictures
 	logger.Info("syncing media and whatsapp")
 	updateProgress("Sincronizando Câmera...")
-	Rsync(ctx, "/sdcard/DCIM/Camera/", config.Backup.RemotePath+"/camera", n, "--exclude=.thumbnails")
+	_, _ = Rsync(ctx, "/sdcard/DCIM/Camera/", config.Backup.RemotePath+"/camera", n, "--exclude=.thumbnails")
 	updateProgress("Sincronizando Fotos...")
-	Rsync(ctx, "/sdcard/Pictures/", config.Backup.RemotePath+"/pictures", n, "--exclude=.thumbnails")
+	_, _ = Rsync(ctx, "/sdcard/Pictures/", config.Backup.RemotePath+"/pictures", n, "--exclude=.thumbnails")
 	updateProgress("Sincronizando Mídia WhatsApp...")
-	Rsync(ctx, "/sdcard/Android/media/com.whatsapp/WhatsApp/Media/", config.Backup.RemotePath+"/WhatsApp", n, "--exclude=.Links", "--exclude=.Statuses")
+	_, _ = Rsync(ctx, "/sdcard/Android/media/com.whatsapp/WhatsApp/Media/", config.Backup.RemotePath+"/WhatsApp", n, "--exclude=.Links", "--exclude=.Statuses")
 	updateProgress("Sincronizando Backups WhatsApp...")
-	Rsync(ctx, "/sdcard/Android/media/com.whatsapp/WhatsApp/Backups/", config.Backup.RemotePath+"/WhatsApp", n)
+	_, _ = Rsync(ctx, "/sdcard/Android/media/com.whatsapp/WhatsApp/Backups/", config.Backup.RemotePath+"/WhatsApp", n)
 
 	// Termux config staging
 	updateProgress("Sincronizando Configurações Termux...")
 	logger.Info("staging termux configuration")
 	home, _ := os.UserHomeDir()
 	cacheDir := filepath.Join(home, ".cache/backup/termux")
-	os.MkdirAll(cacheDir, 0755)
+	_ = os.MkdirAll(cacheDir, 0755)
 
 	// package list
 	logger.Info("generating package list")
 	pkgList, _ := common.RunCmd(ctx, "dpkg-query", "-f", "${binary:Package}\n", "-W").Output()
-	os.WriteFile(filepath.Join(cacheDir, "packages.txt"), pkgList, 0644)
+	_ = os.WriteFile(filepath.Join(cacheDir, "packages.txt"), pkgList, 0644)
 
 	// sync home files
 	for _, item := range []string{".bashrc", ".bash_history", ".config", ".termux", "workspace"} {
 		src := filepath.Join(home, item)
 		if _, err := os.Stat(src); err == nil {
 			logger.Info("syncing home item", "item", item)
-			common.RunCmd(ctx, "rsync", "-avP", src, cacheDir).Run()
+			_ = common.RunCmd(ctx, "rsync", "-avP", src, cacheDir).Run()
 		}
 	}
 
 	tarPath := filepath.Join(home, ".cache/backup/termux.tar")
 	logger.Info("creating tarball", "path", tarPath)
-	common.RunCmd(ctx, "tar", "-cvf", tarPath, "-C", filepath.Dir(cacheDir), "termux").Run()
+	_ = common.RunCmd(ctx, "tar", "-cvf", tarPath, "-C", filepath.Dir(cacheDir), "termux").Run()
 
 	_, err := Rsync(ctx, tarPath, config.Backup.RemotePath, n)
 	return err
