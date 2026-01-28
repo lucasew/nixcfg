@@ -15,6 +15,8 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
+var EssentialPaths = []string{"/run/wrappers/bin", "/run/current-system/sw/bin"}
+
 func GetLogger(ctx context.Context) *slog.Logger {
 	if logger, ok := ctx.Value(types.LoggerKey).(*slog.Logger); ok {
 		return logger
@@ -67,9 +69,43 @@ func (h *ChannelLogHandler) WithGroup(name string) slog.Handler {
 func RunCmd(ctx context.Context, name string, args ...string) *exec.Cmd {
 	cmd := exec.CommandContext(ctx, name, args...)
 	if env, ok := ctx.Value(types.EnvKey).([]string); ok {
-		cmd.Env = env
+		cmd.Env = EnsureEssentialPaths(env)
 	}
 	return cmd
+}
+
+func EnsureEssentialPaths(env []string) []string {
+	var newEnv []string
+	foundPath := false
+	for _, e := range env {
+		if strings.HasPrefix(e, "PATH=") {
+			foundPath = true
+			currentPath := strings.TrimPrefix(e, "PATH=")
+			pathParts := strings.Split(currentPath, ":")
+
+			// Check which essential paths are missing and prepend them
+			for i := len(EssentialPaths) - 1; i >= 0; i-- {
+				p := EssentialPaths[i]
+				missing := true
+				for _, cp := range pathParts {
+					if cp == p {
+						missing = false
+						break
+					}
+				}
+				if missing {
+					pathParts = append([]string{p}, pathParts...)
+				}
+			}
+			newEnv = append(newEnv, "PATH="+strings.Join(pathParts, ":"))
+		} else {
+			newEnv = append(newEnv, e)
+		}
+	}
+	if !foundPath {
+		newEnv = append(newEnv, "PATH="+strings.Join(EssentialPaths, ":")+":"+os.Getenv("PATH"))
+	}
+	return newEnv
 }
 
 func InheritContextWriters(ctx context.Context, cmd *exec.Cmd) {

@@ -3,9 +3,9 @@ package svc
 import (
 	"context"
 	"log/slog"
-	"os/exec"
 	"strings"
 	"time"
+	"workspaced/pkg/common"
 
 	"github.com/spf13/cobra"
 )
@@ -37,7 +37,7 @@ func init() {
 						}
 
 						slog.Info("renicing process", "pid", pid, "cmd", cmdline)
-						exec.CommandContext(ctx, "renice", "7", pid).Run()
+						common.RunCmd(ctx, "renice", "7", pid).Run()
 					}
 				}
 			},
@@ -47,7 +47,7 @@ func init() {
 
 func getHungryPID(ctx context.Context) (string, string, error) {
 	// ps -eo pid,args --sort=-%cpu | head -n2 | tail -n 1
-	out, err := exec.CommandContext(ctx, "ps", "-eo", "pid,args", "--sort=-%cpu").Output()
+	out, err := common.RunCmd(ctx, "ps", "-eo", "pid,args", "--sort=-%cpu").Output()
 	if err != nil {
 		return "", "", err
 	}
