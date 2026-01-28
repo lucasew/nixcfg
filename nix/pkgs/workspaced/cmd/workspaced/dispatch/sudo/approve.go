@@ -3,6 +3,7 @@ package sudo
 import (
 	"os"
 	"os/exec"
+	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/sudo"
 
 	"github.com/spf13/cobra"
@@ -15,13 +16,15 @@ func init() {
 			Short: "Approve and execute a pending command",
 			Args:  cobra.ExactArgs(1),
 			RunE: func(cmd *cobra.Command, args []string) error {
+				ctx := cmd.Context()
+				logger := common.GetLogger(ctx)
 				slug := args[0]
 				sc, err := sudo.Get(slug)
 				if err != nil {
 					return err
 				}
 
-				cmd.Printf("Approving command: %s %v\n", sc.Command, sc.Args)
+				logger.Info("approving command", "command", sc.Command, "args", sc.Args, "slug", slug)
 
 				// Always remove after attempting to run
 				defer sudo.Remove(slug)

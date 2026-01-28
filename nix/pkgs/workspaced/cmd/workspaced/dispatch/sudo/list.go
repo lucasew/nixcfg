@@ -28,10 +28,11 @@ func init() {
 					return nil
 				}
 
-				cmd.Printf("%-10s %-20s %s\n", "SLUG", "TIME", "COMMAND")
+				cmd.Printf("%-15s %-10s %s\n", "SLUG", "TIME", "COMMAND")
 				for _, c := range cmds {
 					t := time.Unix(c.Timestamp, 0).Format("15:04:05")
-					cmd.Printf("%-10s %-20s %s %v\n", c.Slug, t, c.Command, c.Args)
+					fullCmd := append([]string{c.Command}, c.Args...)
+					cmd.Printf("%-15s %-10s %v\n", c.Slug, t, fullCmd)
 				}
 				return nil
 			},
