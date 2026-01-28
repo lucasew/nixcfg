@@ -12,6 +12,15 @@ const (
 	StderrKey     ContextKey = "stderr"
 )
 
+type SudoCommand struct {
+	Slug      string   `json:"slug"`
+	Command   string   `json:"command"`
+	Args      []string `json:"args"`
+	Cwd       string   `json:"cwd"`
+	Env       []string `json:"env"`
+	Timestamp int64    `json:"timestamp"`
+}
+
 type Request struct {
 	Command string   `json:"command"`
 	Args    []string `json:"args"`

@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"os/exec"
 	"strings"
 	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/notification"
+	"workspaced/pkg/drivers/sudo"
 	"workspaced/pkg/types"
 )
 
@@ -196,14 +196,27 @@ func Rebuild(ctx context.Context, action string, flake string) error {
 	args := []string{action, "--flake", target}
 
 	cmdName := "nixos-rebuild"
-	var cmd *exec.Cmd
+
 	if os.Getuid() != 0 {
-		cmd = common.RunCmd(ctx, "pkexec", append([]string{cmdName}, args...)...)
+		isDaemon := false
+		if val := ctx.Value(types.DaemonModeKey); val != nil {
+			isDaemon = val.(bool)
+		}
+		if isDaemon {
+			return sudo.Enqueue(ctx, &types.SudoCommand{
+				Slug:    "rebuild",
+				Command: cmdName,
+				Args:    args,
+			})
+		}
+		cmd := common.RunCmd(ctx, "sudo", append([]string{cmdName}, args...)...)
+		common.InheritContextWriters(ctx, cmd)
+		return cmd.Run()
 	} else {
-		cmd = common.RunCmd(ctx, cmdName, args...)
+		cmd := common.RunCmd(ctx, cmdName, args...)
+		common.InheritContextWriters(ctx, cmd)
+		return cmd.Run()
 	}
-	common.InheritContextWriters(ctx, cmd)
-	return cmd.Run()
 }
 
 func GetFlakeOutput(ctx context.Context, flake, output string) (string, error) {

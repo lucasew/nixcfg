@@ -22,6 +22,7 @@ import (
 	"workspaced/cmd/workspaced/dispatch/screen"
 	"workspaced/cmd/workspaced/dispatch/screenshot"
 	"workspaced/cmd/workspaced/dispatch/setup"
+	"workspaced/cmd/workspaced/dispatch/sudo"
 	"workspaced/cmd/workspaced/dispatch/wallpaper"
 	"workspaced/cmd/workspaced/dispatch/workspace"
 	"workspaced/pkg/types"
@@ -68,6 +69,13 @@ func NewCommand() *cobra.Command {
 			return nil
 		}
 
+		if remoteCmd == "sudo" && len(remoteArgs) > 0 {
+			switch remoteArgs[0] {
+			case "approve", "reject", "add":
+				return nil
+			}
+		}
+
 		output, connected, err := TryRemoteRaw(remoteCmd, remoteArgs)
 		if connected {
 			if output != "" {
@@ -95,6 +103,7 @@ func NewCommand() *cobra.Command {
 	cmd.AddCommand(screen.GetCommand())
 	cmd.AddCommand(screenshot.GetCommand())
 	cmd.AddCommand(setup.GetCommand())
+	cmd.AddCommand(sudo.GetCommand())
 	cmd.AddCommand(wallpaper.GetCommand())
 	cmd.AddCommand(workspace.GetCommand())
 

@@ -11,6 +11,8 @@ import (
 	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/git"
 	"workspaced/pkg/drivers/notification"
+	"workspaced/pkg/drivers/sudo"
+	"workspaced/pkg/types"
 )
 
 func RunFullBackup(ctx context.Context) error {
@@ -177,9 +179,30 @@ func ReplicateZFS(ctx context.Context) error {
 	logger := common.GetLogger(ctx)
 	// Ported from bin/misc/zfs-backup
 	logger.Info("replicating ZFS vms dataset")
-	if err := common.RunCmd(ctx, "pkexec", "syncoid", "-r", "zroot/vms", "storage/backup/vms").Run(); err != nil {
+
+	isDaemon := false
+	if val := ctx.Value(types.DaemonModeKey); val != nil {
+		isDaemon = val.(bool)
+	}
+
+	if isDaemon {
+		sudo.Enqueue(ctx, &types.SudoCommand{
+			Slug:    "zfs-backup-vms",
+			Command: "syncoid",
+			Args:    []string{"-r", "zroot/vms", "storage/backup/vms"},
+		})
+		logger.Info("replicating ZFS games dataset")
+		sudo.Enqueue(ctx, &types.SudoCommand{
+			Slug:    "zfs-backup-games",
+			Command: "syncoid",
+			Args:    []string{"-r", "zroot/games", "storage/games"},
+		})
+		return nil
+	}
+
+	if err := common.RunCmd(ctx, "sudo", "syncoid", "-r", "zroot/vms", "storage/backup/vms").Run(); err != nil {
 		return err
 	}
 	logger.Info("replicating ZFS games dataset")
-	return common.RunCmd(ctx, "pkexec", "syncoid", "-r", "zroot/games", "storage/games").Run()
+	return common.RunCmd(ctx, "sudo", "syncoid", "-r", "zroot/games", "storage/games").Run()
 }
