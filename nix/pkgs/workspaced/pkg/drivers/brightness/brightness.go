@@ -40,7 +40,7 @@ func ShowStatus(ctx context.Context) error {
 		if l, err := strconv.Atoi(levelVal); err == nil {
 			n.Progress = float64(l) / 100.0
 		}
-		n.Notify(ctx)
+		_ = n.Notify(ctx)
 		common.GetLogger(ctx).Info("brightness updated", "device", devname, "level", level)
 	}
 	return nil

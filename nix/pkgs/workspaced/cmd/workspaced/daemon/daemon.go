@@ -61,7 +61,7 @@ func RunDaemon() error {
 		listener = listeners[0]
 	} else {
 		socketPath := getSocketPath()
-		os.Remove(socketPath)
+		_ = os.Remove(socketPath)
 		l, err := net.Listen("unix", socketPath)
 		if err != nil {
 			return fmt.Errorf("failed to listen on socket: %w", err)

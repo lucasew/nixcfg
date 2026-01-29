@@ -117,7 +117,7 @@ func Execute(ctx context.Context, actions []Action, state *State) error {
 			if info, err := os.Lstat(action.Target); err == nil {
 				if info.Mode()&os.ModeSymlink != 0 {
 					// It's a symlink, just remove it
-					os.Remove(action.Target)
+					_ = os.Remove(action.Target)
 				} else {
 					// It's a real file/dir, backup it
 					bakPath := action.Target + ".bak.workspaced"

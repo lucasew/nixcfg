@@ -19,7 +19,7 @@ func NewRootCommand() *cobra.Command {
 			path := os.Getenv("PATH")
 			systemPath := "/run/current-system/sw/bin"
 			if !strings.Contains(path, systemPath) {
-				os.Setenv("PATH", fmt.Sprintf("%s:%s", systemPath, path))
+				_ = os.Setenv("PATH", fmt.Sprintf("%s:%s", systemPath, path))
 			}
 		},
 	}
