@@ -12,7 +12,6 @@
     ./atuin.nix
     ./dlna.nix
     ./ghostty.nix
-    ./espanso.nix
     ./dconf.nix
     ./theme
     ./qutebrowser.nix
@@ -27,7 +26,6 @@
   programs.atuin.enable = true;
 
   # programs.zen-browser.enable = true; # Handled unconditionally in zen-browser.nix
-  # services.espanso.enable = true;
   programs.man.enable = true;
 
   # programs.qutebrowser.enable = true;
