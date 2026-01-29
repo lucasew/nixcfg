@@ -276,6 +276,36 @@ func Rebuild(ctx context.Context, action string, flake string) error {
 	}
 }
 
+func HomeManagerSwitch(ctx context.Context, action string, flake string) error {
+	if flake == "" || flake == "." || flake == "," {
+		root, err := common.GetDotfilesRoot()
+		if err != nil {
+			return err
+		}
+		flake = root
+	}
+
+	if common.IsInStore() {
+		flake = "github:lucasew/nixcfg"
+	}
+
+	if strings.HasPrefix(flake, "/nix/store/") {
+		activatePath := filepath.Join(flake, "activate")
+		if _, err := os.Stat(activatePath); err == nil {
+			cmd := common.RunCmd(ctx, activatePath)
+			common.InheritContextWriters(ctx, cmd)
+			return cmd.Run()
+		}
+	}
+
+	target := fmt.Sprintf("%s#main", flake)
+	args := []string{action, "--flake", target}
+
+	cmd := common.RunCmd(ctx, "home-manager", args...)
+	common.InheritContextWriters(ctx, cmd)
+	return cmd.Run()
+}
+
 func GetFlakeOutput(ctx context.Context, flake, output string) (string, error) {
 	cmd := common.RunCmd(ctx, "nix", "build", fmt.Sprintf("%s#%s", flake, output), "--no-link", "--print-out-paths")
 	if stderr, ok := ctx.Value(types.StderrKey).(io.Writer); ok {
