@@ -16,8 +16,13 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
+// EssentialPaths defines the list of directories that must be present in the PATH
+// for the application to function correctly on NixOS.
+// These typically include locations for wrapped binaries and current system software.
 var EssentialPaths = []string{"/run/wrappers/bin", "/run/current-system/sw/bin"}
 
+// GetLogger retrieves the logger instance from the context.
+// It returns the default slog logger if no logger is found in the context.
 func GetLogger(ctx context.Context) *slog.Logger {
 	if logger, ok := ctx.Value(types.LoggerKey).(*slog.Logger); ok {
 		return logger
@@ -25,16 +30,21 @@ func GetLogger(ctx context.Context) *slog.Logger {
 	return slog.Default()
 }
 
+// ChannelLogHandler is a custom slog.Handler that broadcasts log records to a channel.
+// This is used to stream server-side logs to the client via the daemon connection.
 type ChannelLogHandler struct {
 	Out    chan<- types.StreamPacket
 	Parent slog.Handler
 	Ctx    context.Context
 }
 
+// Enabled reports whether the handler handles records at the given level.
 func (h *ChannelLogHandler) Enabled(ctx context.Context, level slog.Level) bool {
 	return true
 }
 
+// Handle processes a log record, marshals it to JSON, and sends it as a StreamPacket.
+// It also delegates to the parent handler if one is configured.
 func (h *ChannelLogHandler) Handle(ctx context.Context, r slog.Record) error {
 	entry := types.LogEntry{
 		Level:   r.Level.String(),
@@ -59,14 +69,18 @@ func (h *ChannelLogHandler) Handle(ctx context.Context, r slog.Record) error {
 	return nil
 }
 
+// WithAttrs returns a new ChannelLogHandler with the given attributes added.
 func (h *ChannelLogHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
 	return &ChannelLogHandler{Out: h.Out, Parent: h.Parent.WithAttrs(attrs), Ctx: h.Ctx}
 }
 
+// WithGroup returns a new ChannelLogHandler with the given group name.
 func (h *ChannelLogHandler) WithGroup(name string) slog.Handler {
 	return &ChannelLogHandler{Out: h.Out, Parent: h.Parent.WithGroup(name), Ctx: h.Ctx}
 }
 
+// RunCmd creates an exec.Cmd with environment variables injected from the context.
+// It ensures that the PATH includes EssentialPaths.
 func RunCmd(ctx context.Context, name string, args ...string) *exec.Cmd {
 	cmd := exec.CommandContext(ctx, name, args...)
 	if env, ok := ctx.Value(types.EnvKey).([]string); ok {
@@ -75,6 +89,8 @@ func RunCmd(ctx context.Context, name string, args ...string) *exec.Cmd {
 	return cmd
 }
 
+// EnsureEssentialPaths inspects the environment slice and prepends EssentialPaths to the PATH variable.
+// This ensures that invoked commands can find necessary system binaries even in a restricted environment.
 func EnsureEssentialPaths(env []string) []string {
 	var newEnv []string
 	foundPath := false
@@ -103,6 +119,8 @@ func EnsureEssentialPaths(env []string) []string {
 	return newEnv
 }
 
+// InheritContextWriters configures the command's Stdout and Stderr to write to the writers
+// stored in the context, allowing output capture or redirection.
 func InheritContextWriters(ctx context.Context, cmd *exec.Cmd) {
 	if stdout, ok := ctx.Value(types.StdoutKey).(io.Writer); ok {
 		cmd.Stdout = stdout
@@ -112,6 +130,8 @@ func InheritContextWriters(ctx context.Context, cmd *exec.Cmd) {
 	}
 }
 
+// GetRPC determines the appropriate IPC command for the current window manager.
+// It checks for WAYLAND_DISPLAY to decide between "swaymsg" (Wayland) and "i3-msg" (X11).
 func GetRPC(ctx context.Context) string {
 	if env, ok := ctx.Value(types.EnvKey).([]string); ok {
 		for _, e := range env {
@@ -126,6 +146,8 @@ func GetRPC(ctx context.Context) string {
 	return "i3-msg"
 }
 
+// GetDotfilesRoot locates the root directory of the dotfiles repository.
+// It checks standard locations (~/.dotfiles, /etc/.dotfiles).
 func GetDotfilesRoot() (string, error) {
 	home, err := os.UserHomeDir()
 	if err == nil {
@@ -142,28 +164,34 @@ func GetDotfilesRoot() (string, error) {
 	return "", fmt.Errorf("could not find dotfiles root")
 }
 
+// GetHostname returns the current system hostname.
 func GetHostname() string {
 	hostname, _ := os.Hostname()
 	return hostname
 }
 
+// IsRiverwood checks if the current host is "riverwood".
 func IsRiverwood() bool {
 	return GetHostname() == "riverwood"
 }
 
+// IsWhiterun checks if the current host is "whiterun".
 func IsWhiterun() bool {
 	return GetHostname() == "whiterun"
 }
 
+// IsPhone checks if the environment suggests we are running on a phone (Termux).
 func IsPhone() bool {
 	return os.Getenv("TERMUX_VERSION") != ""
 }
 
+// IsBinaryAvailable checks if a command exists in the PATH.
 func IsBinaryAvailable(ctx context.Context, name string) bool {
 	_, err := exec.LookPath(name)
 	return err == nil
 }
 
+// IsInStore checks if the dotfiles root is located inside the Nix store.
 func IsInStore() bool {
 	root, err := GetDotfilesRoot()
 	if err != nil {
@@ -172,11 +200,13 @@ func IsInStore() bool {
 	return strings.HasPrefix(root, "/nix/store")
 }
 
+// IsNixOS checks if the system is NixOS by verifying the existence of /etc/NIXOS.
 func IsNixOS() bool {
 	_, err := os.Stat("/etc/NIXOS")
 	return err == nil
 }
 
+// GlobalConfig represents the schema of the settings.toml file.
 type GlobalConfig struct {
 	Workspaces map[string]int    `toml:"workspaces"`
 	Wallpaper  WallpaperConfig   `toml:"wallpaper"`
@@ -205,6 +235,9 @@ type QuickSyncConfig struct {
 	RemotePath string `toml:"remote_path"`
 }
 
+// LoadConfig reads the global configuration from ~/settings.toml.
+// If the file is missing or invalid, it falls back to hardcoded defaults.
+// It also expands environment variables and tilde (~) in paths.
 func LoadConfig() (*GlobalConfig, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -252,6 +285,8 @@ func LoadConfig() (*GlobalConfig, error) {
 	return config, nil
 }
 
+// ExpandPath expands the tilde (~) to the user's home directory
+// and expands environment variables (e.g. $HOME, ${VAR}) in the path.
 func ExpandPath(path string) string {
 	if strings.HasPrefix(path, "~/") {
 		home, _ := os.UserHomeDir()
