@@ -42,11 +42,12 @@ func ShowStatus(ctx context.Context) error {
 		}
 
 		n := &notification.Notification{
-			ID:       notification.StatusNotificationID,
-			Title:    "Brightness",
-			Message:  devname,
-			Icon:     "display-brightness",
-			Progress: float64(l) / 100.0,
+			ID:          notification.StatusNotificationID,
+			Title:       "Brightness",
+			Message:     devname,
+			Icon:        "display-brightness",
+			Progress:    float64(l) / 100.0,
+			HasProgress: true,
 		}
 
 		_ = n.Notify(ctx)

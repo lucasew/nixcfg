@@ -10,12 +10,13 @@ const (
 )
 
 type Notification struct {
-	ID       uint32
-	Title    string
-	Message  string
-	Urgency  string // low, normal, critical
-	Icon     string
-	Progress float64 // 0.0-1.0, 0.0 means no progress
+	ID          uint32
+	Title       string
+	Message     string
+	Urgency     string // low, normal, critical
+	Icon        string
+	Progress    float64 // 0.0-1.0
+	HasProgress bool
 }
 
 type Notifier interface {

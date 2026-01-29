@@ -97,66 +97,156 @@ func ShowStatus(ctx context.Context) error {
 		return nil
 	}
 
-	// Use the first available player for now
-	player := mprisPlayers[0]
-	obj := conn.Object(player, "/org/mpris/MediaPlayer2")
-
-	metadata, err := obj.GetProperty("org.mpris.MediaPlayer2.Player.Metadata")
-	if err != nil {
-		return err
+	type playerInfo struct {
+		name     string
+		status   string
+		title    string
+		artist   string
+		artUrl   string
+		length   int64
+		position int64
 	}
 
-	m := metadata.Value().(map[string]dbus.Variant)
+	var players []playerInfo
+	for _, p := range mprisPlayers {
+		obj := conn.Object(p, "/org/mpris/MediaPlayer2")
 
-	title := ""
-	if v, ok := m["xesam:title"]; ok {
-		title = v.Value().(string)
+		statusVar, err := obj.GetProperty("org.mpris.MediaPlayer2.Player.PlaybackStatus")
+		if err != nil {
+			common.GetLogger(ctx).Debug("failed to get status for player", "player", p, "error", err)
+			continue
+		}
+		status := statusVar.Value().(string)
+
+		metadataVar, err := obj.GetProperty("org.mpris.MediaPlayer2.Player.Metadata")
+		if err != nil {
+			common.GetLogger(ctx).Debug("failed to get metadata for player", "player", p, "error", err)
+			continue
+		}
+		m := metadataVar.Value().(map[string]dbus.Variant)
+
+		title := ""
+		if v, ok := m["xesam:title"]; ok {
+			title = v.Value().(string)
+		}
+
+		artist := ""
+		if v, ok := m["xesam:artist"]; ok {
+			switch val := v.Value().(type) {
+			case []string:
+				artist = strings.Join(val, ", ")
+			case []interface{}:
+				var artists []string
+				for _, a := range val {
+					artists = append(artists, a.(string))
+				}
+				artist = strings.Join(artists, ", ")
+			case string:
+				artist = val
+			}
+		}
+
+		artUrl := ""
+		if v, ok := m["mpris:artUrl"]; ok {
+			artUrl = v.Value().(string)
+		}
+
+		length := int64(0)
+		if v, ok := m["mpris:length"]; ok {
+			switch val := v.Value().(type) {
+			case int64:
+				length = val
+			case uint64:
+				length = int64(val)
+			}
+		}
+
+		position := int64(0)
+		posVar, err := obj.GetProperty("org.mpris.MediaPlayer2.Player.Position")
+		if err == nil {
+			switch val := posVar.Value().(type) {
+			case int64:
+				position = val
+			case uint64:
+				position = int64(val)
+			}
+		}
+
+		common.GetLogger(ctx).Debug("found player", "name", p, "title", title, "artist", artist, "status", status)
+
+		players = append(players, playerInfo{
+			name:     p,
+			status:   status,
+			title:    title,
+			artist:   artist,
+			artUrl:   artUrl,
+			length:   length,
+			position: position,
+		})
 	}
 
-	artist := ""
-	if v, ok := m["xesam:artist"]; ok {
-		artists := v.Value().([]string)
-		artist = strings.Join(artists, ", ")
+	if len(players) == 0 {
+		return nil
 	}
 
-	artUrl := ""
-	if v, ok := m["mpris:artUrl"]; ok {
-		artUrl = v.Value().(string)
+	// Select best player: Playing > Paused > Stopped, and non-empty title
+	var best *playerInfo
+	for i := range players {
+		p := &players[i]
+		if p.title == "" {
+			continue
+		}
+		if best == nil {
+			best = p
+			continue
+		}
+		// Priority: Playing > Paused > Stopped
+		statusPriority := map[string]int{"Playing": 3, "Paused": 2, "Stopped": 1}
+		if statusPriority[p.status] > statusPriority[best.status] {
+			best = p
+		}
 	}
 
-	length := int64(0)
-	if v, ok := m["mpris:length"]; ok {
-		length = v.Value().(int64)
+	if best == nil || best.title == "" {
+		common.GetLogger(ctx).Warn("no active player with title found")
+		return nil
 	}
-
-	position := int64(0)
-	posVar, err := obj.GetProperty("org.mpris.MediaPlayer2.Player.Position")
-	if err == nil {
-		position = posVar.Value().(int64)
-	}
-
-	statusVar, _ := obj.GetProperty("org.mpris.MediaPlayer2.Player.PlaybackStatus")
-	status := statusVar.Value().(string)
 
 	progress := 0.0
-	if length > 0 {
-		progress = float64(position) / float64(length)
+	if best.length > 0 {
+		progress = float64(best.position) / float64(best.length)
 	}
 
 	iconPath := ""
-	if artUrl != "" {
-		iconPath, _ = getArtCachePath(artUrl)
+	if best.artUrl != "" {
+		iconPath, _ = getArtCachePath(best.artUrl)
+	}
+
+	title := best.title
+	if title == "" {
+		title = "Unknown Track"
+	}
+	message := best.artist
+	if message == "" {
+		message = "Unknown Artist"
 	}
 
 	n := &notification.Notification{
-		ID:       notification.StatusNotificationID,
-		Title:    title,
-		Message:  artist,
-		Icon:     iconPath,
-		Progress: progress,
+		ID:          notification.StatusNotificationID,
+		Title:       title,
+		Message:     message,
+		Icon:        iconPath,
+		Progress:    progress,
+		HasProgress: true,
 	}
 
-	common.GetLogger(ctx).Info("media status", "player", player, "title", title, "artist", artist, "status", status)
+	common.GetLogger(ctx).Info("sending media notification",
+		"player", best.name,
+		"title", title,
+		"artist", message,
+		"progress", progress,
+		"icon", iconPath,
+	)
 
 	return n.Notify(ctx)
 }

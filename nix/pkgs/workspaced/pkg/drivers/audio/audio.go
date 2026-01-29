@@ -56,11 +56,12 @@ func ShowStatus(ctx context.Context) error {
 	sinkName := strings.TrimSpace(string(sinkNameOut))
 
 	n := &notification.Notification{
-		ID:       notification.StatusNotificationID,
-		Title:    "Volume",
-		Message:  sinkName,
-		Icon:     icon,
-		Progress: float64(level) / 100.0,
+		ID:          notification.StatusNotificationID,
+		Title:       "Volume",
+		Message:     sinkName,
+		Icon:        icon,
+		Progress:    float64(level) / 100.0,
+		HasProgress: true,
 	}
 
 	common.GetLogger(ctx).Info("volume updated", "level", level, "sink", sinkName, "muted", isMuted)

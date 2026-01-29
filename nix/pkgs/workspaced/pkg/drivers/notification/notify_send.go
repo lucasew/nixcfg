@@ -26,12 +26,13 @@ func (s *NotifySendNotifier) Notify(ctx context.Context, n *Notification) error 
 		args = append(args, "-i", n.Icon)
 	}
 
-	if n.Progress > 0 {
+	if n.HasProgress {
 		args = append(args, "-h", fmt.Sprintf("int:value:%d", int(n.Progress*100)))
 	}
 
 	args = append(args, n.Title, n.Message)
 
+	common.GetLogger(ctx).Info("running notify-send", "args", strings.Join(args, " "))
 	out, err := common.RunCmd(ctx, "notify-send", args...).Output()
 	if err != nil {
 		return fmt.Errorf("failed to send notification: %w", err)
