@@ -83,6 +83,7 @@ func GetIconPath(ctx context.Context, url string) (string, error) {
 	}
 
 	img = makeBackgroundTransparent(img)
+	img = cropToContentSquare(img)
 
 	out, err := os.Create(path)
 	if err != nil {
@@ -165,5 +166,53 @@ func makeBackgroundTransparent(img image.Image) image.Image {
 		}
 	}
 
+	return dst
+}
+
+func cropToContentSquare(img image.Image) image.Image {
+	bounds := img.Bounds()
+	minX, minY := bounds.Max.X, bounds.Max.Y
+	maxX, maxY := bounds.Min.X, bounds.Min.Y
+	found := false
+
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			_, _, _, a := img.At(x, y).RGBA()
+			if a > 0 {
+				if x < minX {
+					minX = x
+				}
+				if x > maxX {
+					maxX = x
+				}
+				if y < minY {
+					minY = y
+				}
+				if y > maxY {
+					maxY = y
+				}
+				found = true
+			}
+		}
+	}
+
+	if !found {
+		return img
+	}
+
+	w := maxX - minX + 1
+	h := maxY - minY + 1
+	size := w
+	if h > w {
+		size = h
+	}
+
+	dst := image.NewNRGBA(image.Rect(0, 0, size, size))
+	// No need to fill with transparency as NewNRGBA is initialized with zeros (transparent)
+
+	offsetX := (size - w) / 2
+	offsetY := (size - h) / 2
+
+	draw.Draw(dst, image.Rect(offsetX, offsetY, offsetX+w, offsetY+h), img, image.Point{minX, minY}, draw.Src)
 	return dst
 }
