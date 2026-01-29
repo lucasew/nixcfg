@@ -27,7 +27,7 @@ func getQueueDir() (string, error) {
 func Enqueue(ctx context.Context, cmd *types.SudoCommand) error {
 	if cmd.Slug == "" {
 		b := make([]byte, 3)
-		rand.Read(b)
+		_, _ = rand.Read(b)
 		cmd.Slug = fmt.Sprintf("%x", b)
 	}
 
@@ -63,7 +63,7 @@ func Enqueue(ctx context.Context, cmd *types.SudoCommand) error {
 		Message: fmt.Sprintf("Command '%s' (slug: %s) pending approval.", cmd.Command, cmd.Slug),
 		Icon:    "dialog-password",
 	}
-	n.Notify(ctx)
+	_ = n.Notify(ctx)
 
 	return nil
 }

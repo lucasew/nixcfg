@@ -48,7 +48,7 @@ func init() {
 					Message: fmt.Sprintf("Deploy concluído para: %s", strings.Join(nodes, ", ")),
 					Icon:    "nix-snowflake",
 				}
-				n.Notify(ctx)
+				_ = n.Notify(ctx)
 
 				return nil
 			},

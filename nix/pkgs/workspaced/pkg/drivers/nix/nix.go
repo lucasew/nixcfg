@@ -100,7 +100,7 @@ func RemoteBuild(ctx context.Context, ref string, target string, copyBack bool) 
 	updateProgress := func(msg string, prog float64) {
 		n.Message = msg
 		n.Progress = prog
-		n.Notify(ctx)
+		_ = n.Notify(ctx)
 		logger.Info(msg, "progress", prog)
 	}
 
@@ -127,7 +127,7 @@ func RemoteBuild(ctx context.Context, ref string, target string, copyBack bool) 
 	}
 
 	buildID := make([]byte, 8)
-	rand.Read(buildID)
+	_, _ = rand.Read(buildID)
 	uuid := fmt.Sprintf("%x", buildID)
 	outLink := fmt.Sprintf("%s/%s", remoteCache, uuid)
 
