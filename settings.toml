@@ -61,3 +61,126 @@ rsyncnet_user = "de3163@de3163.rsync.net"
 
 [hosts]
 whiterun = "a8:a1:59:9c:ab:32"
+
+[browser]
+default = "zen"
+webapp = "brave"
+
+[webapp.castable-iframe]
+url = "https://castable-iframe.vercel.app/"
+profile = "castable-iframe"
+
+
+[webapp.teste]
+url = "https://google.com"
+
+
+[webapp.element]
+url = "https://app.element.io"
+profile = "element"
+desktop_name = "Element Matrix"
+
+[webapp.reemo]
+url = "https://reemo.io"
+desktop_name = "Remote control"
+
+[webapp.clickup]
+url = "https://clickup.com"
+desktop_name = "ClickUp"
+
+[webapp.facebook]
+url = "https://facebook.com"
+profile = "facebook"
+desktop_name = "Facebook"
+
+[webapp.pocketcasts]
+url = "https://pocketcasts.com"
+desktop_name = "PocketCasts"
+icon = "sound"
+
+[webapp.twitter]
+url = "https://twitter.com"
+profile = "twitter"
+desktop_name = "Twitter"
+
+[webapp.discord-pessoal]
+url = "https://discord.com/channels/me"
+profile = "discord-pessoal"
+desktop_name = "Discord (pessoal)"
+
+
+[webapp.discord-profissional]
+url = "https://discord.com/channels/me"
+profile = "discord-profissional"
+desktop_name = "Discord (profissional)"
+
+[webapp.youtube-tv]
+url = "https://youtube.com/tv"
+profile = "youtube-tv"
+desktop_name = "YouTube (UI para TV)"
+
+[webapp.whatsapp]
+url = "web.whatsapp.com"
+profile = "zap"
+desktop_name = "WhatsApp"
+
+[webapp.notion]
+url = "notion.so"
+profile = "notion"
+desktop_name = "Notion"
+
+[webapp.duolingo]
+url = "duolingo.com"
+desktop_name = "Duolingo"
+
+[webapp.youtube-music]
+url = "music.youtube.com"
+profile = "youtubemusic"
+desktop_name = "Youtube Music"
+
+[webapp.planttext]
+url = "https://www.planttext.com/"
+desktop_name = "PlantText"
+
+[webapp.rainmode]
+url = "https://youtu.be/mPZkdNFkNps"
+desktop_name = "Tocar som de chuva"
+icon = "weather-showers"
+
+[webapp.gmail]
+url = "gmail.com"
+desktop_name = "GMail"
+
+[webapp.keymash]
+url = "https://keyma.sh/learn"
+desktop_name = "keyma.sh: Keyboard typing train"
+
+[webapp.calendar]
+url = "https://calendar.google.com/calendar/u/0/r/customday"
+desktop_name = "Calendário"
+icon = "x-office-calendar"
+
+[webapp.twitchLive]
+url = "https://dashboard.twitch.tv/stream-manager"
+desktop_name = "Dashboard de Live"
+
+[webapp.trello-facul]
+url = "https://trello.com/b/ov0pbUtC/facul"
+desktop_name = "Trello Faculdade"
+
+[webapp.trello-pessoal]
+url = "https://trello.com/b/bjoRKSM2/pessoal"
+desktop_name = "Trello Pessoal"
+
+[webapp.trello-sides]
+url = "https://trello.com/b/36ncJYYV/side-projects"
+desktop_name = "Trello Side Projects"
+
+[webapp.trello-dashboard]
+url = "trello.com"
+desktop_name = "Trello Dashboard"
+
+[webapp.geforce-now]
+url = "play.geforcenow.com"
+desktop_name = "GeForce Now"
+icon = "nvidia"

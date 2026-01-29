@@ -45,9 +45,6 @@
 
     nur.url = "github:nix-community/nur";
 
-    borderless-browser.url = "github:lucasew/borderless-browser.nix";
-    borderless-browser.flake = false;
-
     nix-colors.url = "github:Misterio77/nix-colors";
     nix-colors.inputs.nixpkgs-lib.follows = "nixpkgs-lib";
 

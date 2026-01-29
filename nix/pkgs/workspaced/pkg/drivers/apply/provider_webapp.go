@@ -48,13 +48,19 @@ func (p *WebappProvider) GetDesiredState(ctx context.Context) ([]DesiredState, e
 		normalizedURL := common.NormalizeURL(wa.URL)
 
 		// 1. Manage Icon
-		iconPath := filepath.Join(shortcutsDir, name+".png")
-		if _, err := os.Stat(iconPath); os.IsNotExist(err) {
-			logger.Info("downloading favicon", "webapp", name, "url", normalizedURL)
-			if err := downloadAndEncodeFavicon(ctx, normalizedURL, iconPath); err != nil {
-				logger.Error("failed to download favicon", "webapp", name, "error", err)
-				// Continue without icon as it's optional
+		var iconToUse string
+		if wa.Icon != "" {
+			iconToUse = wa.Icon
+		} else {
+			iconPath := filepath.Join(shortcutsDir, name+".png")
+			if _, err := os.Stat(iconPath); os.IsNotExist(err) {
+				logger.Info("downloading favicon", "webapp", name, "url", normalizedURL)
+				if err := downloadAndEncodeFavicon(ctx, normalizedURL, iconPath); err != nil {
+					logger.Error("failed to download favicon", "webapp", name, "error", err)
+					// Continue without icon as it's optional
+				}
 			}
+			iconToUse = iconPath
 		}
 
 		// 2. Generate .desktop
@@ -63,7 +69,7 @@ func (p *WebappProvider) GetDesiredState(ctx context.Context) ([]DesiredState, e
 			desktopName = common.ToTitleCase(name)
 		}
 
-		desktopContent := generateWebappDesktopFile(wa, cfg.Browser.Engine, name, desktopName, iconPath)
+		desktopContent := generateWebappDesktopFile(wa, cfg.Browser.Engine, name, desktopName, iconToUse)
 		desktopPath := filepath.Join(shortcutsDir, name+".desktop")
 		if err := os.WriteFile(desktopPath, []byte(desktopContent), 0644); err != nil {
 			return nil, err

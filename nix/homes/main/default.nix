@@ -14,7 +14,6 @@
     ./ghostty.nix
     ./espanso.nix
     ./dconf.nix
-    ./borderless-browser.nix
     ./theme
     ./qutebrowser.nix
     ./zen-browser.nix
@@ -22,8 +21,6 @@
   ];
 
   stylix.enable = true;
-
-  borderless-browser.chromium = lib.getExe pkgs.vivaldi;
 
   # programs.ghostty.enable = true;
 

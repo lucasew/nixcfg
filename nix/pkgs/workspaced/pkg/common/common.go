@@ -209,6 +209,7 @@ type WebappConfig struct {
 	URL         string   `toml:"url"`
 	Profile     string   `toml:"profile"`
 	DesktopName string   `toml:"desktop_name"`
+	Icon        string   `toml:"icon"`
 	ExtraFlags  []string `toml:"extra_flags"`
 }
 
