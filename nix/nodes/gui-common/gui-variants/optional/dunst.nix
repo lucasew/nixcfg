@@ -18,15 +18,15 @@
       dmenu="dmenu"
       follow="mouse"
       font="rissole 8"
-      format="%s %p
-      %b"
+      format="%s %p %b"
       frame_width=2
       geometry="300x60-20+48"
       hide_duplicate_count=no
       history_length=20
       horizontal_padding=5
       icon_theme=paper
-      icon_position="off"
+      icon_position=left
+      max_icon_size=64
       idle_threshold=120
       ignore_newline=no
       indicate_hidden=yes
@@ -45,8 +45,6 @@
       text_icon_padding=5
       title="Dunst"
       word_wrap=yes
-
-      [shortcuts]
       close="ctrl+space"
       close_all="ctrl+shift+space"
       context="ctrl+shift+period"
