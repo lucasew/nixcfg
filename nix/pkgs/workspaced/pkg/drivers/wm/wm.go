@@ -10,8 +10,6 @@ import (
 	"strings"
 	"time"
 	"workspaced/pkg/common"
-	"workspaced/pkg/drivers/audio"
-	"workspaced/pkg/drivers/brightness"
 	"workspaced/pkg/drivers/media"
 )
 
@@ -43,8 +41,6 @@ func ToggleScratchpadWithInfo(ctx context.Context) error {
 	if err := ToggleScratchpad(ctx); err != nil {
 		return err
 	}
-	_ = audio.ShowStatus(ctx)
-	_ = brightness.ShowStatus(ctx)
 	_ = media.ShowStatus(ctx)
 	return nil
 }

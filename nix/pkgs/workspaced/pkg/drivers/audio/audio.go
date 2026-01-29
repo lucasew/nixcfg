@@ -28,30 +28,42 @@ func ShowStatus(ctx context.Context) error {
 		return fmt.Errorf("failed to get volume: %w", err)
 	}
 
-	level := "0"
+	level := 0
 	parts := strings.Fields(string(out))
 	for _, p := range parts {
 		if strings.Contains(p, "%") {
-			level = strings.Trim(p, "%")
-			break
+			l, err := strconv.Atoi(strings.Trim(p, "%"))
+			if err == nil {
+				level = l
+				break
+			}
 		}
 	}
 
-	emoji := "🔊"
-	if level == "0" {
-		emoji = "🔇"
+	muteOut, _ := common.RunCmd(ctx, "pactl", "get-sink-mute", sink).Output()
+	isMuted := strings.Contains(string(muteOut), "yes")
+
+	icon := "audio-volume-high"
+	if isMuted || level == 0 {
+		icon = "audio-volume-muted"
+	} else if level < 33 {
+		icon = "audio-volume-low"
+	} else if level < 66 {
+		icon = "audio-volume-medium"
 	}
 
 	sinkNameOut, _ := common.RunCmd(ctx, "pactl", "get-default-sink").Output()
 	sinkName := strings.TrimSpace(string(sinkNameOut))
 
-	n.Title = fmt.Sprintf("%s Volume", emoji)
-	n.Message = sinkName
-	if l, err := strconv.Atoi(level); err == nil {
-		n.Progress = float64(l) / 100.0
+	n := &notification.Notification{
+		ID:       notification.StatusNotificationID,
+		Title:    "Volume",
+		Message:  sinkName,
+		Icon:     icon,
+		Progress: float64(level) / 100.0,
 	}
 
-	common.GetLogger(ctx).Info("volume updated", "level", level, "sink", sinkName)
+	common.GetLogger(ctx).Info("volume updated", "level", level, "sink", sinkName, "muted", isMuted)
 
 	return n.Notify(ctx)
 }

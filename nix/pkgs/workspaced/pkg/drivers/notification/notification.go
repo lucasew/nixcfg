@@ -5,6 +5,10 @@ import (
 	"workspaced/pkg/common"
 )
 
+const (
+	StatusNotificationID uint32 = 100
+)
+
 type Notification struct {
 	ID       uint32
 	Title    string

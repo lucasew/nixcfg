@@ -17,6 +17,7 @@ import (
 	"io"
 	"workspaced/cmd/workspaced/dispatch"
 	"workspaced/pkg/common"
+	"workspaced/pkg/drivers/media"
 	"workspaced/pkg/types"
 )
 
@@ -55,6 +56,11 @@ func getSocketPath() string {
 
 func RunDaemon() error {
 	var listener net.Listener
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	go media.Watch(ctx)
 
 	listeners, err := activation.Listeners()
 	if err == nil && len(listeners) > 0 {

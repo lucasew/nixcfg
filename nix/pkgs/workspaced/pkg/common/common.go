@@ -21,6 +21,12 @@ import (
 // These typically include locations for wrapped binaries and current system software.
 var EssentialPaths = []string{"/run/wrappers/bin", "/run/current-system/sw/bin"}
 
+func init() {
+	if home, err := os.UserHomeDir(); err == nil {
+		EssentialPaths = append(EssentialPaths, filepath.Join(home, ".nix-profile/bin"))
+	}
+}
+
 // GetLogger retrieves the logger instance from the context.
 // It returns the default slog logger if no logger is found in the context.
 func GetLogger(ctx context.Context) *slog.Logger {
