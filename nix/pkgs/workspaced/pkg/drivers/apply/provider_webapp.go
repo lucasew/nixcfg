@@ -3,11 +3,6 @@ package apply
 import (
 	"context"
 	"fmt"
-	"image"
-	_ "image/gif"
-	_ "image/jpeg"
-	"image/png"
-	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -34,9 +29,8 @@ func (p *WebappProvider) GetDesiredState(ctx context.Context) ([]DesiredState, e
 	baseDir := filepath.Join(home, ".config/workspaced/webapp")
 	shortcutsDir := filepath.Join(baseDir, "shortcuts")
 	profilesDir := filepath.Join(baseDir, "profiles")
-	iconsDir := filepath.Join(baseDir, "icons")
 
-	for _, dir := range []string{shortcutsDir, profilesDir, iconsDir} {
+	for _, dir := range []string{shortcutsDir, profilesDir} {
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			return nil, err
 		}
@@ -63,22 +57,17 @@ Categories=Network;WebBrowser;
 	})
 
 	for name, wa := range cfg.Webapps {
-		normalizedURL := common.NormalizeURL(wa.URL)
-
 		// 1. Manage Icon
 		var iconToUse string
 		if wa.Icon != "" {
 			iconToUse = wa.Icon
 		} else {
-			iconPath := filepath.Join(iconsDir, name+".png")
-			if _, err := os.Stat(iconPath); os.IsNotExist(err) {
-				logger.Info("downloading favicon", "webapp", name, "url", normalizedURL)
-				if err := downloadAndEncodeFavicon(ctx, normalizedURL, iconPath); err != nil {
-					logger.Error("failed to download favicon", "webapp", name, "error", err)
-					// Continue without icon as it's optional
-				}
+			var err error
+			iconToUse, err = common.GetIconPath(ctx, wa.URL)
+			if err != nil {
+				logger.Error("failed to get icon path", "webapp", name, "url", wa.URL, "error", err)
+				// Continue without icon as it's optional
 			}
-			iconToUse = iconPath
 		}
 
 		// 2. Generate .desktop
@@ -102,47 +91,6 @@ Categories=Network;WebBrowser;
 	}
 
 	return desired, nil
-}
-
-func downloadAndEncodeFavicon(ctx context.Context, url, targetPath string) error {
-	domain := url
-	if strings.HasPrefix(domain, "https://") {
-		domain = domain[8:]
-	} else if strings.HasPrefix(domain, "http://") {
-		domain = domain[7:]
-	}
-	parts := strings.Split(domain, "/")
-	domain = parts[0]
-
-	faviconURL := fmt.Sprintf("https://www.google.com/s2/favicons?sz=128&domain=%s", domain)
-
-	req, err := http.NewRequestWithContext(ctx, "GET", faviconURL, nil)
-	if err != nil {
-		return err
-	}
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("bad status: %s", resp.Status)
-	}
-
-	img, _, err := image.Decode(resp.Body)
-	if err != nil {
-		return err
-	}
-
-	out, err := os.Create(targetPath)
-	if err != nil {
-		return err
-	}
-	defer out.Close()
-
-	return png.Encode(out, img)
 }
 
 func generateWebappDesktopFile(wa common.WebappConfig, engine, id, name, iconPath string) string {

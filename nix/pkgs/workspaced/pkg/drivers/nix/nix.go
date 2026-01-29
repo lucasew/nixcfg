@@ -94,7 +94,9 @@ func RemoteBuild(ctx context.Context, ref string, target string, copyBack bool) 
 
 	n := &notification.Notification{
 		Title: "Nix Remote Build",
-		Icon:  "nix-snowflake",
+	}
+	if icon, err := common.GetIconPath(ctx, "https://nixos.org"); err == nil {
+		n.Icon = icon
 	}
 
 	updateProgress := func(msg string, prog float64) {
