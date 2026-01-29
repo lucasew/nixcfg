@@ -45,6 +45,23 @@ func (p *WebappProvider) GetDesiredState(ctx context.Context) ([]DesiredState, e
 	desired := []DesiredState{}
 	logger := common.GetLogger(ctx)
 
+	// 0. Add generic launcher
+	borderlessPath := filepath.Join(shortcutsDir, "borderless-browser.desktop")
+	borderlessContent := `[Desktop Entry]
+Type=Application
+Name=Borderless Browser
+Icon=applications-internet
+Exec=workspaced dispatch webapp launch
+Categories=Network;WebBrowser;
+`
+	if err := os.WriteFile(borderlessPath, []byte(borderlessContent), 0644); err != nil {
+		return nil, err
+	}
+	desired = append(desired, DesiredState{
+		Target: filepath.Join(home, ".local/share/applications", "workspaced-webapp-borderless-browser.desktop"),
+		Source: borderlessPath,
+	})
+
 	for name, wa := range cfg.Webapps {
 		normalizedURL := common.NormalizeURL(wa.URL)
 

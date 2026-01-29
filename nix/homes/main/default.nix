@@ -59,6 +59,7 @@
     remmina
     sqlite
     sshpass
+    zenity
 
     # media
     nbr.wine-apps._7zip

@@ -183,4 +183,6 @@ desktop_name = "Trello Dashboard"
 [webapp.geforce-now]
 url = "play.geforcenow.com"
 desktop_name = "GeForce Now"
-icon = "nvidia"
+
+[webapp.deezer]
+url = "deezer.com"
