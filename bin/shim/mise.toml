@@ -4,10 +4,9 @@
 
 [tools]
 bun = "1.3.7"
-node = "25.5.0"
 docker-compose = "5.0.1"
 fd = "10.3.0"
-"github:anomalyco/opencode" = "1.1.40"
+opencode = "1.1.40"
 "github:docker/docker-language-server" = "0.20.1"
 "github:ffbinaries/ffbinaries-prebuilt" = "6.1"
 "github:helix-editor/helix" = "25.07.1"
