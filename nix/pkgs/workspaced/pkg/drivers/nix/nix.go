@@ -255,20 +255,11 @@ func Rebuild(ctx context.Context, action string, flake string) error {
 	cmdName := "nixos-rebuild"
 
 	if os.Getuid() != 0 {
-		isDaemon := false
-		if val := ctx.Value(types.DaemonModeKey); val != nil {
-			isDaemon = val.(bool)
-		}
-		if isDaemon {
-			return sudo.Enqueue(ctx, &types.SudoCommand{
-				Slug:    "rebuild",
-				Command: cmdName,
-				Args:    args,
-			})
-		}
-		cmd := common.RunCmd(ctx, "sudo", append([]string{cmdName}, args...)...)
-		common.InheritContextWriters(ctx, cmd)
-		return cmd.Run()
+		return sudo.Enqueue(ctx, &types.SudoCommand{
+			Slug:    "rebuild",
+			Command: cmdName,
+			Args:    args,
+		})
 	} else {
 		cmd := common.RunCmd(ctx, cmdName, args...)
 		common.InheritContextWriters(ctx, cmd)

@@ -180,12 +180,7 @@ func ReplicateZFS(ctx context.Context) error {
 	// Ported from bin/misc/zfs-backup
 	logger.Info("replicating ZFS vms dataset")
 
-	isDaemon := false
-	if val := ctx.Value(types.DaemonModeKey); val != nil {
-		isDaemon = val.(bool)
-	}
-
-	if isDaemon {
+	if os.Getuid() != 0 {
 		_ = sudo.Enqueue(ctx, &types.SudoCommand{
 			Slug:    "zfs-backup-vms",
 			Command: "syncoid",
@@ -200,9 +195,9 @@ func ReplicateZFS(ctx context.Context) error {
 		return nil
 	}
 
-	if err := common.RunCmd(ctx, "sudo", "syncoid", "-r", "zroot/vms", "storage/backup/vms").Run(); err != nil {
+	if err := common.RunCmd(ctx, "syncoid", "-r", "zroot/vms", "storage/backup/vms").Run(); err != nil {
 		return err
 	}
 	logger.Info("replicating ZFS games dataset")
-	return common.RunCmd(ctx, "sudo", "syncoid", "-r", "zroot/games", "storage/games").Run()
+	return common.RunCmd(ctx, "syncoid", "-r", "zroot/games", "storage/games").Run()
 }

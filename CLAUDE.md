@@ -20,7 +20,6 @@ This is a NixOS configuration repository (dotfiles) using Nix flakes and home-ma
   - `nix/homes/` - home-manager configurations
     - `nix/homes/base/` - Base home configuration
     - `nix/homes/main/` - Primary user home configuration
-  - `nix/nixOnDroid/` - Android/termux configurations via nix-on-droid
   - `nix/pkgs/` - Custom package definitions and overrides
   - `nix/lib/` - Custom Nix library functions
   - `nix/overlay.nix` - Package overlay defining custom packages and overrides

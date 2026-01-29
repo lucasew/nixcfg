@@ -83,12 +83,7 @@ func CleanupProfiles(ctx context.Context) error {
 
 	logger.Info(fmt.Sprintf("Found %d old profile links to remove.", len(filesToRemove)))
 
-	isDaemon := false
-	if val := ctx.Value(types.DaemonModeKey); val != nil {
-		isDaemon = val.(bool)
-	}
-
-	if isDaemon {
+	if os.Getuid() != 0 {
 		return sudo.Enqueue(ctx, &types.SudoCommand{
 			Slug:    "nix-gc-cleanup",
 			Command: "rm",
@@ -96,7 +91,7 @@ func CleanupProfiles(ctx context.Context) error {
 		})
 	} else {
 		// If running interactively, we can just run sudo directly
-		cmd := common.RunCmd(ctx, "sudo", append([]string{"rm"}, filesToRemove...)...)
+		cmd := common.RunCmd(ctx, "rm", filesToRemove...)
 		common.InheritContextWriters(ctx, cmd)
 		return cmd.Run()
 	}
