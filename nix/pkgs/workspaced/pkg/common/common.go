@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"maps"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -217,19 +218,105 @@ type QuickSyncConfig struct {
 	RemotePath string `toml:"remote_path"`
 }
 
-// LoadConfig reads the global configuration from ~/settings.toml.
-// If the file is missing or invalid, it falls back to hardcoded defaults.
+// Merge returns a new WallpaperConfig with values from other overriding non-empty values
+func (w WallpaperConfig) Merge(other WallpaperConfig) WallpaperConfig {
+	result := w
+	if other.Dir != "" {
+		result.Dir = other.Dir
+	}
+	if other.Default != "" {
+		result.Default = other.Default
+	}
+	return result
+}
+
+// Merge returns a new ScreenshotConfig with values from other overriding non-empty values
+func (s ScreenshotConfig) Merge(other ScreenshotConfig) ScreenshotConfig {
+	result := s
+	if other.Dir != "" {
+		result.Dir = other.Dir
+	}
+	return result
+}
+
+// Merge returns a new BackupConfig with values from other overriding non-empty values
+func (b BackupConfig) Merge(other BackupConfig) BackupConfig {
+	result := b
+	if other.RsyncnetUser != "" {
+		result.RsyncnetUser = other.RsyncnetUser
+	}
+	if other.RemotePath != "" {
+		result.RemotePath = other.RemotePath
+	}
+	return result
+}
+
+// Merge returns a new QuickSyncConfig with values from other overriding non-empty values
+func (q QuickSyncConfig) Merge(other QuickSyncConfig) QuickSyncConfig {
+	result := q
+	if other.RepoDir != "" {
+		result.RepoDir = other.RepoDir
+	}
+	if other.RemotePath != "" {
+		result.RemotePath = other.RemotePath
+	}
+	return result
+}
+
+// Merge returns a new GlobalConfig with values from other overriding non-empty values.
+// For maps (Workspaces, Hosts), keys are merged additively.
+func (g GlobalConfig) Merge(other GlobalConfig) GlobalConfig {
+	result := g
+
+	// Deep copy maps to avoid aliasing
+	if result.Workspaces == nil {
+		result.Workspaces = make(map[string]int)
+	} else {
+		// Copy the map
+		newWorkspaces := make(map[string]int, len(result.Workspaces))
+		maps.Copy(newWorkspaces, result.Workspaces)
+		result.Workspaces = newWorkspaces
+	}
+
+	if result.Hosts == nil {
+		result.Hosts = make(map[string]string)
+	} else {
+		// Copy the map
+		newHosts := make(map[string]string, len(result.Hosts))
+		maps.Copy(newHosts, result.Hosts)
+		result.Hosts = newHosts
+	}
+
+	// Merge Workspaces map (additive, override on conflict)
+	maps.Copy(result.Workspaces, other.Workspaces)
+
+	// Merge Hosts map (additive, override on conflict)
+	maps.Copy(result.Hosts, other.Hosts)
+
+	// Merge nested configs using their Merge methods
+	result.Wallpaper = result.Wallpaper.Merge(other.Wallpaper)
+	result.Screenshot = result.Screenshot.Merge(other.Screenshot)
+	result.Backup = result.Backup.Merge(other.Backup)
+	result.QuickSync = result.QuickSync.Merge(other.QuickSync)
+
+	return result
+}
+
+// LoadConfig reads the global configuration using a layered approach:
+// 1. Start with hardcoded defaults
+// 2. Merge with $DOTFILES/settings.toml (if exists)
+// 3. Merge with ~/settings.toml (if exists)
 // It also expands environment variables and tilde (~) in paths.
 func LoadConfig() (*GlobalConfig, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return nil, err
 	}
-	settingsPath := filepath.Join(home, "settings.toml")
 
 	dotfiles, _ := GetDotfilesRoot()
 
-	config := &GlobalConfig{
+	// 1. Start with hardcoded defaults
+	config := GlobalConfig{
 		Workspaces: map[string]int{
 			"www":  1,
 			"meet": 2,
@@ -253,18 +340,33 @@ func LoadConfig() (*GlobalConfig, error) {
 		},
 	}
 
-	if _, err := os.Stat(settingsPath); err == nil {
-		if _, err := toml.DecodeFile(settingsPath, config); err != nil {
-			return config, err
+	// 2. Load and merge base config from $DOTFILES/settings.toml
+	if dotfiles != "" {
+		dotfilesSettingsPath := filepath.Join(dotfiles, "settings.toml")
+		if _, err := os.Stat(dotfilesSettingsPath); err == nil {
+			var dotfilesConfig GlobalConfig
+			if _, err := toml.DecodeFile(dotfilesSettingsPath, &dotfilesConfig); err == nil {
+				config = config.Merge(dotfilesConfig)
+			}
 		}
 	}
 
-	// Expand paths
+	// 3. Load and merge user config from ~/settings.toml
+	userSettingsPath := filepath.Join(home, "settings.toml")
+	if _, err := os.Stat(userSettingsPath); err == nil {
+		var userConfig GlobalConfig
+		if _, err := toml.DecodeFile(userSettingsPath, &userConfig); err == nil {
+			config = config.Merge(userConfig)
+		}
+	}
+
+	// 4. Expand paths
 	config.Wallpaper.Dir = ExpandPath(config.Wallpaper.Dir)
+	config.Wallpaper.Default = ExpandPath(config.Wallpaper.Default)
 	config.Screenshot.Dir = ExpandPath(config.Screenshot.Dir)
 	config.QuickSync.RepoDir = ExpandPath(config.QuickSync.RepoDir)
 
-	return config, nil
+	return &config, nil
 }
 
 // ExpandPath expands the tilde (~) to the user's home directory

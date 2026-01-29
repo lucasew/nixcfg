@@ -1,0 +1,63 @@
+[workspaces]
+www = 1
+calendar = 2
+
+meta_ai_claude = 1500
+meta_ai_jules = 1501
+
+meta_dbeaver = 1600
+
+meta_steam = 1700
+
+
+meta_keepass = 1801
+meta_obsidian = 1802
+meta_fava_beancount = 1803
+meta_dotfiles = 1804
+meta_super_productivity = 1805
+
+comm_telegram = 1900
+comm_element = 1901
+comm_whatsapp = 1902
+comm_meet = 1903
+comm_discord_profissional = 1904
+comm_discord_pessoal = 1905
+comm_discord_video = 1906
+
+work_lewtec = 2000
+work_lewtec_vps = 2001
+work_lewtec_contapila = 2003
+work_lewtec_romaneiro = 2004
+work_lewtec_launcher = 2005
+work_lewtec_homepage = 2006
+work_lewtec_infra = 2007
+
+work_mestrado = 2200
+
+side_blog = 3000
+side_nixpkgs = 3002
+side_contapila = 3004
+side_rinha_backend = 3005
+side_curso_latex = 3006
+side_uilab = 3007
+side_miseci = 3008
+side_fetchurl = 3009
+
+stat_riverwood = 4000
+stat_whiterun = 4001
+stat_ravenrock = 4002
+stat_dgxa100 = 4003
+
+video_obs_live = 8000
+
+waypipe = 9999
+
+[wallpaper]
+dir = "~/.dotfiles/assets/wallpapers"
+default = "default.jpg"
+
+[backup]
+rsyncnet_user = "de3163@de3163.rsync.net"
+
+[hosts]
+whiterun = "a8:a1:59:9c:ab:32"

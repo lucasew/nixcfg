@@ -13,6 +13,7 @@ import (
 	"workspaced/cmd/workspaced/dispatch/audio"
 	"workspaced/cmd/workspaced/dispatch/backup"
 	"workspaced/cmd/workspaced/dispatch/brightness"
+	"workspaced/cmd/workspaced/dispatch/config"
 	"workspaced/cmd/workspaced/dispatch/demo"
 	"workspaced/cmd/workspaced/dispatch/is"
 	"workspaced/cmd/workspaced/dispatch/media"
@@ -95,6 +96,7 @@ func NewCommand() *cobra.Command {
 	cmd.AddCommand(audio.GetCommand())
 	cmd.AddCommand(backup.GetCommand())
 	cmd.AddCommand(brightness.GetCommand())
+	cmd.AddCommand(config.GetCommand())
 	cmd.AddCommand(demo.GetCommand())
 	cmd.AddCommand(is.GetCommand())
 	cmd.AddCommand(media.GetCommand())
