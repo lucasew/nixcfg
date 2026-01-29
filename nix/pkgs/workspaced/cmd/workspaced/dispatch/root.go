@@ -2,6 +2,7 @@ package dispatch
 
 import (
 	"context"
+	"errors"
 	"encoding/json"
 	"fmt"
 	"log/slog"
@@ -193,7 +194,7 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 				return "", true, fmt.Errorf("failed to parse result: %w", err)
 			}
 			if resp.Error != "" {
-				return "", true, fmt.Errorf("%s", resp.Error)
+				return "", true, errors.New(resp.Error)
 			}
 			return "", true, nil
 		}
