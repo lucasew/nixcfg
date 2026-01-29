@@ -35,6 +35,7 @@ func GetCommand() *cobra.Command {
 			providers := []apply.Provider{
 				&apply.SymlinkProvider{},
 				&apply.TermuxProvider{},
+				&apply.WebappProvider{},
 			}
 
 			desired := []apply.DesiredState{}

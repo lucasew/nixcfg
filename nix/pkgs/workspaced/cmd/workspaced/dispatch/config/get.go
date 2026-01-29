@@ -128,6 +128,42 @@ func getConfigValue(cfg *common.GlobalConfig, key string) (any, error) {
 			return cfg.QuickSync, nil
 		}
 
+	case "browser":
+		if len(parts) == 2 {
+			switch parts[1] {
+			case "default":
+				return cfg.Browser.Default, nil
+			case "webapp":
+				return cfg.Browser.Engine, nil
+			default:
+				return nil, fmt.Errorf("unknown browser field: %s", parts[1])
+			}
+		} else if len(parts) == 1 {
+			return cfg.Browser, nil
+		}
+
+	case "webapp":
+		if len(parts) >= 2 {
+			if wa, ok := cfg.Webapps[parts[1]]; ok {
+				if len(parts) == 2 {
+					return wa, nil
+				}
+				switch parts[2] {
+				case "url":
+					return wa.URL, nil
+				case "profile":
+					return wa.Profile, nil
+				case "desktop_name":
+					return wa.DesktopName, nil
+				default:
+					return nil, fmt.Errorf("unknown webapp field: %s", parts[2])
+				}
+			}
+			return nil, fmt.Errorf("webapp not found: %s", parts[1])
+		} else if len(parts) == 1 {
+			return cfg.Webapps, nil
+		}
+
 	default:
 		return nil, fmt.Errorf("unknown config section: %s", parts[0])
 	}

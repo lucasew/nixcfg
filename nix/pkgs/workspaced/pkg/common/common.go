@@ -101,7 +101,6 @@ func RunCmd(ctx context.Context, name string, args ...string) *exec.Cmd {
 	return cmd
 }
 
-
 // InheritContextWriters configures the command's Stdout and Stderr to write to the writers
 // stored in the context, allowing output capture or redirection.
 func InheritContextWriters(ctx context.Context, cmd *exec.Cmd) {
@@ -191,12 +190,26 @@ func IsNixOS() bool {
 
 // GlobalConfig represents the schema of the settings.toml file.
 type GlobalConfig struct {
-	Workspaces map[string]int    `toml:"workspaces"`
-	Wallpaper  WallpaperConfig   `toml:"wallpaper"`
-	Screenshot ScreenshotConfig  `toml:"screenshot"`
-	Hosts      map[string]string `toml:"hosts"`
-	Backup     BackupConfig      `toml:"backup"`
-	QuickSync  QuickSyncConfig   `toml:"quicksync"`
+	Workspaces map[string]int          `toml:"workspaces"`
+	Wallpaper  WallpaperConfig         `toml:"wallpaper"`
+	Screenshot ScreenshotConfig        `toml:"screenshot"`
+	Hosts      map[string]string       `toml:"hosts"`
+	Backup     BackupConfig            `toml:"backup"`
+	QuickSync  QuickSyncConfig         `toml:"quicksync"`
+	Browser    BrowserConfig           `toml:"browser"`
+	Webapps    map[string]WebappConfig `toml:"webapp"`
+}
+
+type BrowserConfig struct {
+	Default string `toml:"default"`
+	Engine  string `toml:"webapp"`
+}
+
+type WebappConfig struct {
+	URL         string   `toml:"url"`
+	Profile     string   `toml:"profile"`
+	DesktopName string   `toml:"desktop_name"`
+	ExtraFlags  []string `toml:"extra_flags"`
 }
 
 type WallpaperConfig struct {
@@ -263,8 +276,20 @@ func (q QuickSyncConfig) Merge(other QuickSyncConfig) QuickSyncConfig {
 	return result
 }
 
+// Merge returns a new BrowserConfig with values from other overriding non-empty values
+func (b BrowserConfig) Merge(other BrowserConfig) BrowserConfig {
+	result := b
+	if other.Default != "" {
+		result.Default = other.Default
+	}
+	if other.Engine != "" {
+		result.Engine = other.Engine
+	}
+	return result
+}
+
 // Merge returns a new GlobalConfig with values from other overriding non-empty values.
-// For maps (Workspaces, Hosts), keys are merged additively.
+// For maps (Workspaces, Hosts, Webapps), keys are merged additively.
 func (g GlobalConfig) Merge(other GlobalConfig) GlobalConfig {
 	result := g
 
@@ -287,17 +312,30 @@ func (g GlobalConfig) Merge(other GlobalConfig) GlobalConfig {
 		result.Hosts = newHosts
 	}
 
+	if result.Webapps == nil {
+		result.Webapps = make(map[string]WebappConfig)
+	} else {
+		// Copy the map
+		newWebapps := make(map[string]WebappConfig, len(result.Webapps))
+		maps.Copy(newWebapps, result.Webapps)
+		result.Webapps = newWebapps
+	}
+
 	// Merge Workspaces map (additive, override on conflict)
 	maps.Copy(result.Workspaces, other.Workspaces)
 
 	// Merge Hosts map (additive, override on conflict)
 	maps.Copy(result.Hosts, other.Hosts)
 
+	// Merge Webapps map (additive, override on conflict)
+	maps.Copy(result.Webapps, other.Webapps)
+
 	// Merge nested configs using their Merge methods
 	result.Wallpaper = result.Wallpaper.Merge(other.Wallpaper)
 	result.Screenshot = result.Screenshot.Merge(other.Screenshot)
 	result.Backup = result.Backup.Merge(other.Backup)
 	result.QuickSync = result.QuickSync.Merge(other.QuickSync)
+	result.Browser = result.Browser.Merge(other.Browser)
 
 	return result
 }
@@ -338,6 +376,11 @@ func LoadConfig() (*GlobalConfig, error) {
 		Hosts: map[string]string{
 			"whiterun": "a8:a1:59:9c:ab:32",
 		},
+		Browser: BrowserConfig{
+			Default: "zen",
+			Engine:  "brave",
+		},
+		Webapps: make(map[string]WebappConfig),
 	}
 
 	// 2. Load and merge base config from $DOTFILES/settings.toml
@@ -377,4 +420,26 @@ func ExpandPath(path string) string {
 		return filepath.Join(home, path[2:])
 	}
 	return os.ExpandEnv(path)
+}
+
+func ToTitleCase(s string) string {
+	s = strings.ReplaceAll(s, "-", " ")
+	s = strings.ReplaceAll(s, "_", " ")
+	words := strings.Fields(s)
+	for i, w := range words {
+		if len(w) > 0 {
+			words[i] = strings.ToUpper(w[:1]) + strings.ToLower(w[1:])
+		}
+	}
+	return strings.Join(words, " ")
+}
+
+func NormalizeURL(url string) string {
+	if strings.HasPrefix(url, "file://") || strings.HasPrefix(url, "http://") || strings.HasPrefix(url, "https://") {
+		return url
+	}
+	if strings.HasPrefix(url, "/") || strings.HasPrefix(url, "~/") {
+		return "file://" + ExpandPath(url)
+	}
+	return "https://" + url
 }
