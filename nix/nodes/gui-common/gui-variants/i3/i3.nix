@@ -202,7 +202,8 @@ in
         bindsym $mod+Shift+f floating toggle
         bindsym $mod+Shift+s sticky toggle
 
-        bindsym $mod+minus exec workspaced dispatch screen toggle
+        bindsym $mod+minus exec workspaced dispatch workspace scratchpad
+        bindsym $mod+equal exec workspaced dispatch screen toggle
         bindsym $mod+Shift+minus move scratchpad
 
         bindsym $mod+Shift+q kill
@@ -243,7 +244,6 @@ in
         bindsym $mod+m focus output next
 
         bindsym $mod+l exec workspaced dispatch screen lock
-        bindsym $mod+Shift+l exec workspaced dispatch screen toggle
         bindsym $mod+n exec workspaced dispatch workspace rotate
         bindsym $mod+z exec workspaced dispatch menu workspace
         bindsym $mod+Shift+z exec workspaced dispatch menu workspace --move

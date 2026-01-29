@@ -1,28 +1,2 @@
 #!/usr/bin/env bash
-
-set -euo pipefail
-
-flake_ref=$(sd d root)
-
-cmd=switch
-
-if [ $# -gt 0 ]; then
-	cmd="$1"
-	shift
-fi
-
-if sd is dotfiles-in-store; then
-	flake_ref="github:lucasew/nixcfg"
-fi
-
-if sd is riverwood; then
-	sudo nixos-rebuild "$cmd" --flake "$flake_ref#riverwood"
-fi
-
-if sd is whiterun; then
-	sudo nixos-rebuild "$cmd" --flake "$flake_ref#whiterun"
-fi
-
-if sd is phone; then
-	echo "[*] Skipping NixOS rebuild on phone (use 'sd apply-dotfiles' for dotfiles setup)"
-fi
+exec workspaced dispatch apply "$@"

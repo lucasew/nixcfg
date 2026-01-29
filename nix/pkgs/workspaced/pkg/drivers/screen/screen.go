@@ -9,10 +9,7 @@ import (
 
 func Lock(ctx context.Context) error {
 	common.GetLogger(ctx).Info("locking session")
-	if err := common.RunCmd(ctx, "loginctl", "lock-session").Run(); err != nil {
-		return err
-	}
-	return SetDPMS(ctx, false)
+	return common.RunCmd(ctx, "loginctl", "lock-session").Run()
 }
 
 func SetDPMS(ctx context.Context, on bool) error {

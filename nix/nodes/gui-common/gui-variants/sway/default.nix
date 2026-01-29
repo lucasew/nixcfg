@@ -71,6 +71,8 @@ in
 
     programs.ssh.startAgent = true;
 
+    security.soteria.enable = true;
+
     programs.xss-lock = {
       enable = true;
       lockerCommand = lib.mkDefault ''
@@ -80,13 +82,13 @@ in
 
     systemd.user.services.swayidle = {
       partOf = [ "graphical-session.target" ];
-      path = with pkgs; [ swayidle ];
+      path = with pkgs; [ swayidle procps ];
       restartIfChanged = true;
       script = ''
         PATH=$PATH:/run/current-system/sw/bin
         exec swayidle -w -d \
-          timeout 300 'swaymsg "output * dpms off"' \
-          timeout 305 'loginctl lock-session' \
+          timeout 300 'loginctl lock-session' \
+          timeout 10 'pgrep swaylock && swaymsg "output * dpms off"' \
           resume 'swaymsg "output * dpms on"' \
           before-sleep 'loginctl lock-session'
       '';
@@ -227,7 +229,8 @@ in
         bindsym $mod+Shift+f floating toggle
         bindsym $mod+Shift+s sticky toggle
 
-        bindsym $mod+minus exec workspaced dispatch screen toggle
+        bindsym $mod+minus exec workspaced dispatch workspace scratchpad
+        bindsym --locked $mod+equal exec workspaced dispatch screen toggle
         bindsym $mod+Shift+minus move scratchpad
 
         bindsym $mod+Shift+q kill
@@ -252,23 +255,22 @@ in
         bindsym $mod+Ctrl+Left  resize grow width 1 px or 1 ppt
 
         # custom keys
-        bindsym XF86AudioRaiseVolume exec workspaced dispatch audio up
-        bindsym XF86AudioLowerVolume exec workspaced dispatch audio down
-        bindsym XF86AudioMute exec workspaced dispatch audio mute
+        bindsym --locked XF86AudioRaiseVolume exec workspaced dispatch audio up
+        bindsym --locked XF86AudioLowerVolume exec workspaced dispatch audio down
+        bindsym --locked XF86AudioMute exec workspaced dispatch audio mute
 
-        bindsym XF86AudioNext exec  workspaced dispatch media next
-        bindsym XF86AudioPrev exec  workspaced dispatch media previous
-        bindsym XF86AudioPlay exec  workspaced dispatch media play-pause
-        bindsym XF86AudioPause exec workspaced dispatch media play-pause
+        bindsym --locked XF86AudioNext exec  workspaced dispatch media next
+        bindsym --locked XF86AudioPrev exec  workspaced dispatch media previous
+        bindsym --locked XF86AudioPlay exec  workspaced dispatch media play-pause
+        bindsym --locked XF86AudioPause exec workspaced dispatch media play-pause
 
-        bindsym XF86MonBrightnessUp   exec workspaced dispatch brightness up
-        bindsym XF86MonBrightnessDown exec workspaced dispatch brightness down
+        bindsym --locked XF86MonBrightnessUp   exec workspaced dispatch brightness up
+        bindsym --locked XF86MonBrightnessDown exec workspaced dispatch brightness down
 
         bindsym $mod+Shift+m move workspace to output left
         bindsym $mod+m focus output right
 
-        bindsym $mod+l exec workspaced dispatch screen lock
-        bindsym $mod+Shift+l exec workspaced dispatch screen toggle
+        bindsym --locked $mod+l exec workspaced dispatch screen lock
         bindsym $mod+n exec workspaced dispatch workspace rotate
         bindsym $mod+z exec workspaced dispatch menu workspace
         bindsym $mod+Shift+z exec workspaced dispatch menu workspace --move

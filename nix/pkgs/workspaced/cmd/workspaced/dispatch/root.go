@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+	"workspaced/cmd/workspaced/dispatch/apply"
 	"workspaced/cmd/workspaced/dispatch/audio"
 	"workspaced/cmd/workspaced/dispatch/backup"
 	"workspaced/cmd/workspaced/dispatch/brightness"
@@ -16,10 +17,13 @@ import (
 	"workspaced/cmd/workspaced/dispatch/is"
 	"workspaced/cmd/workspaced/dispatch/media"
 	"workspaced/cmd/workspaced/dispatch/menu"
+	"workspaced/cmd/workspaced/dispatch/nix"
+	"workspaced/cmd/workspaced/dispatch/notification"
 	"workspaced/cmd/workspaced/dispatch/power"
 	"workspaced/cmd/workspaced/dispatch/screen"
 	"workspaced/cmd/workspaced/dispatch/screenshot"
 	"workspaced/cmd/workspaced/dispatch/setup"
+	"workspaced/cmd/workspaced/dispatch/sudo"
 	"workspaced/cmd/workspaced/dispatch/wallpaper"
 	"workspaced/cmd/workspaced/dispatch/workspace"
 	"workspaced/pkg/types"
@@ -66,6 +70,13 @@ func NewCommand() *cobra.Command {
 			return nil
 		}
 
+		if remoteCmd == "sudo" && len(remoteArgs) > 0 {
+			switch remoteArgs[0] {
+			case "approve", "reject", "add":
+				return nil
+			}
+		}
+
 		output, connected, err := TryRemoteRaw(remoteCmd, remoteArgs)
 		if connected {
 			if output != "" {
@@ -80,6 +91,7 @@ func NewCommand() *cobra.Command {
 		return nil
 	}
 
+	cmd.AddCommand(apply.GetCommand())
 	cmd.AddCommand(audio.GetCommand())
 	cmd.AddCommand(backup.GetCommand())
 	cmd.AddCommand(brightness.GetCommand())
@@ -87,10 +99,13 @@ func NewCommand() *cobra.Command {
 	cmd.AddCommand(is.GetCommand())
 	cmd.AddCommand(media.GetCommand())
 	cmd.AddCommand(menu.GetCommand())
+	cmd.AddCommand(nix.GetCommand())
+	cmd.AddCommand(notification.GetCommand())
 	cmd.AddCommand(power.GetCommand())
 	cmd.AddCommand(screen.GetCommand())
 	cmd.AddCommand(screenshot.GetCommand())
 	cmd.AddCommand(setup.GetCommand())
+	cmd.AddCommand(sudo.GetCommand())
 	cmd.AddCommand(wallpaper.GetCommand())
 	cmd.AddCommand(workspace.GetCommand())
 
@@ -162,15 +177,25 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 				attrs = append(attrs, slog.Any(k, v))
 			}
 			slog.Log(context.Background(), level, entry.Message, attrs...)
+		case "stdout":
+			var out string
+			if err := json.Unmarshal(packet.Payload, &out); err == nil {
+				fmt.Print(out)
+			}
+		case "stderr":
+			var out string
+			if err := json.Unmarshal(packet.Payload, &out); err == nil {
+				fmt.Fprint(os.Stderr, out)
+			}
 		case "result":
 			var resp types.Response
 			if err := json.Unmarshal(packet.Payload, &resp); err != nil {
 				return "", true, fmt.Errorf("failed to parse result: %w", err)
 			}
 			if resp.Error != "" {
-				return resp.Output, true, fmt.Errorf(resp.Error)
+				return "", true, fmt.Errorf("%s", resp.Error)
 			}
-			return resp.Output, true, nil
+			return "", true, nil
 		}
 	}
 }

@@ -14,10 +14,25 @@ import (
 	"github.com/coreos/go-systemd/v22/activation"
 	"github.com/gorilla/websocket"
 	"github.com/spf13/cobra"
+	"io"
 	"workspaced/cmd/workspaced/dispatch"
 	"workspaced/pkg/common"
 	"workspaced/pkg/types"
 )
+
+type StreamPacketWriter struct {
+	Out  chan<- types.StreamPacket
+	Type string
+}
+
+func (w *StreamPacketWriter) Write(p []byte) (n int, err error) {
+	payload, _ := json.Marshal(string(p))
+	w.Out <- types.StreamPacket{
+		Type:    w.Type,
+		Payload: payload,
+	}
+	return len(p), nil
+}
 
 var Command = &cobra.Command{
 	Use:   "daemon",
@@ -46,7 +61,7 @@ func RunDaemon() error {
 		listener = listeners[0]
 	} else {
 		socketPath := getSocketPath()
-		os.Remove(socketPath)
+		_ = os.Remove(socketPath)
 		l, err := net.Listen("unix", socketPath)
 		if err != nil {
 			return fmt.Errorf("failed to listen on socket: %w", err)
@@ -80,7 +95,7 @@ func handleWS(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	// Output channel
-	outCh := make(chan types.StreamPacket, 100)
+	outCh := make(chan types.StreamPacket, 1000)
 	done := make(chan struct{})
 
 	// Pump goroutine: channel -> websocket
@@ -113,12 +128,17 @@ func handleWS(w http.ResponseWriter, r *http.Request) {
 	logger := slog.New(handler)
 
 	// Build context
+	stdout := &StreamPacketWriter{Out: outCh, Type: "stdout"}
+	stderr := &StreamPacketWriter{Out: outCh, Type: "stderr"}
+
 	ctx = context.WithValue(ctx, types.LoggerKey, logger)
+	ctx = context.WithValue(ctx, types.StdoutKey, stdout)
+	ctx = context.WithValue(ctx, types.StderrKey, stderr)
 	env := append(req.Env, "WORKSPACED_DAEMON=1")
 	ctx = context.WithValue(ctx, types.EnvKey, env)
 	ctx = context.WithValue(ctx, types.DaemonModeKey, true)
 
-	output, err := ExecuteViaCobra(ctx, req)
+	output, err := ExecuteViaCobra(ctx, req, stdout, stderr)
 
 	resp := types.Response{Output: output}
 	if err != nil {
@@ -136,17 +156,25 @@ func handleWS(w http.ResponseWriter, r *http.Request) {
 	<-done
 }
 
-func ExecuteViaCobra(ctx context.Context, req types.Request) (string, error) {
+func ExecuteViaCobra(ctx context.Context, req types.Request, stdout, stderr io.Writer) (string, error) {
 	targetCmd, targetArgs, err := dispatch.FindCommand(req.Command, req.Args)
 	if err != nil {
 		return "", err
 	}
 
 	buf := new(bytes.Buffer)
-	targetCmd.SetOut(buf)
-	targetCmd.SetErr(buf)
+	targetCmd.SetOut(io.MultiWriter(buf, stdout))
+	targetCmd.SetErr(io.MultiWriter(buf, stderr))
 	targetCmd.SetArgs(targetArgs)
 	targetCmd.SetContext(ctx)
+
+	if err := targetCmd.ParseFlags(targetArgs); err != nil {
+		return buf.String(), err
+	}
+	argList := targetCmd.Flags().Args()
+	if targetCmd.DisableFlagParsing {
+		argList = targetArgs
+	}
 
 	var parents []*cobra.Command
 	for curr := targetCmd; curr != nil; curr = curr.Parent() {
@@ -155,18 +183,18 @@ func ExecuteViaCobra(ctx context.Context, req types.Request) (string, error) {
 
 	for _, p := range parents {
 		if p.PersistentPreRunE != nil {
-			if err := p.PersistentPreRunE(targetCmd, targetArgs); err != nil {
+			if err := p.PersistentPreRunE(targetCmd, argList); err != nil {
 				return buf.String(), err
 			}
 		} else if p.PersistentPreRun != nil {
-			p.PersistentPreRun(targetCmd, targetArgs)
+			p.PersistentPreRun(targetCmd, argList)
 		}
 	}
 
 	if targetCmd.RunE != nil {
-		err = targetCmd.RunE(targetCmd, targetArgs)
+		err = targetCmd.RunE(targetCmd, argList)
 	} else if targetCmd.Run != nil {
-		targetCmd.Run(targetCmd, targetArgs)
+		targetCmd.Run(targetCmd, argList)
 	} else {
 		err = fmt.Errorf("command has no run implementation")
 	}

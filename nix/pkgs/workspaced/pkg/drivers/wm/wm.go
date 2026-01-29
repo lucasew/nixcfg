@@ -10,6 +10,9 @@ import (
 	"strings"
 	"time"
 	"workspaced/pkg/common"
+	"workspaced/pkg/drivers/audio"
+	"workspaced/pkg/drivers/brightness"
+	"workspaced/pkg/drivers/media"
 )
 
 type Workspace struct {
@@ -36,13 +39,23 @@ func ToggleScratchpad(ctx context.Context) error {
 	return common.RunCmd(ctx, rpc, "scratchpad", "show").Run()
 }
 
+func ToggleScratchpadWithInfo(ctx context.Context) error {
+	if err := ToggleScratchpad(ctx); err != nil {
+		return err
+	}
+	_ = audio.ShowStatus(ctx)
+	_ = brightness.ShowStatus(ctx)
+	_ = media.ShowStatus(ctx)
+	return nil
+}
+
 func NextWorkspace(ctx context.Context, move bool) error {
 	runtimeDir := os.Getenv("XDG_RUNTIME_DIR")
 	if runtimeDir == "" {
 		runtimeDir = filepath.Join(os.TempDir(), fmt.Sprintf("workspaced-%d", os.Getuid()))
 	}
 	workspacedDir := filepath.Join(runtimeDir, "workspaced")
-	os.MkdirAll(workspacedDir, 0700)
+	_ = os.MkdirAll(workspacedDir, 0700)
 
 	wsFile := filepath.Join(workspacedDir, "last_ws")
 	lastWS := 10
@@ -53,7 +66,7 @@ func NextWorkspace(ctx context.Context, move bool) error {
 	}
 
 	nextWS := lastWS + 1
-	os.WriteFile(wsFile, []byte(strconv.Itoa(nextWS)), 0600)
+	_ = os.WriteFile(wsFile, []byte(strconv.Itoa(nextWS)), 0600)
 
 	return SwitchToWorkspace(ctx, nextWS, move)
 }
@@ -67,7 +80,7 @@ func RotateWorkspaces(ctx context.Context) error {
 		return err
 	}
 	var workspaces []Workspace
-	json.Unmarshal(out, &workspaces)
+	_ = json.Unmarshal(out, &workspaces)
 
 	var focusedWorkspace string
 	for _, w := range workspaces {
@@ -83,7 +96,7 @@ func RotateWorkspaces(ctx context.Context) error {
 		return err
 	}
 	var outputs []Output
-	json.Unmarshal(out, &outputs)
+	_ = json.Unmarshal(out, &outputs)
 
 	var screens []string
 	workspaceScreens := make(map[string]string)
@@ -110,19 +123,19 @@ func RotateWorkspaces(ctx context.Context) error {
 		toScreen := screens[i]
 		ws := workspaceScreens[fromScreen]
 
-		common.RunCmd(ctx, rpc, "workspace", "number", ws).Run()
+		_ = common.RunCmd(ctx, rpc, "workspace", "number", ws).Run()
 		time.Sleep(100 * time.Millisecond)
-		common.RunCmd(ctx, rpc, "move", "workspace", "to", "output", toScreen).Run()
+		_ = common.RunCmd(ctx, rpc, "move", "workspace", "to", "output", toScreen).Run()
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	for _, ws := range workspaceScreens {
-		common.RunCmd(ctx, rpc, "workspace", "number", ws).Run()
+		_ = common.RunCmd(ctx, rpc, "workspace", "number", ws).Run()
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	if focusedWorkspace != "" {
-		common.RunCmd(ctx, rpc, "workspace", "number", focusedWorkspace).Run()
+		_ = common.RunCmd(ctx, rpc, "workspace", "number", focusedWorkspace).Run()
 	}
 
 	return nil

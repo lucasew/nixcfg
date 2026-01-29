@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-node=$(workspaced dispatch is known-node)
-if [ $? -eq 0 ]; then
-    echo "$node"
-    exit 0
-fi
-exit 1

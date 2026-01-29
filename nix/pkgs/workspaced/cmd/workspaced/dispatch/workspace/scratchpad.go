@@ -10,9 +10,9 @@ func init() {
 	Registry.Register(func(parent *cobra.Command) {
 		parent.AddCommand(&cobra.Command{
 			Use:   "scratchpad",
-			Short: "Toggle scratchpad visibility",
+			Short: "Toggle scratchpad visibility with status info",
 			RunE: func(c *cobra.Command, args []string) error {
-				return wm.ToggleScratchpad(c.Context())
+				return wm.ToggleScratchpadWithInfo(c.Context())
 			},
 		})
 	})

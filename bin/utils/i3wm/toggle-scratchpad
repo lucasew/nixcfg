@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-workspaced dispatch workspace scratchpad
-workspaced dispatch brightness show
-workspaced dispatch audio show
-workspaced dispatch media show

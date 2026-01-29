@@ -3,4 +3,3 @@
 set -euo pipefail
 sd d pull
 sd d apply
-sd apply-dotfiles
