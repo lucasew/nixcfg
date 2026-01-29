@@ -142,6 +142,12 @@ func makeBackgroundTransparent(img image.Image) image.Image {
 		enqueue(bounds.Max.X-1, y)
 	}
 
+	// Seed from center if it matches target color
+	centerX, centerY := bounds.Min.X+width/2, bounds.Min.Y+height/2
+	if isTarget(centerX, centerY) {
+		enqueue(centerX, centerY)
+	}
+
 	// BFS Flood Fill
 	head := 0
 	for head < len(queue) {
