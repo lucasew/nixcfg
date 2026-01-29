@@ -25,7 +25,8 @@
       hide_duplicate_count=no
       history_length=20
       horizontal_padding=5
-      icon_theme=paper
+      icon_theme=Paper
+      enable_recursive_icon_lookup=true
       icon_position=left
       max_icon_size=64
       idle_threshold=120
