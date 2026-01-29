@@ -18,7 +18,8 @@
       dmenu="dmenu"
       follow="mouse"
       font="rissole 8"
-      format="%s %p %b"
+      format="<b>%s</b>
+      %b"
       frame_width=2
       geometry="300x60-20+48"
       hide_duplicate_count=no
