@@ -244,15 +244,20 @@ func Rebuild(ctx context.Context, action string, flake string) error {
 		return fmt.Errorf("hostname %s is not a supported NixOS node for rebuild", hostname)
 	}
 
-	var target string
+	var toplevel string
 	if strings.HasPrefix(flake, "/nix/store/") {
-		target = flake
+		toplevel = flake
 	} else {
-		target = fmt.Sprintf("%s#%s", flake, hostname)
+		ref := fmt.Sprintf("%s#nixosConfigurations.%s.config.system.build.toplevel", flake, hostname)
+		var err error
+		toplevel, err = Build(ctx, ref, true)
+		if err != nil {
+			return err
+		}
 	}
-	args := []string{action, "--flake", target}
 
-	cmdName := "nixos-rebuild"
+	cmdName := filepath.Join(toplevel, "bin/switch-to-configuration")
+	args := []string{action}
 
 	if os.Getuid() != 0 {
 		return sudo.Enqueue(ctx, &types.SudoCommand{
