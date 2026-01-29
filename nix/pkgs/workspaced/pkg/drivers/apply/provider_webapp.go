@@ -34,8 +34,9 @@ func (p *WebappProvider) GetDesiredState(ctx context.Context) ([]DesiredState, e
 	baseDir := filepath.Join(home, ".config/workspaced/webapp")
 	shortcutsDir := filepath.Join(baseDir, "shortcuts")
 	profilesDir := filepath.Join(baseDir, "profiles")
+	iconsDir := filepath.Join(baseDir, "icons")
 
-	for _, dir := range []string{shortcutsDir, profilesDir} {
+	for _, dir := range []string{shortcutsDir, profilesDir, iconsDir} {
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			return nil, err
 		}
@@ -52,7 +53,7 @@ func (p *WebappProvider) GetDesiredState(ctx context.Context) ([]DesiredState, e
 		if wa.Icon != "" {
 			iconToUse = wa.Icon
 		} else {
-			iconPath := filepath.Join(shortcutsDir, name+".png")
+			iconPath := filepath.Join(iconsDir, name+".png")
 			if _, err := os.Stat(iconPath); os.IsNotExist(err) {
 				logger.Info("downloading favicon", "webapp", name, "url", normalizedURL)
 				if err := downloadAndEncodeFavicon(ctx, normalizedURL, iconPath); err != nil {

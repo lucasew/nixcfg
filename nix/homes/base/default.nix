@@ -1,21 +1,12 @@
 {
-  global,
   pkgs,
-  config,
-  self,
   lib,
   ...
 }:
 let
-  inherit (self) inputs outputs;
   inherit (lib) mkDefault;
-  inherit (global) environmentShell;
 in
 {
-  imports = [
-    "${self.inputs.borderless-browser}/home-manager.nix"
-  ];
-
   programs.bash.bashrcExtra = ''
     if command -v sdw > /dev/null 2> /dev/null && [ -f "$(sdw d root || echo "/nhaa")/bin/source_me" ]; then
       source $(sdw d root)/bin/source_me

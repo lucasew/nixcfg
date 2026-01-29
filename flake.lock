@@ -84,22 +84,6 @@
         "type": "github"
       }
     },
-    "borderless-browser": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1766272531,
-        "narHash": "sha256-Ke5kehw0GRx+dptY13Idg1iE8apwGe+VMC9IPTiH/pE=",
-        "owner": "lucasew",
-        "repo": "borderless-browser.nix",
-        "rev": "703ce1551e5e42f422145ecbcfcbb68b5c09137e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "lucasew",
-        "repo": "borderless-browser.nix",
-        "type": "github"
-      }
-    },
     "cloud-savegame": {
       "flake": false,
       "locked": {
@@ -463,7 +447,6 @@
     },
     "root": {
       "inputs": {
-        "borderless-browser": "borderless-browser",
         "cloud-savegame": "cloud-savegame",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",

@@ -232,7 +232,6 @@
       };
       overlays = {
         # nix-requirefile = import "${inputs.nix-requirefile}/overlay.nix";
-        borderless-browser = import "${inputs.borderless-browser}/overlay.nix";
         zzzthis = import ./nix/overlay.nix self;
       };
       colors =
