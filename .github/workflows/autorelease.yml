@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
+        uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a # v21
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
