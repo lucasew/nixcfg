@@ -13,17 +13,22 @@ import (
 	"workspaced/pkg/drivers/media"
 )
 
+// Workspace represents a workspace as returned by Sway/i3 IPC.
 type Workspace struct {
 	Name    string `json:"name"`
 	Focused bool   `json:"focused"`
 	Output  string `json:"output"`
 }
 
+// Output represents a display output as returned by Sway/i3 IPC.
 type Output struct {
 	Name             string `json:"name"`
 	CurrentWorkspace string `json:"current_workspace"`
 }
 
+// SwitchToWorkspace switches to the specified workspace number.
+// It uses common.GetRPC to determine whether to use swaymsg or i3-msg.
+// If move is true, it moves the current container to that workspace instead of switching focus.
 func SwitchToWorkspace(ctx context.Context, num int, move bool) error {
 	rpc := common.GetRPC(ctx)
 	if move {
@@ -32,11 +37,14 @@ func SwitchToWorkspace(ctx context.Context, num int, move bool) error {
 	return common.RunCmd(ctx, rpc, "workspace", "number", strconv.Itoa(num)).Run()
 }
 
+// ToggleScratchpad toggles the visibility of the scratchpad container.
 func ToggleScratchpad(ctx context.Context) error {
 	rpc := common.GetRPC(ctx)
 	return common.RunCmd(ctx, rpc, "scratchpad", "show").Run()
 }
 
+// ToggleScratchpadWithInfo toggles the scratchpad and shows a media status notification.
+// This is useful for visual feedback when toggling the scratchpad.
 func ToggleScratchpadWithInfo(ctx context.Context) error {
 	if err := ToggleScratchpad(ctx); err != nil {
 		return err
@@ -45,6 +53,11 @@ func ToggleScratchpadWithInfo(ctx context.Context) error {
 	return nil
 }
 
+// NextWorkspace switches to (or moves the container to) the next available workspace.
+// It maintains a counter in XDG_RUNTIME_DIR/workspaced/last_ws to ensure unique,
+// monotonically increasing workspace numbers until the system (or runtime dir) resets.
+//
+// The counter starts at 10 and increments with each call.
 func NextWorkspace(ctx context.Context, move bool) error {
 	runtimeDir := os.Getenv("XDG_RUNTIME_DIR")
 	if runtimeDir == "" {
@@ -67,6 +80,16 @@ func NextWorkspace(ctx context.Context, move bool) error {
 	return SwitchToWorkspace(ctx, nextWS, move)
 }
 
+// RotateWorkspaces rotates the visible workspaces across all connected outputs.
+// It effectively shifts the workspace on output A to output B, B to C, etc.
+// This creates a "carousel" effect for workspaces.
+//
+// The function:
+// 1. Fetches current workspaces and outputs via IPC.
+// 2. Maps outputs to their currently visible workspace.
+// 3. Rotates the list of screens.
+// 4. Moves workspaces to their new target screens.
+// 5. Restores focus to the originally focused workspace.
 func RotateWorkspaces(ctx context.Context) error {
 	rpc := common.GetRPC(ctx)
 

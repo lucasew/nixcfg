@@ -13,6 +13,9 @@ var n = &notification.Notification{
 	Icon: "audio",
 }
 
+// SetVolume sets the volume of the default sink using pactl.
+// The arg parameter accepts format like "50%", "+10%", "-10%".
+// It also triggers a status notification after the change.
 func SetVolume(ctx context.Context, arg string) error {
 	sink := "@DEFAULT_SINK@"
 	if err := common.RunCmd(ctx, "pactl", "set-sink-volume", sink, arg).Run(); err != nil {
@@ -21,6 +24,9 @@ func SetVolume(ctx context.Context, arg string) error {
 	return ShowStatus(ctx)
 }
 
+// ShowStatus retrieves the current volume and mute status of the default sink
+// and displays a notification with a progress bar.
+// It parses the output of `pactl get-sink-volume` and `pactl get-sink-mute`.
 func ShowStatus(ctx context.Context) error {
 	sink := "@DEFAULT_SINK@"
 	out, err := common.RunCmd(ctx, "pactl", "get-sink-volume", sink).Output()
