@@ -384,9 +384,7 @@ func LoadConfig() (*GlobalConfig, error) {
 			RepoDir:    filepath.Join(home, ".personal"),
 			RemotePath: "/data2/home/de3163/git-personal",
 		},
-		Hosts: map[string]HostConfig{
-			"whiterun": {MAC: "a8:a1:59:9c:ab:32"},
-		},
+		Hosts: make(map[string]HostConfig),
 		Browser: BrowserConfig{
 			Default: "zen",
 			Engine:  "brave",

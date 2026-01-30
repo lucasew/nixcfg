@@ -16,12 +16,7 @@ func Wake(ctx context.Context, host string) error {
 	hostCfg, ok := config.Hosts[host]
 	macStr := ""
 	if !ok {
-		// Hardcoded fallback for whiterun if not in config
-		if host == "whiterun" {
-			macStr = "a8:a1:59:9c:ab:32"
-		} else {
-			return fmt.Errorf("host %s not found in config", host)
-		}
+		return fmt.Errorf("host %s not found in config", host)
 	} else {
 		macStr = hostCfg.MAC
 	}
