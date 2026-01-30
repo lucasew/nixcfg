@@ -9,7 +9,6 @@
 
   imports = [
     ../base/default.nix
-    ./atuin.nix
     ./dlna.nix
     ./ghostty.nix
     ./dconf.nix
@@ -36,8 +35,6 @@
   '';
 
   stylix.enable = true;
-
-  programs.atuin.enable = true;
 
   programs.man.enable = true;
 
