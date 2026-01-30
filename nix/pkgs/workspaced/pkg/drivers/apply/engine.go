@@ -62,18 +62,53 @@ func Plan(ctx context.Context, desired []DesiredState, currentState *State) ([]A
 		desiredMap[d.Target] = d
 		current, managed := currentState.Files[d.Target]
 
-		actualSource, err := os.Readlink(d.Target)
-		exists := true
-		if err != nil {
-			exists = false
-		}
+		info, err := os.Lstat(d.Target)
+		exists := err == nil
 
+		needsUpdate := false
 		if !exists {
 			actions = append(actions, Action{Type: ActionCreate, Target: d.Target, Desired: d})
-		} else if actualSource != d.Source {
-			actions = append(actions, Action{Type: ActionUpdate, Target: d.Target, Desired: d, Current: current})
-		} else if !managed || current.Source != d.Source {
-			// Even if link is correct, update state if not managed
+			continue
+		}
+
+		if d.Mode == 0 { // Symlink
+			if info.Mode()&os.ModeSymlink == 0 {
+				needsUpdate = true
+			} else {
+				actualSource, err := os.Readlink(d.Target)
+				if err != nil || actualSource != d.Source {
+					needsUpdate = true
+				}
+			}
+		} else { // Regular File
+			if info.Mode().IsRegular() {
+				// Check permissions
+				if info.Mode().Perm() != d.Mode.Perm() {
+					needsUpdate = true
+				} else {
+					// Check content
+					srcInfo, err := os.Stat(d.Source)
+					if err == nil {
+						if info.Size() != srcInfo.Size() {
+							needsUpdate = true
+						} else {
+							// Full content check
+							srcData, _ := os.ReadFile(d.Source)
+							dstData, _ := os.ReadFile(d.Target)
+							if string(srcData) != string(dstData) {
+								needsUpdate = true
+							}
+						}
+					} else {
+						needsUpdate = true
+					}
+				}
+			} else {
+				needsUpdate = true
+			}
+		}
+
+		if needsUpdate || !managed || current.Source != d.Source {
 			actions = append(actions, Action{Type: ActionUpdate, Target: d.Target, Desired: d, Current: current})
 		} else {
 			actions = append(actions, Action{Type: ActionNoop, Target: d.Target, Desired: d, Current: current})
@@ -106,7 +141,7 @@ func Execute(ctx context.Context, actions []Action, state *State) error {
 			delete(state.Files, action.Target)
 
 		case ActionCreate, ActionUpdate:
-			logger.Info("applying link", "target", action.Target, "source", action.Desired.Source)
+			logger.Info("applying", "target", action.Target, "source", action.Desired.Source, "mode", action.Desired.Mode)
 
 			// Ensure parent directory
 			if err := os.MkdirAll(filepath.Dir(action.Target), 0755); err != nil {
@@ -118,6 +153,8 @@ func Execute(ctx context.Context, actions []Action, state *State) error {
 				if info.Mode()&os.ModeSymlink != 0 {
 					// It's a symlink, just remove it
 					_ = os.Remove(action.Target)
+				} else if info.Mode().IsRegular() && action.Desired.Mode != 0 {
+					// It's a file and we want a file, just overwrite it later
 				} else {
 					// It's a real file/dir, backup it
 					bakPath := action.Target + ".bak.workspaced"
@@ -128,8 +165,19 @@ func Execute(ctx context.Context, actions []Action, state *State) error {
 				}
 			}
 
-			if err := os.Symlink(action.Desired.Source, action.Target); err != nil {
-				return fmt.Errorf("failed to create symlink %s -> %s: %w", action.Target, action.Desired.Source, err)
+			if action.Desired.Mode == 0 {
+				if err := os.Symlink(action.Desired.Source, action.Target); err != nil {
+					return fmt.Errorf("failed to create symlink %s -> %s: %w", action.Target, action.Desired.Source, err)
+				}
+			} else {
+				// Regular File
+				data, err := os.ReadFile(action.Desired.Source)
+				if err != nil {
+					return fmt.Errorf("failed to read source file %s: %w", action.Desired.Source, err)
+				}
+				if err := os.WriteFile(action.Target, data, action.Desired.Mode); err != nil {
+					return fmt.Errorf("failed to write target file %s: %w", action.Target, err)
+				}
 			}
 			state.Files[action.Target] = ManagedInfo{Source: action.Desired.Source}
 		}

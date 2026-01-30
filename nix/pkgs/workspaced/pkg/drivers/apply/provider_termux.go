@@ -45,6 +45,7 @@ func (p *TermuxProvider) GetDesiredState(ctx context.Context) ([]DesiredState, e
 	}
 
 	desired := []DesiredState{}
+	logger := common.GetLogger(ctx)
 	for _, entry := range entries {
 		if entry.IsDir() {
 			continue
@@ -52,10 +53,12 @@ func (p *TermuxProvider) GetDesiredState(ctx context.Context) ([]DesiredState, e
 		name := entry.Name()
 		genPath := filepath.Join(genDir, name)
 
+		logger.Info("generating termux shortcut", "name", name)
 		content := fmt.Sprintf(`#!/data/data/com.termux/files/usr/bin/bash
 export LD_PRELOAD="/data/data/com.termux/files/usr/lib/libtermux-exec.so"
 export PATH="/data/data/com.termux/files/usr/bin"
-exec bash %s/bin/source_me sd _shortcuts termux %s "$@"
+. "%s/bin/source_me"
+sd _shortcuts termux %s "$@"
 `, dotfiles, name)
 
 		if err := os.WriteFile(genPath, []byte(content), 0755); err != nil {
@@ -65,6 +68,7 @@ exec bash %s/bin/source_me sd _shortcuts termux %s "$@"
 		desired = append(desired, DesiredState{
 			Target: filepath.Join(home, ".shortcuts", name),
 			Source: genPath,
+			Mode:   0755,
 		})
 	}
 

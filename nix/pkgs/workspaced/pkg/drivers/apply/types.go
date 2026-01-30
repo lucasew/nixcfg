@@ -2,6 +2,7 @@ package apply
 
 import (
 	"context"
+	"os"
 )
 
 type ActionType int
@@ -28,8 +29,9 @@ func (a ActionType) String() string {
 }
 
 type DesiredState struct {
-	Target string // Absolute path on the system
-	Source string // Absolute path to the source file (could be in repo or generated)
+	Target string      // Absolute path on the system
+	Source string      // Absolute path to the source file (could be in repo or generated)
+	Mode   os.FileMode // Type/Mode of the target. 0 means symlink.
 }
 
 type ManagedInfo struct {
