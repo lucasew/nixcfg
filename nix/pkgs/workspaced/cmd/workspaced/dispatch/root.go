@@ -143,7 +143,7 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 		slog.Info("daemon not reachable, running locally", "error", err)
 		return "", false, nil
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 
 	req := types.Request{
 		Command: cmdName,

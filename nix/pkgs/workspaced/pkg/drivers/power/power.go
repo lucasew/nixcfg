@@ -42,7 +42,7 @@ func Wake(ctx context.Context, host string) error {
 	if err != nil {
 		return fmt.Errorf("failed to dial UDP broadcast: %w", err)
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 
 	_, err = conn.Write(packet)
 	if err != nil {

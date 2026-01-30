@@ -9,10 +9,6 @@ import (
 	"workspaced/pkg/drivers/notification"
 )
 
-var n = &notification.Notification{
-	Icon: "audio",
-}
-
 func SetVolume(ctx context.Context, arg string) error {
 	sink := "@DEFAULT_SINK@"
 	if err := common.RunCmd(ctx, "pactl", "set-sink-volume", sink, arg).Run(); err != nil {

@@ -27,7 +27,7 @@ func init() {
 				logger.Info("approving command", "command", sc.Command, "args", sc.Args, "slug", slug)
 
 				// Always remove after attempting to run
-				defer sudo.Remove(slug)
+				defer func() { _ = sudo.Remove(slug) }()
 
 				ec := exec.Command("sudo", append([]string{"-E", sc.Command}, sc.Args...)...)
 				ec.Stdout = os.Stdout

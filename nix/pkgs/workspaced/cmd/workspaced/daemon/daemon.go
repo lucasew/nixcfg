@@ -74,7 +74,7 @@ func RunDaemon() error {
 		}
 		listener = l
 	}
-	defer listener.Close()
+	defer func() { _ = listener.Close() }()
 
 	slog.Info("listening", "address", listener.Addr())
 
@@ -95,7 +95,7 @@ func handleWS(w http.ResponseWriter, r *http.Request) {
 		slog.Error("ws upgrade error", "error", err)
 		return
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 
 	ctx, cancel := context.WithCancel(r.Context())
 	defer cancel()
