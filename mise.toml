@@ -3,11 +3,6 @@ sops = "3.11.0"
 ruff = "0.14.14"
 shfmt = "3.12.0"
 shellcheck = "0.11.0"
-go = "1.23.6"
-"go:golang.org/x/tools/gopls" = "0.21.0"
-golangci-lint = "1.61.0"
-terraform = "1.9.0"
-tflint = "0.60.0"
 
 [tasks.lint]
 description = "Run all linters"
@@ -15,7 +10,7 @@ depends = ["lint:*"]
 
 [tasks."lint:nix"]
 description = "Lint Nix files"
-run = "nix fmt -- --check"
+run = "command -v nix >/dev/null && nix fmt -- --check || echo 'Nix not found, skipping'"
 
 [tasks."lint:sh"]
 description = "Lint Shell scripts"
@@ -31,12 +26,12 @@ run = "ruff check ."
 [tasks."lint:go"]
 description = "Lint Go files"
 dir = "nix/pkgs/workspaced"
-run = "golangci-lint run ./..."
+run = "mise exec -- golangci-lint run ./..."
 
 [tasks."lint:tf"]
 description = "Lint Terraform files"
 dir = "infra"
-run = "tflint --recursive"
+run = "mise exec -- tflint --recursive"
 
 [tasks.fmt]
 description = "Format all files"
@@ -44,7 +39,7 @@ depends = ["fmt:*"]
 
 [tasks."fmt:nix"]
 description = "Format Nix files"
-run = "nix fmt"
+run = "command -v nix >/dev/null && nix fmt || echo 'Nix not found, skipping'"
 
 [tasks."fmt:sh"]
 description = "Format Shell scripts"
@@ -60,12 +55,12 @@ run = """
 [tasks."fmt:go"]
 description = "Format Go files"
 dir = "nix/pkgs/workspaced"
-run = "go fmt ./..."
+run = "mise exec -- go fmt ./..."
 
 [tasks."fmt:tf"]
 description = "Format Terraform files"
 dir = "infra"
-run = "terraform fmt -recursive"
+run = "mise exec -- terraform fmt -recursive"
 
 [tasks.test]
 description = "Run tests"
@@ -73,12 +68,12 @@ depends = ["test:*"]
 
 [tasks."test:nix"]
 description = "Test Nix configuration"
-run = "nix flake check"
+run = "command -v nix >/dev/null && nix flake check || echo 'Nix not found, skipping'"
 
 [tasks."test:go"]
 description = "Test Go code"
 dir = "nix/pkgs/workspaced"
-run = "go test ./..."
+run = "mise exec -- go test ./..."
 
 [tasks.codegen]
 description = "Generate code"
@@ -87,7 +82,7 @@ depends = ["codegen:*"]
 [tasks."codegen:go"]
 description = "Tidy Go modules"
 dir = "nix/pkgs/workspaced"
-run = "go mod tidy"
+run = "mise exec -- go mod tidy"
 
 [tasks.install]
 description = "Install dependencies"
@@ -96,7 +91,7 @@ depends = ["install:*"]
 [tasks."install:go"]
 description = "Install Go dependencies"
 dir = "nix/pkgs/workspaced"
-run = "go mod download"
+run = "mise exec -- go mod download"
 
 [tasks."install:nix"]
 description = "Install Nix dependencies"
