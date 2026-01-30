@@ -8,8 +8,10 @@ import (
 	"strings"
 )
 
+// Status represents the charging status of the battery.
 type Status string
 
+// Battery status constants.
 const (
 	Charging    Status = "Charging"
 	Discharging Status = "Discharging"
@@ -17,6 +19,9 @@ const (
 	Unknown     Status = "Unknown"
 )
 
+// GetStatus retrieves the current battery status.
+// It scans /sys/class/power_supply/BAT*/status to find the first available battery
+// and reads its status.
 func GetStatus(ctx context.Context) (Status, error) {
 	matches, _ := filepath.Glob("/sys/class/power_supply/BAT*/status")
 	if len(matches) == 0 {
