@@ -3,8 +3,11 @@ sops = "3.11.0"
 ruff = "0.14.14"
 shfmt = "3.12.0"
 shellcheck = "0.11.0"
-go = "1.25.6"
+go = "1.23.6"
 "go:golang.org/x/tools/gopls" = "0.21.0"
+golangci-lint = "1.61.0"
+terraform = "1.9.0"
+tflint = "0.60.0"
 
 [tasks.lint]
 description = "Run all linters"
@@ -25,14 +28,80 @@ run = """
 description = "Lint Python files"
 run = "ruff check ."
 
+[tasks."lint:go"]
+description = "Lint Go files"
+dir = "nix/pkgs/workspaced"
+run = "golangci-lint run ./..."
+
+[tasks."lint:tf"]
+description = "Lint Terraform files"
+dir = "infra"
+run = "tflint --recursive"
+
+[tasks.fmt]
+description = "Format all files"
+depends = ["fmt:*"]
+
+[tasks."fmt:nix"]
+description = "Format Nix files"
+run = "nix fmt"
+
+[tasks."fmt:sh"]
+description = "Format Shell scripts"
+run = "shfmt -w ."
+
+[tasks."fmt:py"]
+description = "Format Python files"
+run = """
+    ruff check --fix .
+    ruff format .
+"""
+
+[tasks."fmt:go"]
+description = "Format Go files"
+dir = "nix/pkgs/workspaced"
+run = "go fmt ./..."
+
+[tasks."fmt:tf"]
+description = "Format Terraform files"
+dir = "infra"
+run = "terraform fmt -recursive"
+
 [tasks.test]
 description = "Run tests"
+depends = ["test:*"]
+
+[tasks."test:nix"]
+description = "Test Nix configuration"
 run = "nix flake check"
+
+[tasks."test:go"]
+description = "Test Go code"
+dir = "nix/pkgs/workspaced"
+run = "go test ./..."
+
+[tasks.codegen]
+description = "Generate code"
+depends = ["codegen:*"]
+
+[tasks."codegen:go"]
+description = "Tidy Go modules"
+dir = "nix/pkgs/workspaced"
+run = "go mod tidy"
+
+[tasks.install]
+description = "Install dependencies"
+depends = ["install:*"]
+
+[tasks."install:go"]
+description = "Install Go dependencies"
+dir = "nix/pkgs/workspaced"
+run = "go mod download"
+
+[tasks."install:nix"]
+description = "Install Nix dependencies"
+run = "echo 'Managed by Nix'"
 
 [tasks.ci]
 description = "Run CI pipeline locally"
 depends = ["lint", "test"]
-
-[tasks.install]
-description = "Install dependencies"
-run = "echo 'Managed by Nix'"

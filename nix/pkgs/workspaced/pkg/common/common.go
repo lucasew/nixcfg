@@ -33,7 +33,9 @@ func init() {
 			newPath = append([]string{path}, newPath...)
 		}
 	}
-	os.Setenv("PATH", strings.Join(newPath, ":"))
+	if err := os.Setenv("PATH", strings.Join(newPath, ":")); err != nil {
+		panic(err)
+	}
 }
 
 // GetLogger retrieves the logger instance from the context.

@@ -30,7 +30,7 @@ jobs:
         done
 
         sudo journalctl -f -u "miseci-*" &
-        
+
         echo "Workers started. Waiting for them to finish (they stop on error)..."
         while true; do
           if ! systemctl is-active --quiet "miseci-1" "miseci-2" "miseci-3" "miseci-4"; then

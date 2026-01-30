@@ -64,4 +64,3 @@ jobs:
           delete-branch: true
           reviewers: |
             lucasew
-

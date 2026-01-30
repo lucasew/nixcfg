@@ -59,7 +59,7 @@ func SetAPOD(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	var apod APODResponse
 	if err := json.NewDecoder(resp.Body).Decode(&apod); err != nil {
@@ -80,13 +80,13 @@ func SetAPOD(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	defer out.Close()
+	defer func() { _ = out.Close() }()
 
 	imgResp, err := http.Get(url)
 	if err != nil {
 		return err
 	}
-	defer imgResp.Body.Close()
+	defer func() { _ = imgResp.Body.Close() }()
 
 	if _, err := io.Copy(out, imgResp.Body); err != nil {
 		return err

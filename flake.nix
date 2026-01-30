@@ -216,7 +216,7 @@
         devShells.default = pkgs.mkShell {
           name = "nixcfg-shell";
           buildInputs = with pkgs; [
-            ctl
+            # ctl # missing
           ];
           shellHook = ''
             export NIXCFG_ROOT_PATH=$(pwd)

@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - master
-    paths:
-      - '**.nix'
-      - 'flake.lock'
+      - main
+  pull_request:
   workflow_dispatch:
 
 concurrency:
@@ -14,41 +13,46 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  autorelease:
+  ci-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
-      - name: Setup build disk space
-        uses: lucasew/action-i-only-care-about-nix@main
-
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
-
-      - name: Setup stuff
-        run: |
-          sudo mkdir -p /nix/build
-          df -h
+      - uses: actions/checkout@v4
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
+        uses: DeterminateSystems/nix-installer-action@v16
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          extra-conf: |
-            build-dir = /nix/build
 
       - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+        uses: DeterminateSystems/magic-nix-cache-action@v8
 
-      - uses: cachix/cachix-action@0fc020193b5a1fa3ac4575aa3a7d3aa6a35435ad # v16
-        with:
-          name: lucasew-personal
-          authToken: '${{ secrets.CACHIX_TOKEN }}'
+      - name: Install mise
+        uses: jdx/mise-action@v2
 
-      - name: Build release
+      - name: Install dependencies
+        run: mise run install
+
+      - name: Codegen
+        run: mise run codegen
+
+      - name: Check for changes
+        id: git-check
         run: |
-          nix build .#release --keep-going --accept-flake-config
+          git diff --exit-code || echo "changes=true" >> $GITHUB_OUTPUT
 
-      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
-        if: failure()
+      - name: Create Pull Request
+        if: steps.git-check.outputs.changes == 'true' && github.event_name != 'pull_request'
+        uses: peter-evans/create-pull-request@v6
         with:
-          name: build-logs
-          path: /nix/var/log/nix/drvs
-          include-hidden-files: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update generated code"
+          title: "chore: update generated code"
+          body: "This PR updates generated code based on the latest changes."
+          branch: "autorelease/codegen"
+          delete-branch: true
+
+      - name: Run CI
+        run: mise run ci

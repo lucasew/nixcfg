@@ -71,7 +71,7 @@ func GetIconPath(ctx context.Context, url string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("bad status: %s", resp.Status)
@@ -89,7 +89,7 @@ func GetIconPath(ctx context.Context, url string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer out.Close()
+	defer func() { _ = out.Close() }()
 
 	if err := png.Encode(out, img); err != nil {
 		return "", err

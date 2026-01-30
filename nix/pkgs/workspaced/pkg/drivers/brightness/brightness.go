@@ -9,8 +9,6 @@ import (
 	"workspaced/pkg/drivers/notification"
 )
 
-var n = &notification.Notification{}
-
 func SetBrightness(ctx context.Context, arg string) error {
 	if arg != "" {
 		if err := common.RunCmd(ctx, "brightnessctl", "s", arg).Run(); err != nil {

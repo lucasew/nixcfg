@@ -44,13 +44,13 @@ func getArtCachePath(url string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	out, err := os.Create(path)
 	if err != nil {
 		return "", err
 	}
-	defer out.Close()
+	defer func() { _ = out.Close() }()
 
 	if _, err := io.Copy(out, resp.Body); err != nil {
 		return "", err
