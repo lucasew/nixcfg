@@ -29,5 +29,5 @@
     "scminput": false,
     "latex": false
   },
-  "mise.binPath": "/home/lucasew/.local/bin/mise"
+  "mise.binPath": "~/.local/bin/mise"
 }

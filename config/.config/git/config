@@ -7,4 +7,4 @@
 [user]
 	email = "lucas59356@gmail.com"
 	name = "lucasew"
-	signingkey = /home/lucasew/.ssh/id_ed25519.pub
+	signingkey = ~/.ssh/id_ed25519.pub
