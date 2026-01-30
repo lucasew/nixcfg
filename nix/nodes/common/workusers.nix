@@ -24,7 +24,6 @@
   environment.systemPackages = with pkgs; [
     ecryptfs
     brave
-    docker-compose
   ];
   virtualisation.podman.enable = true;
 }

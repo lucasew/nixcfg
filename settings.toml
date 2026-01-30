@@ -290,3 +290,7 @@ bins = ["vscode-html-language-server", "vscode-css-language-server", "vscode-jso
 [lazy_tools."vfox:clang"]
 version = "18.1.8"
 bins = ["clang", "clang++"]
+
+[lazy_tools."jless"]
+version = "0.9.0"
+global = true

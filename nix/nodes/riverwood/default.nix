@@ -44,21 +44,9 @@ in
 
   programs.nix-ld.enable = true;
 
-  # services.xserver.windowManager.i3.enable = true;
-  # programs.hyprland.enable = true;
   programs.sway.enable = true;
-  # services.desktopManager.cosmic.enable = true;
 
   services.sunshine.enable = true;
-
-  # virtualisation.waydroid.enable = true;
-
-  # services.nixgram = {
-  #   enable = true;
-  #   customCommands = {
-  #     ping = "echo pong";
-  #   };
-  # };
 
   services.nginx.enable = true;
 
@@ -82,11 +70,6 @@ in
   programs.steam.enable = true;
 
   services.xserver.xkb.model = "acer_laptop";
-
-  # services.simple-dashboardd = {
-  #   enable = true;
-  #   openFirewall = true;
-  # };
 
   virtualisation.kvmgt.enable = false;
   virtualisation.spiceUSBRedirection.enable = true;
@@ -114,21 +97,11 @@ in
   gc-hold = {
     enable = true;
     paths = with pkgs; [
-      go
-      gopls
-      # zig zls
-      # terraform
-      # ansible vagrant
       gnumake
       cmake
       clang
       gdb
       ccls
-      # python3Packages.pylsp-mypy
-      # nodejs yarn
-      # openjdk11 maven ant
-      docker-compose
-      # jre
     ];
   };
 

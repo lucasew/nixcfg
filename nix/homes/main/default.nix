@@ -37,14 +37,9 @@
 
   stylix.enable = true;
 
-  # programs.ghostty.enable = true;
-
   programs.atuin.enable = true;
 
-  # programs.zen-browser.enable = true; # Handled unconditionally in zen-browser.nix
   programs.man.enable = true;
-
-  # programs.qutebrowser.enable = true;
 
   home = {
     homeDirectory = /home/lucasew;
@@ -52,12 +47,8 @@
   };
 
   home.packages = with pkgs; [
-    uv
-    ruff
     mission-center
-    # custom.firefox # now I am using chromium
     cached-nix-shell
-    jless # json viewer
     feh
     fortune
     graphviz
@@ -69,9 +60,6 @@
     nix-prefetch-scripts
     nix-output-monitor
     pkg
-    rclone
-    ripgrep
-    fd
     remmina
     sqlite
     sshpass
@@ -104,16 +92,12 @@
     })
   ];
 
-  # programs.hello-world.enable = true;
-
   programs = {
-    # adskipped-spotify.enable = true;
     jq.enable = true;
     obs-studio = {
       package = pkgs.obs-studio;
       enable = true;
     };
-    
   };
 
   gtk = {
