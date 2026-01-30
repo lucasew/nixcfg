@@ -291,7 +291,11 @@ __sd() {
 			exit 1
 		fi
 	elif [[ -x "$target" ]]; then
-		SD="$(dirname "$target")" exec "$target" "$@"
+		if [[ -n ${TERMUX_VERSION:-} ]]; then
+			SD="$(dirname "$target")" exec bash "$target" "$@"
+		else
+			SD="$(dirname "$target")" exec "$target" "$@"
+		fi
 	else
 		__sd_cat "$@"
 	fi
