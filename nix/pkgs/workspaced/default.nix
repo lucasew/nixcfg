@@ -4,8 +4,8 @@ writeShellScriptBin "workspaced" ''
   dotfilesFolder=
   if [ -d ~/.dotfiles ]; then
     dotfilesFolder=~/.dotfiles
-  elif [ -d /home/lucasew/.dotfiles ]; then
-    dotfilesFolder=/home/lucasew/.dotfiles
+  elif [ -d "$HOME/.dotfiles" ]; then
+    dotfilesFolder="$HOME/.dotfiles"
   elif [ -d /etc/.dotfiles ]; then
     dotfilesFolder=/etc/.dotfiles
   fi
