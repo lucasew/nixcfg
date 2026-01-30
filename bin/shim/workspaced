@@ -13,9 +13,9 @@ fi
 
 SOURCE_DIR="$DOTFILES_ROOT/nix/pkgs/workspaced"
 
-cd "$SOURCE_DIR"
+cd "$SOURCE_DIR" >> /dev/null
 mkdir -p ~/.local/share/workspaced/bin
 mise exec -- go build -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
-cd -
+cd - >> /dev/null
 
 exec ~/.local/share/workspaced/bin/workspaced "$@"
