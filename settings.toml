@@ -59,8 +59,25 @@ default = "default.jpg"
 [backup]
 rsyncnet_user = "de3163@de3163.rsync.net"
 
-[hosts]
-whiterun = "a8:a1:59:9c:ab:32"
+[hosts.riverwood]
+tailscale_ip = "100.82.35.120"
+zerotier_ip = "192.168.69.2"
+port = 22
+
+[hosts.whiterun]
+tailscale_ip = "100.85.38.19"
+zerotier_ip = "192.168.69.1"
+mac = "a8:a1:59:9c:ab:32"
+port = 22
+
+[hosts.ravenrock]
+tailscale_ip = "100.122.87.59"
+port = 22
+
+[hosts.phone]
+tailscale_ip = "100.76.88.29"
+zerotier_ip = "192.168.69.4"
+port = 22
 
 [browser]
 default = "zen"

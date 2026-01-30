@@ -91,9 +91,25 @@ func getConfigValue(cfg *common.GlobalConfig, key string) (any, error) {
 		}
 
 	case "hosts":
-		if len(parts) == 2 {
+		if len(parts) >= 2 {
 			if val, ok := cfg.Hosts[parts[1]]; ok {
-				return val, nil
+				if len(parts) == 2 {
+					return val, nil
+				}
+				switch parts[2] {
+				case "mac":
+					return val.MAC, nil
+				case "tailscale_ip":
+					return val.TailscaleIP, nil
+				case "zerotier_ip":
+					return val.ZerotierIP, nil
+				case "port":
+					return val.Port, nil
+				case "user":
+					return val.User, nil
+				default:
+					return nil, fmt.Errorf("unknown host field: %s", parts[2])
+				}
 			}
 			return nil, fmt.Errorf("host key not found: %s", parts[1])
 		} else if len(parts) == 1 {

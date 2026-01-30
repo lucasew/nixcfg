@@ -85,6 +85,7 @@
       };
 
       pkgs = mkPkgs { inherit system; };
+      settings = builtins.fromTOML (builtins.readFile ./settings.toml);
       mkPkgs =
         {
           nixpkgs ? defaultNixpkgs,
@@ -107,23 +108,7 @@
       global = {
         username = "lucasew";
         email = "lucas59356@gmail.com";
-        nodeIps = {
-          riverwood = {
-            ts = "100.82.35.120";
-            zt = "192.168.69.2";
-          };
-          whiterun = {
-            ts = "100.85.38.19";
-            zt = "192.168.69.1";
-          };
-          ravenrock = {
-            ts = "100.122.87.59";
-          };
-          phone = {
-            ts = "100.76.88.29";
-            zt = "192.168.69.4";
-          };
-        };
+        hosts = settings.hosts;
         selectedDesktopEnvironment = "i3";
         environmentShell = ''
           source ${self}/bin/source_me

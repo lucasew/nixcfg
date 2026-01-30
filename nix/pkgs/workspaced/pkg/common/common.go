@@ -195,11 +195,19 @@ type GlobalConfig struct {
 	Workspaces map[string]int          `toml:"workspaces"`
 	Wallpaper  WallpaperConfig         `toml:"wallpaper"`
 	Screenshot ScreenshotConfig        `toml:"screenshot"`
-	Hosts      map[string]string       `toml:"hosts"`
+	Hosts      map[string]HostConfig   `toml:"hosts"`
 	Backup     BackupConfig            `toml:"backup"`
 	QuickSync  QuickSyncConfig         `toml:"quicksync"`
 	Browser    BrowserConfig           `toml:"browser"`
 	Webapps    map[string]WebappConfig `toml:"webapp"`
+}
+
+type HostConfig struct {
+	MAC         string `toml:"mac"`
+	TailscaleIP string `toml:"tailscale_ip"`
+	ZerotierIP  string `toml:"zerotier_ip"`
+	Port        int    `toml:"port"`
+	User        string `toml:"user"`
 }
 
 type BrowserConfig struct {
@@ -307,10 +315,10 @@ func (g GlobalConfig) Merge(other GlobalConfig) GlobalConfig {
 	}
 
 	if result.Hosts == nil {
-		result.Hosts = make(map[string]string)
+		result.Hosts = make(map[string]HostConfig)
 	} else {
 		// Copy the map
-		newHosts := make(map[string]string, len(result.Hosts))
+		newHosts := make(map[string]HostConfig, len(result.Hosts))
 		maps.Copy(newHosts, result.Hosts)
 		result.Hosts = newHosts
 	}
@@ -376,8 +384,8 @@ func LoadConfig() (*GlobalConfig, error) {
 			RepoDir:    filepath.Join(home, ".personal"),
 			RemotePath: "/data2/home/de3163/git-personal",
 		},
-		Hosts: map[string]string{
-			"whiterun": "a8:a1:59:9c:ab:32",
+		Hosts: map[string]HostConfig{
+			"whiterun": {MAC: "a8:a1:59:9c:ab:32"},
 		},
 		Browser: BrowserConfig{
 			Default: "zen",

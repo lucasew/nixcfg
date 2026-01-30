@@ -13,7 +13,8 @@ func Wake(ctx context.Context, host string) error {
 		return err
 	}
 
-	macStr, ok := config.Hosts[host]
+	hostCfg, ok := config.Hosts[host]
+	macStr := ""
 	if !ok {
 		// Hardcoded fallback for whiterun if not in config
 		if host == "whiterun" {
@@ -21,6 +22,12 @@ func Wake(ctx context.Context, host string) error {
 		} else {
 			return fmt.Errorf("host %s not found in config", host)
 		}
+	} else {
+		macStr = hostCfg.MAC
+	}
+
+	if macStr == "" {
+		return fmt.Errorf("host %s has no MAC address configured", host)
 	}
 
 	hwAddr, err := net.ParseMAC(macStr)

@@ -5,7 +5,7 @@
   ...
 }:
 let
-  node = global.nodeIps.${config.networking.hostName}.ts or null;
+  node = global.hosts.${config.networking.hostName}.tailscale_ip or null;
 
   nginxDomains = builtins.attrNames config.services.nginx.virtualHosts;
   baseDomain = "${config.networking.hostName}.${config.networking.domain}";

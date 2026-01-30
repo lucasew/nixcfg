@@ -8,8 +8,14 @@
 let
   inherit (builtins) attrValues concatStringsSep;
   inherit (lib) flatten;
-  ipAttrs = attrValues global.nodeIps;
-  ips = flatten (map (attrValues) ipAttrs);
+  hostAttrs = attrValues global.hosts;
+  ips = flatten (
+    map (
+      h:
+      (if (h ? tailscale_ip) then [ h.tailscale_ip ] else [ ])
+      ++ (if (h ? zerotier_ip) then [ h.zerotier_ip ] else [ ])
+    ) hostAttrs
+  );
   ipExprs = map (ip: "allow ${ip};") ips;
 in
 {

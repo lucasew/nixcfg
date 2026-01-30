@@ -17,6 +17,7 @@
     ./qutebrowser.nix
     ./zen-browser.nix
     ./mise.nix
+    ./ssh.nix
   ];
 
   stylix.enable = true;
