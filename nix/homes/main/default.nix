@@ -65,6 +65,7 @@
     sqlite
     sshpass
     zenity
+    workspaced
 
     # media
     nbr.wine-apps._7zip

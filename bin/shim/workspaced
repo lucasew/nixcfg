@@ -18,7 +18,11 @@ if [[ -d "$SOURCE_DIR" ]]; then
 	BASE_TMP="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}"
 	mkdir -p "$BASE_TMP"
 	TEMP_BIN="$BASE_TMP/workspaced-hot"
-	(cd "$SOURCE_DIR" && go build -o "$TEMP_BIN" ./cmd/workspaced)
+	if command -v mise > /dev/null; then
+		(cd "$SOURCE_DIR" && mise exec -- go build -o "$TEMP_BIN" ./cmd/workspaced)
+	else
+		(cd "$SOURCE_DIR" && go build -o "$TEMP_BIN" ./cmd/workspaced)
+	fi
 	exec "$TEMP_BIN" "$@"
 fi
 
