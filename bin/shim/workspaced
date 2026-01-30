@@ -15,7 +15,7 @@ SOURCE_DIR="$DOTFILES_ROOT/nix/pkgs/workspaced"
 
 cd "$SOURCE_DIR" >> /dev/null
 mkdir -p ~/.local/share/workspaced/bin
-mise exec go@1.23.6 -- go build -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
+mise exec go@1.23.6 -- env CGO_ENABLED=0 go build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
 cd - >> /dev/null
 
 exec ~/.local/share/workspaced/bin/workspaced "$@"

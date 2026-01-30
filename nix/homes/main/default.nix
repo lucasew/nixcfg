@@ -30,7 +30,7 @@
     fi
     if [ -n "$dotfilesFolder" ]; then
       mkdir -p ~/.local/share/workspaced/bin
-      (cd "$dotfilesFolder/nix/pkgs/workspaced" && "$dotfilesFolder/bin/shim/mise" exec -- go build -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced)
+      (cd "$dotfilesFolder/nix/pkgs/workspaced" && "$dotfilesFolder/bin/shim/mise" exec -- env CGO_ENABLED=0 go build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced)
     fi
     $DRY_RUN_CMD systemctl --user restart workspaced.service || true
   '';
