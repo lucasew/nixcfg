@@ -20,6 +20,18 @@
   ];
 
   home.activation.restart-workspaced = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    dotfilesFolder=
+    if [ -d ~/.dotfiles ]; then
+      dotfilesFolder=~/.dotfiles
+    elif [ -d /home/lucasew/.dotfiles ]; then
+      dotfilesFolder=/home/lucasew/.dotfiles
+    elif [ -d /etc/.dotfiles ]; then
+      dotfilesFolder=/etc/.dotfiles
+    fi
+    if [ -n "$dotfilesFolder" ]; then
+      mkdir -p ~/.local/share/workspaced/bin
+      (cd "$dotfilesFolder/nix/pkgs/workspaced" && "$dotfilesFolder/bin/shim/mise" exec -- go build -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced)
+    fi
     $DRY_RUN_CMD systemctl --user restart workspaced.service || true
   '';
 
@@ -64,7 +76,6 @@
     sqlite
     sshpass
     zenity
-    workspaced
 
     # media
     nbr.wine-apps._7zip
