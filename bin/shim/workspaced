@@ -13,26 +13,9 @@ fi
 
 SOURCE_DIR="$DOTFILES_ROOT/nix/pkgs/workspaced"
 
-if [[ -d "$SOURCE_DIR" ]]; then
-	# Hot build!
-	BASE_TMP="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}"
-	mkdir -p "$BASE_TMP"
-	TEMP_BIN="$BASE_TMP/workspaced-hot"
-	if command -v mise > /dev/null; then
-		(cd "$SOURCE_DIR" && mise exec -- go build -o "$TEMP_BIN" ./cmd/workspaced)
-	else
-		(cd "$SOURCE_DIR" && go build -o "$TEMP_BIN" ./cmd/workspaced)
-	fi
-	exec "$TEMP_BIN" "$@"
-fi
+cd "$SOURCE_DIR"
+mkdir -p ~/.local/share/workspaced/bin
+mise exec -- go build -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
+cd -
 
-# Fallback to pre-installed binary
-# We use -ap to find all occurrences and grep -v to skip this script itself
-REAL_BIN=$(type -ap workspaced | grep -v "$0" | head -n 1)
-
-if [[ -n "$REAL_BIN" ]]; then
-	exec "$REAL_BIN" "$@"
-fi
-
-echo "workspaced: source not found in $SOURCE_DIR and no binary found in PATH" >&2
-exit 1
+exec ~/.local/share/workspaced/bin/workspaced "$@"
