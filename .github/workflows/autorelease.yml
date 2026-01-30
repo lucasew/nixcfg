@@ -56,16 +56,3 @@ jobs:
 
       - name: Run CI
         run: mise run ci
-
-      - name: Release
-        if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-            if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-              TAG_NAME="v$(date +'%Y%m%d%H%M%S')"
-              echo "Creating release $TAG_NAME"
-              gh release create "$TAG_NAME" --generate-notes
-            else
-              gh release create "${{ github.ref_name }}" --generate-notes
-            fi
