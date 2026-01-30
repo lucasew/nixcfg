@@ -16,7 +16,6 @@
     ./theme
     ./qutebrowser.nix
     ./zen-browser.nix
-    ./mise.nix
     ./ssh.nix
   ];
 

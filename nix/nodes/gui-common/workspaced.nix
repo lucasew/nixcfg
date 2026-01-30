@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   config = {
@@ -7,12 +7,8 @@
     systemd.user.services.workspaced = {
       description = "Workspaced Daemon";
       wantedBy = [ "graphical-session.target" ];
-      path = with pkgs; [ 
-        workspaced 
-        mise
-      ];
       serviceConfig = {
-        ExecStart = "workspaced daemon";
+        ExecStart = lib.getExe pkgs.workspaced;
         Restart = "on-failure";
       };
     };
