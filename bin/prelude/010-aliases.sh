@@ -6,7 +6,6 @@ alias ..='cd ..'
 alias ç='sd'
 alias e=$EDITOR
 alias sdw=sd
-alias workspaced="$HOME/.local/share/workspaced/bin/workspaced"
 
 function reset_term {
 	tput reset
