@@ -552,11 +552,11 @@
     "telegram-sendmail": {
       "flake": false,
       "locked": {
-        "lastModified": 1743646182,
-        "narHash": "sha256-Ki9fGWiCo0ul2wNtcGs3oeAcszI/jxpGmsvw/94gWuQ=",
+        "lastModified": 1769811181,
+        "narHash": "sha256-t6kr+MHPFiGMUNeTsiVr6TzwVUZ7jQe6gVz5cRe8iug=",
         "owner": "lucasew",
         "repo": "telegram-sendmail",
-        "rev": "8563ce801ef50eb095ba75027a631753cf75c846",
+        "rev": "c8d268cfc316917f864a6c73b13049503b03336d",
         "type": "github"
       },
       "original": {
