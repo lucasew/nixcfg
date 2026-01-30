@@ -160,29 +160,29 @@ url = "https://calendar.google.com/calendar/u/0/r/customday"
 desktop_name = "Calendário"
 icon = "x-office-calendar"
 
-[webapp.twitchLive]
+[webapp.twitch-dashboard]
 url = "https://dashboard.twitch.tv/stream-manager"
-desktop_name = "Dashboard de Live"
 
-[webapp.trello-facul]
-url = "https://trello.com/b/ov0pbUtC/facul"
-desktop_name = "Trello Faculdade"
+# [webapp.trello-facul]
+# url = "https://trello.com/b/ov0pbUtC/facul"
 
 [webapp.trello-pessoal]
 url = "https://trello.com/b/bjoRKSM2/pessoal"
-desktop_name = "Trello Pessoal"
 
-[webapp.trello-sides]
+[webapp.trello-side-projects]
 url = "https://trello.com/b/36ncJYYV/side-projects"
-desktop_name = "Trello Side Projects"
 
 [webapp.trello-dashboard]
 url = "trello.com"
-desktop_name = "Trello Dashboard"
 
 [webapp.geforce-now]
 url = "play.geforcenow.com"
-desktop_name = "GeForce Now"
 
 [webapp.deezer]
 url = "deezer.com"
+
+[webapp.jules]
+url = "jules.google.com"
+
+[webapp.claude-code-web]
+url = "claude.ai/code"
