@@ -20,6 +20,10 @@
     ./ssh.nix
   ];
 
+  home.activation.restart-workspaced = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    $DRY_RUN_CMD systemctl --user restart workspaced.service || true
+  '';
+
   stylix.enable = true;
 
   # programs.ghostty.enable = true;
