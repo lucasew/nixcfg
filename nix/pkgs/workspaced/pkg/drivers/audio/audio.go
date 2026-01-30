@@ -9,10 +9,6 @@ import (
 	"workspaced/pkg/drivers/notification"
 )
 
-var n = &notification.Notification{
-	Icon: "audio",
-}
-
 // SetVolume sets the volume of the default sink using pactl.
 // The arg parameter accepts format like "50%", "+10%", "-10%".
 // It also triggers a status notification after the change.
