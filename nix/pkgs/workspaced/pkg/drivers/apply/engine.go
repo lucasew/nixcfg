@@ -131,11 +131,10 @@ func Execute(ctx context.Context, actions []Action, state *State) error {
 		case ActionNoop:
 			continue
 		case ActionDelete:
-			logger.Info("pruning orphaned link", "target", action.Target)
-			// Only delete if it's a symlink pointing where we thought it was
-			if actual, err := os.Readlink(action.Target); err == nil && actual == action.Current.Source {
+			logger.Info("pruning orphaned file", "target", action.Target)
+			if _, err := os.Lstat(action.Target); err == nil {
 				if err := os.Remove(action.Target); err != nil {
-					return fmt.Errorf("failed to remove orphaned link %s: %w", action.Target, err)
+					return fmt.Errorf("failed to remove orphaned file %s: %w", action.Target, err)
 				}
 			}
 			delete(state.Files, action.Target)

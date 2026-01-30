@@ -203,3 +203,86 @@ url = "jules.google.com"
 
 [webapp.claude-code-web]
 url = "claude.ai/code"
+
+[lazy_tools."bun"]
+version = "1.3.8"
+
+[lazy_tools."docker-compose"]
+version = "5.0.1"
+global = true
+
+[lazy_tools."fd"]
+version = "10.3.0"
+global = true
+
+[lazy_tools."opencode"]
+version = "1.1.40"
+global = true
+
+[lazy_tools."rclone"]
+version = "1.72.1"
+global = true
+
+[lazy_tools."ripgrep"]
+version = "15.1.0"
+global = true
+
+[lazy_tools."ruff"]
+version = "0.14.14"
+
+[lazy_tools."shfmt"]
+version = "3.12.0"
+
+[lazy_tools."shellcheck"]
+version = "0.11.0"
+
+[lazy_tools."sops"]
+version = "3.11.0"
+
+[lazy_tools."uv"]
+version = "0.9.28"
+global = true
+
+[lazy_tools."yt-dlp"]
+version = "2025.10.22"
+global = true
+
+[lazy_tools."terraform"]
+version = "1.9.0"
+
+[lazy_tools."tflint"]
+version = "0.60.0"
+
+[lazy_tools."go"]
+version = "1.23.6"
+
+[lazy_tools."golangci-lint"]
+version = "1.61.0"
+
+[lazy_tools."github:docker/docker-language-server"]
+version = "0.20.1"
+global = true
+
+[lazy_tools."github:ffbinaries/ffbinaries-prebuilt"]
+version = "6.1"
+bins = ["ffmpeg", "ffprobe"]
+
+[lazy_tools."github:helix-editor/helix"]
+version = "25.07.1"
+global = true
+
+[lazy_tools."github:valentjn/ltex-ls"]
+version = "16.0.0"
+global = true
+
+[lazy_tools."npm:bash-language-server"]
+version = "5.6.0"
+global = true
+
+[lazy_tools."npm:vscode-langservers-extracted"]
+version = "4.10.0"
+bins = ["vscode-html-language-server", "vscode-css-language-server", "vscode-json-language-server", "vscode-eslint-language-server"]
+
+[lazy_tools."vfox:clang"]
+version = "18.1.8"
+bins = ["clang", "clang++"]

@@ -154,6 +154,19 @@ func GetHostname() string {
 	return hostname
 }
 
+// GetUserDataDir returns the path to the user data directory for workspaced (~/.local/share/workspaced)
+func GetUserDataDir() (string, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	path := filepath.Join(home, ".local/share/workspaced")
+	if err := os.MkdirAll(path, 0755); err != nil {
+		return "", err
+	}
+	return path, nil
+}
+
 // IsRiverwood checks if the current host is "riverwood".
 func IsRiverwood() bool {
 	return GetHostname() == "riverwood"
@@ -192,14 +205,23 @@ func IsNixOS() bool {
 
 // GlobalConfig represents the schema of the settings.toml file.
 type GlobalConfig struct {
-	Workspaces map[string]int          `toml:"workspaces"`
-	Wallpaper  WallpaperConfig         `toml:"wallpaper"`
-	Screenshot ScreenshotConfig        `toml:"screenshot"`
-	Hosts      map[string]HostConfig   `toml:"hosts"`
-	Backup     BackupConfig            `toml:"backup"`
-	QuickSync  QuickSyncConfig         `toml:"quicksync"`
-	Browser    BrowserConfig           `toml:"browser"`
-	Webapps    map[string]WebappConfig `toml:"webapp"`
+	Workspaces map[string]int            `toml:"workspaces"`
+	Wallpaper  WallpaperConfig           `toml:"wallpaper"`
+	Screenshot ScreenshotConfig          `toml:"screenshot"`
+	Hosts      map[string]HostConfig     `toml:"hosts"`
+	Backup     BackupConfig              `toml:"backup"`
+	QuickSync  QuickSyncConfig           `toml:"quicksync"`
+	Browser    BrowserConfig             `toml:"browser"`
+	Webapps    map[string]WebappConfig   `toml:"webapp"`
+	LazyTools  map[string]LazyToolConfig `toml:"lazy_tools"`
+}
+
+type LazyToolConfig struct {
+	Version string   `toml:"version"`
+	Pkg     string   `toml:"pkg"`    // Optional: mise ref (e.g. github:owner/repo)
+	Global  bool     `toml:"global"` // Whether to put in global PATH
+	Alias   string   `toml:"alias"`  // Binary name if Bins is empty
+	Bins    []string `toml:"bins"`   // List of binaries
 }
 
 type HostConfig struct {
@@ -332,6 +354,14 @@ func (g GlobalConfig) Merge(other GlobalConfig) GlobalConfig {
 		result.Webapps = newWebapps
 	}
 
+	if result.LazyTools == nil {
+		result.LazyTools = make(map[string]LazyToolConfig)
+	} else {
+		newLazyTools := make(map[string]LazyToolConfig, len(result.LazyTools))
+		maps.Copy(newLazyTools, result.LazyTools)
+		result.LazyTools = newLazyTools
+	}
+
 	// Merge Workspaces map (additive, override on conflict)
 	maps.Copy(result.Workspaces, other.Workspaces)
 
@@ -340,6 +370,9 @@ func (g GlobalConfig) Merge(other GlobalConfig) GlobalConfig {
 
 	// Merge Webapps map (additive, override on conflict)
 	maps.Copy(result.Webapps, other.Webapps)
+
+	// Merge LazyTools map
+	maps.Copy(result.LazyTools, other.LazyTools)
 
 	// Merge nested configs using their Merge methods
 	result.Wallpaper = result.Wallpaper.Merge(other.Wallpaper)
@@ -389,7 +422,8 @@ func LoadConfig() (*GlobalConfig, error) {
 			Default: "zen",
 			Engine:  "brave",
 		},
-		Webapps: make(map[string]WebappConfig),
+		Webapps:   make(map[string]WebappConfig),
+		LazyTools: make(map[string]LazyToolConfig),
 	}
 
 	// 2. Load and merge base config from $DOTFILES/settings.toml
