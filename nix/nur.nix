@@ -29,7 +29,7 @@ pkgs.lib.makeScope pkgs.newScope (
 
     # utils
     pkg = p ./pkgs/pkg.nix;
-    c4me = p ./pkgs/c4me;
+    # c4me = p ./pkgs/c4me;
     fhsctl = p ./pkgs/fhsctl.nix;
     #};
     lib = {

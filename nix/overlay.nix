@@ -52,7 +52,7 @@ in
 
   buildFHSUserEnv = prev.buildFHSEnv;
 
-  ctl = cp ./pkgs/ctl;
+  # ctl = cp ./pkgs/ctl;
 
   personal-utils = cp ./pkgs/personal-utils.nix;
   workspaced = cp ./pkgs/workspaced/default.nix;
