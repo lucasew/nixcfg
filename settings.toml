@@ -226,6 +226,7 @@ global = true
 [lazy_tools."ripgrep"]
 version = "15.1.0"
 global = true
+bins = ["rg"]
 
 [lazy_tools."ruff"]
 version = "0.14.14"
@@ -255,6 +256,7 @@ version = "0.60.0"
 
 [lazy_tools."go"]
 version = "1.23.6"
+bins = ["go", "gofmt"]
 
 [lazy_tools."golangci-lint"]
 version = "1.61.0"
@@ -262,6 +264,7 @@ version = "1.61.0"
 [lazy_tools."github:docker/docker-language-server"]
 version = "0.20.1"
 global = true
+bins = ["docker-langserver"]
 
 [lazy_tools."github:ffbinaries/ffbinaries-prebuilt"]
 version = "6.1"
@@ -270,6 +273,7 @@ bins = ["ffmpeg", "ffprobe"]
 [lazy_tools."github:helix-editor/helix"]
 version = "25.07.1"
 global = true
+bins = ["hx"]
 
 [lazy_tools."github:valentjn/ltex-ls"]
 version = "16.0.0"
