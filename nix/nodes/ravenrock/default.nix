@@ -104,7 +104,7 @@ in
 
   cachix.enable = true;
 
-  boot.kernelPackages = pkgs.linuxPackages_5_4;
+  # boot.kernelPackages = pkgs.linuxPackages_5_4;
   # services.nginx = {
   #   enable = true;
   #   enableReload = true;
