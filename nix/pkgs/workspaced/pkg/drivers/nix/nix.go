@@ -287,19 +287,24 @@ func HomeManagerSwitch(ctx context.Context, action string, flake string) error {
 		flake = "github:lucasew/nixcfg"
 	}
 
+	var activationPackage string
 	if strings.HasPrefix(flake, "/nix/store/") {
-		activatePath := filepath.Join(flake, "activate")
-		if _, err := os.Stat(activatePath); err == nil {
-			cmd := common.RunCmd(ctx, activatePath)
-			common.InheritContextWriters(ctx, cmd)
-			return cmd.Run()
+		activationPackage = flake
+	} else {
+		ref := fmt.Sprintf("%s#homeConfigurations.main.activationPackage", flake)
+		var err error
+		activationPackage, err = Build(ctx, ref, true)
+		if err != nil {
+			return err
 		}
 	}
 
-	target := fmt.Sprintf("%s#main", flake)
-	args := []string{action, "--flake", target}
+	activatePath := filepath.Join(activationPackage, "activate")
+	if _, err := os.Stat(activatePath); err != nil {
+		return fmt.Errorf("activation script not found at %s: %w", activatePath, err)
+	}
 
-	cmd := common.RunCmd(ctx, "home-manager", args...)
+	cmd := common.RunCmd(ctx, activatePath)
 	common.InheritContextWriters(ctx, cmd)
 	return cmd.Run()
 }
