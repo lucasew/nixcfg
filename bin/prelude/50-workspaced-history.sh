@@ -19,7 +19,7 @@ _workspaced_history_hook() {
 		--timestamp "$(date +%s)" &) &>/dev/null
 }
 
-if [[ -n "$BASH_VERSION" ]]; then
+if [[ -n "$BASH_VERSION" && $- == *i* ]]; then
 	if [[ "$PROMPT_COMMAND" != *"_workspaced_history_hook"* ]]; then
 		PROMPT_COMMAND="_workspaced_history_hook${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
 	fi

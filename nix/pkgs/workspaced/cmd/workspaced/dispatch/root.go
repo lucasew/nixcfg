@@ -90,7 +90,7 @@ func NewCommand() *cobra.Command {
 			}
 		}
 
-		if remoteCmd == "sync" {
+		if remoteCmd == "sync" || remoteCmd == "config" || remoteCmd == "is" {
 			return nil
 		}
 
