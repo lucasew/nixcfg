@@ -17,6 +17,10 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
+var (
+	ErrCommandNotFound = fmt.Errorf("command not found")
+)
+
 // EssentialPaths defines the list of directories that must be present in the PATH
 // for the application to function correctly on NixOS.
 // These typically include locations for wrapped binaries and current system software.
@@ -188,9 +192,38 @@ func IsPhone() bool {
 	return os.Getenv("TERMUX_VERSION") != ""
 }
 
-// IsBinaryAvailable checks if a command exists in the PATH.
+// Which locates a command in the PATH without using os/exec.LookPath
+// to avoid SIGSYS errors on Android/Go 1.24.
+func Which(ctx context.Context, name string) (string, error) {
+	if filepath.IsAbs(name) {
+		if _, err := os.Stat(name); err == nil {
+			return name, nil
+		}
+		return "", fmt.Errorf("file not found: %s", name)
+	}
+
+	path := os.Getenv("PATH")
+	if env, ok := ctx.Value(types.EnvKey).([]string); ok {
+		for _, e := range env {
+			if strings.HasPrefix(e, "PATH=") {
+				path = strings.TrimPrefix(e, "PATH=")
+				break
+			}
+		}
+	}
+
+	for _, dir := range filepath.SplitList(path) {
+		fullPath := filepath.Join(dir, name)
+		if info, err := os.Stat(fullPath); err == nil && !info.IsDir() {
+			return fullPath, nil
+		}
+	}
+	return "", fmt.Errorf("%w: %s", ErrCommandNotFound, name)
+}
+
+// IsBinaryAvailable checks if a command exists in the PATH using the internal Which implementation.
 func IsBinaryAvailable(ctx context.Context, name string) bool {
-	_, err := exec.LookPath(name)
+	_, err := Which(ctx, name)
 	return err == nil
 }
 

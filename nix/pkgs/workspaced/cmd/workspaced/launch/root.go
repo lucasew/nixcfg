@@ -24,15 +24,21 @@ func NewCommand() *cobra.Command {
 			terminals := []string{"kitty", "alacritty", "foot", "st", "xterm"}
 
 			for _, term := range terminals {
-				if common.IsBinaryAvailable(ctx, term) {
-					path, err := exec.LookPath(term)
-					if err != nil {
-						continue
-					}
-
-					// If local, just exec
-					return syscall.Exec(path, append([]string{term}, args...), os.Environ())
+				termPath, err := common.Which(ctx, term)
+				if err != nil {
+					continue
 				}
+
+				// If we are in the daemon, we want to detach it
+				if os.Getenv("WORKSPACED_DAEMON") == "1" {
+					cmd := exec.Command(termPath, args...)
+					cmd.Stdout = nil
+					cmd.Stderr = nil
+					return cmd.Start()
+				}
+
+				// If local, just exec
+				return syscall.Exec(termPath, append([]string{term}, args...), os.Environ())
 			}
 
 			return fmt.Errorf("no terminal found")
