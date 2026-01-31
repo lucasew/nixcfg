@@ -2,19 +2,22 @@
 
 ## 2026-01-31 - Robust Directory Changing & CI Fixes
 
-**Issue:** `bin/shim/workspaced` used fragile `cd` patterns (SC2103). CI failed due to `shfmt` errors in `bin/prelude/999-atuin.sh` and impure derivation usage (`teste-impure`) in `flake.nix`.
+**Issue:** `bin/shim/workspaced` used fragile `cd` patterns (SC2103). CI failed due to `shfmt` errors in `bin/prelude/999-atuin.sh`, impure derivation usage (`teste-impure`) in `flake.nix`, and `mise.toml` `lint:sh` task failing to find `shfmt`.
 **Root Cause:**
 1. `bin/shim/workspaced`: Linear directory state changes.
 2. `flake.nix`: `teste-impure` required `impure-derivations` feature disabled in CI.
 3. `bin/prelude/999-atuin.sh`: Formatting violation (extra space).
+4. `mise.toml`: `lint:sh` used `$(shfmt -f .)` which failed because `shfmt` wasn't in the global PATH.
 **Solution:**
 1. Refactored `bin/shim/workspaced` to use subshells `( cd ... )`.
 2. Commented out `teste-impure` in `flake.nix` as it blocks CI.
 3. Ran `shfmt -w` on `bin/prelude/999-atuin.sh`.
+4. Updated `mise.toml` to use `$(mise exec shfmt -- shfmt -f .)` ensuring tool availability.
 **Pattern:**
 - Always use subshells `( cd ... )` for temporary directory changes.
 - Ensure strict compliance with CI linters (`shfmt`, `nix flake check`) before submitting.
 - Disable or fix experimental features in Flakes that conflict with CI security settings.
+- When using `mise` tools in command substitutions inside `mise.toml`, explicitly wrap them with `mise exec` if they aren't guaranteed to be in PATH.
 
 ## 2026-01-24 - Robust Shell Argument Parsing
 
