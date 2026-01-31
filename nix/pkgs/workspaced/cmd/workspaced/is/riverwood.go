@@ -1,7 +1,7 @@
 package is
 
 import (
-	"os"
+	"fmt"
 	"workspaced/pkg/common"
 
 	"github.com/spf13/cobra"
@@ -12,10 +12,11 @@ func init() {
 		parent.AddCommand(&cobra.Command{
 			Use:   "riverwood",
 			Short: "Check if host is riverwood",
-			Run: func(c *cobra.Command, args []string) {
+			RunE: func(c *cobra.Command, args []string) error {
 				if !common.IsRiverwood() {
-					os.Exit(1)
+					return fmt.Errorf("not riverwood")
 				}
+				return nil
 			},
 		})
 	})

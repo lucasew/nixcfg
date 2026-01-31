@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if workspaced dispatch is binary kitty; then
+if workspaced is binary kitty; then
 	exec kitty "$@"
 fi
 

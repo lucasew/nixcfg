@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"workspaced/cmd/workspaced/daemon"
 	"workspaced/cmd/workspaced/dispatch"
+	"workspaced/cmd/workspaced/is"
 	"workspaced/cmd/workspaced/svc"
 )
 
@@ -26,6 +27,7 @@ func NewRootCommand() *cobra.Command {
 	cmd.AddCommand(dispatch.NewCommand())
 	cmd.AddCommand(daemon.Command) // daemon is a global command instance, but its Run doesn't use shared state in a racey way
 	cmd.AddCommand(svc.NewCommand())
+	cmd.AddCommand(is.GetCommand())
 	return cmd
 }
 

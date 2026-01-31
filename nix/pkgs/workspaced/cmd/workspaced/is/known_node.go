@@ -1,7 +1,7 @@
 package is
 
 import (
-	"os"
+	"fmt"
 	"workspaced/pkg/common"
 
 	"github.com/spf13/cobra"
@@ -12,21 +12,21 @@ func init() {
 		parent.AddCommand(&cobra.Command{
 			Use:   "known-node",
 			Short: "Check if host is a known node",
-			Run: func(c *cobra.Command, args []string) {
+			RunE: func(c *cobra.Command, args []string) error {
 				logger := common.GetLogger(c.Context())
 				if common.IsRiverwood() {
 					logger.Info("riverwood")
-					return
+					return nil
 				}
 				if common.IsWhiterun() {
 					logger.Info("whiterun")
-					return
+					return nil
 				}
 				if common.IsPhone() {
 					logger.Info("phone")
-					return
+					return nil
 				}
-				os.Exit(1)
+				return fmt.Errorf("unknown node")
 			},
 		})
 	})
