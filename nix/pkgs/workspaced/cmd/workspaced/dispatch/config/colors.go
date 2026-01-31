@@ -46,18 +46,18 @@ func GetColorsCommand() *cobra.Command {
 
 			for i, color := range colors {
 				if color != "" {
-					fmt.Printf("printf \"\\033]4;%d;#%s\\033\\\\\"\n", i, color)
+					fmt.Printf("\033]4;%d;#%s\033\\", i, color)
 				}
 			}
 
 			fg := get("base05")
 			bg := get("base00")
 			if fg != "" {
-				fmt.Printf("printf \"\\033]10;#%s\\033\\\\\"\n", fg)
-				fmt.Printf("printf \"\\033]12;#%s\\033\\\\\"\n", fg)
+				fmt.Printf("\033]10;#%s\033\\", fg)
+				fmt.Printf("\033]12;#%s\033\\", fg)
 			}
 			if bg != "" {
-				fmt.Printf("printf \"\\033]11;#%s\\033\\\\\"\n", bg)
+				fmt.Printf("\033]11;#%s\033\\", bg)
 			}
 
 			return nil
