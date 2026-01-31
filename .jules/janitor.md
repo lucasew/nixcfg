@@ -1,5 +1,12 @@
 # Janitor's Journal - Critical Learnings
 
+## 2026-01-31 - Robust Directory Changing
+
+**Issue:** `bin/shim/workspaced` used `cd "$dir"; ...; cd -`, which is fragile if `cd` fails and pollutes the script's state, triggering SC2103.
+**Root Cause:** Using linear state changes for temporary directory switching instead of isolating the scope.
+**Solution:** Refactored to use a subshell `( cd "$dir" || exit; ... )` which automatically restores the directory context on exit.
+**Pattern:** Always use subshells `( cd ... )` for temporary directory changes in scripts to prevent side effects and simplify cleanup.
+
 ## 2026-01-24 - Robust Shell Argument Parsing
 
 **Issue:** Argument parsing in `bin/prelude/020-notification.sh` was fragile, using double-shift which could consume flags as values if arguments were missing, and using unsafe `[ ... ]` syntax.
