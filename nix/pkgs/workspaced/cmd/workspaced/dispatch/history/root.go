@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -13,6 +12,7 @@ import (
 	"workspaced/pkg/types"
 
 	"github.com/gorilla/websocket"
+	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/spf13/cobra"
 )
 
@@ -24,54 +24,60 @@ func GetCommand() *cobra.Command {
 
 	cmd.AddCommand(&cobra.Command{
 		Use:   "search [query]",
-		Short: "Search history using fzf",
+		Short: "Search history using fuzzy finder",
 		RunE: func(c *cobra.Command, args []string) error {
-			query := ""
+			database, ok := c.Context().Value("db").(*db.DB)
+			if !ok {
+				var err error
+				database, err = db.Open()
+				if err != nil {
+					return err
+				}
+				defer database.Close()
+			}
+
+			events, err := database.SearchHistory(c.Context(), "", 5000)
+			if err != nil {
+				return fmt.Errorf("failed to fetch history: %w", err)
+			}
+
+			if len(events) == 0 {
+				return fmt.Errorf("no history found")
+			}
+
+			// 2. Run fuzzy finder
+			options := []fuzzyfinder.Option{
+				fuzzyfinder.WithPreviewWindow(func(i int, width int, height int) string {
+					if i == -1 {
+						return ""
+					}
+					e := events[i]
+					t := time.Unix(e.Timestamp, 0).Format("2006-01-02 15:04:05")
+					return fmt.Sprintf("Time:     %s\nExitCode: %d\nCwd:      %s\nDuration: %dms\n\nCommand:\n%s",
+						t, e.ExitCode, e.Cwd, e.Duration, e.Command)
+				}),
+			}
+
 			if len(args) > 0 {
-				query = strings.Join(args, " ")
+				options = append(options, fuzzyfinder.WithQuery(strings.Join(args, " ")))
 			}
 
-			// We need to get history from the daemon
-			// Since we want to pipe to fzf, we can't let the normal dispatch mechanism handle it
-			// unless we make 'list' a command that outputs what we need.
-
-			// 1. Get history from daemon via 'history list'
-			listCmd := exec.Command("workspaced", "dispatch", "history", "list", "--limit", "5000")
-			out, err := listCmd.Output()
-			if err != nil {
-				return fmt.Errorf("failed to list history: %w", err)
-			}
-
-			// 2. Run fzf
-			fzfCmd := exec.Command("fzf",
-				"--delimiter", "\t",
-				"--with-nth", "2..",
-				"--query", query,
-				"--layout", "reverse",
-				"--height", "40%",
-				"--header", "Workspaced History",
-				"--preview", "echo -e \"Time: {1}\nCommand: {2..}\"",
-				"--preview-window", "bottom:3:wrap",
+			idx, err := fuzzyfinder.Find(
+				events,
+				func(i int) string {
+					return events[i].Command
+				},
+				options...,
 			)
-			fzfCmd.Stdin = strings.NewReader(string(out))
-			fzfCmd.Stderr = os.Stderr
 
-			selection, err := fzfCmd.Output()
 			if err != nil {
-				if exitErr, ok := err.(*exec.ExitError); ok && exitErr.ExitCode() == 130 {
+				if err == fuzzyfinder.ErrAbort {
 					return nil
 				}
-				return fmt.Errorf("fzf failed: %w", err)
+				return fmt.Errorf("fuzzy finder failed: %w", err)
 			}
 
-			selectedStr := strings.TrimSpace(string(selection))
-			if selectedStr != "" {
-				parts := strings.Split(selectedStr, "\t")
-				if len(parts) >= 2 {
-					fmt.Print(strings.Join(parts[1:], "\t"))
-				}
-			}
-
+			fmt.Print(events[idx].Command)
 			return nil
 		},
 	})
@@ -81,16 +87,26 @@ func GetCommand() *cobra.Command {
 		Short: "List history entries (internal use)",
 		RunE: func(c *cobra.Command, args []string) error {
 			limit, _ := c.Flags().GetInt32("limit")
+			asJSON, _ := c.Flags().GetBool("json")
 
 			database, ok := c.Context().Value("db").(*db.DB)
 			if !ok {
-				// If not on daemon, this will be dispatched to daemon
-				return fmt.Errorf("this command must run on the daemon")
+				var err error
+				database, err = db.Open()
+				if err != nil {
+					return err
+				}
+				defer database.Close()
 			}
 
 			events, err := database.SearchHistory(c.Context(), "", int(limit))
+
 			if err != nil {
 				return err
+			}
+
+			if asJSON {
+				return json.NewEncoder(c.OutOrStdout()).Encode(events)
 			}
 
 			for _, e := range events {
@@ -102,6 +118,7 @@ func GetCommand() *cobra.Command {
 		},
 	}
 	listCmd.Flags().Int32("limit", 5000, "Limit number of entries")
+	listCmd.Flags().Bool("json", false, "Output as JSON")
 	cmd.AddCommand(listCmd)
 
 	recordCmd := &cobra.Command{

@@ -82,6 +82,13 @@ func NewCommand() *cobra.Command {
 			}
 		}
 
+		if remoteCmd == "history" && len(remoteArgs) > 0 {
+			switch remoteArgs[0] {
+			case "search", "list":
+				return nil
+			}
+		}
+
 		output, connected, err := TryRemoteRaw(remoteCmd, remoteArgs)
 		if connected {
 			if output != "" {
