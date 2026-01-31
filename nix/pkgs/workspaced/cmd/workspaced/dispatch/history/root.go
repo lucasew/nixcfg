@@ -241,7 +241,9 @@ func ingestBash() ([]types.HistoryEvent, error) {
 		events = append(events, types.HistoryEvent{
 			Command:   line,
 			Timestamp: lastTimestamp,
-			Cwd:       "unknown",
+			Cwd:       "/dev/null",
+			ExitCode:  0,
+			Duration:  0,
 		})
 	}
 	return events, scanner.Err()
@@ -277,6 +279,9 @@ func ingestAtuin() ([]types.HistoryEvent, error) {
 		// Let's assume it needs conversion to seconds if it's too large.
 		if ts > 2000000000 {
 			ts = ts / 1000000000
+		}
+		if e.Cwd == "" {
+			e.Cwd = "/dev/null"
 		}
 		e.Timestamp = ts
 		e.ExitCode = exitCode
