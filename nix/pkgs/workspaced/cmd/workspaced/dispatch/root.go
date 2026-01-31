@@ -16,7 +16,6 @@ import (
 	"workspaced/cmd/workspaced/dispatch/brightness"
 	"workspaced/cmd/workspaced/dispatch/config"
 	"workspaced/cmd/workspaced/dispatch/demo"
-	"workspaced/cmd/workspaced/dispatch/is"
 	"workspaced/cmd/workspaced/dispatch/media"
 	"workspaced/cmd/workspaced/dispatch/menu"
 	"workspaced/cmd/workspaced/dispatch/nix"
@@ -29,6 +28,8 @@ import (
 	"workspaced/cmd/workspaced/dispatch/wallpaper"
 	"workspaced/cmd/workspaced/dispatch/webapp"
 	"workspaced/cmd/workspaced/dispatch/workspace"
+	"workspaced/cmd/workspaced/is"
+	"workspaced/pkg/common"
 	"workspaced/pkg/types"
 
 	"github.com/gorilla/websocket"
@@ -128,7 +129,6 @@ func getSocketPath() string {
 	}
 	return filepath.Join(runtimeDir, "workspaced.sock")
 }
-
 
 func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 	socketPath := getSocketPath()

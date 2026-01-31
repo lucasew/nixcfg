@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
-	"workspaced/pkg/common"
+	"workspaced/pkg/config"
 
 	"github.com/spf13/cobra"
 )
@@ -25,7 +25,7 @@ Outputs the value as JSON for easy parsing.`,
 			Args: cobra.ExactArgs(1),
 			RunE: func(c *cobra.Command, args []string) error {
 				key := args[0]
-				cfg, err := common.LoadConfig()
+				cfg, err := config.Load()
 				if err != nil {
 					return fmt.Errorf("failed to load config: %w", err)
 				}
@@ -41,14 +41,14 @@ Outputs the value as JSON for easy parsing.`,
 					return fmt.Errorf("failed to encode JSON: %w", err)
 				}
 
-				fmt.Println(string(jsonBytes))
+				c.Println(string(jsonBytes))
 				return nil
 			},
 		})
 	})
 }
 
-func getConfigValue(cfg *common.GlobalConfig, key string) (any, error) {
+func getConfigValue(cfg *config.Config, key string) (any, error) {
 	if key == "" {
 		return cfg, nil
 	}
@@ -67,26 +67,45 @@ func getConfigValue(cfg *common.GlobalConfig, key string) (any, error) {
 		}
 
 	case "desktop":
-		if len(parts) == 2 {
-			switch parts[1] {
-			case "dark_mode":
-				return cfg.Desktop.DarkMode, nil
-			case "wallpaper":
-				return cfg.Desktop.Wallpaper, nil
-			default:
-				return nil, fmt.Errorf("unknown desktop field: %s", parts[1])
-			}
-		} else if len(parts) == 3 && parts[1] == "wallpaper" {
-			switch parts[2] {
-			case "dir":
-				return cfg.Desktop.Wallpaper.Dir, nil
-			case "default":
-				return cfg.Desktop.Wallpaper.Default, nil
-			default:
-				return nil, fmt.Errorf("unknown wallpaper field: %s", parts[2])
-			}
-		} else if len(parts) == 1 {
+		if len(parts) == 1 {
 			return cfg.Desktop, nil
+		}
+		switch parts[1] {
+		case "dark_mode":
+			return cfg.Desktop.DarkMode, nil
+		case "wallpaper":
+			if len(parts) == 2 {
+				return cfg.Desktop.Wallpaper, nil
+			} else if len(parts) == 3 {
+				switch parts[2] {
+				case "dir":
+					return cfg.Desktop.Wallpaper.Dir, nil
+				case "default":
+					return cfg.Desktop.Wallpaper.Default, nil
+				default:
+					return nil, fmt.Errorf("unknown wallpaper field: %s", parts[2])
+				}
+			}
+		case "palette":
+			// Read palette from config using raw unmarshaling
+			var desktop map[string]interface{}
+			if err := cfg.UnmarshalKey("desktop", &desktop); err != nil {
+				return nil, err
+			}
+			if palette, ok := desktop["palette"]; ok {
+				if len(parts) == 2 {
+					return palette, nil
+				}
+				// Navigate deeper (desktop.palette.base16)
+				if paletteMap, ok := palette.(map[string]interface{}); ok {
+					if len(parts) == 3 {
+						return paletteMap[parts[2]], nil
+					}
+				}
+			}
+			return nil, fmt.Errorf("palette not found")
+		default:
+			return nil, fmt.Errorf("unknown desktop field: %s", parts[1])
 		}
 
 	case "screenshot":

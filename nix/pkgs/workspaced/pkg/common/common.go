@@ -217,8 +217,8 @@ type GlobalConfig struct {
 }
 
 type DesktopConfig struct {
-	DarkMode  bool             `toml:"dark_mode"`
-	Wallpaper WallpaperConfig  `toml:"wallpaper"`
+	DarkMode  bool            `toml:"dark_mode"`
+	Wallpaper WallpaperConfig `toml:"wallpaper"`
 }
 
 type LazyToolConfig struct {
@@ -380,7 +380,7 @@ func (g GlobalConfig) Merge(other GlobalConfig) GlobalConfig {
 	maps.Copy(result.LazyTools, other.LazyTools)
 
 	// Merge nested configs using their Merge methods
-	result.Wallpaper = result.Wallpaper.Merge(other.Wallpaper)
+	result.Desktop.Wallpaper = result.Desktop.Wallpaper.Merge(other.Desktop.Wallpaper)
 	result.Screenshot = result.Screenshot.Merge(other.Screenshot)
 	result.Backup = result.Backup.Merge(other.Backup)
 	result.QuickSync = result.QuickSync.Merge(other.QuickSync)
@@ -408,8 +408,10 @@ func LoadConfig() (*GlobalConfig, error) {
 			"www":  1,
 			"meet": 2,
 		},
-		Wallpaper: WallpaperConfig{
-			Dir: filepath.Join(dotfiles, "assets/wallpapers"),
+		Desktop: DesktopConfig{
+			Wallpaper: WallpaperConfig{
+				Dir: filepath.Join(dotfiles, "assets/wallpapers"),
+			},
 		},
 		Screenshot: ScreenshotConfig{
 			Dir: filepath.Join(home, "Pictures/Screenshots"),
@@ -452,8 +454,8 @@ func LoadConfig() (*GlobalConfig, error) {
 	}
 
 	// 4. Expand paths
-	config.Wallpaper.Dir = ExpandPath(config.Wallpaper.Dir)
-	config.Wallpaper.Default = ExpandPath(config.Wallpaper.Default)
+	config.Desktop.Wallpaper.Dir = ExpandPath(config.Desktop.Wallpaper.Dir)
+	config.Desktop.Wallpaper.Default = ExpandPath(config.Desktop.Wallpaper.Default)
 	config.Screenshot.Dir = ExpandPath(config.Screenshot.Dir)
 	config.QuickSync.RepoDir = ExpandPath(config.QuickSync.RepoDir)
 
