@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/coreos/go-systemd/v22/activation"
 	"github.com/gorilla/websocket"
@@ -40,11 +41,26 @@ var Command = &cobra.Command{
 	Use:   "daemon",
 	Short: "Run the workspaced daemon",
 	Run: func(c *cobra.Command, args []string) {
+		try, _ := c.Flags().GetBool("try")
+		if try {
+			socketPath := getSocketPath()
+			conn, err := net.DialTimeout("unix", socketPath, 200*time.Millisecond)
+			if err == nil {
+				conn.Close()
+				slog.Info("daemon already running, exiting")
+				os.Exit(0)
+			}
+		}
+
 		if err := RunDaemon(); err != nil {
 			slog.Error("daemon failure", "error", err)
 			os.Exit(1)
 		}
 	},
+}
+
+func init() {
+	Command.Flags().Bool("try", false, "Exit if daemon is already running")
 }
 
 func getSocketPath() string {

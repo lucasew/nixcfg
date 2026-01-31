@@ -25,5 +25,4 @@ if [[ -n "$BASH_VERSION" ]]; then
 	fi
 	# Bind Ctrl+R to history search. If cancelled, keep the current line.
 	bind -x '"\C-r": "SELECTED=$(workspaced dispatch history search \"$READLINE_LINE\"); if [[ -n \"$SELECTED\" ]]; then READLINE_LINE=$SELECTED; READLINE_POINT=${#READLINE_LINE}; fi"'
-
 fi

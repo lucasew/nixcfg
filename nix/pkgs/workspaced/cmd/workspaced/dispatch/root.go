@@ -145,7 +145,7 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 
 	dialer := websocket.Dialer{
 		NetDial: func(network, addr string) (net.Conn, error) {
-			return net.DialTimeout("unix", socketPath, 5*time.Second)
+			return net.DialTimeout("unix", socketPath, 1*time.Second)
 		},
 	}
 
@@ -223,9 +223,18 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 				if resp.Error == "DAEMON_RESTART_NEEDED" {
 					slog.Info("daemon binary outdated, restarting daemon and retrying")
 
-					// Restart the daemon via systemd
-					cmd := exec.Command("systemctl", "--user", "restart", "workspaced.service")
-					_ = cmd.Run()
+					// Try to restart via systemd first
+					if _, err := exec.LookPath("systemctl"); err == nil {
+						cmd := exec.Command("systemctl", "--user", "restart", "workspaced.service")
+						_ = cmd.Run()
+					} else {
+						// Fallback: kill current and start new
+						// This is a bit aggressive but works on Android
+						_ = exec.Command("pkill", "-f", "workspaced daemon").Run()
+						go func() {
+							_ = exec.Command("workspaced", "daemon").Start()
+						}()
+					}
 
 					// Wait a bit for daemon to restart
 					time.Sleep(500 * time.Millisecond)

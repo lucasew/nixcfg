@@ -159,7 +159,17 @@ func GetCommand() *cobra.Command {
 				return database.RecordHistory(c.Context(), event)
 			}
 
-			return sendHistoryEvent(event)
+			if err := sendHistoryEvent(event); err == nil {
+				return nil
+			}
+
+			// Fallback: write to database directly if daemon is not available
+			database, err := db.Open()
+			if err != nil {
+				return nil // Give up silently to avoid hanging shell
+			}
+			defer database.Close()
+			return database.RecordHistory(c.Context(), event)
 		},
 	}
 	recordCmd.Flags().String("command", "", "Command string")
@@ -303,16 +313,17 @@ func sendHistoryEvent(event types.HistoryEvent) error {
 	socketPath := getSocketPath()
 	dialer := websocket.Dialer{
 		NetDial: func(network, addr string) (net.Conn, error) {
-			return net.DialTimeout("unix", socketPath, 2*time.Second)
+			return net.DialTimeout("unix", socketPath, 200*time.Millisecond)
 		},
 	}
 
 	conn, _, err := dialer.Dial("ws://localhost/ws", nil)
 	if err != nil {
-		return nil // Daemon not running, ignore
+		return err // Return error so caller can fallback
 	}
 	defer conn.Close()
 
+	_ = conn.SetWriteDeadline(time.Now().Add(500 * time.Millisecond))
 	payload, _ := json.Marshal(event)
 	packet := types.StreamPacket{
 		Type:    "history_event",
