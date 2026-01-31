@@ -99,6 +99,11 @@ func (p *DconfProvider) GetDesiredState(ctx context.Context) ([]DesiredState, er
 	markerFile := filepath.Join(tmpDir, "dconf.marker")
 	markerContent := filepath.Join(tmpDir, fmt.Sprintf("dconf-%s.hash", hash))
 
+	// Create the hash file so the engine can find it
+	if err := os.WriteFile(markerContent, []byte(hash), 0644); err != nil {
+		return nil, err
+	}
+
 	return []DesiredState{
 		{
 			Target: markerFile,

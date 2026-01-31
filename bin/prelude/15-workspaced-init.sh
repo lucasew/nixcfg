@@ -8,5 +8,5 @@ if command -v workspaced >/dev/null 2>&1; then
 	source <(workspaced completion bash)
 
 	# Apply colors directly to terminal
-	workspaced dispatch config colors
+	workspaced colors
 fi
