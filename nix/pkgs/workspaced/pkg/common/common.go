@@ -26,6 +26,12 @@ func init() {
 	if home, err := os.UserHomeDir(); err == nil {
 		EssentialPaths = append(EssentialPaths, filepath.Join(home, ".nix-profile/bin"))
 	}
+	if root, err := GetDotfilesRoot(); err == nil && root != "" {
+		EssentialPaths = append(EssentialPaths, filepath.Join(root, "bin/shim"))
+	}
+	if dataDir, err := GetUserDataDir(); err == nil && dataDir != "" {
+		EssentialPaths = append(EssentialPaths, filepath.Join(dataDir, "shim/global"))
+	}
 	newPath := strings.Split(os.Getenv("PATH"), ":")
 
 	for _, path := range EssentialPaths {
