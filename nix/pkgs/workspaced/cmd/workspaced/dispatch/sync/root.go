@@ -28,7 +28,7 @@ func GetCommand() *cobra.Command {
 
 			// 1. Git pull
 			fmt.Println("==> Pulling dotfiles changes...")
-			pullCmd := exec.CommandContext(ctx, gitPath, "-C", root, "pull", "--really")
+			pullCmd := exec.CommandContext(ctx, gitPath, "-C", root, "pull")
 			pullCmd.Stdout = os.Stdout
 			pullCmd.Stderr = os.Stderr
 			if err := pullCmd.Run(); err != nil {
