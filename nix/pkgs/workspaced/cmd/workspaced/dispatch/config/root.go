@@ -13,5 +13,6 @@ func GetCommand() *cobra.Command {
 		Use:   "config",
 		Short: "Manage configuration",
 	}
+	cmd.AddCommand(GetColorsCommand())
 	return Registry.GetCommand(cmd)
 }
