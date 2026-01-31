@@ -3,6 +3,9 @@ _shim_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)/../sh
 _workspaced_shim_dir="$HOME/.local/share/workspaced/shim/global"
 _workspaced_bin_dir="$HOME/.local/share/workspaced/bin"
 
+# Ensure absolute path
+_shim_dir="$(realpath "$_shim_dir")"
+
 # Remove existing shim paths using bash string manipulation to avoid forks
 _clean_path=":$PATH:"
 _clean_path="${_clean_path//:$_shim_dir:/:}"
