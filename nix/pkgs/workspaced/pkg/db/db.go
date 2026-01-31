@@ -83,6 +83,30 @@ func (db *DB) RecordHistory(ctx context.Context, event types.HistoryEvent) error
 	})
 }
 
+func (db *DB) BatchRecordHistory(ctx context.Context, events []types.HistoryEvent) error {
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	q := db.Queries.WithTx(tx)
+	for _, event := range events {
+		err := q.RecordHistory(ctx, sqlc.RecordHistoryParams{
+			Command:    event.Command,
+			Cwd:        event.Cwd,
+			Timestamp:  event.Timestamp,
+			ExitCode:   int64(event.ExitCode),
+			DurationMs: event.Duration,
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	return tx.Commit()
+}
+
 func (db *DB) SearchHistory(ctx context.Context, query string, limit int) ([]types.HistoryEvent, error) {
 	var rows []sqlc.History
 	var err error

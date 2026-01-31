@@ -84,7 +84,7 @@ func NewCommand() *cobra.Command {
 
 		if remoteCmd == "history" && len(remoteArgs) > 0 {
 			switch remoteArgs[0] {
-			case "search", "list":
+			case "search", "list", "ingest":
 				return nil
 			}
 		}

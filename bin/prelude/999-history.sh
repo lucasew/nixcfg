@@ -11,12 +11,12 @@ _workspaced_history_hook() {
 		return
 	fi
 
-	# Send to daemon in background
-	workspaced dispatch history record \
+	# Send to daemon in background and detach completely to prevent job control messages
+	(workspaced dispatch history record \
 		--command "$cmd" \
 		--cwd "$PWD" \
 		--exit-code "$exit_code" \
-		--timestamp "$(date +%s)" >/dev/null 2>&1 &
+		--timestamp "$(date +%s)" &) &>/dev/null
 }
 
 if [[ -n "$BASH_VERSION" ]]; then

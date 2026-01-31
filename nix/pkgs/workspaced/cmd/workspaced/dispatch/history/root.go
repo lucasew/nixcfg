@@ -1,11 +1,14 @@
 package history
 
 import (
+	"bufio"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 	"workspaced/pkg/db"
@@ -162,7 +165,121 @@ func GetCommand() *cobra.Command {
 	recordCmd.Flags().Int64("duration", 0, "Duration in ms")
 	cmd.AddCommand(recordCmd)
 
+	cmd.AddCommand(&cobra.Command{
+		Use:   "ingest [source]",
+		Short: "Ingest history from other sources (bash, atuin)",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(c *cobra.Command, args []string) error {
+			source := args[0]
+			database, ok := c.Context().Value("db").(*db.DB)
+			if !ok {
+				var err error
+				database, err = db.Open()
+				if err != nil {
+					return err
+				}
+				defer database.Close()
+			}
+
+			var events []types.HistoryEvent
+			var err error
+
+			switch source {
+			case "bash":
+				events, err = ingestBash()
+			case "atuin":
+				events, err = ingestAtuin()
+			default:
+				return fmt.Errorf("unknown source: %s", source)
+			}
+
+			if err != nil {
+				return err
+			}
+
+			if len(events) == 0 {
+				fmt.Println("No events to ingest")
+				return nil
+			}
+
+			fmt.Printf("Ingesting %d events...\n", len(events))
+			return database.BatchRecordHistory(c.Context(), events)
+		},
+	})
+
 	return cmd
+}
+
+func ingestBash() ([]types.HistoryEvent, error) {
+	home, _ := os.UserHomeDir()
+	path := filepath.Join(home, ".bash_history")
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var events []types.HistoryEvent
+	scanner := bufio.NewScanner(file)
+	var lastTimestamp int64
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.HasPrefix(line, "#") {
+			ts, err := strconv.ParseInt(line[1:], 10, 64)
+			if err == nil {
+				lastTimestamp = ts
+				continue
+			}
+		}
+		if line == "" {
+			continue
+		}
+		events = append(events, types.HistoryEvent{
+			Command:   line,
+			Timestamp: lastTimestamp,
+			Cwd:       "unknown",
+		})
+	}
+	return events, scanner.Err()
+}
+
+func ingestAtuin() ([]types.HistoryEvent, error) {
+	home, _ := os.UserHomeDir()
+	dbPath := filepath.Join(home, ".local/share/atuin/history.db")
+
+	// Open atuin database using the registered sqlite driver
+	dbConn, err := sql.Open("sqlite", dbPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open atuin database: %w", err)
+	}
+	defer dbConn.Close()
+
+	rows, err := dbConn.Query("SELECT command, cwd, timestamp, exit, duration FROM history")
+	if err != nil {
+		return nil, fmt.Errorf("failed to query atuin database: %w", err)
+	}
+	defer rows.Close()
+
+	var events []types.HistoryEvent
+	for rows.Next() {
+		var e types.HistoryEvent
+		var ts int64
+		var exitCode int
+		var duration int64
+		if err := rows.Scan(&e.Command, &e.Cwd, &ts, &exitCode, &duration); err != nil {
+			return nil, err
+		}
+		// Atuin timestamp is nanoseconds or microseconds? Usually nanoseconds in newer versions.
+		// Let's assume it needs conversion to seconds if it's too large.
+		if ts > 2000000000 {
+			ts = ts / 1000000000
+		}
+		e.Timestamp = ts
+		e.ExitCode = exitCode
+		e.Duration = duration / 1000000 // nano to milli
+		events = append(events, e)
+	}
+	return events, nil
 }
 
 func getSocketPath() string {
