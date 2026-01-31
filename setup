@@ -6,9 +6,10 @@ curl https://mise.run | sh
 
 mkdir -p ~/.local/share/workspaced/bin
 
-cd "nix/pkgs/workspaced"
-mise exec -- go build -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
-cd -
+(
+	cd "nix/pkgs/workspaced" || exit
+	mise exec -- go build -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
+)
 
 systemctl restart --user workspaced
 

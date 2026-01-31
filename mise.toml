@@ -1,3 +1,10 @@
+[tools]
+go = "1.23.6"
+golangci-lint = "latest"
+ruff = "latest"
+shfmt = "latest"
+shellcheck = "latest"
+
 [tasks.lint]
 description = "Run all linters"
 depends = ["lint:*"]
