@@ -3,9 +3,33 @@ package screen
 import (
 	"context"
 	"fmt"
+	"os"
 	"strings"
 	"workspaced/pkg/common"
+	"workspaced/pkg/types"
 )
+
+func GetDriver(ctx context.Context) (Driver, error) {
+	rpc := common.GetRPC(ctx)
+	if rpc == "swaymsg" {
+		return &SwayDriver{}, nil
+	}
+
+	display := os.Getenv("DISPLAY")
+	if env, ok := ctx.Value(types.EnvKey).([]string); ok {
+		for _, e := range env {
+			if strings.HasPrefix(e, "DISPLAY=") {
+				display = strings.TrimPrefix(e, "DISPLAY=")
+				break
+			}
+		}
+	}
+
+	if display != "" {
+		return &X11Driver{}, nil
+	}
+	return nil, fmt.Errorf("no suitable screen driver found")
+}
 
 func Lock(ctx context.Context) error {
 	common.GetLogger(ctx).Info("locking session")
@@ -13,63 +37,39 @@ func Lock(ctx context.Context) error {
 }
 
 func SetDPMS(ctx context.Context, on bool) error {
-	state := "off"
-	if on {
-		state = "on"
-	}
-
-	common.GetLogger(ctx).Info("setting DPMS", "state", state)
-	rpc := common.GetRPC(ctx)
-	if rpc == "swaymsg" {
-		return common.RunCmd(ctx, "swaymsg", "output * dpms "+state).Run()
-	}
-
-	xsetArg := "off"
-	if on {
-		xsetArg = "on"
-	}
-	return common.RunCmd(ctx, "xset", "dpms", "force", xsetArg).Run()
-}
-
-func ToggleDPMS(ctx context.Context) error {
-	isOn, err := IsDPMSOn(ctx)
+	d, err := GetDriver(ctx)
 	if err != nil {
 		return err
 	}
-	return SetDPMS(ctx, !isOn)
+	common.GetLogger(ctx).Info("setting DPMS", "on", on)
+	return d.SetDPMS(ctx, on)
+}
+
+func ToggleDPMS(ctx context.Context) error {
+	d, err := GetDriver(ctx)
+	if err != nil {
+		return err
+	}
+	isOn, err := d.IsDPMSOn(ctx)
+	if err != nil {
+		return err
+	}
+	return d.SetDPMS(ctx, !isOn)
 }
 
 func IsDPMSOn(ctx context.Context) (bool, error) {
-	rpc := common.GetRPC(ctx)
-	if rpc == "swaymsg" {
-		out, err := common.RunCmd(ctx, "swaymsg", "-t", "get_outputs").Output()
-		if err != nil {
-			return false, err
-		}
-		return strings.Contains(string(out), `"dpms": true`), nil
-	}
-
-	out, err := common.RunCmd(ctx, "xset", "q").Output()
+	d, err := GetDriver(ctx)
 	if err != nil {
 		return false, err
 	}
-	return strings.Contains(string(out), "Monitor is On"), nil
+	return d.IsDPMSOn(ctx)
 }
 
 func Reset(ctx context.Context) error {
-	if common.IsRiverwood() {
-		// xrandr --output eDP-1 --mode 1366x768
-		// xrandr --output HDMI-1 --mode 1366x768 --left-of eDP-1
-		if err := common.RunCmd(ctx, "xrandr", "--output", "eDP-1", "--mode", "1366x768").Run(); err != nil {
-			return err
-		}
-		return common.RunCmd(ctx, "xrandr", "--output", "HDMI-1", "--mode", "1366x768", "--left-of", "eDP-1").Run()
+	d, err := GetDriver(ctx)
+	if err != nil {
+		return err
 	}
-
-	if common.IsWhiterun() {
-		// xrandr --output HDMI-1 --mode 1368x768
-		return common.RunCmd(ctx, "xrandr", "--output", "HDMI-1", "--mode", "1368x768").Run()
-	}
-
-	return fmt.Errorf("no reset logic for this host")
+	common.GetLogger(ctx).Info("resetting screen layout")
+	return d.Reset(ctx)
 }

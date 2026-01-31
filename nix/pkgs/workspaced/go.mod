@@ -10,6 +10,7 @@ require (
 	github.com/godbus/dbus/v5 v5.2.2
 	github.com/golang-migrate/migrate/v4 v4.19.1
 	github.com/gorilla/websocket v1.5.3
+	github.com/ktr0731/go-fuzzyfinder v0.9.0
 	github.com/spf13/cobra v1.10.2
 	modernc.org/sqlite v1.44.3
 )
@@ -21,7 +22,6 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/ktr0731/go-ansisgr v0.1.0 // indirect
-	github.com/ktr0731/go-fuzzyfinder v0.9.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
