@@ -59,7 +59,16 @@ type LogEntry struct {
 // StreamPacket envelopes different types of outputs to be multiplexed over a single connection.
 // This allows interleaving logs, command results, and raw stdio streams.
 type StreamPacket struct {
-	// Type indicates the payload kind: "log", "result", "stdout", or "stderr".
+	// Type indicates the payload kind: "log", "result", "stdout", "stderr", or "history_event".
 	Type    string          `json:"type"`
 	Payload json.RawMessage `json:"payload"`
+}
+
+// HistoryEvent is sent by the shell hook to record a command execution.
+type HistoryEvent struct {
+	Command   string `json:"command"`
+	Cwd       string `json:"cwd"`
+	Timestamp int64  `json:"timestamp"`
+	ExitCode  int    `json:"exit_code"`
+	Duration  int64  `json:"duration_ms"`
 }

@@ -17,6 +17,7 @@ import (
 	"io"
 	"workspaced/cmd/workspaced/dispatch"
 	"workspaced/pkg/common"
+	"workspaced/pkg/db"
 	"workspaced/pkg/drivers/media"
 	"workspaced/pkg/types"
 )
@@ -60,6 +61,12 @@ func RunDaemon() error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	database, err := db.Open()
+	if err != nil {
+		return fmt.Errorf("failed to open database: %w", err)
+	}
+	defer database.Close()
+
 	go media.Watch(ctx)
 
 	listeners, err := activation.Listeners()
@@ -79,7 +86,9 @@ func RunDaemon() error {
 	slog.Info("listening", "address", listener.Addr())
 
 	server := &http.Server{
-		Handler: http.HandlerFunc(handleWS),
+		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			handleWS(w, r, database)
+		}),
 	}
 
 	return server.Serve(listener)
@@ -89,7 +98,7 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool { return true },
 }
 
-func handleWS(w http.ResponseWriter, r *http.Request) {
+func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		slog.Error("ws upgrade error", "error", err)
@@ -116,13 +125,44 @@ func handleWS(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
-	// Read request
-	var req types.Request
-	if err := conn.ReadJSON(&req); err != nil {
-		slog.Warn("ws read request error", "error", err)
-		return
-	}
+	// Read loop for packets from client
+	go func() {
+		for {
+			var packet types.StreamPacket
+			if err := conn.ReadJSON(&packet); err != nil {
+				if !websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway) {
+					slog.Debug("ws read error", "error", err)
+				}
+				cancel()
+				return
+			}
 
+			switch packet.Type {
+			case "request":
+				var req types.Request
+				if err := json.Unmarshal(packet.Payload, &req); err != nil {
+					slog.Warn("ws unmarshal request error", "error", err)
+					continue
+				}
+				handleRequest(ctx, req, outCh, database)
+			case "history_event":
+				var event types.HistoryEvent
+				if err := json.Unmarshal(packet.Payload, &event); err != nil {
+					slog.Warn("ws unmarshal history event error", "error", err)
+					continue
+				}
+				if err := database.RecordHistory(ctx, event); err != nil {
+					slog.Error("failed to record history", "error", err)
+				}
+			}
+		}
+	}()
+
+	<-ctx.Done()
+	<-done
+}
+
+func handleRequest(ctx context.Context, req types.Request, outCh chan types.StreamPacket, database *db.DB) {
 	// Check if binary changed - if so, signal restart needed
 	if req.BinaryHash != "" {
 		daemonHash, err := common.GetBinaryHash()
@@ -140,8 +180,6 @@ func handleWS(w http.ResponseWriter, r *http.Request) {
 				Type:    "result",
 				Payload: payload,
 			}
-			close(outCh)
-			<-done
 			return
 		}
 	}
@@ -166,6 +204,8 @@ func handleWS(w http.ResponseWriter, r *http.Request) {
 	env := append(req.Env, "WORKSPACED_DAEMON=1")
 	ctx = context.WithValue(ctx, types.EnvKey, env)
 	ctx = context.WithValue(ctx, types.DaemonModeKey, true)
+	// Inject DB into context so commands can use it
+	ctx = context.WithValue(ctx, "db", database)
 
 	output, err := ExecuteViaCobra(ctx, req, stdout, stderr)
 
@@ -180,9 +220,6 @@ func handleWS(w http.ResponseWriter, r *http.Request) {
 		Type:    "result",
 		Payload: payload,
 	}
-
-	close(outCh)
-	<-done
 }
 
 func ExecuteViaCobra(ctx context.Context, req types.Request, stdout, stderr io.Writer) (string, error) {

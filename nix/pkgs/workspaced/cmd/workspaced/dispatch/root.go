@@ -16,6 +16,7 @@ import (
 	"workspaced/cmd/workspaced/dispatch/brightness"
 	"workspaced/cmd/workspaced/dispatch/config"
 	"workspaced/cmd/workspaced/dispatch/demo"
+	"workspaced/cmd/workspaced/dispatch/history"
 	"workspaced/cmd/workspaced/dispatch/media"
 	"workspaced/cmd/workspaced/dispatch/menu"
 	"workspaced/cmd/workspaced/dispatch/nix"
@@ -101,6 +102,7 @@ func NewCommand() *cobra.Command {
 	cmd.AddCommand(brightness.GetCommand())
 	cmd.AddCommand(config.GetCommand())
 	cmd.AddCommand(demo.GetCommand())
+	cmd.AddCommand(history.GetCommand())
 	cmd.AddCommand(is.GetCommand())
 	cmd.AddCommand(media.GetCommand())
 	cmd.AddCommand(menu.GetCommand())
@@ -157,7 +159,14 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 		BinaryHash: clientHash,
 	}
 
-	if err := conn.WriteJSON(req); err != nil {
+	// Send request as a StreamPacket
+	payload, _ := json.Marshal(req)
+	packet := types.StreamPacket{
+		Type:    "request",
+		Payload: payload,
+	}
+
+	if err := conn.WriteJSON(packet); err != nil {
 		return "", true, fmt.Errorf("failed to send request: %w", err)
 	}
 

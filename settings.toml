@@ -295,10 +295,8 @@ bins = ["clang", "clang++"]
 version = "0.9.0"
 global = true
 
-[lazy_tools."atuin"]
-version = "18.10.0"
-global = true
 [desktop_scripts.nixcfg-quicksync]
+
 name = "nixcfg: Sincronização Rápida"
 description = "Quick sync dotfiles configuration"
 icon = "sync-synchronizing"
