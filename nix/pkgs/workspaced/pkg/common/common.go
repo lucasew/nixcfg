@@ -206,7 +206,7 @@ func IsNixOS() bool {
 // GlobalConfig represents the schema of the settings.toml file.
 type GlobalConfig struct {
 	Workspaces map[string]int            `toml:"workspaces"`
-	Wallpaper  WallpaperConfig           `toml:"wallpaper"`
+	Desktop    DesktopConfig             `toml:"desktop"`
 	Screenshot ScreenshotConfig          `toml:"screenshot"`
 	Hosts      map[string]HostConfig     `toml:"hosts"`
 	Backup     BackupConfig              `toml:"backup"`
@@ -214,6 +214,11 @@ type GlobalConfig struct {
 	Browser    BrowserConfig             `toml:"browser"`
 	Webapps    map[string]WebappConfig   `toml:"webapp"`
 	LazyTools  map[string]LazyToolConfig `toml:"lazy_tools"`
+}
+
+type DesktopConfig struct {
+	DarkMode  bool             `toml:"dark_mode"`
+	Wallpaper WallpaperConfig  `toml:"wallpaper"`
 }
 
 type LazyToolConfig struct {

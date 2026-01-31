@@ -19,9 +19,10 @@ func SetStatic(ctx context.Context, path string) error {
 		if err != nil {
 			return err
 		}
-		files, _ := filepath.Glob(filepath.Join(config.Wallpaper.Dir, "*"))
+		wallpaperDir := config.Desktop.Wallpaper.Dir
+		files, _ := filepath.Glob(filepath.Join(wallpaperDir, "*"))
 		if len(files) == 0 {
-			return fmt.Errorf("no wallpapers found in %s", config.Wallpaper.Dir)
+			return fmt.Errorf("no wallpapers found in %s", wallpaperDir)
 		}
 		path = files[rand.Intn(len(files))]
 	}

@@ -18,8 +18,8 @@ func init() {
 
 Examples:
   workspaced dispatch config get workspaces.www
-  workspaced dispatch config get wallpaper.dir
-  workspaced dispatch config get wallpaper
+  workspaced dispatch config get desktop.wallpaper.dir
+  workspaced dispatch config get desktop.wallpaper
 
 Outputs the value as JSON for easy parsing.`,
 			Args: cobra.ExactArgs(1),
@@ -66,18 +66,27 @@ func getConfigValue(cfg *common.GlobalConfig, key string) (any, error) {
 			return cfg.Workspaces, nil
 		}
 
-	case "wallpaper":
+	case "desktop":
 		if len(parts) == 2 {
 			switch parts[1] {
-			case "dir":
-				return cfg.Wallpaper.Dir, nil
-			case "default":
-				return cfg.Wallpaper.Default, nil
+			case "dark_mode":
+				return cfg.Desktop.DarkMode, nil
+			case "wallpaper":
+				return cfg.Desktop.Wallpaper, nil
 			default:
-				return nil, fmt.Errorf("unknown wallpaper field: %s", parts[1])
+				return nil, fmt.Errorf("unknown desktop field: %s", parts[1])
+			}
+		} else if len(parts) == 3 && parts[1] == "wallpaper" {
+			switch parts[2] {
+			case "dir":
+				return cfg.Desktop.Wallpaper.Dir, nil
+			case "default":
+				return cfg.Desktop.Wallpaper.Default, nil
+			default:
+				return nil, fmt.Errorf("unknown wallpaper field: %s", parts[2])
 			}
 		} else if len(parts) == 1 {
-			return cfg.Wallpaper, nil
+			return cfg.Desktop, nil
 		}
 
 	case "screenshot":
