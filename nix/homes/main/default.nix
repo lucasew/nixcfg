@@ -16,20 +16,16 @@
 
   stylix.enable = true;
 
-  programs.man.enable = true;
-
   home = {
     homeDirectory = /home/lucasew;
     inherit (global) username;
   };
 
   home.packages = with pkgs; [
-    nix-output-monitor
     pkg
 
     # media
     nbr.wine-apps._7zip
-    xxd
 
     # LSPs
     nil
@@ -42,12 +38,5 @@
   qt = {
     enable = true;
     platformTheme.name = "gtk";
-  };
-
-  programs.terminator = {
-    # enable = true;
-    config = {
-      global_config.borderless = true;
-    };
   };
 }

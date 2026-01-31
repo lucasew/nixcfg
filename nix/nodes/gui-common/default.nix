@@ -48,7 +48,10 @@ in
     fortune
     libnotify
     zenity
+    nix-output-monitor
   ];
+
+  programs.man.enable = true;
 
   programs.dconf.enable = true;
   services.dbus.packages = with pkgs; [ dconf ];
