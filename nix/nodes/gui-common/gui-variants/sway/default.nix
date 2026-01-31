@@ -214,7 +214,7 @@ in
         bindsym $mod+Left focus left
         bindsym $mod+Right focus right
         bindsym $mod+a focus parent
-        bindsym $mod+Return exec sdw shim terminal
+        bindsym $mod+Return exec workspaced launch terminal
 
         bindsym $mod+Shift+Down move down
         bindsym $mod+Shift+Left move left

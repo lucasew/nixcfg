@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-if workspaced is binary kitty; then
-	exec kitty "$@"
-fi
-
-echo "no terminal found" >&2
