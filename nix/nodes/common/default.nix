@@ -98,6 +98,7 @@ in
       lm_sensors
       neofetch
       lls # like netstat
+      cached-nix-shell
     ];
   };
   cachix.enable = true;

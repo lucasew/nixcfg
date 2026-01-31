@@ -10,6 +10,7 @@ let
   inherit (pkgs)
     vim
     gitMinimal
+    file
     tmux
     xclip
     killall
@@ -51,6 +52,7 @@ in
   environment.systemPackages = [
     vim
     gitMinimal
+    file
     tmux
     xclip
     killall

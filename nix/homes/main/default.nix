@@ -9,29 +9,10 @@
 
   imports = [
     ../base/default.nix
-    ./dlna.nix
     ./ghostty.nix
     ./dconf.nix
     ./theme
-    ./qutebrowser.nix
-    ./zen-browser.nix
   ];
-
-  home.activation.restart-workspaced = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    dotfilesFolder=
-    if [ -d ~/.dotfiles ]; then
-      dotfilesFolder=~/.dotfiles
-    elif [ -d /home/lucasew/.dotfiles ]; then
-      dotfilesFolder=/home/lucasew/.dotfiles
-    elif [ -d /etc/.dotfiles ]; then
-      dotfilesFolder=/etc/.dotfiles
-    fi
-    if [ -n "$dotfilesFolder" ]; then
-      mkdir -p ~/.local/share/workspaced/bin
-      (cd "$dotfilesFolder/nix/pkgs/workspaced" && "$dotfilesFolder/bin/shim/mise" exec -- env CGO_ENABLED=0 go build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced)
-    fi
-    $DRY_RUN_CMD systemctl --user restart workspaced.service || true
-  '';
 
   stylix.enable = true;
 
@@ -44,22 +25,8 @@
 
   home.packages = with pkgs; [
     mission-center
-    cached-nix-shell
-    feh
-    fortune
-    graphviz
-    github-cli
-    google-cloud-sdk
-    htop
-    libnotify
-    ncdu
-    nix-prefetch-scripts
     nix-output-monitor
     pkg
-    remmina
-    sqlite
-    sshpass
-    zenity
 
     # media
     nbr.wine-apps._7zip
@@ -68,12 +35,7 @@
     # LSPs
     nil
     python3Packages.python-lsp-server
-    (pkgs.writeShellScriptBin "e" ''
-      if [ ! -v EDITOR ]; then
-        export EDITOR=hx
-      fi
-      "$EDITOR" "$@"
-    '')
+
     (pkgs.makeDesktopItem {
       name = "nixcfg-quicksync";
       desktopName = "nixcfg: Sincronização Rápida";
@@ -90,10 +52,6 @@
 
   programs = {
     jq.enable = true;
-    obs-studio = {
-      package = pkgs.obs-studio;
-      enable = true;
-    };
   };
 
   gtk = {

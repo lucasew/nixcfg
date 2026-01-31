@@ -43,6 +43,11 @@ in
     xorg.xkill
     waypipe
     xwayland-satellite
+    # GUI utilities
+    feh
+    fortune
+    libnotify
+    zenity
   ];
 
   programs.dconf.enable = true;
