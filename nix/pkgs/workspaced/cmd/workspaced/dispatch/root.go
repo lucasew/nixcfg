@@ -229,13 +229,12 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 				if resp.Error == "DAEMON_RESTART_NEEDED" {
 					slog.Info("daemon binary outdated, restarting daemon and retrying")
 
-					// Try to restart via systemd first
-					if _, err := exec.LookPath("systemctl"); err == nil {
-						cmd := exec.Command("systemctl", "--user", "restart", "workspaced.service")
-						_ = cmd.Run()
+					// Try to restart daemon
+					// 1. Try systemd if available (user says it's not bad if it works)
+					if common.IsBinaryAvailable(context.Background(), "systemctl") {
+						_ = exec.Command("systemctl", "--user", "restart", "workspaced.service").Run()
 					} else {
-						// Fallback: kill current and start new
-						// This is a bit aggressive but works on Android
+						// 2. Fallback to pkill and background start (works on Android)
 						_ = exec.Command("pkill", "-f", "workspaced daemon").Run()
 						go func() {
 							_ = exec.Command("workspaced", "daemon").Start()

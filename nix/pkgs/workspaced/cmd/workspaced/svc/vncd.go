@@ -4,7 +4,6 @@ import (
 	"context"
 	"log/slog"
 	"os"
-	"os/exec"
 	"strings"
 	"syscall"
 	"workspaced/pkg/common"
@@ -42,7 +41,7 @@ func runWaylandVNC(ctx context.Context) error {
 		}
 	}
 
-	bin, err := exec.LookPath("wayvnc")
+	bin, err := common.Which(ctx, "wayvnc")
 	if err != nil {
 		return err
 	}
@@ -53,7 +52,7 @@ func runWaylandVNC(ctx context.Context) error {
 
 func runXorgVNC(ctx context.Context) error {
 	slog.Info("Starting x0vncserver")
-	bin, err := exec.LookPath("x0vncserver")
+	bin, err := common.Which(ctx, "x0vncserver")
 	if err != nil {
 		return err
 	}
