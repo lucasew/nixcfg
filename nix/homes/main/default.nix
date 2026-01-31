@@ -50,10 +50,6 @@
     })
   ];
 
-  programs = {
-    jq.enable = true;
-  };
-
   gtk = {
     enable = true;
   };
@@ -66,14 +62,6 @@
     # enable = true;
     config = {
       global_config.borderless = true;
-    };
-  };
-  programs.bash.enable = true;
-
-  programs.mpv = {
-    enable = true;
-    config = {
-      ytdl-raw-options = "format-sort=\"vcodec:h264,res,acodec:m4a\"";
     };
   };
 }
