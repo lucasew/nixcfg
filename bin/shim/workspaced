@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 # Automatically generated workspaced shim
 
+# Load mise prelude
+export MISE_ALL_COMPILE=false
+if [ -f "$HOME/.local/bin/mise" ]; then
+	eval "$("$HOME"/.local/bin/mise activate bash)"
+	if [ -n "${TERMUX_VERSION:-}" ]; then
+		unset -f mise
+	fi
+fi
+
 # Find dotfiles root using the same logic as sd
 if [[ -d "$HOME/.dotfiles" ]]; then
 	DOTFILES_ROOT="$HOME/.dotfiles"
