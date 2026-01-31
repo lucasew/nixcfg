@@ -62,7 +62,11 @@ func GetCommand() *cobra.Command {
 			}
 
 			if len(args) > 0 {
-				options = append(options, fuzzyfinder.WithQuery(strings.Join(args, " ")))
+				query := strings.Join(args, " ")
+				query = strings.Trim(query, "'\"")
+				if query != "" {
+					options = append(options, fuzzyfinder.WithQuery(query))
+				}
 			}
 
 			idx, err := fuzzyfinder.Find(
@@ -80,7 +84,7 @@ func GetCommand() *cobra.Command {
 				return fmt.Errorf("fuzzy finder failed: %w", err)
 			}
 
-			fmt.Print(events[idx].Command)
+			fmt.Print(strings.TrimSpace(events[idx].Command))
 			return nil
 		},
 	})
