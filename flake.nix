@@ -142,23 +142,23 @@
             exec workspaced dispatch nix deploy "$@"
           '';
 
-          teste-impure =
-            pkgs.runCommand "teste"
-              {
-                __impure = true;
-                nativeBuildInputs = with pkgs; [
-                  cacert
-                  curl
-                ];
-              }
-              ''
-                # TODO: find a way to mount the sops secret folder inside
-                ls -a /
-                echo foi
-                ls -a /etc
-                curl -L https://google.com
-                date > $out
-              '';
+          # teste-impure =
+          #   pkgs.runCommand "teste"
+          #     {
+          #       __impure = true;
+          #       nativeBuildInputs = with pkgs; [
+          #         cacert
+          #         curl
+          #       ];
+          #     }
+          #     ''
+          #       # TODO: find a way to mount the sops secret folder inside
+          #       ls -a /
+          #       echo foi
+          #       ls -a /etc
+          #       curl -L https://google.com
+          #       date > $out
+          #     '';
 
           release = pkgs.stdenv.mkDerivation {
             pname = "nixcfg-release";

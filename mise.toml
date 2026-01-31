@@ -1,3 +1,13 @@
+[tools]
+go = "1.23.6"
+"go:golang.org/x/tools/gopls" = "0.21.0"
+golangci-lint = "1.61.0"
+terraform = "1.9.0"
+tflint = "0.60.0"
+ruff = "0.14.14"
+shellcheck = "0.11.0"
+shfmt = "3.12.0"
+
 [tasks.lint]
 description = "Run all linters"
 depends = ["lint:*"]
@@ -10,7 +20,7 @@ run = "command -v nix >/dev/null && nix fmt -- --check || echo 'Nix not found, s
 description = "Lint Shell scripts"
 run = """
     mise exec shfmt shellcheck -- shfmt -d .
-    mise exec shfmt shellcheck -- shellcheck $(shfmt -f .)
+    mise exec shfmt shellcheck -- shellcheck $(mise exec shfmt -- shfmt -f .)
 """
 
 [tasks."lint:py"]
