@@ -9,8 +9,6 @@
 
   imports = [
     ../base/default.nix
-    ./ghostty.nix
-    ./dconf.nix
     ./theme
   ];
 
@@ -22,11 +20,6 @@
   };
 
   home.packages = with pkgs; [
-    pkg
-
-    # media
-    nbr.wine-apps._7zip
-
     # LSPs
     nil
     python3Packages.python-lsp-server

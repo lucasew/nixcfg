@@ -34,6 +34,7 @@ func GetCommand() *cobra.Command {
 			// 2. Collect desired state
 			providers := []apply.Provider{
 				&apply.BashrcProvider{},
+				&apply.DconfProvider{},
 				&apply.DesktopProvider{},
 				&apply.SymlinkProvider{},
 				&apply.TermuxProvider{},

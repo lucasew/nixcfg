@@ -52,7 +52,7 @@ video_obs_live = 8000
 
 waypipe = 9999
 
-[wallpaper]
+[desktop.wallpaper]
 dir = "~/.dotfiles/assets/wallpapers"
 default = "default.jpg"
 
@@ -313,3 +313,46 @@ icon = "sync-synchronizing"
 exec = "workspaced dispatch backup run"
 terminal = true
 categories = "System;Utility;"
+
+[desktop]
+dark_mode = true
+
+[desktop.raw.dconf."org/gnome/desktop/background"]
+picture-options = "zoom"
+primary-color = "#ffffff"
+secondary-color = "#000000"
+
+[desktop.raw.dconf."org/gnome/desktop/input-sources"]
+current = "uint32 0"
+xkb-options = ["terminate:ctrl_alt_bksp"]
+
+[desktop.raw.dconf."org/gnome/desktop/peripherals/keyboard"]
+numlock-state = false
+
+[desktop.raw.dconf."org/gnome/desktop/privacy"]
+disable-microphone = true
+report-technical-problems = false
+
+[desktop.raw.dconf."org/gnome/system/location"]
+enabled = false
+
+[desktop.raw.dconf."org/gnome/desktop/periphereals/touchpad"]
+tap-to-click = true
+
+[desktop.palette.base16]
+base00 = "251530"
+base01 = "41407c"
+base02 = "706492"
+base03 = "ac97b6"
+base04 = "dfaca8"
+base05 = "fed5e5"
+base06 = "ffe8fc"
+base07 = "ffe7ea"
+base08 = "9f89ad"
+base09 = "b68581"
+base0A = "c37d87"
+base0B = "ac878f"
+base0C = "be8176"
+base0D = "ba828b"
+base0E = "9989b6"
+base0F = "be7e8c"
