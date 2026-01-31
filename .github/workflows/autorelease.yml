@@ -59,7 +59,9 @@ jobs:
           delete-branch: true
 
       - name: Run CI
-        run: mise run ci
+        run: |
+          git add .
+          mise run ci
 
       - name: Release
         if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
