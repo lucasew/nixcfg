@@ -52,19 +52,6 @@ var Command = &cobra.Command{
 			}
 		}
 
-		// Generate completion cache on startup to speed up shell startup
-		home, _ := os.UserHomeDir()
-		compCache := filepath.Join(home, ".cache/workspaced/completion.bash")
-		if err := os.MkdirAll(filepath.Dir(compCache), 0755); err == nil {
-			f, err := os.Create(compCache)
-			if err == nil {
-				if err := c.Root().GenBashCompletion(f); err != nil {
-					slog.Warn("failed to generate bash completion", "error", err)
-				}
-				f.Close()
-			}
-		}
-
 		if err := RunDaemon(); err != nil {
 			slog.Error("daemon failure", "error", err)
 			os.Exit(1)
