@@ -15,7 +15,7 @@
 
   home.packages = with pkgs; [
     lxappearance
-    colorpipe
+    custom.colorpipe
   ];
 
   gtk = {
