@@ -123,6 +123,29 @@ func handleWS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Check if binary changed - if so, signal restart needed
+	if req.BinaryHash != "" {
+		daemonHash, err := common.GetBinaryHash()
+		if err == nil && daemonHash != req.BinaryHash {
+			slog.Warn("binary hash mismatch, requesting daemon restart",
+				"daemon_hash", daemonHash[:16],
+				"client_hash", req.BinaryHash[:16])
+
+			// Send special error that tells client to restart daemon and retry
+			resp := types.Response{
+				Error: "DAEMON_RESTART_NEEDED",
+			}
+			payload, _ := json.Marshal(resp)
+			outCh <- types.StreamPacket{
+				Type:    "result",
+				Payload: payload,
+			}
+			close(outCh)
+			<-done
+			return
+		}
+	}
+
 	slog.Info("executing command", "command", req.Command, "args", req.Args)
 
 	// Create logger

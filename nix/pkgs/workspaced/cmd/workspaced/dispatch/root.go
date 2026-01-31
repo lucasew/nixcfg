@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"net"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"time"
 	"workspaced/cmd/workspaced/dispatch/apply"
@@ -128,6 +129,7 @@ func getSocketPath() string {
 	return filepath.Join(runtimeDir, "workspaced.sock")
 }
 
+
 func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 	socketPath := getSocketPath()
 	slog.Info("connecting to daemon", "socket", socketPath, "cmd", cmdName, "args", args)
@@ -145,10 +147,14 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 	}
 	defer func() { _ = conn.Close() }()
 
+	// Get client binary hash
+	clientHash, _ := common.GetBinaryHash()
+
 	req := types.Request{
-		Command: cmdName,
-		Args:    args,
-		Env:     os.Environ(),
+		Command:    cmdName,
+		Args:       args,
+		Env:        os.Environ(),
+		BinaryHash: clientHash,
 	}
 
 	if err := conn.WriteJSON(req); err != nil {
@@ -197,6 +203,21 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 				return "", true, fmt.Errorf("failed to parse result: %w", err)
 			}
 			if resp.Error != "" {
+				// Check if daemon needs restart
+				if resp.Error == "DAEMON_RESTART_NEEDED" {
+					slog.Info("daemon binary outdated, restarting daemon and retrying")
+
+					// Restart the daemon via systemd
+					cmd := exec.Command("systemctl", "--user", "restart", "workspaced.service")
+					_ = cmd.Run()
+
+					// Wait a bit for daemon to restart
+					time.Sleep(500 * time.Millisecond)
+
+					// Retry the command locally (new daemon will be picked up next time)
+					// Return not connected so caller runs locally, which will connect to new daemon
+					return "", false, nil
+				}
 				return "", true, fmt.Errorf("%s", resp.Error)
 			}
 			return "", true, nil

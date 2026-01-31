@@ -24,7 +24,6 @@
   };
 
   home.packages = with pkgs; [
-    mission-center
     nix-output-monitor
     pkg
 
@@ -35,19 +34,6 @@
     # LSPs
     nil
     python3Packages.python-lsp-server
-
-    (pkgs.makeDesktopItem {
-      name = "nixcfg-quicksync";
-      desktopName = "nixcfg: Sincronização Rápida";
-      icon = "sync-synchronizing";
-      exec = "sdw quicksync";
-    })
-    (pkgs.makeDesktopItem {
-      name = "nixcfg-backup";
-      desktopName = "nixcfg: Backup";
-      icon = "sync-synchronizing";
-      exec = "sdw backup";
-    })
   ];
 
   gtk = {

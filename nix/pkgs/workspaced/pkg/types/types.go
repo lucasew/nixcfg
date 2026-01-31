@@ -35,9 +35,10 @@ type SudoCommand struct {
 // Request represents a generic RPC command execution request sent to the daemon.
 // It carries the command to run, arguments, and any specific environment overrides.
 type Request struct {
-	Command string   `json:"command"`
-	Args    []string `json:"args"`
-	Env     []string `json:"env"`
+	Command    string   `json:"command"`
+	Args       []string `json:"args"`
+	Env        []string `json:"env"`
+	BinaryHash string   `json:"binary_hash,omitempty"` // SHA256 of client binary
 }
 
 // Response represents the final result of a command execution.

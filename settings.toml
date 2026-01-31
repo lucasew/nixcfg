@@ -298,3 +298,18 @@ global = true
 [lazy_tools."atuin"]
 version = "18.10.0"
 global = true
+[desktop_scripts.nixcfg-quicksync]
+name = "nixcfg: Sincronização Rápida"
+description = "Quick sync dotfiles configuration"
+icon = "sync-synchronizing"
+exec = "workspaced dispatch backup sync"
+terminal = true
+categories = "System;Utility;"
+
+[desktop_scripts.nixcfg-backup]
+name = "nixcfg: Backup"
+description = "Backup dotfiles and important data"
+icon = "sync-synchronizing"
+exec = "workspaced dispatch backup run"
+terminal = true
+categories = "System;Utility;"
