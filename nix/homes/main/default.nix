@@ -15,7 +15,6 @@
     ./theme
     ./qutebrowser.nix
     ./zen-browser.nix
-    ./ssh.nix
   ];
 
   home.activation.restart-workspaced = lib.hm.dag.entryAfter ["writeBoundary"] ''

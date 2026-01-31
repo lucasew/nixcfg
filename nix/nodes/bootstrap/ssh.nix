@@ -1,4 +1,14 @@
-{ config, ... }:
+{ global, lib, ... }:
+let
+  inherit (lib) concatStringsSep mapAttrsToList;
+  mkMatchBlock = name: host: ''
+    Host ${name}
+      HostName ${host.tailscale_ip}
+      ${if host ? port then "Port ${toString host.port}" else ""}
+      ${if host ? user then "User ${host.user}" else "User ${global.username}"}
+  '';
+  sshConfig = concatStringsSep "\n" (mapAttrsToList mkMatchBlock global.hosts);
+in
 {
   services.openssh = {
     enable = true;
@@ -7,18 +17,9 @@
     };
   };
 
-  programs.ssh.extraConfig = ''
-    Include ${config.sops.secrets.ssh-hosts.path}
-  '';
-  programs.mosh.enable = true;
-
-  users.groups.ssh = { };
-
-  sops.secrets.ssh-hosts = {
-    sopsFile = ../../../secrets/ssh-hosts;
-    owner = config.users.users.root.name;
-    group = config.users.groups.ssh.name;
-    mode = "0440";
-    format = "binary";
+  programs.ssh = {
+    extraConfig = sshConfig;
   };
+
+  programs.mosh.enable = true;
 }
