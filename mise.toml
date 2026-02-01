@@ -1,6 +1,6 @@
 [tools]
 go = "1.25.6"
-golangci-lint = "1.64.5"
+"go:github.com/golangci/golangci-lint/cmd/golangci-lint" = "v1.64.5"
 shfmt = "latest"
 shellcheck = "latest"
 terraform = "latest"
@@ -13,7 +13,7 @@ depends = ["lint:*"]
 
 [tasks."lint:nix"]
 description = "Lint Nix files"
-run = "command -v nix >/dev/null && nix fmt --accept-flake-config -- --check || echo 'Nix not found, skipping'"
+run = "command -v nix >/dev/null && nix fmt --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' -- --check || echo 'Nix not found, skipping'"
 
 [tasks."lint:sh"]
 description = "Lint Shell scripts"
@@ -71,7 +71,7 @@ depends = ["test:*"]
 
 [tasks."test:nix"]
 description = "Test Nix configuration"
-run = "command -v nix >/dev/null && nix flake check --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations' || echo 'Nix not found, skipping'"
+run = "command -v nix >/dev/null && nix flake check --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' || echo 'Nix not found, skipping'"
 
 [tasks."test:go"]
 description = "Test Go code"
