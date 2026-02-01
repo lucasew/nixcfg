@@ -4,7 +4,7 @@ _workspaced_history_hook() {
 	local exit_code=$?
 	local cmd
 	# Get last command from history
-	cmd=$(HISTTIMEFORMAT= history 1 | sed 's/^[ ]*[0-9]*[ ]*//')
+	cmd=$(HISTTIMEFORMAT="" history 1 | sed 's/^[ ]*[0-9]*[ ]*//')
 
 	# Avoid recording the record command itself and empty commands
 	if [[ -z "$cmd" || "$cmd" == "workspaced dispatch history record"* ]]; then

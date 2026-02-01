@@ -215,7 +215,7 @@ while [ $# -gt 0 ]; do
 				exit 2
 			}
 		elif [ -r "$1" ]; then
-			encoded_image=$(cat "$1" | b64_encode)
+			encoded_image=$(b64_encode <"$1")
 		else
 			error "imgcat: $1: No such file or directory"
 			exit 2

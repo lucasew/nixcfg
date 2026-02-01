@@ -12,7 +12,6 @@ type CASWriter struct {
 	tempFile *os.File
 	writer   io.Writer
 	hasher   io.Writer
-	hash     []byte
 	dir      string
 }
 

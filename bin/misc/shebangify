@@ -59,7 +59,7 @@ outfile="$script_directory/$script_name"
 echo "#!/usr/bin/env nix-shell" >$outfile
 echo "#!nix-shell -i $interpreter -p $*" >>$outfile
 
-if [[ ! -z $filetype ]]; then
+if [[ -n $filetype ]]; then
 	echo "# vim:ft=$filetype" >>$outfile
 fi
 

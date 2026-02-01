@@ -15,7 +15,7 @@ echo "nix-shell kicked in!" >&2
 set -euo pipefail
 
 NIXCFG_ROOT_PATH=$(sd d root)
-eval "$(cat /etc/bashrc | grep NIX_PATH)"
+eval "$(grep NIX_PATH /etc/bashrc)"
 
 NIX_SHELL_BIN=nix-shell
 
