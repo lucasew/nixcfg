@@ -20,15 +20,9 @@ func GetCommand() *cobra.Command {
 				return fmt.Errorf("failed to get dotfiles root: %w", err)
 			}
 
-			// Find git binary without using os/exec.LookPath to avoid SIGSYS on Android/Go 1.24
-			gitPath, err := common.Which(ctx, "git")
-			if err != nil {
-				return fmt.Errorf("git not found in PATH: %w", err)
-			}
-
 			// 1. Git pull
 			fmt.Println("==> Pulling dotfiles changes...")
-			pullCmd := exec.CommandContext(ctx, gitPath, "-C", root, "pull")
+			pullCmd := common.RunCmd(ctx, "git", "-C", root, "pull")
 			pullCmd.Stdout = os.Stdout
 			pullCmd.Stderr = os.Stderr
 			if err := pullCmd.Run(); err != nil {
