@@ -119,7 +119,7 @@ func applyDconf(iniFile string) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	cmd.Stdin = file
 	return cmd.Run()

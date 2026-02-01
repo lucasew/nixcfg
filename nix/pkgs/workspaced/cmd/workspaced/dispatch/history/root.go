@@ -29,14 +29,14 @@ func GetCommand() *cobra.Command {
 		Use:   "search [query]",
 		Short: "Search history using fuzzy finder",
 		RunE: func(c *cobra.Command, args []string) error {
-			database, ok := c.Context().Value("db").(*db.DB)
+			database, ok := c.Context().Value(types.DBKey).(*db.DB)
 			if !ok {
 				var err error
 				database, err = db.Open()
 				if err != nil {
 					return err
 				}
-				defer database.Close()
+				defer func() { _ = database.Close() }()
 			}
 
 			events, err := database.SearchHistory(c.Context(), "", 5000)
@@ -96,14 +96,14 @@ func GetCommand() *cobra.Command {
 			limit, _ := c.Flags().GetInt32("limit")
 			asJSON, _ := c.Flags().GetBool("json")
 
-			database, ok := c.Context().Value("db").(*db.DB)
+			database, ok := c.Context().Value(types.DBKey).(*db.DB)
 			if !ok {
 				var err error
 				database, err = db.Open()
 				if err != nil {
 					return err
 				}
-				defer database.Close()
+				defer func() { _ = database.Close() }()
 			}
 
 			events, err := database.SearchHistory(c.Context(), "", int(limit))
@@ -118,7 +118,7 @@ func GetCommand() *cobra.Command {
 
 			for _, e := range events {
 				t := time.Unix(e.Timestamp, 0).Format("2006-01-02 15:04:05")
-				fmt.Fprintf(c.OutOrStdout(), "%s\t%s\n", t, e.Command)
+				_, _ = fmt.Fprintf(c.OutOrStdout(), "%s\t%s\n", t, e.Command)
 			}
 
 			return nil
@@ -155,7 +155,7 @@ func GetCommand() *cobra.Command {
 				event.Cwd, _ = os.Getwd()
 			}
 
-			if database, ok := c.Context().Value("db").(*db.DB); ok {
+			if database, ok := c.Context().Value(types.DBKey).(*db.DB); ok {
 				return database.RecordHistory(c.Context(), event)
 			}
 
@@ -168,7 +168,7 @@ func GetCommand() *cobra.Command {
 			if err != nil {
 				return nil // Give up silently to avoid hanging shell
 			}
-			defer database.Close()
+			defer func() { _ = database.Close() }()
 			return database.RecordHistory(c.Context(), event)
 		},
 	}
@@ -185,14 +185,14 @@ func GetCommand() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(c *cobra.Command, args []string) error {
 			source := args[0]
-			database, ok := c.Context().Value("db").(*db.DB)
+			database, ok := c.Context().Value(types.DBKey).(*db.DB)
 			if !ok {
 				var err error
 				database, err = db.Open()
 				if err != nil {
 					return err
 				}
-				defer database.Close()
+				defer func() { _ = database.Close() }()
 			}
 
 			var events []types.HistoryEvent
@@ -231,7 +231,7 @@ func ingestBash() ([]types.HistoryEvent, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	var events []types.HistoryEvent
 	scanner := bufio.NewScanner(file)
@@ -268,13 +268,13 @@ func ingestAtuin() ([]types.HistoryEvent, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to open atuin database: %w", err)
 	}
-	defer dbConn.Close()
+	defer func() { _ = dbConn.Close() }()
 
 	rows, err := dbConn.Query("SELECT command, cwd, timestamp, exit, duration FROM history")
 	if err != nil {
 		return nil, fmt.Errorf("failed to query atuin database: %w", err)
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	var events []types.HistoryEvent
 	for rows.Next() {
@@ -321,7 +321,7 @@ func sendHistoryEvent(event types.HistoryEvent) error {
 	if err != nil {
 		return err // Return error so caller can fallback
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 
 	_ = conn.SetWriteDeadline(time.Now().Add(500 * time.Millisecond))
 	payload, _ := json.Marshal(event)

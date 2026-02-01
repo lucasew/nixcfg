@@ -46,7 +46,7 @@ var Command = &cobra.Command{
 			socketPath := getSocketPath()
 			conn, err := net.DialTimeout("unix", socketPath, 200*time.Millisecond)
 			if err == nil {
-				conn.Close()
+				_ = conn.Close()
 				slog.Info("daemon already running, exiting")
 				os.Exit(0)
 			}
@@ -81,7 +81,7 @@ func RunDaemon() error {
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
 	}
-	defer database.Close()
+	defer func() { _ = database.Close() }()
 
 	go media.Watch(ctx)
 
@@ -221,7 +221,7 @@ func handleRequest(ctx context.Context, req types.Request, outCh chan types.Stre
 	ctx = context.WithValue(ctx, types.EnvKey, env)
 	ctx = context.WithValue(ctx, types.DaemonModeKey, true)
 	// Inject DB into context so commands can use it
-	ctx = context.WithValue(ctx, "db", database)
+	ctx = context.WithValue(ctx, types.DBKey, database)
 
 	output, err := ExecuteViaCobra(ctx, req, stdout, stderr)
 
