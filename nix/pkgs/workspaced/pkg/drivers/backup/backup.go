@@ -168,11 +168,20 @@ func getRemoteStatus(ctx context.Context, config *common.GlobalConfig) (string, 
 	// Get quota (raw)
 	quotaOut, _ := common.RunCmd(ctx, "ssh", user, "quota").Output()
 
+	// Filter out lines with asterisks from quota output
+	var quotaLines []string
+	for _, line := range strings.Split(string(quotaOut), "\n") {
+		if !strings.Contains(line, "*") && line != "" {
+			quotaLines = append(quotaLines, line)
+		}
+	}
+	filteredQuota := strings.Join(quotaLines, "\n")
+
 	// Get snapshots (flattened)
 	snapOut, _ := common.RunCmd(ctx, "ssh", user, "ls .zfs/snapshot").Output()
 	snapshots := strings.Join(strings.Fields(string(snapOut)), " ")
 
-	return string(quotaOut) + "\n" + snapshots, nil
+	return filteredQuota + "\n" + snapshots, nil
 }
 
 func ReplicateZFS(ctx context.Context) error {
