@@ -22,18 +22,19 @@ fi
 
 SOURCE_DIR="$DOTFILES_ROOT/nix/pkgs/workspaced"
 
-cd "$SOURCE_DIR" >> /dev/null
 mkdir -p ~/.local/share/workspaced/bin
 
 GO_VERSION="1.25.6"
 DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 GO_BIN="$DATA_HOME/mise/installs/go/$GO_VERSION/bin/go"
 
-if [[ -x "$GO_BIN" ]]; then
-	env CGO_ENABLED=0 "$GO_BIN" build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
-else
-	mise exec "go@$GO_VERSION" -- env CGO_ENABLED=0 go build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
-fi
-cd - >> /dev/null
+(
+	cd "$SOURCE_DIR" || exit 1
+	if [[ -x "$GO_BIN" ]]; then
+		env CGO_ENABLED=0 "$GO_BIN" build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
+	else
+		mise exec "go@$GO_VERSION" -- env CGO_ENABLED=0 go build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
+	fi
+)
 
 exec ~/.local/share/workspaced/bin/workspaced "$@"
