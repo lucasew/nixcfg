@@ -72,7 +72,7 @@ depends = ["test:*"]
 
 [tasks."test:nix"]
 description = "Test Nix configuration"
-run = "if command -v nix >/dev/null; then nix flake check --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations'; else echo 'Nix not found, skipping'; fi"
+run = "if command -v nix >/dev/null; then nix flake check --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations'; else echo 'Nix not found, skipping'; fi"
 
 [tasks."test:go"]
 description = "Test Go code"
