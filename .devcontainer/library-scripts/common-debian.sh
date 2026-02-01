@@ -103,17 +103,17 @@ if [ "${PACKAGES_ALREADY_INSTALLED}" != "true" ]; then
         strace"
 
 	# Install libssl1.1 if available
-	if [[ ! -z $(apt-cache --names-only search ^libssl1.1$) ]]; then
+	if [[ -n $(apt-cache --names-only search ^libssl1.1$) ]]; then
 		PACKAGE_LIST="${PACKAGE_LIST}       libssl1.1"
 	fi
 
 	# Install appropriate version of libssl1.0.x if available
 	LIBSSL=$(dpkg-query -f '${db:Status-Abbrev}\t${binary:Package}\n' -W 'libssl1\.0\.?' 2>&1 || echo '')
 	if [ "$(echo "$LIBSSL" | grep -o 'libssl1\.0\.[0-9]:' | uniq | sort | wc -l)" -eq 0 ]; then
-		if [[ ! -z $(apt-cache --names-only search ^libssl1.0.2$) ]]; then
+		if [[ -n $(apt-cache --names-only search ^libssl1.0.2$) ]]; then
 			# Debian 9
 			PACKAGE_LIST="${PACKAGE_LIST}       libssl1.0.2"
-		elif [[ ! -z $(apt-cache --names-only search ^libssl1.0.0$) ]]; then
+		elif [[ -n $(apt-cache --names-only search ^libssl1.0.0$) ]]; then
 			# Ubuntu 18.04, 16.04, earlier
 			PACKAGE_LIST="${PACKAGE_LIST}       libssl1.0.0"
 		fi

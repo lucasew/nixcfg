@@ -1,3 +1,12 @@
+[tools]
+go = "1.24"
+golangci-lint = "1.64"
+ruff = "0.9"
+shfmt = "3.10"
+shellcheck = "0.10"
+terraform = "1.10"
+tflint = "0.55"
+
 [tasks.lint]
 description = "Run all linters"
 depends = ["lint:*"]
@@ -62,7 +71,7 @@ depends = ["test:*"]
 
 [tasks."test:nix"]
 description = "Test Nix configuration"
-run = "command -v nix >/dev/null && nix flake check || echo 'Nix not found, skipping'"
+run = "command -v nix >/dev/null && nix flake check --impure || echo 'Nix not found, skipping'"
 
 [tasks."test:go"]
 description = "Test Go code"

@@ -74,7 +74,7 @@ function install_fdroid_app() {
 	log "[*] Getting F-Droid app '$app_id' from '$repo'"
 
 	# Errors in this jq command may mean that the app does not exist
-	item_payload="$(cat "$repo_data" | jq ".packages.\"$app_id\".versions[]" | jq -cs '.[0]')" || log "[X] App $app_id may not exist in the $repo F-Droid repo"
+	item_payload="$(jq ".packages.\"$app_id\".versions[]" <"$repo_data" | jq -cs '.[0]')" || log "[X] App $app_id may not exist in the $repo F-Droid repo"
 	item_name="$(echo "$item_payload" | jq -r .file.name)"
 	item_sha256="$(echo "$item_payload" | jq -r .file.sha256)"
 
