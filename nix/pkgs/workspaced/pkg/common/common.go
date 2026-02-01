@@ -108,8 +108,16 @@ func (h *ChannelLogHandler) WithGroup(name string) slog.Handler {
 
 // RunCmd creates an exec.Cmd with environment variables injected from the context.
 // It ensures that the PATH includes EssentialPaths.
+// It uses the custom Which implementation to avoid SIGSYS errors on Android/Termux.
 func RunCmd(ctx context.Context, name string, args ...string) *exec.Cmd {
-	cmd := exec.CommandContext(ctx, name, args...)
+	// Resolve the full path using our custom Which to avoid SIGSYS on Android
+	fullPath, err := Which(ctx, name)
+	if err != nil {
+		// If Which fails, fall back to the original name
+		// This allows exec.CommandContext to handle the error properly
+		fullPath = name
+	}
+	cmd := exec.CommandContext(ctx, fullPath, args...)
 	return cmd
 }
 
