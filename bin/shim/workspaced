@@ -30,11 +30,10 @@ GO_BIN="$DATA_HOME/mise/installs/go/$GO_VERSION/bin/go"
 
 (
 	cd "$SOURCE_DIR" || exit 1
-	if [[ -x "$GO_BIN" ]]; then
-		env CGO_ENABLED=0 "$GO_BIN" build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
-	else
-		mise exec "go@$GO_VERSION" -- env CGO_ENABLED=0 go build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
+	if [[ ! -x "$GO_BIN" ]]; then
+		mise install "go@$GO_VERSION"
 	fi
+	env CGO_ENABLED=0 "$GO_BIN" build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
 )
 
 exec ~/.local/share/workspaced/bin/workspaced "$@"
