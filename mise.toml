@@ -1,10 +1,20 @@
+[tools]
+go = "1.24.12"
+"go:golang.org/x/tools/gopls" = "0.21.0"
+golangci-lint = "1.64.5"
+terraform = "1.9.0"
+tflint = "0.60.0"
+ruff = "0.14.14"
+shfmt = "3.12.0"
+shellcheck = "0.11.0"
+
 [tasks.lint]
 description = "Run all linters"
 depends = ["lint:*"]
 
 [tasks."lint:nix"]
 description = "Lint Nix files"
-run = "command -v nix >/dev/null && nix fmt -- --check || echo 'Nix not found, skipping'"
+run = "if command -v nix >/dev/null; then nix fmt . -- --check; else echo 'Nix not found, skipping'; fi"
 
 [tasks."lint:sh"]
 description = "Lint Shell scripts"
@@ -20,7 +30,7 @@ run = "mise exec ruff -- ruff check ."
 [tasks."lint:go"]
 description = "Lint Go files"
 dir = "nix/pkgs/workspaced"
-run = "mise exec -- golangci-lint run ./..."
+run = "mise exec -- golangci-lint run --timeout 10m ./..."
 
 [tasks."lint:tf"]
 description = "Lint Terraform files"
@@ -33,7 +43,7 @@ depends = ["fmt:*"]
 
 [tasks."fmt:nix"]
 description = "Format Nix files"
-run = "command -v nix >/dev/null && nix fmt || echo 'Nix not found, skipping'"
+run = "if command -v nix >/dev/null; then nix fmt .; else echo 'Nix not found, skipping'; fi"
 
 [tasks."fmt:sh"]
 description = "Format Shell scripts"
@@ -62,7 +72,7 @@ depends = ["test:*"]
 
 [tasks."test:nix"]
 description = "Test Nix configuration"
-run = "command -v nix >/dev/null && nix flake check || echo 'Nix not found, skipping'"
+run = "if command -v nix >/dev/null; then nix flake check --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations'; else echo 'Nix not found, skipping'; fi"
 
 [tasks."test:go"]
 description = "Test Go code"

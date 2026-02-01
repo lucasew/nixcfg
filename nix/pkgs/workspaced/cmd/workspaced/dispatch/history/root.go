@@ -29,7 +29,7 @@ func GetCommand() *cobra.Command {
 		Use:   "search [query]",
 		Short: "Search history using fuzzy finder",
 		RunE: func(c *cobra.Command, args []string) error {
-			database, ok := c.Context().Value("db").(*db.DB)
+			database, ok := c.Context().Value(types.DBKey).(*db.DB)
 			if !ok {
 				var err error
 				database, err = db.Open()
@@ -96,7 +96,7 @@ func GetCommand() *cobra.Command {
 			limit, _ := c.Flags().GetInt32("limit")
 			asJSON, _ := c.Flags().GetBool("json")
 
-			database, ok := c.Context().Value("db").(*db.DB)
+			database, ok := c.Context().Value(types.DBKey).(*db.DB)
 			if !ok {
 				var err error
 				database, err = db.Open()
@@ -155,7 +155,7 @@ func GetCommand() *cobra.Command {
 				event.Cwd, _ = os.Getwd()
 			}
 
-			if database, ok := c.Context().Value("db").(*db.DB); ok {
+			if database, ok := c.Context().Value(types.DBKey).(*db.DB); ok {
 				return database.RecordHistory(c.Context(), event)
 			}
 
@@ -185,7 +185,7 @@ func GetCommand() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(c *cobra.Command, args []string) error {
 			source := args[0]
-			database, ok := c.Context().Value("db").(*db.DB)
+			database, ok := c.Context().Value(types.DBKey).(*db.DB)
 			if !ok {
 				var err error
 				database, err = db.Open()
