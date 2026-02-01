@@ -12,7 +12,6 @@ type CASWriter struct {
 	tempFile *os.File
 	writer   io.Writer
 	hasher   io.Writer
-	hash     []byte
 	dir      string
 }
 
@@ -47,7 +46,7 @@ func (c *CASWriter) Write(p []byte) (n int, err error) {
 }
 
 func (c *CASWriter) Seal() (string, error) {
-	c.tempFile.Close()
+	_ = c.tempFile.Close()
 	hash := c.hasher.(interface{ Sum(b []byte) []byte }).Sum(nil)
 	hashStr := hex.EncodeToString(hash)
 	finalPath := filepath.Join(c.dir, hashStr)
@@ -57,7 +56,7 @@ func (c *CASWriter) Seal() (string, error) {
 			return "", err
 		}
 	} else {
-		os.Remove(c.tempFile.Name())
+		_ = os.Remove(c.tempFile.Name())
 	}
 
 	return finalPath, nil

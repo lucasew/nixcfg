@@ -38,6 +38,9 @@ jobs:
       - name: Codegen
         run: mise run codegen
 
+      - name: Format
+        run: mise run fmt
+
       - name: Check for changes
         id: git-check
         run: |

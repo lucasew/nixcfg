@@ -48,7 +48,7 @@ func downloadIcon(ctx context.Context, iconURL string, iconsDir string) (string,
 	if err != nil {
 		return "", fmt.Errorf("failed to download icon: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("failed to download icon: status %d", resp.StatusCode)
@@ -59,10 +59,10 @@ func downloadIcon(ctx context.Context, iconURL string, iconsDir string) (string,
 	if err != nil {
 		return "", fmt.Errorf("failed to create icon file: %w", err)
 	}
-	defer out.Close()
+	defer func() { _ = out.Close() }()
 
 	if _, err := io.Copy(out, resp.Body); err != nil {
-		os.Remove(iconPath)
+		_ = os.Remove(iconPath)
 		return "", fmt.Errorf("failed to save icon: %w", err)
 	}
 
