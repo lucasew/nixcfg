@@ -2,21 +2,20 @@ package prelude
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
+	"strings"
 )
 
-// GenerateCompletion generates bash completion by calling workspaced
+// GenerateCompletion generates bash completion using cobra API directly (no exec)
 func GenerateCompletion() (string, error) {
-	// Execute workspaced completion bash to get the completion code
-	// This is only done once when generating the cache
-	cmd := exec.Command("workspaced", "completion", "bash")
-	cmd.Env = os.Environ()
-
-	output, err := cmd.Output()
-	if err != nil {
-		return "", fmt.Errorf("failed to generate completion: %w", err)
+	if rootCommand == nil {
+		return "", fmt.Errorf("root command not set, call SetRootCommand first")
 	}
 
-	return string(output), nil
+	// Generate completion directly using cobra API (much faster than exec)
+	var buf strings.Builder
+	if err := rootCommand.GenBashCompletionV2(&buf, true); err != nil {
+		return "", fmt.Errorf("failed to generate bash completion: %w", err)
+	}
+
+	return buf.String(), nil
 }

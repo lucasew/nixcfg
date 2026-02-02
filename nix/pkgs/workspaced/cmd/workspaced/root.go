@@ -16,6 +16,7 @@ import (
 	"workspaced/cmd/workspaced/is"
 	"workspaced/cmd/workspaced/launch"
 	"workspaced/cmd/workspaced/svc"
+	"workspaced/pkg/prelude"
 )
 
 func NewRootCommand() *cobra.Command {
@@ -58,7 +59,12 @@ func NewRootCommand() *cobra.Command {
 }
 
 func Execute() {
-	if err := NewRootCommand().Execute(); err != nil {
+	rootCmd := NewRootCommand()
+
+	// Set root command for prelude generators (e.g., completion)
+	prelude.SetRootCommand(rootCmd)
+
+	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}

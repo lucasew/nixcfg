@@ -7,10 +7,20 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/spf13/cobra"
 )
 
 // Generator is a function that generates shell code
 type Generator func() (string, error)
+
+// rootCommand is set by SetRootCommand and used by generators that need it
+var rootCommand *cobra.Command
+
+// SetRootCommand sets the root command for generators that need it (e.g., completion)
+func SetRootCommand(cmd *cobra.Command) {
+	rootCommand = cmd
+}
 
 // generators maps order/name to generator functions
 var generators = map[string]Generator{
