@@ -112,6 +112,8 @@ run = "mise exec -- go mod download"
 [tasks."install:tools"]
 description = "Install Mise tools"
 run = """
+    mise plugins install --yes terraform || true
+    mise plugins install --yes tflint || true
     mise install
     mise list
 """
