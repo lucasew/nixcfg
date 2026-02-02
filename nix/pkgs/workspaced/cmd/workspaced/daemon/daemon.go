@@ -9,7 +9,6 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"path/filepath"
 	"time"
 
 	"github.com/coreos/go-systemd/v22/activation"
@@ -43,7 +42,7 @@ var Command = &cobra.Command{
 	Run: func(c *cobra.Command, args []string) {
 		try, _ := c.Flags().GetBool("try")
 		if try {
-			socketPath := getSocketPath()
+			socketPath := common.GetSocketPath()
 			conn, err := net.DialTimeout("unix", socketPath, 200*time.Millisecond)
 			if err == nil {
 				conn.Close()
@@ -61,14 +60,6 @@ var Command = &cobra.Command{
 
 func init() {
 	Command.Flags().Bool("try", false, "Exit if daemon is already running")
-}
-
-func getSocketPath() string {
-	runtimeDir := os.Getenv("XDG_RUNTIME_DIR")
-	if runtimeDir == "" {
-		runtimeDir = fmt.Sprintf("/run/user/%d", os.Getuid())
-	}
-	return filepath.Join(runtimeDir, "workspaced.sock")
 }
 
 func RunDaemon() error {
@@ -89,7 +80,7 @@ func RunDaemon() error {
 	if err == nil && len(listeners) > 0 {
 		listener = listeners[0]
 	} else {
-		socketPath := getSocketPath()
+		socketPath := common.GetSocketPath()
 		_ = os.Remove(socketPath)
 		l, err := net.Listen("unix", socketPath)
 		if err != nil {
@@ -221,7 +212,7 @@ func handleRequest(ctx context.Context, req types.Request, outCh chan types.Stre
 	ctx = context.WithValue(ctx, types.EnvKey, env)
 	ctx = context.WithValue(ctx, types.DaemonModeKey, true)
 	// Inject DB into context so commands can use it
-	ctx = context.WithValue(ctx, "db", database)
+	ctx = context.WithValue(ctx, types.DBKey, database)
 
 	output, err := ExecuteViaCobra(ctx, req, stdout, stderr)
 

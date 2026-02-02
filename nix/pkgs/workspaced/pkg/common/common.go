@@ -540,3 +540,12 @@ func NormalizeURL(url string) string {
 	}
 	return "https://" + url
 }
+
+// GetSocketPath returns the path to the workspaced unix socket.
+func GetSocketPath() string {
+	runtimeDir := os.Getenv("XDG_RUNTIME_DIR")
+	if runtimeDir == "" {
+		runtimeDir = fmt.Sprintf("/run/user/%d", os.Getuid())
+	}
+	return filepath.Join(runtimeDir, "workspaced.sock")
+}

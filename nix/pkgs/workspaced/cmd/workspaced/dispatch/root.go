@@ -8,7 +8,6 @@ import (
 	"net"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"time"
 	"workspaced/cmd/workspaced/dispatch/apply"
 	"workspaced/cmd/workspaced/dispatch/audio"
@@ -137,16 +136,8 @@ func FindCommand(name string, args []string) (*cobra.Command, []string, error) {
 	return NewCommand().Find(append([]string{name}, args...))
 }
 
-func getSocketPath() string {
-	runtimeDir := os.Getenv("XDG_RUNTIME_DIR")
-	if runtimeDir == "" {
-		runtimeDir = fmt.Sprintf("/run/user/%d", os.Getuid())
-	}
-	return filepath.Join(runtimeDir, "workspaced.sock")
-}
-
 func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
-	socketPath := getSocketPath()
+	socketPath := common.GetSocketPath()
 	slog.Info("connecting to daemon", "socket", socketPath, "cmd", cmdName, "args", args)
 
 	dialer := websocket.Dialer{
