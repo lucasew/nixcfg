@@ -1,3 +1,12 @@
+[tools]
+go = "1.25.6"
+"go:github.com/golangci/golangci-lint/cmd/golangci-lint" = "v1.64.5"
+shfmt = "latest"
+shellcheck = "latest"
+ruff = "latest"
+terraform = "latest"
+tflint = "latest"
+
 [tasks.lint]
 description = "Run all linters"
 depends = ["lint:*"]
