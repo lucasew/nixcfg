@@ -29,7 +29,7 @@ run = "mise exec ruff -- ruff check ."
 [tasks."lint:go"]
 description = "Lint Go files"
 dir = "nix/pkgs/workspaced"
-run = "mise exec -- golangci-lint run ./..."
+run = "mise exec -- golangci-lint run --timeout 10m ./..."
 
 [tasks."lint:tf"]
 description = "Lint Terraform files"
