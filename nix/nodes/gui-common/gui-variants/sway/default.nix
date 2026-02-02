@@ -301,6 +301,7 @@ in
         exec_always systemctl restart --user xss-lock nm-applet.service blueberry-tray.service kdeconnect.service kdeconnect-indicator.service dunst.service swayidle.service waybar.service
         exec_always sh -c 'sdw is riverwood &&  wlr-randr --output HDMI-A-1 --right-of eDP-1'
         exec_always systemctl --user restart xdg-desktop-portal
+        exec_always workspaced dispatch screen reset
       '';
   };
 }

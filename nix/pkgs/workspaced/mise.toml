@@ -1,4 +1,4 @@
 [tools]
-go = "1.23.6"
+go = "1.25.6"
 "go:golang.org/x/tools/gopls" = "0.21.0"
 golangci-lint = "1.61.0"

@@ -21,17 +21,21 @@ else
 fi
 
 (
-	GO_VERSION="1.25.6"
-	GO_BIN="$XDG_DATA_HOME/mise/installs/go/$GO_VERSION/bin/go"
+	
 	SOURCE_DIR="$DOTFILES_ROOT/nix/pkgs/workspaced"
+	GO_VERSION="$(sed -n 's/^go = "\(.*\)"/\1/p' "$SOURCE_DIR/mise.toml")"
+	export GO_ROOT=~/.local/share/mise/installs/go/$GO_VERSION
+	export PATH="$GO_ROOT/bin:$PATH"
+	export GOTOOLCHAIN=local
+	export CGO_ENABLED=0
 
 	mkdir -p ~/.local/share/workspaced/bin
 	cd "$SOURCE_DIR" || exit 1
 	if [[ ! -x "$GO_BIN" ]]; then
 		mise install "go@$GO_VERSION"
 	fi
-	env CGO_ENABLED=0 "$GO_BIN" build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
-)
+	env go build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
+) || exit 1
 
 
 exec ~/.local/share/workspaced/bin/workspaced "$@"
