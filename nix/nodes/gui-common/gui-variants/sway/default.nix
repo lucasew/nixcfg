@@ -132,7 +132,7 @@ in
       xfce.ristretto
       pcmanfm
       kitty
-      slurm
+      slurp
       custom_rofi
       lockerSpace
       playerctl
