@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 	"sync"
+	"time"
 	"workspaced/pkg/common"
 	"workspaced/pkg/prelude"
 
@@ -16,6 +17,7 @@ import (
 
 func getInitCommand() *cobra.Command {
 	var force bool
+	var profile bool
 
 	cmd := &cobra.Command{
 		Use:   "init [shell]",
@@ -24,6 +26,12 @@ func getInitCommand() *cobra.Command {
 Uses caching for performance - regenerates only when source files change.`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			startTime := time.Now()
+			defer func() {
+				if profile {
+					fmt.Fprintf(os.Stderr, "\n⏱️  Total time: %v\n", time.Since(startTime))
+				}
+			}()
 			shell := "bash"
 			if len(args) > 0 {
 				shell = args[0]
@@ -49,15 +57,25 @@ Uses caching for performance - regenerates only when source files change.`,
 			// Check if cache exists (build ID already in filename)
 			if !force {
 				if content, err := os.ReadFile(cacheFile); err == nil {
+					if profile {
+						fmt.Fprintf(os.Stderr, "✓ Cache hit: %s\n", cacheFile)
+					}
 					fmt.Print(string(content))
 					return nil
 				}
 			}
+			if profile {
+				fmt.Fprintf(os.Stderr, "⚠️  Cache miss, generating...\n")
+			}
 
 			// Read all prelude files in parallel
+			t1 := time.Now()
 			allFiles, err := filepath.Glob(filepath.Join(preludeDir, "*.sh"))
 			if err != nil {
 				return fmt.Errorf("failed to list prelude files: %w", err)
+			}
+			if profile {
+				fmt.Fprintf(os.Stderr, "  Glob files: %v (%d files)\n", time.Since(t1), len(allFiles))
 			}
 
 			// Separate .source.sh files from regular .sh files
@@ -119,9 +137,13 @@ Uses caching for performance - regenerates only when source files change.`,
 			}
 
 			// Execute .source.sh files in parallel
+			t2 := time.Now()
 			sourceOutputs, err := executeSourceFiles(sourceFiles)
 			if err != nil {
 				return fmt.Errorf("failed to execute source files: %w", err)
+			}
+			if profile {
+				fmt.Fprintf(os.Stderr, "  Execute .source.sh files: %v (%d files)\n", time.Since(t2), len(sourceFiles))
 			}
 
 			// Build output in order
@@ -131,9 +153,13 @@ Uses caching for performance - regenerates only when source files change.`,
 			output.WriteString("# Commands executed in parallel for faster loading\n\n")
 
 			// Generate all inline prelude code in parallel
+			t3 := time.Now()
 			inlineCode, err := prelude.Generate()
 			if err != nil {
 				return fmt.Errorf("failed to generate inline prelude: %w", err)
+			}
+			if profile {
+				fmt.Fprintf(os.Stderr, "  Generate inline prelude: %v\n", time.Since(t3))
 			}
 			output.WriteString(inlineCode)
 
@@ -183,6 +209,7 @@ Uses caching for performance - regenerates only when source files change.`,
 	}
 
 	cmd.Flags().BoolVarP(&force, "force", "f", false, "Force regeneration, ignore cache")
+	cmd.Flags().BoolVarP(&profile, "profile", "p", false, "Show timing information for each step")
 
 	return cmd
 }

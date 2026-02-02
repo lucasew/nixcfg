@@ -2,9 +2,11 @@ package prelude
 
 import (
 	"fmt"
+	"os"
 	"sort"
 	"strings"
 	"sync"
+	"time"
 )
 
 // Generator is a function that generates shell code
@@ -22,10 +24,13 @@ var generators = map[string]Generator{
 
 // Generate executes all generators in parallel and returns ordered output
 func Generate() (string, error) {
+	profile := os.Getenv("WORKSPACED_PROFILE") == "1"
+
 	type result struct {
-		key    string
-		output string
-		err    error
+		key      string
+		output   string
+		err      error
+		duration time.Duration
 	}
 
 	results := make(chan result, len(generators))
@@ -36,8 +41,9 @@ func Generate() (string, error) {
 		wg.Add(1)
 		go func(k string, g Generator) {
 			defer wg.Done()
+			start := time.Now()
 			output, err := g()
-			results <- result{key: k, output: output, err: err}
+			results <- result{key: k, output: output, err: err, duration: time.Since(start)}
 		}(key, gen)
 	}
 
@@ -49,6 +55,7 @@ func Generate() (string, error) {
 
 	// Collect results
 	resultMap := make(map[string]string)
+	timings := make(map[string]time.Duration)
 	var errs []error
 	for r := range results {
 		if r.err != nil {
@@ -56,6 +63,10 @@ func Generate() (string, error) {
 			continue
 		}
 		resultMap[r.key] = r.output
+		timings[r.key] = r.duration
+		if profile {
+			fmt.Fprintf(os.Stderr, "    • %s: %v\n", r.key, r.duration)
+		}
 	}
 
 	if len(errs) > 0 {
