@@ -132,6 +132,7 @@ in
       xfce.ristretto
       pcmanfm
       kitty
+      slurm
       custom_rofi
       lockerSpace
       playerctl
@@ -293,14 +294,16 @@ in
         hide_edge_borders smart
         focus_on_window_activation urgent
 
+        
+
         # announce a running sway session to systemd
         # https://discourse.nixos.org/t/xdg-desktop-portal-not-working-on-wayland-while-kde-is-installed/20919/3
         exec_always systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP WAYLAND_DISPLAY DISPLAY SWAYSOCK PATH
         exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
         exec_always systemctl restart --user xss-lock nm-applet.service blueberry-tray.service kdeconnect.service kdeconnect-indicator.service dunst.service swayidle.service waybar.service
-        exec_always sh -c 'sdw is riverwood &&  wlr-randr --output HDMI-A-1 --right-of eDP-1'
         exec_always systemctl --user restart xdg-desktop-portal
+        exec_always env WORKSPACED_REFRESH=1 workspaced
         exec_always workspaced dispatch screen reset
       '';
   };
