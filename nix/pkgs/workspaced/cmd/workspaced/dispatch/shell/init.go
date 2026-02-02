@@ -67,6 +67,10 @@ Uses caching for performance - regenerates only when source files change.`,
 			for _, file := range allFiles {
 				basename := filepath.Base(file)
 				if strings.HasSuffix(basename, ".source.sh") {
+					// Skip mise .source.sh as it's generated in Go
+					if strings.Contains(basename, "mise") {
+						continue
+					}
 					// Map the base name without .source.sh extension
 					key := strings.TrimSuffix(basename, ".source.sh")
 					sourceFiles[key] = file
