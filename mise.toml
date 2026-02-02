@@ -94,3 +94,12 @@ run = "echo 'Managed by Nix'"
 [tasks.ci]
 description = "Run CI pipeline locally"
 depends = ["lint", "test"]
+
+[tools]
+go = "1.25.6"
+golangci-lint = "1.64.5"
+shfmt = "latest"
+shellcheck = "latest"
+terraform = "latest"
+tflint = "latest"
+ruff = "latest"
