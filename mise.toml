@@ -3,8 +3,8 @@ go = "1.25.6"
 golangci-lint = "1.64.5"
 shfmt = "latest"
 shellcheck = "latest"
-terraform = "latest"
-tflint = "latest"
+terraform = "1.9.0"
+tflint = "0.60.0"
 ruff = "latest"
 
 [tasks.lint]
