@@ -8,6 +8,15 @@ import (
 	"workspaced/pkg/common"
 )
 
+// SetupTermuxShortcuts provisions Termux:Widget shortcuts by creating wrapper scripts in ~/.shortcuts.
+//
+// This function:
+// 1. Verifies the environment is Termux (via IsPhone).
+// 2. Scans for shortcut definitions in `$DOTFILES/bin/_shortcuts/termux`.
+// 3. Creates executable wrappers in `~/.shortcuts` that invoke the corresponding dotfiles script via `source_me`.
+//
+// These shortcuts allow easy access to workspaced commands from the Android home screen
+// using the Termux:Widget app.
 func SetupTermuxShortcuts(ctx context.Context) error {
 	if !common.IsPhone() {
 		return fmt.Errorf("this command only works on phone (Termux)")

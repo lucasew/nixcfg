@@ -19,9 +19,12 @@ const (
 	Unknown     Status = "Unknown"
 )
 
-// GetStatus retrieves the current battery status.
-// It scans /sys/class/power_supply/BAT*/status to find the first available battery
-// and reads its status.
+// GetStatus retrieves the current battery status by reading from sysfs.
+//
+// It scans `/sys/class/power_supply/BAT*/status` to locate battery devices.
+//
+// Note: It currently picks the *first* matching battery found (e.g., BAT0).
+// In multi-battery systems, this may not reflect the aggregate status.
 func GetStatus(ctx context.Context) (Status, error) {
 	matches, _ := filepath.Glob("/sys/class/power_supply/BAT*/status")
 	if len(matches) == 0 {

@@ -15,21 +15,31 @@ import (
 )
 
 // Workspace represents a workspace as returned by Sway/i3 IPC.
+// It maps the JSON response from `get_workspaces` command.
 type Workspace struct {
-	Name    string `json:"name"`
-	Focused bool   `json:"focused"`
-	Output  string `json:"output"`
+	// Name is the workspace name (e.g. "1", "2", "www").
+	Name string `json:"name"`
+	// Focused indicates if this workspace is currently focused.
+	Focused bool `json:"focused"`
+	// Output is the name of the screen (e.g. "eDP-1") this workspace is on.
+	Output string `json:"output"`
 }
 
 // Output represents a display output as returned by Sway/i3 IPC.
+// It maps the JSON response from `get_outputs` command.
 type Output struct {
-	Name             string `json:"name"`
+	// Name is the output name (e.g. "eDP-1", "HDMI-A-1").
+	Name string `json:"name"`
+	// CurrentWorkspace is the name of the workspace currently visible on this output.
 	CurrentWorkspace string `json:"current_workspace"`
 }
 
 // SwitchToWorkspace switches to the specified workspace number.
-// It uses common.GetRPC to determine whether to use swaymsg or i3-msg.
-// If move is true, it moves the current container to that workspace instead of switching focus.
+// It abstracts the underlying window manager (Sway or i3) by using common.GetRPC
+// to determine the correct IPC tool (swaymsg vs i3-msg).
+//
+// If move is true, it moves the currently focused container to the target workspace
+// instead of switching the view to that workspace.
 func SwitchToWorkspace(ctx context.Context, num int, move bool) error {
 	rpc := common.GetRPC(ctx)
 	if move {

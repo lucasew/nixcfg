@@ -52,6 +52,16 @@ func Load() (*Config, error) {
 	}, nil
 }
 
+// UnmarshalKey retrieves a value from the raw configuration map by dot-notation key
+// and unmarshals it into the provided target structure.
+//
+// It navigates the nested map structure using the dot-separated key (e.g. "desktop.wallpaper").
+//
+// Implementation Detail:
+// Since the configuration is stored as a generic `map[string]interface{}`, we use
+// a round-trip JSON serialization (Marshal -> Unmarshal) to convert the unstructured
+// map data into the strongly-typed target structure `val`. This avoids manual type assertions
+// and leverages the standard library's robust mapping logic.
 func (c *Config) UnmarshalKey(key string, val interface{}) error {
 	parts := strings.Split(key, ".")
 	var current interface{} = c.raw

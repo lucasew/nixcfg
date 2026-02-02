@@ -252,15 +252,24 @@ func IsNixOS() bool {
 
 // GlobalConfig represents the schema of the settings.toml file.
 type GlobalConfig struct {
-	Workspaces map[string]int            `toml:"workspaces"`
-	Desktop    DesktopConfig             `toml:"desktop"`
-	Screenshot ScreenshotConfig          `toml:"screenshot"`
-	Hosts      map[string]HostConfig     `toml:"hosts"`
-	Backup     BackupConfig              `toml:"backup"`
-	QuickSync  QuickSyncConfig           `toml:"quicksync"`
-	Browser    BrowserConfig             `toml:"browser"`
-	Webapps    map[string]WebappConfig   `toml:"webapp"`
-	LazyTools  map[string]LazyToolConfig `toml:"lazy_tools"`
+	// Workspaces maps workspace names to their assigned number (e.g. "www" -> 1).
+	Workspaces map[string]int `toml:"workspaces"`
+	// Desktop contains general desktop environment settings.
+	Desktop DesktopConfig `toml:"desktop"`
+	// Screenshot configures where screenshots are saved.
+	Screenshot ScreenshotConfig `toml:"screenshot"`
+	// Hosts defines host-specific configurations matched by hostname.
+	Hosts map[string]HostConfig `toml:"hosts"`
+	// Backup configures remote backup destinations.
+	Backup BackupConfig `toml:"backup"`
+	// QuickSync configures the git repository synchronization tool.
+	QuickSync QuickSyncConfig `toml:"quicksync"`
+	// Browser defines default browser settings.
+	Browser BrowserConfig `toml:"browser"`
+	// Webapps defines standalone web applications (SSBs).
+	Webapps map[string]WebappConfig `toml:"webapp"`
+	// LazyTools defines tools that are installed on-demand via mise.
+	LazyTools map[string]LazyToolConfig `toml:"lazy_tools"`
 }
 
 type DesktopConfig struct {
@@ -519,6 +528,8 @@ func ExpandPath(path string) string {
 	return os.ExpandEnv(path)
 }
 
+// ToTitleCase converts snake_case or kebab-case strings to Title Case.
+// For example: "hello-world" -> "Hello World", "my_variable" -> "My Variable".
 func ToTitleCase(s string) string {
 	s = strings.ReplaceAll(s, "-", " ")
 	s = strings.ReplaceAll(s, "_", " ")
@@ -531,6 +542,11 @@ func ToTitleCase(s string) string {
 	return strings.Join(words, " ")
 }
 
+// NormalizeURL normalizes a string into a valid URL.
+// It handles:
+// - Existing schemes (file://, http://, https://) -> kept as is.
+// - Absolute paths (/, ~/) -> converted to file:// URLs (with tilde expansion).
+// - Other strings -> assumed to be https:// URLs.
 func NormalizeURL(url string) string {
 	if strings.HasPrefix(url, "file://") || strings.HasPrefix(url, "http://") || strings.HasPrefix(url, "https://") {
 		return url
