@@ -12,14 +12,6 @@ if [[ "$SD_ROOT" =~ "/nix" ]]; then
 	fi
 fi
 
-# Use workspaced shell init if available (faster parallel loading + caching)
-if command -v workspaced >/dev/null 2>&1; then
-	eval "$(workspaced dispatch shell init bash)"
-else
-	# Fallback to sequential loading
-	for script in "$SD_ROOT/prelude/"*; do
-		. "$script"
-	done
-fi
+source <(workspaced dispatch shell init bash)
 
 (return 0 2>/dev/null) || "$@"
