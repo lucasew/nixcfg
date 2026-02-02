@@ -1,15 +1,14 @@
 package shell
 
 import (
-	"crypto/sha256"
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"sort"
 	"strings"
 	"sync"
+	"workspaced/pkg/common"
 
 	"github.com/spf13/cobra"
 )
@@ -43,8 +42,16 @@ Uses caching for performance - regenerates only when source files change.`,
 				return fmt.Errorf("failed to create cache directory: %w", err)
 			}
 
-			cacheFile := filepath.Join(cacheDir, fmt.Sprintf("shell-init-%s.bash", shell))
-			hashFile := filepath.Join(cacheDir, fmt.Sprintf("shell-init-%s.hash", shell))
+			buildID := common.GetBuildID()
+			cacheFile := filepath.Join(cacheDir, fmt.Sprintf("shell-init-%s-%s.bash", shell, buildID))
+
+			// Check if cache exists (build ID already in filename)
+			if !force {
+				if content, err := os.ReadFile(cacheFile); err == nil {
+					fmt.Print(string(content))
+					return nil
+				}
+			}
 
 			// Read all prelude files in parallel
 			allFiles, err := filepath.Glob(filepath.Join(preludeDir, "*.sh"))
@@ -67,26 +74,6 @@ Uses caching for performance - regenerates only when source files change.`,
 				}
 			}
 			sort.Strings(files)
-
-			// Calculate hash of all files
-			currentHash, err := calculateFilesHash(files)
-			if err != nil {
-				return fmt.Errorf("failed to calculate hash: %w", err)
-			}
-
-			// Check if cache is valid
-			if !force {
-				if cachedHash, err := os.ReadFile(hashFile); err == nil {
-					if string(cachedHash) == currentHash {
-						// Cache is valid, return cached content
-						content, err := os.ReadFile(cacheFile)
-						if err == nil {
-							fmt.Print(string(content))
-							return nil
-						}
-					}
-				}
-			}
 
 			// Read all files in parallel
 			type fileContent struct {
@@ -173,10 +160,6 @@ Uses caching for performance - regenerates only when source files change.`,
 				// Non-fatal, continue
 				fmt.Fprintf(os.Stderr, "Warning: failed to write cache: %v\n", err)
 			}
-			if err := os.WriteFile(hashFile, []byte(currentHash), 0644); err != nil {
-				// Non-fatal, continue
-				fmt.Fprintf(os.Stderr, "Warning: failed to write hash: %v\n", err)
-			}
 
 			fmt.Print(result)
 			return nil
@@ -210,30 +193,6 @@ func getCacheDir() string {
 		return filepath.Join(xdgCache, "workspaced")
 	}
 	return filepath.Join(os.Getenv("HOME"), ".cache", "workspaced")
-}
-
-func calculateFilesHash(files []string) (string, error) {
-	h := sha256.New()
-
-	for _, file := range files {
-		// Include filename in hash
-		if _, err := h.Write([]byte(file)); err != nil {
-			return "", err
-		}
-
-		// Include file content
-		f, err := os.Open(file)
-		if err != nil {
-			return "", err
-		}
-		if _, err := io.Copy(h, f); err != nil {
-			f.Close()
-			return "", err
-		}
-		f.Close()
-	}
-
-	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }
 
 // executeSourceFiles executes all .source.sh files in parallel and returns their outputs
@@ -286,183 +245,4 @@ func executeSourceFiles(sourceFiles map[string]string) (map[string]string, error
 	}
 
 	return outputMap, nil
-}
-
-// Patterns to detect shell command invocations
-var commandPatterns = []*regexp.Regexp{
-	// eval "$(command args)"
-	regexp.MustCompile(`eval\s+"?\$\(([^)]+)\)"?`),
-	// source <(command args)
-	regexp.MustCompile(`source\s+<\(([^)]+)\)`),
-	// . <(command args)
-	regexp.MustCompile(`\.\s+<\(([^)]+)\)`),
-}
-
-type commandExecution struct {
-	cmd    string
-	output string
-	err    error
-}
-
-// executeCommandsInParallel finds all command invocations and executes them in parallel
-func executeCommandsInParallel(contentMap map[string]string) (map[string]string, error) {
-	// Collect unique commands
-	commandSet := make(map[string]bool)
-	for _, content := range contentMap {
-		for _, pattern := range commandPatterns {
-			matches := pattern.FindAllStringSubmatch(content, -1)
-			for _, match := range matches {
-				if len(match) > 1 {
-					cmd := strings.TrimSpace(match[1])
-					commandSet[cmd] = true
-				}
-			}
-		}
-	}
-
-	if len(commandSet) == 0 {
-		return make(map[string]string), nil
-	}
-
-	// Execute all commands in parallel
-	results := make(chan commandExecution, len(commandSet))
-	var wg sync.WaitGroup
-
-	for cmd := range commandSet {
-		wg.Add(1)
-		go func(command string) {
-			defer wg.Done()
-
-			// Skip if command doesn't exist
-			cmdParts := strings.Fields(command)
-			if len(cmdParts) == 0 {
-				results <- commandExecution{cmd: command, output: "", err: nil}
-				return
-			}
-
-			// Check if command exists
-			if _, err := exec.LookPath(cmdParts[0]); err != nil {
-				// Command doesn't exist, keep original
-				results <- commandExecution{cmd: command, output: "", err: err}
-				return
-			}
-
-			// Execute command
-			bashCmd := exec.Command("bash", "-c", command)
-			bashCmd.Env = os.Environ()
-			output, err := bashCmd.Output()
-
-			results <- commandExecution{
-				cmd:    command,
-				output: string(output),
-				err:    err,
-			}
-		}(cmd)
-	}
-
-	// Wait and close
-	go func() {
-		wg.Wait()
-		close(results)
-	}()
-
-	// Collect results
-	commandMap := make(map[string]string)
-	for result := range results {
-		if result.err == nil && result.output != "" {
-			commandMap[result.cmd] = result.output
-		}
-	}
-
-	return commandMap, nil
-}
-
-// replaceSourceCommands replaces source/eval commands with the cached output from .source.sh
-func replaceSourceCommands(content string, sourceOutput string) string {
-	result := content
-
-	// Patterns to replace with source output (captures indentation)
-	patterns := []*regexp.Regexp{
-		// source <(command)
-		regexp.MustCompile(`(?m)^(\s*)source\s+<\([^)]+\)\s*$`),
-		// . <(command)
-		regexp.MustCompile(`(?m)^(\s*)\.\s+<\([^)]+\)\s*$`),
-		// eval "$(command)" or eval "$(...)"
-		regexp.MustCompile(`(?m)^(\s*)eval\s+"\$\([^)]+\)"\s*$`),
-	}
-
-	// Replace first match with source output, preserving indentation
-	for _, pattern := range patterns {
-		if pattern.MatchString(result) {
-			result = pattern.ReplaceAllStringFunc(result, func(match string) string {
-				// Extract indentation
-				submatch := pattern.FindStringSubmatch(match)
-				indent := ""
-				if len(submatch) > 1 {
-					indent = submatch[1]
-				}
-
-				// Add comment and inject source output with indentation
-				lines := strings.Split(strings.TrimRight(sourceOutput, "\n"), "\n")
-				indentedOutput := make([]string, len(lines))
-				for i, line := range lines {
-					if line != "" {
-						indentedOutput[i] = indent + line
-					} else {
-						indentedOutput[i] = ""
-					}
-				}
-
-				return fmt.Sprintf("%s# Cached from .source.sh:\n%s", indent, strings.Join(indentedOutput, "\n"))
-			})
-			break // Only replace one command
-		}
-	}
-
-	return result
-}
-
-// replaceCommandsWithOutputs replaces command invocations with their cached outputs
-func replaceCommandsWithOutputs(content string, commandMap map[string]string) string {
-	result := content
-
-	for _, pattern := range commandPatterns {
-		result = pattern.ReplaceAllStringFunc(result, func(match string) string {
-			// Extract command from match
-			submatch := pattern.FindStringSubmatch(match)
-			if len(submatch) < 2 {
-				return match
-			}
-
-			cmd := strings.TrimSpace(submatch[1])
-			output, exists := commandMap[cmd]
-
-			if !exists || output == "" {
-				// Keep original if command wasn't executed or had no output
-				return match
-			}
-
-			// Check if command binary exists
-			cmdParts := strings.Fields(cmd)
-			if len(cmdParts) > 0 {
-				if _, err := exec.LookPath(cmdParts[0]); err != nil {
-					// Keep original if command doesn't exist
-					return match
-				}
-			}
-
-			// Replace with inline output
-			// Add comment for clarity
-			replacement := fmt.Sprintf("# Cached output of: %s\n%s", cmd, output)
-
-			// If output doesn't end with newline, add one
-			if !strings.HasSuffix(replacement, "\n") {
-				replacement += "\n"
-			}
-
-			return replacement
-		})
-	}
-
-	return result
 }

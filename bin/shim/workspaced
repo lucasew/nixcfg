@@ -36,7 +36,8 @@ if [[ -v WORKSPACED_REFRESH ]] || [[ ! -x "$HOME/.local/share/workspaced/bin/wor
 		if [[ ! -x "$GO_BIN" ]]; then
 			mise install "go@$GO_VERSION"
 		fi
-		env go build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
+		BUILD_ID="$(date +%s)"
+		env go build -v -ldflags "-X workspaced/pkg/common.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
 
 		notify-send --hint=string:x-canonical-private-synchronous:workspaced-build "Workspaced" "Workspaced recompilado"
 	) || exit 1
