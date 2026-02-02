@@ -228,6 +228,11 @@ version = "15.1.0"
 global = true
 bins = ["rg"]
 
+[lazy_tools."fzf"]
+version = "0.67.0"
+global = true
+bins = ["fzf", "fzf-tmux"]
+
 [lazy_tools."ruff"]
 version = "0.14.14"
 
