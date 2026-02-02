@@ -22,10 +22,11 @@ fi
 
 SOURCE_DIR="$DOTFILES_ROOT/nix/pkgs/workspaced"
 
-cd "$SOURCE_DIR" >>/dev/null
-mkdir -p ~/.local/share/workspaced/bin
+(
+	cd "$SOURCE_DIR" || exit 1
+	mkdir -p ~/.local/share/workspaced/bin
 
-mise exec go@1.25.6 -- env CGO_ENABLED=0 go build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
-cd - >>/dev/null
+	mise exec go@1.25.6 -- env CGO_ENABLED=0 go build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
+)
 
 exec ~/.local/share/workspaced/bin/workspaced "$@"
