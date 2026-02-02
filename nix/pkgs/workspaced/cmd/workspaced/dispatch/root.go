@@ -25,6 +25,7 @@ import (
 	"workspaced/cmd/workspaced/dispatch/screen"
 	"workspaced/cmd/workspaced/dispatch/screenshot"
 	"workspaced/cmd/workspaced/dispatch/setup"
+	"workspaced/cmd/workspaced/dispatch/shell"
 	"workspaced/cmd/workspaced/dispatch/sudo"
 	"workspaced/cmd/workspaced/dispatch/sync"
 	"workspaced/cmd/workspaced/dispatch/wallpaper"
@@ -90,7 +91,7 @@ func NewCommand() *cobra.Command {
 			}
 		}
 
-		if remoteCmd == "sync" || remoteCmd == "config" || remoteCmd == "is" {
+		if remoteCmd == "sync" || remoteCmd == "config" || remoteCmd == "is" || remoteCmd == "shell" {
 			return nil
 		}
 
@@ -124,6 +125,7 @@ func NewCommand() *cobra.Command {
 	cmd.AddCommand(screen.GetCommand())
 	cmd.AddCommand(screenshot.GetCommand())
 	cmd.AddCommand(setup.GetCommand())
+	cmd.AddCommand(shell.GetCommand())
 	cmd.AddCommand(sudo.GetCommand())
 	cmd.AddCommand(sync.GetCommand())
 	cmd.AddCommand(wallpaper.GetCommand())
