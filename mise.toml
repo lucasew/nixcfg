@@ -13,7 +13,7 @@ depends = ["lint:*"]
 
 [tasks."lint:nix"]
 description = "Lint Nix files"
-run = "command -v nix >/dev/null && nix fmt -- --check || echo 'Nix not found, skipping'"
+run = "command -v nix >/dev/null && nix fmt --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' -- --check || echo 'Nix not found, skipping'"
 
 [tasks."lint:sh"]
 description = "Lint Shell scripts"
@@ -71,7 +71,7 @@ depends = ["test:*"]
 
 [tasks."test:nix"]
 description = "Test Nix configuration"
-run = "command -v nix >/dev/null && nix flake check || echo 'Nix not found, skipping'"
+run = "command -v nix >/dev/null && nix flake check --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' || echo 'Nix not found, skipping'"
 
 [tasks."test:go"]
 description = "Test Go code"
