@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 	"workspaced/pkg/common"
-	"workspaced/pkg/config"
+	"workspaced/pkg/prelude"
 
 	"github.com/spf13/cobra"
 )
@@ -126,40 +126,20 @@ Uses caching for performance - regenerates only when source files change.`,
 			output.WriteString("# This file is cached for performance\n")
 			output.WriteString("# Commands executed in parallel for faster loading\n\n")
 
-			// Apply colors first (visual feedback) - inline, no subshell
-			output.WriteString("# Apply terminal colors (inline, no external calls)\n")
-			output.WriteString("if [[ $- == *i* ]]; then\n")
-			if colorCodes, err := generateColorCodes(); err == nil {
-				output.WriteString("\tprintf '")
-				output.WriteString(colorCodes)
-				output.WriteString("'\n")
-			} else {
-				fmt.Fprintf(os.Stderr, "Warning: failed to generate colors: %v\n", err)
+			// Generate all inline prelude code in parallel
+			inlineCode, err := prelude.Generate()
+			if err != nil {
+				return fmt.Errorf("failed to generate inline prelude: %w", err)
 			}
-			output.WriteString("fi\n\n")
-
-			output.WriteString("# Flag to indicate workspaced shell init is being used\n")
-			output.WriteString("export WORKSPACED_SHELL_INIT=1\n\n")
-
-			// Start daemon in background
-			output.WriteString("# Start workspaced daemon if available\n")
-			output.WriteString("if command -v workspaced >/dev/null 2>&1; then\n")
-			output.WriteString("\t(workspaced daemon --try &) &>/dev/null\n")
-			output.WriteString("fi\n\n")
-
-			// Generate completion inline
-			output.WriteString("# Workspaced completion (generated inline)\n")
-			if err := generateBashCompletion(&output); err != nil {
-				fmt.Fprintf(os.Stderr, "Warning: failed to generate completion: %v\n", err)
-			}
-			output.WriteString("\n")
+			output.WriteString(inlineCode)
 
 			for _, file := range files {
 				basename := filepath.Base(file)
 				baseKey := strings.TrimSuffix(basename, ".sh")
 
-				// Skip workspaced-init as it's generated inline above
-				if strings.Contains(basename, "workspaced-init") {
+				// Skip files generated inline above
+				if strings.Contains(basename, "workspaced-init") ||
+				   strings.Contains(basename, "workspaced-history") {
 					continue
 				}
 
@@ -228,74 +208,6 @@ func getCacheDir() string {
 }
 
 // generateColorCodes generates ANSI color codes inline without calling external commands
-func generateColorCodes() (string, error) {
-	cfg, err := config.Load()
-	if err != nil {
-		return "", err
-	}
-
-	var desktop map[string]interface{}
-	if err := cfg.UnmarshalKey("desktop", &desktop); err != nil {
-		return "", err
-	}
-
-	palette, ok := desktop["palette"].(map[string]interface{})
-	if !ok {
-		return "", fmt.Errorf("palette not found")
-	}
-
-	base16, ok := palette["base16"].(map[string]interface{})
-	if !ok {
-		return "", fmt.Errorf("base16 palette not found")
-	}
-
-	get := func(key string) string {
-		val, _ := base16[key].(string)
-		return val
-	}
-
-	colors := []string{
-		get("base00"), get("base08"), get("base0B"), get("base0A"),
-		get("base0D"), get("base0E"), get("base0C"), get("base05"),
-		get("base03"), get("base08"), get("base0B"), get("base0A"),
-		get("base0D"), get("base0E"), get("base0C"), get("base07"),
-	}
-
-	var result strings.Builder
-	for i, color := range colors {
-		if color != "" {
-			result.WriteString(fmt.Sprintf("\\033]4;%d;#%s\\033\\\\", i, color))
-		}
-	}
-
-	fg := get("base05")
-	bg := get("base00")
-	if fg != "" {
-		result.WriteString(fmt.Sprintf("\\033]10;#%s\\033\\\\", fg))
-		result.WriteString(fmt.Sprintf("\\033]12;#%s\\033\\\\", fg))
-	}
-	if bg != "" {
-		result.WriteString(fmt.Sprintf("\\033]11;#%s\\033\\\\", bg))
-	}
-
-	return result.String(), nil
-}
-
-// generateBashCompletion generates bash completion inline by calling workspaced
-func generateBashCompletion(output *strings.Builder) error {
-	// Execute workspaced completion bash to get the completion code
-	// This is only done once when generating the cache
-	cmd := exec.Command("workspaced", "completion", "bash")
-	cmd.Env = os.Environ()
-
-	completionOutput, err := cmd.Output()
-	if err != nil {
-		return fmt.Errorf("failed to generate completion: %w", err)
-	}
-
-	output.Write(completionOutput)
-	return nil
-}
 
 // executeSourceFiles executes all .source.sh files in parallel and returns their outputs
 func executeSourceFiles(sourceFiles map[string]string) (map[string]string, error) {
