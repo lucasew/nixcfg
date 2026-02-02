@@ -20,12 +20,18 @@ else
 	DOTFILES_ROOT=$(sd d root 2>/dev/null)
 fi
 
-SOURCE_DIR="$DOTFILES_ROOT/nix/pkgs/workspaced"
+(
+	GO_VERSION="1.25.6"
+	GO_BIN="$XDG_DATA_HOME/mise/installs/go/$GO_VERSION/bin/go"
+	SOURCE_DIR="$DOTFILES_ROOT/nix/pkgs/workspaced"
 
-cd "$SOURCE_DIR" >> /dev/null
-mkdir -p ~/.local/share/workspaced/bin
+	mkdir -p ~/.local/share/workspaced/bin
+	cd "$SOURCE_DIR" || exit 1
+	if [[ ! -x "$GO_BIN" ]]; then
+		mise install "go@$GO_VERSION"
+	fi
+	env CGO_ENABLED=0 "$GO_BIN" build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
+)
 
-mise exec go@1.25.6 -- env CGO_ENABLED=0 go build -v -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
-cd - >> /dev/null
 
 exec ~/.local/share/workspaced/bin/workspaced "$@"
