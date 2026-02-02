@@ -91,6 +91,10 @@ description = "Install Go dependencies"
 dir = "nix/pkgs/workspaced"
 run = "mise exec -- go mod download"
 
+[tasks."install:tools"]
+description = "Install Mise tools"
+run = "mise install"
+
 [tasks."install:nix"]
 description = "Install Nix dependencies"
 run = "echo 'Managed by Nix'"
