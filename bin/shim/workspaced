@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 # Automatically generated workspaced shim
 
+# Ensure libtermux-exec is preloaded for child processes on Termux
+if [ -n "${TERMUX_VERSION:-}" ]; then
+	TERMUX_EXEC_PATH="/data/data/com.termux/files/usr/lib/libtermux-exec.so"
+	if [ -f "$TERMUX_EXEC_PATH" ] && [[ "${LD_PRELOAD:-}" != *"$TERMUX_EXEC_PATH"* ]]; then
+		export LD_PRELOAD="$TERMUX_EXEC_PATH${LD_PRELOAD:+:$LD_PRELOAD}"
+	fi
+fi
+
 # Load mise prelude
 export MISE_ALL_COMPILE=false
 if [ -f "$HOME/.local/bin/mise" ]; then
