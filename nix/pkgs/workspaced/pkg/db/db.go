@@ -88,7 +88,7 @@ func (db *DB) BatchRecordHistory(ctx context.Context, events []types.HistoryEven
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
+	defer tx.Rollback() //nolint:errcheck // Rollback is best-effort
 
 	q := db.Queries.WithTx(tx)
 	for _, event := range events {

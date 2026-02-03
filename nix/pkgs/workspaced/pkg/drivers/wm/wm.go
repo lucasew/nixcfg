@@ -55,10 +55,14 @@ func ToggleScratchpadWithInfo(ctx context.Context) error {
 }
 
 // NextWorkspace switches to (or moves the container to) the next available workspace.
-// It maintains a counter in XDG_RUNTIME_DIR/workspaced/last_ws to ensure unique,
-// monotonically increasing workspace numbers until the system (or runtime dir) resets.
 //
-// The counter starts at 10 and increments with each call.
+// Mechanism:
+// It maintains a monotonic counter in `$XDG_RUNTIME_DIR/workspaced/last_ws`.
+// This persistence ensures that even if the daemon restarts, it doesn't recycle
+// workspace numbers that might still be populated.
+//
+// The counter starts at 10 to leave single-digit workspaces (1-9) free for
+// static/manual assignment (e.g., '1:www', '2:code').
 func NextWorkspace(ctx context.Context, move bool) error {
 	runtimeDir := os.Getenv("XDG_RUNTIME_DIR")
 	if runtimeDir == "" {
@@ -83,14 +87,15 @@ func NextWorkspace(ctx context.Context, move bool) error {
 
 // RotateWorkspaces rotates the visible workspaces across all connected outputs.
 // It effectively shifts the workspace on output A to output B, B to C, etc.
-// This creates a "carousel" effect for workspaces.
 //
-// The function:
-// 1. Fetches current workspaces and outputs via IPC.
-// 2. Maps outputs to their currently visible workspace.
-// 3. Rotates the list of screens.
-// 4. Moves workspaces to their new target screens.
-// 5. Restores focus to the originally focused workspace.
+// The logic implements a physical "carousel" of workspaces:
+//  1. Snapshots the current state (which workspace is on which output).
+//  2. Calculates the rotation (Screen[i] gets Workspace from Screen[i-1]).
+//  3. Sequentially moves workspaces.
+//
+// Note: Artificial delays (`time.Sleep`) are injected between IPC commands.
+// This is necessary because Sway/i3 IPC is asynchronous and rapid commands
+// can race, causing workspaces to land on the wrong output or focus to be lost.
 func RotateWorkspaces(ctx context.Context) error {
 	rpc := common.GetRPC(ctx)
 

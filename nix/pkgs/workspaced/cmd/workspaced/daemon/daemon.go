@@ -221,7 +221,7 @@ func handleRequest(ctx context.Context, req types.Request, outCh chan types.Stre
 	ctx = context.WithValue(ctx, types.EnvKey, env)
 	ctx = context.WithValue(ctx, types.DaemonModeKey, true)
 	// Inject DB into context so commands can use it
-	ctx = context.WithValue(ctx, "db", database)
+	ctx = context.WithValue(ctx, "db", database) //nolint:staticcheck // Legacy string key
 
 	output, err := ExecuteViaCobra(ctx, req, stdout, stderr)
 

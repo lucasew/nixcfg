@@ -15,6 +15,16 @@ import (
 	"workspaced/pkg/types"
 )
 
+// RunFullBackup executes the complete backup workflow.
+//
+// Workflow:
+//  1. QuickSync: Commits and pushes changes in known git repositories.
+//  2. Host-Specific Sync:
+//     - Riverwood: Syncs 'CANTGIT' (large/private files not in git).
+//     - Phone (Termux): Syncs camera, pictures, WhatsApp media/backups, and termux config.
+//  3. Reporting: Fetches usage/snapshot stats from the remote backup server.
+//
+// It provides real-time progress updates via the notification system.
 func RunFullBackup(ctx context.Context) error {
 	config, err := common.LoadConfig()
 	if err != nil {
@@ -80,6 +90,11 @@ func RunFullBackup(ctx context.Context) error {
 	return nil
 }
 
+// Rsync executes an rsync command with real-time notification updates.
+//
+// It captures the output stream to update the notification message with the
+// currently transferring file (throttled to 1 update/sec to avoid flooding).
+// The destination is automatically prefixed with the configured rsync.net user/host.
 func Rsync(ctx context.Context, src, dst string, n *notification.Notification, extraArgs ...string) (string, error) {
 	config, _ := common.LoadConfig()
 	remote := fmt.Sprintf("%s:%s", config.Backup.RsyncnetUser, dst)
@@ -184,6 +199,13 @@ func getRemoteStatus(ctx context.Context, config *common.GlobalConfig) (string, 
 	return filteredQuota + "\n" + snapshots, nil
 }
 
+// ReplicateZFS handles ZFS dataset replication (VMS and Games).
+//
+// Permission Handling:
+// - If running as root, it executes `syncoid` directly.
+// - If running as user, it enqueues a request to the sudo driver (privileged helper).
+//
+// This allows the unprivileged daemon to trigger privileged ZFS operations safely.
 func ReplicateZFS(ctx context.Context) error {
 	logger := common.GetLogger(ctx)
 	// Ported from bin/misc/zfs-backup

@@ -23,7 +23,11 @@ var (
 
 // EssentialPaths defines the list of directories that must be present in the PATH
 // for the application to function correctly on NixOS.
-// These typically include locations for wrapped binaries and current system software.
+// These typically include locations for wrapped binaries (`/run/wrappers/bin`) and
+// current system software (`/run/current-system/sw/bin`).
+//
+// Because NixOS does not adhere to the FHS, utilities like `ls` or `grep` might not
+// be in `/bin` or `/usr/bin`. This variable ensures reliable access to system tools.
 var EssentialPaths = []string{"/run/wrappers/bin", "/run/current-system/sw/bin"}
 
 func init() {
@@ -107,8 +111,13 @@ func (h *ChannelLogHandler) WithGroup(name string) slog.Handler {
 }
 
 // RunCmd creates an exec.Cmd with environment variables injected from the context.
-// It ensures that the PATH includes EssentialPaths.
-// It uses the custom Which implementation to avoid SIGSYS errors on Android/Termux.
+//
+// Key behaviors:
+//  1. Injects `EssentialPaths` into PATH to support NixOS non-standard locations.
+//  2. Uses a custom `Which` implementation to resolve binary paths. This is crucial
+//     to avoid `SIGSYS` errors on Android/Termux caused by Go's standard library
+//     `LookPath` implementation which may make syscalls forbidden by the seccomp filter.
+//  3. Falls back to the raw name if `Which` fails, letting `exec.Command` handle the error.
 func RunCmd(ctx context.Context, name string, args ...string) *exec.Cmd {
 	// Resolve the full path using our custom Which to avoid SIGSYS on Android
 	fullPath, err := Which(ctx, name)
@@ -133,7 +142,13 @@ func InheritContextWriters(ctx context.Context, cmd *exec.Cmd) {
 }
 
 // GetRPC determines the appropriate IPC command for the current window manager.
-// It checks for WAYLAND_DISPLAY to decide between "swaymsg" (Wayland) and "i3-msg" (X11).
+//
+// Detection logic:
+//  1. Checks `EnvKey` in context for `WAYLAND_DISPLAY` override.
+//  2. Checks OS environment `WAYLAND_DISPLAY`.
+//  3. Defaults to `i3-msg` if no Wayland environment is found.
+//
+// Returns "swaymsg" for Sway (Wayland) and "i3-msg" for i3 (X11).
 func GetRPC(ctx context.Context) string {
 	if env, ok := ctx.Value(types.EnvKey).([]string); ok {
 		for _, e := range env {
@@ -250,7 +265,9 @@ func IsNixOS() bool {
 	return err == nil
 }
 
-// GlobalConfig represents the schema of the settings.toml file.
+// GlobalConfig represents the schema of the `settings.toml` file.
+// It is the source of truth for workspace mapping, desktop appearance, backup targets,
+// and other runtime behaviors. This struct maps directly to the TOML structure.
 type GlobalConfig struct {
 	Workspaces map[string]int            `toml:"workspaces"`
 	Desktop    DesktopConfig             `toml:"desktop"`
@@ -436,11 +453,15 @@ func (g GlobalConfig) Merge(other GlobalConfig) GlobalConfig {
 	return result
 }
 
-// LoadConfig reads the global configuration using a layered approach:
-// 1. Start with hardcoded defaults
-// 2. Merge with $DOTFILES/settings.toml (if exists)
-// 3. Merge with ~/settings.toml (if exists)
-// It also expands environment variables and tilde (~) in paths.
+// LoadConfig reads the global configuration using a layered approach with the following precedence (last wins):
+//
+//  1. Hardcoded defaults (base values for workspaces, paths).
+//  2. `$DOTFILES/settings.toml`: Repository-tracked configuration (shared across machines).
+//  3. `~/settings.toml`: User-local overrides (machine-specific secrets or preferences).
+//
+// This layering allows committing a standard config while letting individual machines
+// override specific settings (like backup paths or monitor layouts) without dirtying git.
+// It also handles path expansion for tildes (~) and environment variables.
 func LoadConfig() (*GlobalConfig, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {

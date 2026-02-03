@@ -12,7 +12,7 @@ type CASWriter struct {
 	tempFile *os.File
 	writer   io.Writer
 	hasher   io.Writer
-	hash     []byte
+	hash     []byte //nolint:unused // Planned for future verification
 	dir      string
 }
 
