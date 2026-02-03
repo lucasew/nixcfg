@@ -30,7 +30,7 @@ fi
 
 if [[ -v WORKSPACED_REFRESH ]] || [[ ! -x "$HOME/.local/share/workspaced/bin/workspaced" ]]; then
 	(
-		notify-send --hint=string:x-canonical-private-synchronous:workspaced-build "Workspaced" "Recompilando workspaced"
+		notify-send --hint=string:x-canonical-private-synchronous:workspaced-build "Workspaced" "Recompilando workspaced" || true
 
 		SOURCE_DIR="$DOTFILES_ROOT/nix/pkgs/workspaced"
 		GO_VERSION="$(sed -n 's/^go = "\(.*\)"/\1/p' "$SOURCE_DIR/mise.toml")"
@@ -38,7 +38,7 @@ if [[ -v WORKSPACED_REFRESH ]] || [[ ! -x "$HOME/.local/share/workspaced/bin/wor
 		BUILD_ID="$(date +%s)"
 		cd "$SOURCE_DIR"
 		mise exec "go@$GO_VERSION" -- env CGO_ENABLED=0 go build -v -ldflags "-X workspaced/pkg/common.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
-		notify-send --hint=string:x-canonical-private-synchronous:workspaced-build "Workspaced" "Workspaced recompilado"
+		notify-send --hint=string:x-canonical-private-synchronous:workspaced-build "Workspaced" "Workspaced recompilado" || true
 	) || exit 1
 fi
 
