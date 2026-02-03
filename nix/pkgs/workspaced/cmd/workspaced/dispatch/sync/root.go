@@ -58,25 +58,21 @@ func GetCommand() *cobra.Command {
 func rebuildWorkspaced(ctx context.Context, dotfilesRoot string) error {
 	sourceDir := filepath.Join(dotfilesRoot, "nix/pkgs/workspaced")
 
-	// Build workspaced
+	// Build workspaced using mise exec, matching the shim logic
 	buildCmd := exec.CommandContext(ctx, "bash", "-c", fmt.Sprintf(`
 		SOURCE_DIR="%s"
 		GO_VERSION="$(sed -n 's/^go = "\(.*\)"/\1/p' "$SOURCE_DIR/mise.toml")"
-		export GO_ROOT=~/.local/share/mise/installs/go/$GO_VERSION
-		export PATH="$GO_ROOT/bin:$PATH"
-		export GOTOOLCHAIN=local
-		export CGO_ENABLED=0
+
+		# Activate mise so that mise exec works
+		if [ -f "$HOME/.local/bin/mise" ]; then
+			eval "$("$HOME"/.local/bin/mise activate bash)"
+		fi
 
 		mkdir -p ~/.local/share/workspaced/bin
 		cd "$SOURCE_DIR" || exit 1
 
-		# Install go if needed
-		if [[ ! -x "$GO_ROOT/bin/go" ]]; then
-			mise install "go@$GO_VERSION"
-		fi
-
 		BUILD_ID="$(date +%%s)"
-		env go build -v -ldflags "-X workspaced/pkg/common.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
+		mise exec "go@$GO_VERSION" -- env CGO_ENABLED=0 go build -v -ldflags "-X workspaced/pkg/common.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
 	`, sourceDir))
 
 	buildCmd.Stdout = os.Stdout
