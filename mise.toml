@@ -14,7 +14,7 @@ depends = ["lint:*"]
 
 [tasks."lint:nix"]
 description = "Lint Nix files"
-run = "command -v nix >/dev/null && nix fmt -- --check || echo 'Nix not found, skipping'"
+run = "command -v nix >/dev/null && nix --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' fmt -- --check || echo 'Nix not found, skipping'"
 
 [tasks."lint:sh"]
 description = "Lint Shell scripts"
@@ -30,7 +30,7 @@ run = "mise exec ruff -- ruff check ."
 [tasks."lint:go"]
 description = "Lint Go files"
 dir = "nix/pkgs/workspaced"
-run = "mise exec -- golangci-lint run ./..."
+run = "mise exec -- golangci-lint run --timeout 10m ./..."
 
 [tasks."lint:tf"]
 description = "Lint Terraform files"
