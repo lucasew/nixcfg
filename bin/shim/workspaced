@@ -25,13 +25,26 @@ if [[ -v WORKSPACED_REFRESH ]] || [[ ! -x "$HOME/.local/share/workspaced/bin/wor
 		notify-send --hint=string:x-canonical-private-synchronous:workspaced-build "Workspaced" "Recompilando workspaced"
 
 		SOURCE_DIR="$DOTFILES_ROOT/nix/pkgs/workspaced"
-		GO_VERSION="$(sed -n 's/^go = "\(.*\)"/\1/p' "$SOURCE_DIR/mise.toml")"
+		# Use hardcoded version to match root mise.toml
+		GO_VERSION="1.25.6"
+
+		# Define path to mise-managed go binary
+		MISE_DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/mise"
+		GO_BIN="$MISE_DATA_DIR/installs/go/$GO_VERSION/bin/go"
+
+		# Ensure go is installed
+		if [[ ! -x "$GO_BIN" ]]; then
+			mise install "go@$GO_VERSION"
+		fi
+
 		export CGO_ENABLED=0
 
 		mkdir -p ~/.local/share/workspaced/bin
 		BUILD_ID="$(date +%s)"
-		cd "$SOURCE_DIR"
-		mise exec "go@$GO_VERSION" -- env go build -v -ldflags "-X workspaced/pkg/common.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
+
+		cd "$SOURCE_DIR" || exit 1
+
+		"$GO_BIN" build -v -ldflags "-X workspaced/pkg/common.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
 		notify-send --hint=string:x-canonical-private-synchronous:workspaced-build "Workspaced" "Workspaced recompilado"
 	) || exit 1
 fi
