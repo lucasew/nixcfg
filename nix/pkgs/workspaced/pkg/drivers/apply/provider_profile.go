@@ -44,5 +44,10 @@ func (p *ProfileProvider) GetDesiredState(ctx context.Context) ([]DesiredState, 
 			Source: tmpProfile,
 			Mode:   0644,
 		},
+		{
+			Target: filepath.Join(home, ".bashrc"),
+			Source: tmpProfile,
+			Mode:   0644,
+		},
 	}, nil
 }
