@@ -26,19 +26,12 @@ if [[ -v WORKSPACED_REFRESH ]] || [[ ! -x "$HOME/.local/share/workspaced/bin/wor
 
 		SOURCE_DIR="$DOTFILES_ROOT/nix/pkgs/workspaced"
 		GO_VERSION="$(sed -n 's/^go = "\(.*\)"/\1/p' "$SOURCE_DIR/mise.toml")"
-		export GO_ROOT=~/.local/share/mise/installs/go/$GO_VERSION
-		export PATH="$GO_ROOT/bin:$PATH"
-		export GOTOOLCHAIN=local
 		export CGO_ENABLED=0
 
 		mkdir -p ~/.local/share/workspaced/bin
-		cd "$SOURCE_DIR" || exit 1
-		if [[ ! -x "$GO_BIN" ]]; then
-			mise install "go@$GO_VERSION"
-		fi
 		BUILD_ID="$(date +%s)"
-		env go build -v -ldflags "-X workspaced/pkg/common.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
-
+		cd "$SOURCE_DIR"
+		mise exec "go@$GO_VERSION" -- env go build -v -ldflags "-X workspaced/pkg/common.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
 		notify-send --hint=string:x-canonical-private-synchronous:workspaced-build "Workspaced" "Workspaced recompilado"
 	) || exit 1
 fi
