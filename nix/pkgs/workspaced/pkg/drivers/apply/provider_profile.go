@@ -8,13 +8,13 @@ import (
 	"workspaced/pkg/common"
 )
 
-type BashrcProvider struct{}
+type ProfileProvider struct{}
 
-func (p *BashrcProvider) Name() string {
-	return "bashrc"
+func (p *ProfileProvider) Name() string {
+	return "profile"
 }
 
-func (p *BashrcProvider) GetDesiredState(ctx context.Context) ([]DesiredState, error) {
+func (p *ProfileProvider) GetDesiredState(ctx context.Context) ([]DesiredState, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return nil, err
@@ -25,24 +25,23 @@ func (p *BashrcProvider) GetDesiredState(ctx context.Context) ([]DesiredState, e
 		return nil, err
 	}
 
-	// Create a temporary file with the bashrc content
 	tmpDir := filepath.Join(home, ".config", "workspaced", "generated")
 	if err := os.MkdirAll(tmpDir, 0755); err != nil {
 		return nil, err
 	}
 
 	sourceMePath := filepath.Join(dotfiles, "bin", "source_me")
-	bashrcContent := fmt.Sprintf("source %s\n", sourceMePath)
+	profileContent := fmt.Sprintf("source %s\n", sourceMePath)
 
-	tmpBashrc := filepath.Join(tmpDir, "bashrc")
-	if err := os.WriteFile(tmpBashrc, []byte(bashrcContent), 0644); err != nil {
+	tmpProfile := filepath.Join(tmpDir, "profile")
+	if err := os.WriteFile(tmpProfile, []byte(profileContent), 0644); err != nil {
 		return nil, err
 	}
 
 	return []DesiredState{
 		{
-			Target: filepath.Join(home, ".bashrc"),
-			Source: tmpBashrc,
+			Target: filepath.Join(home, ".profile"),
+			Source: tmpProfile,
 			Mode:   0644,
 		},
 	}, nil
