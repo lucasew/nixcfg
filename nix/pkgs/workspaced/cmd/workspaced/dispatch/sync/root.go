@@ -32,8 +32,12 @@ func GetCommand() *cobra.Command {
 
 			// 2. Rebuild via shim and apply (WORKSPACED_REFRESH triggers rebuild, shim execs the new binary)
 			fmt.Println("==> Rebuilding and applying...")
+			bashPath, err := common.Which(ctx, "bash")
+			if err != nil {
+				return fmt.Errorf("bash not found: %w", err)
+			}
 			shimPath := filepath.Join(root, "bin/shim/workspaced")
-			applyCmd := exec.CommandContext(ctx, "bash", shimPath, "dispatch", "apply")
+			applyCmd := exec.CommandContext(ctx, bashPath, shimPath, "dispatch", "apply")
 			applyCmd.Env = append(os.Environ(), "WORKSPACED_REFRESH=1")
 			applyCmd.Stdout = os.Stdout
 			applyCmd.Stderr = os.Stderr
