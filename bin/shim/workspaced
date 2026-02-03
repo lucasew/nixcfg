@@ -25,7 +25,7 @@ if [[ -v WORKSPACED_REFRESH ]] || [[ ! -x "$HOME/.local/share/workspaced/bin/wor
 		notify-send --hint=string:x-canonical-private-synchronous:workspaced-build "Workspaced" "Recompilando workspaced"
 
 		SOURCE_DIR="$DOTFILES_ROOT/nix/pkgs/workspaced"
-		GO_VERSION="$(sed -n 's/^go = "\(.*\)"/\1/p' "$SOURCE_DIR/mise.toml")"
+		GO_VERSION="$(sed -n 's/^go = "\(.*\)"/\1/p' "$DOTFILES_ROOT/mise.toml")"
 		export CGO_ENABLED=0
 
 		mkdir -p ~/.local/share/workspaced/bin

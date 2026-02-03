@@ -61,7 +61,8 @@ func rebuildWorkspaced(ctx context.Context, dotfilesRoot string) error {
 	// Build workspaced
 	buildCmd := exec.CommandContext(ctx, "bash", "-c", fmt.Sprintf(`
 		SOURCE_DIR="%s"
-		GO_VERSION="$(sed -n 's/^go = "\(.*\)"/\1/p' "$SOURCE_DIR/mise.toml")"
+		DOTFILES_ROOT="%s"
+		GO_VERSION="$(sed -n 's/^go = "\(.*\)"/\1/p' "$DOTFILES_ROOT/mise.toml")"
 		export GO_ROOT=~/.local/share/mise/installs/go/$GO_VERSION
 		export PATH="$GO_ROOT/bin:$PATH"
 		export GOTOOLCHAIN=local
@@ -77,7 +78,7 @@ func rebuildWorkspaced(ctx context.Context, dotfilesRoot string) error {
 
 		BUILD_ID="$(date +%%s)"
 		env go build -v -ldflags "-X workspaced/pkg/common.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
-	`, sourceDir))
+	`, sourceDir, dotfilesRoot))
 
 	buildCmd.Stdout = os.Stdout
 	buildCmd.Stderr = os.Stderr
