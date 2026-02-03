@@ -36,7 +36,14 @@ func SetupTermuxShortcuts(ctx context.Context) error {
 
 		if !entry.IsDir() {
 			name := entry.Name()
-			content := fmt.Sprintf("#!/usr/bin/env bash\nexec %s/bin/source_me workspaced dispatch _shortcuts termux %s \"$@\"\n", dotfiles, name)
+			content := fmt.Sprintf(`#!/data/data/com.termux/files/usr/bin/bash
+TERMUX_EXEC_PATH="/data/data/com.termux/files/usr/lib/libtermux-exec.so"
+if [ -f "$TERMUX_EXEC_PATH" ] && [[ "$LD_PRELOAD" != *"$TERMUX_EXEC_PATH"* ]]; then
+	export LD_PRELOAD="$TERMUX_EXEC_PATH"
+	exec "$0" "$@"
+fi
+exec %s/bin/source_me workspaced dispatch _shortcuts termux %s "$@"
+`, dotfiles, name)
 
 			destPath := filepath.Join(shortcutDir, name)
 			if err := os.WriteFile(destPath, []byte(content), 0755); err != nil {

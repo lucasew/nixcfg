@@ -55,7 +55,11 @@ func (p *TermuxProvider) GetDesiredState(ctx context.Context) ([]DesiredState, e
 
 		logger.Info("generating termux shortcut", "name", name)
 		content := fmt.Sprintf(`#!/data/data/com.termux/files/usr/bin/bash
-export LD_PRELOAD="/data/data/com.termux/files/usr/lib/libtermux-exec.so"
+TERMUX_EXEC_PATH="/data/data/com.termux/files/usr/lib/libtermux-exec.so"
+if [ -f "$TERMUX_EXEC_PATH" ] && [[ "$LD_PRELOAD" != *"$TERMUX_EXEC_PATH"* ]]; then
+	export LD_PRELOAD="$TERMUX_EXEC_PATH"
+	exec "$0" "$@"
+fi
 export PATH="/data/data/com.termux/files/usr/bin"
 . "%s/bin/source_me"
 sd _shortcuts termux %s "$@"
