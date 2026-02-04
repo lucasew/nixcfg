@@ -10,7 +10,7 @@ run = "command -v nix >/dev/null && nix fmt -- --check || echo 'Nix not found, s
 description = "Lint Shell scripts"
 run = """
     mise exec shfmt shellcheck -- shfmt -d .
-    mise exec shfmt shellcheck -- shellcheck $(shfmt -f .)
+    mise exec shfmt shellcheck -- bash -c 'shfmt -f . | xargs -r shellcheck'
 """
 
 [tasks."lint:py"]
@@ -62,7 +62,7 @@ depends = ["test:*"]
 
 [tasks."test:nix"]
 description = "Test Nix configuration"
-run = "command -v nix >/dev/null && nix flake check || echo 'Nix not found, skipping'"
+run = "command -v nix >/dev/null && nix --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' --accept-flake-config flake check || echo 'Nix not found, skipping'"
 
 [tasks."test:go"]
 description = "Test Go code"
