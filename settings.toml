@@ -300,6 +300,10 @@ bins = ["clang", "clang++"]
 version = "0.9.0"
 global = true
 
+[lazy_tools."gh"]
+version = "2.86.0"
+global = true
+
 [desktop_scripts.nixcfg-quicksync]
 
 name = "nixcfg: Sincronização Rápida"
