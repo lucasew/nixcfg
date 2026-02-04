@@ -2,6 +2,8 @@ name: Ciborg Turbo
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '30 9 * * *'
 jobs:
   work:
     name: "Work"
