@@ -1,3 +1,8 @@
+[tools]
+shfmt = "3.12.0"
+shellcheck = "0.11.0"
+ruff = "0.15.0"
+
 [tasks.lint]
 description = "Run all linters"
 depends = ["lint:*"]
