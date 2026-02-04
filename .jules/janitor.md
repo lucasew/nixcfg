@@ -27,3 +27,10 @@
 **Root Cause:** These tools were missing from the `[tools]` section in the root `mise.toml`, so `mise run install` did not install them.
 **Solution:** Explicitly added `shfmt`, `shellcheck`, and `ruff` to `mise.toml`.
 **Pattern:** Always define tool dependencies explicitly in `mise.toml` to ensure deterministic builds in CI.
+
+## 2026-02-04 - Robust Linting Pipeline
+
+**Issue:** `lint:sh` failed in CI because command substitution hid errors and passed empty arguments to `shellcheck`. Additionally, tools in root `mise.toml` might not be installed explicitly by the `install` task.
+**Root Cause:** Command substitution execution order and stderr handling in CI environment is fragile. `mise run install` does not implicitly run `mise install` for root tools.
+**Solution:** Replaced command substitution with `shfmt -f=0 . | xargs -0 -r ...` to robustly pipe file lists. Added `install:tools` task to explicitly run `mise install`.
+**Pattern:** Prefer pipelines with `xargs -0 -r` over command substitution for passing file lists to tools, as it handles empty lists and filenames with spaces correctly.

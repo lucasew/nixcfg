@@ -15,7 +15,7 @@ run = "command -v nix >/dev/null && nix fmt -- --check || echo 'Nix not found, s
 description = "Lint Shell scripts"
 run = """
     mise exec shfmt shellcheck -- shfmt -d .
-    mise exec shfmt shellcheck -- shellcheck $(mise exec shfmt -- shfmt -f . 2>/dev/null)
+    mise exec shfmt shellcheck -- shfmt -f=0 . | xargs -0 -r mise exec shellcheck -- shellcheck
 """
 
 [tasks."lint:py"]
@@ -95,6 +95,10 @@ run = "mise exec -- go mod download"
 [tasks."install:nix"]
 description = "Install Nix dependencies"
 run = "echo 'Managed by Nix'"
+
+[tasks."install:tools"]
+description = "Install Mise tools"
+run = "mise install"
 
 [tasks.ci]
 description = "Run CI pipeline locally"
