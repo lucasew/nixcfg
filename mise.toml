@@ -10,7 +10,7 @@ run = "command -v nix >/dev/null && nix fmt -- --check || echo 'Nix not found, s
 description = "Lint Shell scripts"
 run = """
     mise exec shfmt shellcheck -- shfmt -d .
-    mise exec shfmt shellcheck -- shellcheck $(shfmt -f .)
+    mise exec shfmt shellcheck -- shellcheck $(mise exec shfmt -- shfmt -f .)
 """
 
 [tasks."lint:py"]
