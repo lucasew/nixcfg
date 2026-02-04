@@ -19,6 +19,8 @@ const (
 	StdoutKey ContextKey = "stdout"
 	// StderrKey stores an io.Writer for capturing standard error from subprocesses.
 	StderrKey ContextKey = "stderr"
+	// DBKey stores the database connection handle (*db.DB).
+	DBKey ContextKey = "db"
 )
 
 // SudoCommand defines a privileged command request.
