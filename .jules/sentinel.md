@@ -50,3 +50,8 @@
 **Vulnerability:** The `bin/nix/rbuild` script was vulnerable to remote command injection. It passed user-controlled input (the flake reference item) directly to `ssh` without proper escaping. This allowed a malicious user (or malicious flake reference) to execute arbitrary commands on the remote build host.
 **Learning:** When executing commands via SSH, arguments are joined by spaces and interpreted by the remote shell. Passing unescaped variables directly to `ssh` allows argument injection and command execution (e.g., using semicolons).
 **Prevention:** Always construct the remote command string locally using `printf %q` to ensure all arguments are properly escaped before passing the resulting string as a single argument to `ssh`.
+
+## 2026-02-04 - [Command Injection in SetAnimated]
+**Vulnerability:** The `SetAnimated` function in `wallpaper.go` was vulnerable to command injection. It constructed a shell command using `fmt.Sprintf("sd wall video %s", path)` and executed it with `sh -c`. A malicious filename containing shell metacharacters (e.g., `foo; rm -rf /`) could execute arbitrary commands.
+**Learning:** String interpolation is never safe for constructing shell commands when user input is involved. Even "internal" tools can be vectors if they process filenames or other external inputs.
+**Prevention:** Always use `exec.Command` (or equivalent) with separate arguments. This ensures the operating system passes arguments directly to the process without invoking a shell to interpret them.
