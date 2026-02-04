@@ -20,7 +20,7 @@ func validateSlug(slug string) error {
 		return fmt.Errorf("slug cannot be empty")
 	}
 	if !slugRegex.MatchString(slug) {
-return fmt.Errorf("invalid slug: %q", slug)
+		return fmt.Errorf("invalid slug: %s", slug)
 	}
 	return nil
 }
