@@ -50,3 +50,8 @@
 **Vulnerability:** The `bin/nix/rbuild` script was vulnerable to remote command injection. It passed user-controlled input (the flake reference item) directly to `ssh` without proper escaping. This allowed a malicious user (or malicious flake reference) to execute arbitrary commands on the remote build host.
 **Learning:** When executing commands via SSH, arguments are joined by spaces and interpreted by the remote shell. Passing unescaped variables directly to `ssh` allows argument injection and command execution (e.g., using semicolons).
 **Prevention:** Always construct the remote command string locally using `printf %q` to ensure all arguments are properly escaped before passing the resulting string as a single argument to `ssh`.
+
+## 2026-02-04 - [Arbitrary File Deletion in Sudo Driver]
+**Vulnerability:** The `workspaced` sudo driver was vulnerable to arbitrary file deletion. The `approve` command accepted a user-supplied `slug` which was used directly in `filepath.Join` to locate the command file. By supplying a path with `..` components (e.g., `../../target`), an attacker could point `Get` and `Remove` to any file on the system (ending in `.json`), causing it to be deleted after execution attempt.
+**Learning:** Accepting file paths or identifiers that are used in file paths from user input without validation is dangerous. `filepath.Join` cleans paths but does not prevent traversal if the input itself contains traversal characters.
+**Prevention:** Validate all file identifiers to ensure they contain only expected characters (e.g., alphanumeric) and do not contain path separators or traversal sequences.

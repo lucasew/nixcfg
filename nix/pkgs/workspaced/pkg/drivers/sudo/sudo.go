@@ -7,10 +7,23 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"time"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/types"
 )
+
+var slugRegex = regexp.MustCompile("^[a-zA-Z0-9_-]+$")
+
+func validateSlug(slug string) error {
+	if slug == "" {
+		return fmt.Errorf("slug cannot be empty")
+	}
+	if !slugRegex.MatchString(slug) {
+		return fmt.Errorf("invalid slug: %s", slug)
+	}
+	return nil
+}
 
 func getQueueDir() (string, error) {
 	home, err := os.UserHomeDir()
@@ -29,6 +42,10 @@ func Enqueue(ctx context.Context, cmd *types.SudoCommand) error {
 		b := make([]byte, 3)
 		_, _ = rand.Read(b)
 		cmd.Slug = fmt.Sprintf("%x", b)
+	} else {
+		if err := validateSlug(cmd.Slug); err != nil {
+			return err
+		}
 	}
 
 	if cmd.Cwd == "" {
@@ -96,6 +113,10 @@ func List() ([]*types.SudoCommand, error) {
 }
 
 func Get(slug string) (*types.SudoCommand, error) {
+	if err := validateSlug(slug); err != nil {
+		return nil, err
+	}
+
 	dir, err := getQueueDir()
 	if err != nil {
 		return nil, err
@@ -115,6 +136,10 @@ func Get(slug string) (*types.SudoCommand, error) {
 }
 
 func Remove(slug string) error {
+	if err := validateSlug(slug); err != nil {
+		return err
+	}
+
 	dir, err := getQueueDir()
 	if err != nil {
 		return err
