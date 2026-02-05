@@ -19,10 +19,15 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
-
       - name: Setup disk space
         uses: lucasew/action-i-only-care-about-nix@main
+
+      - uses: actions/checkout@v4
+
+      - name: Prepare build directory
+        run: |
+          sudo mkdir -p /nix/build
+          df -h
 
       - name: Install Nix
         uses: cachix/install-nix-action@4e002c8ec80594ecd40e759629461e26c8abed15 # v31
@@ -31,6 +36,7 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+            build-dir = /nix/build
 
       - name: Setup Nix cache
         uses: cachix/cachix-action@0fc020193b5a1fa3ac4575aa3a7d3aa6a35435ad # v16
