@@ -19,15 +19,25 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - name: Setup build disk space
+        uses: lucasew/action-i-only-care-about-nix@main
+
       - uses: actions/checkout@v4
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a # v21
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          extra-conf: |
+            build-dir = /nix/build
 
       - name: Setup Nix cache
         uses: DeterminateSystems/magic-nix-cache-action@565684385bcd71bad329742eefe8d12f2e765b39 # v13
+
+      - uses: cachix/cachix-action@0fc020193b5a1fa3ac4575aa3a7d3aa6a35435ad # v16
+        with:
+          name: lucasew-personal
+          authToken: '${{ secrets.CACHIX_TOKEN }}'
 
       - name: Install mise
         uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3

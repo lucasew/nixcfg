@@ -72,8 +72,8 @@ depends = ["test:*"]
 description = "Test Nix configuration"
 run = "command -v nix >/dev/null && nix flake check || echo 'Nix not found, skipping'"
 
-[tasks."test:release"]
-description = "Test Nix release build"
+[tasks."build:release"]
+description = "Build Nix release"
 run = "command -v nix >/dev/null && nix build .#release --accept-flake-config || echo 'Nix not found, skipping'"
 
 [tasks."test:go"]
