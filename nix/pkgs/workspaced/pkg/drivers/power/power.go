@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"net"
 	"workspaced/pkg/common"
+	"workspaced/pkg/config"
 )
 
 func Wake(ctx context.Context, host string) error {
-	config, err := common.LoadConfig()
+	config, err := config.Load()
 	if err != nil {
 		return err
 	}

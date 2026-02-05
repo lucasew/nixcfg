@@ -4,6 +4,7 @@ import (
 	"sort"
 	"strings"
 	"workspaced/pkg/common"
+	pkgConfig "workspaced/pkg/config"
 	"workspaced/pkg/drivers/wm"
 
 	"github.com/spf13/cobra"
@@ -16,7 +17,7 @@ func init() {
 			Short: "Workspace switcher",
 			RunE: func(c *cobra.Command, args []string) error {
 				move, _ := c.Flags().GetBool("move")
-				config, err := common.LoadConfig()
+				config, err := pkgConfig.Load()
 				if err != nil {
 					return err
 				}

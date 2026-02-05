@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 	"workspaced/pkg/common"
+	pkgConfig "workspaced/pkg/config"
 	"workspaced/pkg/drivers/git"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/drivers/sudo"
@@ -16,7 +17,7 @@ import (
 )
 
 func RunFullBackup(ctx context.Context) error {
-	config, err := common.LoadConfig()
+	config, err := pkgConfig.Load()
 	if err != nil {
 		return err
 	}
@@ -62,7 +63,7 @@ func RunFullBackup(ctx context.Context) error {
 
 	if common.IsPhone() {
 		logger.Info("host identified as phone, starting android backup")
-		if err := runPhoneBackup(ctx, config, updateProgress, n); err != nil {
+		if err := runPhoneBackup(ctx, config.GlobalConfig, updateProgress, n); err != nil {
 			return err
 		}
 	}
@@ -70,7 +71,7 @@ func RunFullBackup(ctx context.Context) error {
 	// Final report
 	updateProgress("Finalizando e obtendo status...")
 	logger.Info("fetching remote status from rsync.net")
-	status, _ := getRemoteStatus(ctx, config)
+	status, _ := getRemoteStatus(ctx, config.GlobalConfig)
 	n.Title = "Backup finalizado"
 	n.Message = status
 	n.Progress = 1.0
@@ -81,7 +82,7 @@ func RunFullBackup(ctx context.Context) error {
 }
 
 func Rsync(ctx context.Context, src, dst string, n *notification.Notification, extraArgs ...string) (string, error) {
-	config, _ := common.LoadConfig()
+	config, _ := pkgConfig.Load()
 	remote := fmt.Sprintf("%s:%s", config.Backup.RsyncnetUser, dst)
 
 	common.GetLogger(ctx).Info("rsync sync", "from", src, "to", remote)
@@ -120,7 +121,7 @@ func Rsync(ctx context.Context, src, dst string, n *notification.Notification, e
 	return lastLine, err
 }
 
-func runPhoneBackup(ctx context.Context, config *common.GlobalConfig, updateProgress func(string), n *notification.Notification) error {
+func runPhoneBackup(ctx context.Context, config *pkgConfig.GlobalConfig, updateProgress func(string), n *notification.Notification) error {
 	logger := common.GetLogger(ctx)
 	// Sync Camera and Pictures
 	logger.Info("syncing media and whatsapp")
@@ -162,7 +163,7 @@ func runPhoneBackup(ctx context.Context, config *common.GlobalConfig, updateProg
 	return err
 }
 
-func getRemoteStatus(ctx context.Context, config *common.GlobalConfig) (string, error) {
+func getRemoteStatus(ctx context.Context, config *pkgConfig.GlobalConfig) (string, error) {
 	user := config.Backup.RsyncnetUser
 
 	// Get quota (raw)

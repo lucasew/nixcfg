@@ -12,12 +12,12 @@ import (
 )
 
 type Config struct {
-	*common.GlobalConfig
+	*GlobalConfig
 	raw map[string]interface{}
 }
 
 func Load() (*Config, error) {
-	commonCfg, err := common.LoadConfig()
+	commonCfg, err := loadDefault()
 	if err != nil {
 		return nil, err
 	}

@@ -8,11 +8,12 @@ import (
 
 	"time"
 	"workspaced/pkg/common"
+	"workspaced/pkg/config"
 	"workspaced/pkg/drivers/notification"
 )
 
 func Capture(ctx context.Context, area bool) (string, error) {
-	config, err := common.LoadConfig()
+	config, err := config.Load()
 	if err != nil {
 		return "", err
 	}

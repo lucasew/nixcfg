@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 	"workspaced/pkg/common"
+	"workspaced/pkg/config"
 )
 
 type WebappProvider struct{}
@@ -16,7 +17,7 @@ func (p *WebappProvider) Name() string {
 }
 
 func (p *WebappProvider) GetDesiredState(ctx context.Context) ([]DesiredState, error) {
-	cfg, err := common.LoadConfig()
+	cfg, err := config.Load()
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +94,7 @@ Categories=Network;WebBrowser;
 	return desired, nil
 }
 
-func generateWebappDesktopFile(wa common.WebappConfig, engine, id, name, iconPath string) string {
+func generateWebappDesktopFile(wa config.WebappConfig, engine, id, name, iconPath string) string {
 	url := common.NormalizeURL(wa.URL)
 	args := []string{"--app=" + url}
 

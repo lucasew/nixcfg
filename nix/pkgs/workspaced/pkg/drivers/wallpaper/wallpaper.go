@@ -10,12 +10,13 @@ import (
 	"os"
 	"path/filepath"
 	"workspaced/pkg/common"
+	"workspaced/pkg/config"
 )
 
 func SetStatic(ctx context.Context, path string) error {
 	logger := common.GetLogger(ctx)
 	if path == "" {
-		config, err := common.LoadConfig()
+		config, err := config.Load()
 		if err != nil {
 			return err
 		}
