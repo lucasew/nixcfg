@@ -3,13 +3,9 @@
   lib,
   config,
   ...
-}:
-
-let
+}: let
   cfg = config.services.python-microservices;
-in
-
-{
+in {
   options = {
     services.python-microservices = {
       socketDirectory = lib.mkOption {
@@ -24,15 +20,20 @@ in
       };
       services = lib.mkOption {
         description = "Python microservices that are waken up on invocation and do one thing";
-        default = { };
+        default = {};
         type = lib.types.attrsOf (
           lib.types.submodule (
-            { name, config, ... }:
             {
+              name,
+              config,
+              ...
+            }: {
               options = {
-                enable = (lib.mkEnableOption "microservice") // {
-                  default = true;
-                };
+                enable =
+                  (lib.mkEnableOption "microservice")
+                  // {
+                    default = true;
+                  };
                 name = lib.mkOption {
                   readOnly = true;
                   internal = true;
@@ -56,11 +57,12 @@ in
                     ]
                   );
                 };
-                python = (lib.mkPackageOption pkgs "python3" { })
-                #  // {
-                #   description = "Which python interpreter to use for this microservice. Use python.withPackages to add packages in scope.";
-                # }
-                ;
+                python =
+                  lib.mkPackageOption pkgs "python3" {}
+                  #  // {
+                  #   description = "Which python interpreter to use for this microservice. Use python.withPackages to add packages in scope.";
+                  # }
+                  ;
                 script = lib.mkOption {
                   description = ''
                     Script code that has a handle function that returns a function that gets the `self` argument of http.server.BaseHTTPHandler
@@ -89,7 +91,7 @@ in
             socketConfig = {
               ListenStream = "${cfg.socketDirectory}/${item.name}";
             };
-            partOf = [ "${item.unitName}.service" ];
+            partOf = ["${item.unitName}.service"];
             wantedBy = [
               "sockets.target"
               "multi-user.target"
@@ -100,7 +102,7 @@ in
               exec ${lib.getExe item.python} ${item.entrypoint};
             '';
             unitConfig = {
-              After = [ "network.target" ];
+              After = ["network.target"];
             };
             serviceConfig = {
               Nice = 7;
@@ -108,7 +110,7 @@ in
             };
           };
 
-          tmpfiles.rules = [ "d ${cfg.socketDirectory} 755 root root 0" ];
+          tmpfiles.rules = ["d ${cfg.socketDirectory} 755 root root 0"];
         }))
       ]
     );

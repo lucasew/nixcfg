@@ -4,7 +4,6 @@
   fetchFromGitHub,
   xxd,
 }:
-
 stdenv.mkDerivation {
   pname = "text2image";
   version = "unstable-2022-11-24";
@@ -16,7 +15,7 @@ stdenv.mkDerivation {
     hash = "sha256-yvyas1RY8uXrngQS5lyGTXp7nL8wYDNVl8eoazL6d4I=";
   };
 
-  buildInputs = [ xxd ];
+  buildInputs = [xxd];
 
   postPatch = ''
     substituteInPlace text2image.c \
@@ -26,7 +25,7 @@ stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
     mkdir -p $out/bin
-    install -m755 text2image $out/bin 
+    install -m755 text2image $out/bin
     runHook postInstall
   '';
 }

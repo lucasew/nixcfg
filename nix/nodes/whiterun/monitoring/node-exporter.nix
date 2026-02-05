@@ -1,6 +1,4 @@
-{ config, ... }:
-
-{
+{config, ...}: {
   networking.ports.prometheus-exporter-node_exporter.enable = true;
 
   services.prometheus = {
@@ -26,5 +24,4 @@
       }
     ];
   };
-
 }

@@ -3,10 +3,7 @@
   pkgs,
   lib,
   ...
-}:
-
-{
-
+}: {
   imports = [
     ../base/default.nix
     ./theme

@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   config = {
     environment.dotd."/etc/nix/machines".enable = true;
     nix.distributedBuilds = true;

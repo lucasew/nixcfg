@@ -30,12 +30,10 @@
     home-manager.url = "home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-
     cloud-savegame.url = "github:lucasew/cloud-savegame";
     cloud-savegame.flake = false;
 
     nix-index-database.url = "github:Mic92/nix-index-database";
-
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
@@ -60,73 +58,72 @@
     phpelo.flake = false;
   };
 
-  outputs =
-    {
-      self,
-      nix-index-database,
-      nixpkgs,
-      home-manager,
-      nbr,
-      nur,
-      nixos-hardware,
-      flake-utils,
-      ...
-    }@inputs:
-    let
-      system = "x86_64-linux";
-      bootstrapPkgs = import nixpkgs {
-        inherit system;
-        overlays = [ ]; # essential, infinite loop if not when using overlays
-      };
+  outputs = {
+    self,
+    nix-index-database,
+    nixpkgs,
+    home-manager,
+    nbr,
+    nur,
+    nixos-hardware,
+    flake-utils,
+    ...
+  } @ inputs: let
+    system = "x86_64-linux";
+    bootstrapPkgs = import nixpkgs {
+      inherit system;
+      overlays = []; # essential, infinite loop if not when using overlays
+    };
 
-      defaultNixpkgs = import ./nix/lib/patchNixpkgs.nix {
-        inherit nixpkgs system bootstrapPkgs;
-        patches = [ ];
-      };
+    defaultNixpkgs = import ./nix/lib/patchNixpkgs.nix {
+      inherit nixpkgs system bootstrapPkgs;
+      patches = [];
+    };
 
-      pkgs = mkPkgs { inherit system; };
-      settings = builtins.fromTOML (builtins.readFile ./settings.toml);
-      mkPkgs =
-        {
-          nixpkgs ? defaultNixpkgs,
-          config ? { },
-          overlays ? [ ],
-          disableOverlays ? false,
-          system ? builtins.currentSystem,
-        }:
-        import nixpkgs {
-          localSystem = system;
-          config = config // {
+    pkgs = mkPkgs {inherit system;};
+    settings = builtins.fromTOML (builtins.readFile ./settings.toml);
+    mkPkgs = {
+      nixpkgs ? defaultNixpkgs,
+      config ? {},
+      overlays ? [],
+      disableOverlays ? false,
+      system ? builtins.currentSystem,
+    }:
+      import nixpkgs {
+        localSystem = system;
+        config =
+          config
+          // {
             allowUnfree = true;
             nvidia.acceptLicense = true;
             android_sdk.accept_license = true;
-            permittedInsecurePackages = [ ];
+            permittedInsecurePackages = [];
           };
-          overlays =
-            if disableOverlays then [ ] else (overlays ++ (builtins.attrValues self.outputs.overlays));
-        };
-      global = {
-        username = "lucasew";
-        email = "lucas59356@gmail.com";
-        hosts = settings.hosts;
-        selectedDesktopEnvironment = "i3";
-        environmentShell = ''
-          source ${self}/bin/source_me
-        '';
+        overlays =
+          if disableOverlays
+          then []
+          else (overlays ++ (builtins.attrValues self.outputs.overlays));
       };
+    global = {
+      username = "lucasew";
+      email = "lucas59356@gmail.com";
+      hosts = settings.hosts;
+      selectedDesktopEnvironment = "i3";
+      environmentShell = ''
+        source ${self}/bin/source_me
+      '';
+    };
 
-      extraArgs = {
-        inherit self;
-        inherit global;
-        cfg = throw "your past self made a trap for non compliant code after a migration you did, now follow the stacktrace and go fix it";
-      };
-    in
-    flake-utils.lib.eachSystem [ "x86_64-linux" ] (
-      system:
-      let
-        pkgs = mkPkgs { inherit system; };
-      in
-      {
+    extraArgs = {
+      inherit self;
+      inherit global;
+      cfg = throw "your past self made a trap for non compliant code after a migration you did, now follow the stacktrace and go fix it";
+    };
+  in
+    flake-utils.lib.eachSystem ["x86_64-linux"] (
+      system: let
+        pkgs = mkPkgs {inherit system;};
+      in {
         inherit global self;
         legacyPackages = pkgs;
 
@@ -144,21 +141,21 @@
 
           teste-impure =
             pkgs.runCommand "teste"
-              {
-                __impure = true;
-                nativeBuildInputs = with pkgs; [
-                  cacert
-                  curl
-                ];
-              }
-              ''
-                # TODO: find a way to mount the sops secret folder inside
-                ls -a /
-                echo foi
-                ls -a /etc
-                curl -L https://google.com
-                date > $out
-              '';
+            {
+              __impure = true;
+              nativeBuildInputs = with pkgs; [
+                cacert
+                curl
+              ];
+            }
+            ''
+              # TODO: find a way to mount the sops secret folder inside
+              ls -a /
+              echo foi
+              ls -a /etc
+              curl -L https://google.com
+              date > $out
+            '';
 
           release = pkgs.stdenv.mkDerivation {
             pname = "nixcfg-release";
@@ -169,7 +166,7 @@
 
             dontUnpack = true;
             buildInputs =
-              [ ]
+              []
               # ++ (with pkgs.custom; [ neovim ])
               # ++ (with pkgs.custom; [ firefox tixati emacs ])
               # ++ (with pkgs.custom.vscode; [ common programming ])
@@ -178,18 +175,18 @@
                 whiterun.config.system.build.toplevel
                 # ivarstead.config.system.build.toplevel
               ])
-              ++ (with self.homeConfigurations; [ main.activationPackage ])
-            # ++ (with self.devShells.${system}; [
-            #   (pkgs.writeShellScriptBin "s" "echo ${default.outPath}")
-            # ])
-            # ++ (let
-            #   flattenItems = items: if pkgs.lib.isDerivation items
-            #     then items
-            #     else if pkgs.lib.isAttrs items then pkgs.lib.flatten ((map (flattenItems) (builtins.attrValues items)))
-            #     else []
-            # ;
-            # in map (item: (pkgs.writeShellScriptBin "source" "echo ${item}")) (flattenItems bumpkinInputs))
-            ;
+              ++ (with self.homeConfigurations; [main.activationPackage])
+              # ++ (with self.devShells.${system}; [
+              #   (pkgs.writeShellScriptBin "s" "echo ${default.outPath}")
+              # ])
+              # ++ (let
+              #   flattenItems = items: if pkgs.lib.isDerivation items
+              #     then items
+              #     else if pkgs.lib.isAttrs items then pkgs.lib.flatten ((map (flattenItems) (builtins.attrValues items)))
+              #     else []
+              # ;
+              # in map (item: (pkgs.writeShellScriptBin "source" "echo ${item}")) (flattenItems bumpkinInputs))
+              ;
             installPhase = ''
               echo $version > $out
               for input in $buildInputs; do
@@ -219,10 +216,9 @@
         # nix-requirefile = import "${inputs.nix-requirefile}/overlay.nix";
         zzzthis = import ./nix/overlay.nix self;
       };
-      colors =
-        let
-          scheme = inputs.nix-colors.colorschemes."darkviolet";
-        in
+      colors = let
+        scheme = inputs.nix-colors.colorschemes."darkviolet";
+      in
         scheme
         // {
           isDark = true;
@@ -237,23 +233,23 @@
         ];
         nodes = {
           ravenrock = {
-            modules = [ ./nix/nodes/ravenrock ];
+            modules = [./nix/nodes/ravenrock];
             inherit pkgs;
           };
           riverwood = {
-            modules = [ ./nix/nodes/riverwood ];
+            modules = [./nix/nodes/riverwood];
             inherit pkgs;
           };
           whiterun = {
-            modules = [ ./nix/nodes/whiterun ];
+            modules = [./nix/nodes/whiterun];
             inherit pkgs;
           };
           atomicpi = {
-            modules = [ ./nix/nodes/atomicpi ];
+            modules = [./nix/nodes/atomicpi];
             inherit pkgs;
           };
           recovery = {
-            modules = [ ./nix/nodes/recovery ];
+            modules = [./nix/nodes/recovery];
             inherit pkgs;
           };
         };
@@ -266,12 +262,12 @@
         ];
         nodes = {
           main = {
-            modules = [ ./nix/homes/main ];
+            modules = [./nix/homes/main];
             inherit pkgs;
           };
         };
       };
 
-      containers = pkgs.callPackage ./nix/containers { inherit self; };
+      containers = pkgs.callPackage ./nix/containers {inherit self;};
     };
 }

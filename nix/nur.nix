@@ -1,14 +1,9 @@
-{
-  pkgs ? import <nixpkgs> { },
-  ...
-}:
+{pkgs ? import <nixpkgs> {}, ...}:
 pkgs.lib.makeScope pkgs.newScope (
-  self:
-  let
+  self: let
     inherit (self) callPackage;
-    p = path: callPackage path { };
-  in
-  rec {
+    p = path: callPackage path {};
+  in rec {
     hmModules = {
       tmux = ./modules/tmux/home.nix;
       wallpaper = ./modules/wallpaper/home.nix;

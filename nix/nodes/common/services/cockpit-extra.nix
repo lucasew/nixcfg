@@ -1,5 +1,8 @@
-{ config, lib, ... }:
-
+{
+  config,
+  lib,
+  ...
+}:
 lib.mkIf config.services.cockpit.enable {
   networking.ports.cockpit.enable = true;
 
@@ -17,16 +20,15 @@ lib.mkIf config.services.cockpit.enable {
     # };
   };
 
-  systemd.services =
-    let
-      units = [
-        "cockpit-wsinstance-https@"
-        "cockpit-wsinstance-https-factory@"
-        "cockpit-wsinstance-http"
-        "cockpit"
-        "cockpit-motd"
-      ];
-    in
+  systemd.services = let
+    units = [
+      "cockpit-wsinstance-https@"
+      "cockpit-wsinstance-https-factory@"
+      "cockpit-wsinstance-http"
+      "cockpit"
+      "cockpit-motd"
+    ];
+  in
     lib.listToAttrs (
       map (unit: {
         name = unit;
@@ -34,7 +36,8 @@ lib.mkIf config.services.cockpit.enable {
           MemoryHigh = "512M";
           MemoryMax = "1G";
         };
-      }) units
+      })
+      units
     );
 
   environment.etc."motd-bash.d/99-cockpit" = {

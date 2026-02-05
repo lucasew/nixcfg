@@ -3,15 +3,14 @@
   lib,
   config,
   ...
-}:
-{
+}: {
   services.tailscale.enable = lib.mkDefault true;
 
   networking.firewall = lib.mkIf config.services.tailscale.enable {
-    trustedInterfaces = [ "tailscale0" ];
+    trustedInterfaces = ["tailscale0"];
 
     # allow the Tailscale UDP port through the firewall
-    allowedUDPPorts = [ config.services.tailscale.port ];
+    allowedUDPPorts = [config.services.tailscale.port];
   };
 
   # create a oneshot job to authenticate to Tailscale
@@ -27,7 +26,7 @@
       "network-pre.target"
       "tailscale.service"
     ];
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = ["multi-user.target"];
 
     # set this service as a oneshot job
     serviceConfig.Type = "oneshot";

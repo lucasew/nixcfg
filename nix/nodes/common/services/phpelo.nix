@@ -3,25 +3,20 @@
   lib,
   self,
   ...
-}:
-
-let
+}: let
   cfg = config.services.phpelo;
-  tsproxy-host  = "phpelo-${config.networking.hostName}";
+  tsproxy-host = "phpelo-${config.networking.hostName}";
   tsproxy-container = config.services.ts-proxy.hosts.${tsproxy-host}.unitName;
-in
-
-{
+in {
   imports = [
     "${self.inputs.phpelo}/nixos.nix"
   ];
   config = lib.mkIf cfg.enable {
-
     services.ts-proxy.hosts."${tsproxy-host}" = {
       enableTLS = true;
       enableFunnel = true;
       network = "unix";
-      proxies = [ "phpelo.socket" ];
+      proxies = ["phpelo.socket"];
       address = cfg.socket;
     };
 

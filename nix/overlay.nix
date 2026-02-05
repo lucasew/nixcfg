@@ -1,18 +1,15 @@
-flake: final: prev:
-let
+flake: final: prev: let
   inherit (final) callPackage;
-in
-let
-  cp = f: (callPackage f) { };
-in
-{
+in let
+  cp = f: (callPackage f) {};
+in {
   unstable = flake.lib.mkPkgs {
     nixpkgs = flake.inputs.nixpkgs-unstable;
     inherit (prev) system;
   };
   inherit flake;
 
-  nbr = import "${flake.inputs.nbr}" { pkgs = final // { buildFHSUserEnv = final.buildFHSEnv; }; };
+  nbr = import "${flake.inputs.nbr}" {pkgs = final // {buildFHSUserEnv = final.buildFHSEnv;};};
 
   pythonPackagesExtensions = [
     (final: prev: {
@@ -38,7 +35,7 @@ in
     ctranslate2 = super.ctranslate2.override {
       ctranslate2-cpp = prev.ctranslate2.override {
         withCUDA = true;
-        withCuDNN = true;  
+        withCuDNN = true;
       };
     };
   });
@@ -62,7 +59,7 @@ in
 
   prev = prev;
 
-  nomad-driver-nvidia =  prev.buildGoModule rec {
+  nomad-driver-nvidia = prev.buildGoModule rec {
     pname = "nomad-driver-nvidia";
     version = "1.1.0";
 
@@ -85,20 +82,21 @@ in
 
     env.CGO_ENABLED = 1;
 
-    nativeBuildInputs = [ prev.autoAddDriverRunpath prev.makeWrapper ];
+    nativeBuildInputs = [prev.autoAddDriverRunpath prev.makeWrapper];
 
     doCheck = false;
   };
-  nur = import flake.inputs.nur { pkgs = prev; };
+  nur = import flake.inputs.nur {pkgs = prev;};
 
   custom = rec {
     kodi = final.kodi.withPackages (
-      kpkgs: with kpkgs; [
-        vfs-sftp
-        sponsorblock
-        joystick
-        sendtokodi
-      ]
+      kpkgs:
+        with kpkgs; [
+          vfs-sftp
+          sponsorblock
+          joystick
+          sendtokodi
+        ]
     );
     colorpipe = cp ./pkgs/colorpipe;
     ncdu = cp ./pkgs/custom/ncdu.nix;
@@ -108,12 +106,12 @@ in
     tixati = cp ./pkgs/custom/tixati.nix;
     rofi_xorg = cp ./pkgs/custom/rofi.nix;
     rofi = final.custom.rofi_xorg;
-    rofi_wayland = prev.callPackage ./pkgs/custom/rofi.nix { rofi = final.rofi; };
+    rofi_wayland = prev.callPackage ./pkgs/custom/rofi.nix {rofi = final.rofi;};
     pidgin = cp ./pkgs/custom/pidgin.nix;
     send2kindle = cp ./pkgs/custom/send2kindle.nix;
     retroarch = cp ./pkgs/custom/retroarch.nix;
     polybar = cp ./pkgs/custom/polybar.nix;
-    colors-lib-contrib = import "${flake.inputs.nix-colors}/lib/contrib" { pkgs = prev; };
+    colors-lib-contrib = import "${flake.inputs.nix-colors}/lib/contrib" {pkgs = prev;};
     # wallpaper = ./wall.jpg;
     wallpaper = colors-lib-contrib.nixWallpaperFromScheme {
       scheme = final.custom.colors;
@@ -161,5 +159,5 @@ in
     };
   });
 
-  elixir_edge = final.unstable.elixir.override { erlang = final.unstable.erlang_27; };
+  elixir_edge = final.unstable.elixir.override {erlang = final.unstable.erlang_27;};
 }

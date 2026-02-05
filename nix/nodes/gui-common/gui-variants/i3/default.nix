@@ -4,9 +4,7 @@
   pkgs,
   lib,
   ...
-}:
-
-{
+}: {
   imports = [
     ./i3.nix
     ./lockscreen.nix
@@ -16,7 +14,6 @@
   ];
 
   config = lib.mkIf config.services.xserver.windowManager.i3.enable {
-
     security.polkit.agent.enable = true;
 
     # Redshift
@@ -38,11 +35,11 @@
       };
     };
     systemd.user.services.nm-applet = {
-      path = with pkgs; [ networkmanagerapplet ];
+      path = with pkgs; [networkmanagerapplet];
       script = "nm-applet";
     };
     systemd.user.services.blueberry-tray = {
-      path = with pkgs; [ blueberry ];
+      path = with pkgs; [blueberry];
       script = "blueberry-tray; while true; do sleep 3600; done";
     };
 

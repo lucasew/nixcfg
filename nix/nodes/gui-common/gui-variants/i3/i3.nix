@@ -3,10 +3,8 @@
   lib,
   config,
   ...
-}:
-
-let
-  custom_rofi = pkgs.custom.rofi.override { inherit (pkgs.custom) colors; };
+}: let
+  custom_rofi = pkgs.custom.rofi.override {inherit (pkgs.custom) colors;};
   inherit (pkgs) makeDesktopItem;
   mod = "Mod4";
   lockerSpace = makeDesktopItem {
@@ -16,14 +14,13 @@ let
     type = "Application";
     exec = "sdw utils i3wm lock-screen";
   };
-in
-{
+in {
   imports = [
     ../../workspaced.nix
   ];
 
   config = lib.mkIf config.services.xserver.windowManager.i3.enable {
-    xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
     xdg.portal.config.common.default = "*";
     xdg.portal.xdgOpenUsePortal = true;
     # https://thomashunter.name/i3-configurator/
@@ -44,8 +41,7 @@ in
         brightnessctl
       ];
     };
-    environment.etc."i3status".text =
-      with pkgs.custom.colors.colors;
+    environment.etc."i3status".text = with pkgs.custom.colors.colors;
       lib.mkForce ''
         general {
           colors = true
@@ -121,8 +117,7 @@ in
 
 
       '';
-    environment.etc."i3config".text =
-      with pkgs.custom.colors.colors;
+    environment.etc."i3config".text = with pkgs.custom.colors.colors;
       lib.mkForce ''
         set $mod ${mod}
 

@@ -2,11 +2,9 @@
   pkgs,
   lib,
   ...
-}:
-let
+}: let
   inherit (lib) mkDefault;
-in
-{
+in {
   home.packages = with pkgs; [
     neofetch # system info, arch linux friendly
     home-manager

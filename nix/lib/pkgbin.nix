@@ -1,8 +1,6 @@
 {
   name,
-  pkgs ? import <nixpkgs> { },
-}:
-let
+  pkgs ? import <nixpkgs> {},
+}: let
   pkg = pkgs."${name}";
-in
-"${pkg}/bin/${name}"
+in "${pkg}/bin/${name}"

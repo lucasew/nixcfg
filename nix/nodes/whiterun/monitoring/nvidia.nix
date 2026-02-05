@@ -3,9 +3,7 @@
   lib,
   pkgs,
   ...
-}:
-
-{
+}: {
   networking.ports.prometheus-exporter-nvidia.enable = true;
 
   systemd.services.prometheus-nvidia-exporter = {
@@ -17,7 +15,7 @@
     serviceConfig = {
       PrivateDevices = false;
     };
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = ["multi-user.target"];
   };
 
   services.prometheus = {

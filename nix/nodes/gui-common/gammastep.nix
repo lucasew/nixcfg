@@ -3,20 +3,17 @@
   lib,
   pkgs,
   ...
-}:
-
-let
-  inherit (lib)
+}: let
+  inherit
+    (lib)
     mkOption
     types
     mkIf
     mkPackageOption
     ;
-  settingsFormat = pkgs.formats.ini { };
+  settingsFormat = pkgs.formats.ini {};
   cfg = config.services.gammastep;
-in
-
-{
+in {
   options.services.gammastep = {
     enable = mkOption {
       type = types.bool;
@@ -27,7 +24,7 @@ in
       '';
     };
 
-    package = mkPackageOption pkgs "gammastep" { };
+    package = mkPackageOption pkgs "gammastep" {};
 
     temperature = {
       day = mkOption {
@@ -49,8 +46,8 @@ in
     };
 
     settings = mkOption {
-      type = types.submodule { freeformType = settingsFormat.type; };
-      default = { };
+      type = types.submodule {freeformType = settingsFormat.type;};
+      default = {};
       description = lib.mdDoc ''
         Configuration for gammastep.
       '';
@@ -71,7 +68,7 @@ in
     environment.etc."gammastep.ini".source = settingsFormat.generate "gammastep.ini" cfg.settings;
 
     systemd.user.services.gammastep = {
-      path = [ cfg.package ];
+      path = [cfg.package];
       script = ''
         gammastep -c /etc/gammastep.ini
       '';
@@ -79,7 +76,7 @@ in
         RestartSec = 3;
         Restart = "on-failure";
       };
-      wantedBy = [ "graphical-session.target" ];
+      wantedBy = ["graphical-session.target"];
     };
   };
 }

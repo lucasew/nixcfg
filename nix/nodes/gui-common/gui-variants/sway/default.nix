@@ -3,10 +3,8 @@
   pkgs,
   lib,
   ...
-}:
-
-let
-  custom_rofi = pkgs.custom.rofi_wayland.override { inherit (pkgs.custom) colors; };
+}: let
+  custom_rofi = pkgs.custom.rofi_wayland.override {inherit (pkgs.custom) colors;};
   mod = "Mod4";
   lockerSpace = pkgs.makeDesktopItem {
     name = "locker";
@@ -16,50 +14,47 @@ let
     exec = "sdw utils i3wm lock-screen";
   };
   locker-params = let
-    dict-args =
-      with pkgs.custom.colors.colors; {
+    dict-args = with pkgs.custom.colors.colors; {
+      color = base00; # background
 
-        color = base00; # background
+      text-color = base05;
+      text-clear-color = base05;
+      text-caps-lock-color = base05;
+      text-ver-color = base05;
+      text-wrong-color = base05;
+      layout-text-color = base05;
 
-        text-color = base05;
-        text-clear-color = base05;
-        text-caps-lock-color = base05;
-        text-ver-color = base05;
-        text-wrong-color = base05;
-        layout-text-color = base05;
+      ring-color = base01;
+      ring-clear-color = base0D;
+      ring-caps-lock-color = base0C;
+      ring-ver-color = base0A;
+      ring-wrong-color = base08;
 
-        ring-color = base01;
-        ring-clear-color = base0D;
-        ring-caps-lock-color = base0C;
-        ring-ver-color = base0A;
-        ring-wrong-color = base08;
+      key-hl-color = base06;
+      bs-hl-color = base08;
 
-        key-hl-color = base06;
-        bs-hl-color = base08;
-
-        inside-color = "00000000";
-        inside-clear-color = "00000000";
-        inside-caps-lock-color = "00000000";
-        inside-ver-color = "00000000";
-        inside-wrong-color = "00000000";
-        line-color = "00000000";
-        line-clear-color = "00000000";
-        line-caps-lock-color = "00000000";
-        line-ver-color = "00000000";
-        line-wrong-color = "00000000";
-        layout-bg-color = "00000000";
-        layout-border-color = "00000000";
-      };
+      inside-color = "00000000";
+      inside-clear-color = "00000000";
+      inside-caps-lock-color = "00000000";
+      inside-ver-color = "00000000";
+      inside-wrong-color = "00000000";
+      line-color = "00000000";
+      line-clear-color = "00000000";
+      line-caps-lock-color = "00000000";
+      line-ver-color = "00000000";
+      line-wrong-color = "00000000";
+      layout-bg-color = "00000000";
+      layout-border-color = "00000000";
+    };
 
     swaylock-list-args = lib.pipe dict-args [
       (builtins.mapAttrs (k: v: ["--${k}" "${v}"]))
       (builtins.attrValues)
       (lib.flatten)
     ];
-  in swaylock-list-args;
-in
-
-{
+  in
+    swaylock-list-args;
+in {
   imports = [
     ../optional/flatpak.nix
     ../optional/kdeconnect-indicator.nix
@@ -81,8 +76,8 @@ in
     };
 
     systemd.user.services.swayidle = {
-      partOf = [ "graphical-session.target" ];
-      path = with pkgs; [ swayidle procps ];
+      partOf = ["graphical-session.target"];
+      path = with pkgs; [swayidle procps];
       restartIfChanged = true;
       script = ''
         PATH=$PATH:/run/current-system/sw/bin
@@ -118,11 +113,11 @@ in
     programs.kdeconnect.enable = true;
     services.gammastep.enable = true;
     systemd.user.services.nm-applet = {
-      path = with pkgs; [ networkmanagerapplet ];
+      path = with pkgs; [networkmanagerapplet];
       script = "nm-applet";
     };
     systemd.user.services.blueberry-tray = {
-      path = with pkgs; [ blueberry ];
+      path = with pkgs; [blueberry];
       script = "blueberry-tray; while true; do sleep 3600; done";
     };
     environment.systemPackages = with pkgs; [
@@ -143,8 +138,7 @@ in
 
     programs.waybar.enable = true;
 
-    environment.etc."sway/config".text =
-      with pkgs.custom.colors.colors;
+    environment.etc."sway/config".text = with pkgs.custom.colors.colors;
       lib.mkForce ''
         set $mod ${mod}
 
@@ -294,7 +288,7 @@ in
         hide_edge_borders smart
         focus_on_window_activation urgent
 
-        
+
 
         # announce a running sway session to systemd
         # https://discourse.nixos.org/t/xdg-desktop-portal-not-working-on-wayland-while-kde-is-installed/20919/3

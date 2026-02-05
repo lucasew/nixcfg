@@ -4,10 +4,8 @@
   lib,
   ...
 }:
-
 lib.mkIf config.programs.nix-ld.enable {
-  programs.nix-ld.libraries =
-    with pkgs;
+  programs.nix-ld.libraries = with pkgs;
     [
       fuse
       libbsd
@@ -16,5 +14,4 @@ lib.mkIf config.programs.nix-ld.enable {
     ]
     ++ (appimageTools.defaultFhsEnvArgs.targetPkgs pkgs)
     ++ (appimageTools.defaultFhsEnvArgs.multiPkgs pkgs);
-
 }

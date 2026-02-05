@@ -3,9 +3,7 @@
   config,
   lib,
   ...
-}:
-
-{
+}: {
   options.services.dunst.enable = lib.mkEnableOption "dunst";
 
   config = lib.mkIf config.services.dunst.enable {
@@ -68,7 +66,7 @@
       timeout=10
     '';
     systemd.user.services.dunst = {
-      wantedBy = [ "graphical-session.target" ];
+      wantedBy = ["graphical-session.target"];
       enable = true;
       restartIfChanged = true;
       path = [

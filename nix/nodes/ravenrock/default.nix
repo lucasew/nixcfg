@@ -5,12 +5,10 @@
   self,
   config,
   ...
-}:
-let
+}: let
   inherit (global) username rootPath;
   inherit (lib) mkOverride;
-in
-{
+in {
   imports = [
     "${self.inputs.nixpkgs}/nixos/modules/virtualisation/google-compute-image.nix"
     # "${self.inputs.impermanence}/nixos.nix"
@@ -48,7 +46,7 @@ in
   #   ];
   # };
 
-  swapDevices = [ { device = "/persist/swapfile"; } ];
+  swapDevices = [{device = "/persist/swapfile";}];
 
   networking.hostName = "ravenrock";
   environment.systemPackages = with pkgs; [

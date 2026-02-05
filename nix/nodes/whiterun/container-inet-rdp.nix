@@ -1,12 +1,14 @@
-{ pkgs, config, ... }:
-let
+{
+  pkgs,
+  config,
+  ...
+}: let
   containerUser = "test";
   super-pkgs = pkgs;
-  rdpConfDir =
-    let
-      cfg = config.containers.chrome-rdp.config.services.xrdp;
-    in
-    pkgs.runCommand "xrdp.conf" { preferLocalBuild = true; } ''
+  rdpConfDir = let
+    cfg = config.containers.chrome-rdp.config.services.xrdp;
+  in
+    pkgs.runCommand "xrdp.conf" {preferLocalBuild = true;} ''
       mkdir $out
 
       cp ${cfg.package}/etc/xrdp/{km-*,xrdp,sesman,xrdp_keyboard}.ini $out
@@ -38,9 +40,8 @@ let
       LOCALE_ARCHIVE=${config.i18n.glibcLocales}/lib/locale/locale-archive
       ' $out/sesman.ini
     '';
-in
-{
-  systemd.tmpfiles.rules = [ "d /var/lib/chromerdp-container 0700 root root - -" ];
+in {
+  systemd.tmpfiles.rules = ["d /var/lib/chromerdp-container 0700 root root - -"];
 
   containers.chrome-rdp = {
     autoStart = true;
@@ -61,44 +62,42 @@ in
         isReadOnly = false;
       };
     };
-    config =
-      { pkgs, ... }:
-      {
-        services.xserver = {
-          enable = true;
-          desktopManager = {
-            xterm.enable = false;
-            # mate.enable = true;
-            xfce.enable = true;
-          };
-          displayManager.lightdm.enable = false;
+    config = {pkgs, ...}: {
+      services.xserver = {
+        enable = true;
+        desktopManager = {
+          xterm.enable = false;
+          # mate.enable = true;
+          xfce.enable = true;
         };
-        hardware.pulseaudio = {
-          enable = true;
-          extraModules = [ super-pkgs.pulseaudio-module-xrdp ];
-        };
-        environment.systemPackages = with pkgs; [
-          chromium
-          firefox
-        ];
-        services.xrdp = {
-          enable = true;
-          defaultWindowManager = ''xfce4-session'';
-          audio.enable = true;
-        };
-        users.users.test = {
-          isNormalUser = true;
-          extraGroups = [
-            "wheel"
-            "video"
-            "render"
-            "audio"
-          ];
-          initialPassword = "test";
-          uid = 6969;
-        };
-
-        system.stateVersion = "23.11";
+        displayManager.lightdm.enable = false;
       };
+      hardware.pulseaudio = {
+        enable = true;
+        extraModules = [super-pkgs.pulseaudio-module-xrdp];
+      };
+      environment.systemPackages = with pkgs; [
+        chromium
+        firefox
+      ];
+      services.xrdp = {
+        enable = true;
+        defaultWindowManager = ''xfce4-session'';
+        audio.enable = true;
+      };
+      users.users.test = {
+        isNormalUser = true;
+        extraGroups = [
+          "wheel"
+          "video"
+          "render"
+          "audio"
+        ];
+        initialPassword = "test";
+        uid = 6969;
+      };
+
+      system.stateVersion = "23.11";
+    };
   };
 }

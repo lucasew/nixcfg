@@ -5,13 +5,11 @@
   config,
   lib,
   ...
-}@args:
-let
+} @ args: let
   inherit (self) inputs;
   inherit (global) username;
   hostname = "whiterun";
-in
-{
+in {
   imports = [
     ./hardware-configuration.nix
     ../gui-common
@@ -81,7 +79,7 @@ in
   fileSystems."/var/backup" = {
     device = "/media/storage/backup/var";
     fsType = "none";
-    options = [ "bind" ];
+    options = ["bind"];
   };
 
   nix.settings.min-free = 50 * 1024 * 1024 * 1024; # 50GB
@@ -128,7 +126,7 @@ in
         ];
       };
       flatout-2 = {
-        installdir = [ "/media/downloads/steam/steamapps/common/FlatOut2" ];
+        installdir = ["/media/downloads/steam/steamapps/common/FlatOut2"];
       };
     };
   };
@@ -157,7 +155,7 @@ in
     rocmPackages.rocm-runtime
     rocmPackages.clr
   ];
-  hardware.graphics.extraPackages32 = with pkgs; [ ];
+  hardware.graphics.extraPackages32 = with pkgs; [];
 
   programs.steam.enable = true;
 

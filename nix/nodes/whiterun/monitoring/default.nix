@@ -1,9 +1,4 @@
-{
-  config,
-  ...
-}:
-{
-
+{config, ...}: {
   imports = [
     ./nginx.nix
     ./node-exporter.nix

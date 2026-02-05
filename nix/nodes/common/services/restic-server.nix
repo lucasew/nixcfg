@@ -1,12 +1,14 @@
-{ config, lib, ... }:
-
 {
+  config,
+  lib,
+  ...
+}: {
   config = lib.mkIf config.services.restic.server.enable {
     networking.ports.restic-server.enable = true;
     services.restic.server = {
       appendOnly = true;
       listenAddress = "127.0.0.1:${toString config.networking.ports.restic-server.port}";
-      extraFlags = [ "--no-auth" ];
+      extraFlags = ["--no-auth"];
     };
 
     services.ts-proxy.hosts = {
@@ -20,7 +22,7 @@
       {
         job_name = "restic-server";
         static_configs = [
-          { targets = [ "127.0.0.1:${toString config.networking.ports.restic-server.port}" ]; }
+          {targets = ["127.0.0.1:${toString config.networking.ports.restic-server.port}"];}
         ];
       }
     ];

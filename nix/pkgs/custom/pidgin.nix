@@ -3,14 +3,12 @@
   purple-discord,
   purple-slack,
   purple-matrix,
-}:
-let
+}: let
   plugins = [
     purple-discord
     purple-slack
     purple-matrix
   ];
 in
-
-pidgin.override { inherit plugins; }
+  pidgin.override {inherit plugins;}
 # pidgin.withPlugins (p: with p; [purple-discord purple-slack purple-matrix])

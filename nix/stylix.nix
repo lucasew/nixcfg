@@ -1,13 +1,11 @@
-{
-  pkgs,
-  ...
-}:
-let
+{pkgs, ...}: let
   inherit (pkgs.custom) colors wallpaper;
-in
-{
+in {
   stylix = {
-    polarity = if colors.isDark then "dark" else "light";
+    polarity =
+      if colors.isDark
+      then "dark"
+      else "light";
     # image = wallpaper;
     image = ../assets/wall.jpg;
     # base16Scheme = colors.colors;

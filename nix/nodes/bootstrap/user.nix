@@ -4,16 +4,14 @@
   pkgs,
   lib,
   ...
-}:
-let
+}: let
   inherit (lib) mkDefault;
   inherit (global) username;
   inherit (pkgs) writeText;
   lecture = writeText "sudo-lecture" ''
     Acha que é assim fácil?
   '';
-in
-{
+in {
   services.displayManager.autoLogin = {
     enable = lib.mkDefault true;
     user = lib.mkDefault username;
@@ -34,7 +32,7 @@ in
           "ssh"
         ];
         initialPassword = "changeme";
-        openssh.authorizedKeys.keyFiles = [ ../../../authorized_keys ];
+        openssh.authorizedKeys.keyFiles = [../../../authorized_keys];
       };
     };
   };

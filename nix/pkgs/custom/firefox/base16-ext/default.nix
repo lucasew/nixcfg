@@ -18,7 +18,7 @@ stdenv.mkDerivation {
     } icons/border-48.png
   '';
 
-  nativeBuildInputs = [ zip ];
+  nativeBuildInputs = [zip];
   installPhase = ''
     mkdir $out
     zip -r $out/nixos@base16.xpi base16.js manifest.json icons

@@ -3,12 +3,10 @@
   pkgs,
   lib,
   ...
-}:
-let
+}: let
   inherit (self) inputs;
   inherit (lib) mkDefault;
-in
-{
+in {
   imports = [
     ../bootstrap
     ./cachix.nix
@@ -58,7 +56,7 @@ in
           "/home/lucasew/TMP2"
           "/run/media"
         ];
-        extra_homes = [ "/run/media/lucasew/Dados/DADOS/Lucas" ];
+        extra_homes = ["/run/media/lucasew/Dados/DADOS/Lucas"];
       };
 
       flatout-2 = {
@@ -76,7 +74,7 @@ in
 
   services.unstore = {
     # enable = true;
-    paths = [ "flake.nix" ];
+    paths = ["flake.nix"];
   };
 
   boot.loader.grub.memtest86.enable = true;

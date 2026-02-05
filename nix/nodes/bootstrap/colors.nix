@@ -3,13 +3,14 @@
   lib,
   self,
   ...
-}:
-let
+}: let
   inherit (self) colors;
-in
-{
+in {
   stylix = {
-    polarity = if colors.isDark then "dark" else "light";
+    polarity =
+      if colors.isDark
+      then "dark"
+      else "light";
     base16Scheme = colors.colors;
   };
 }

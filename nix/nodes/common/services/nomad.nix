@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   config = lib.mkIf config.services.nomad.enable {
     services.nomad = {
       extraSettingsPlugins = [
@@ -21,7 +24,7 @@
           enabled = true;
           network_interface = "tailscale0";
           host_volume."consul-data" = {
-            path      = "/var/lib/nomad/consul";
+            path = "/var/lib/nomad/consul";
             read_only = false;
           };
           alloc_mounts_dir = "/var/lib/private/nomad/alloc_mounts";

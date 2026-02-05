@@ -3,13 +3,9 @@
   config,
   pkgs,
   ...
-}:
-
-let
+}: let
   cfg = config.services.ts-proxy;
-in
-
-{
+in {
   options = {
     services.ts-proxy = {
       network-domain = lib.mkOption {
@@ -50,8 +46,7 @@ in
 
         type = lib.types.attrsOf (
           lib.types.submodule (
-            { name, ... }:
-            {
+            {name, ...}: {
               options = {
                 enableFunnel = lib.mkEnableOption "enable funnel for this endpoint";
                 enableTLS = lib.mkEnableOption "enable TLS for this endpoint";
@@ -83,7 +78,7 @@ in
                 proxies = lib.mkOption {
                   description = "Which units this ts-proxy instance is proxying.";
                   type = lib.types.listOf lib.types.str;
-                  default = [ ];
+                  default = [];
                 };
 
                 unitName = lib.mkOption {
@@ -92,7 +87,6 @@ in
                   default = "ts-proxy-${name}";
                 };
               };
-
             }
           )
         );
@@ -113,9 +107,9 @@ in
       inherit (cfg) group;
     };
 
-    users.groups.${cfg.group} = { };
+    users.groups.${cfg.group} = {};
 
-    systemd.tmpfiles.rules = [ "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group} - -" ];
+    systemd.tmpfiles.rules = ["d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group} - -"];
 
     systemd.slices.ts-proxys.sliceConfig = {
       CPUQuota = "10%";
@@ -125,38 +119,41 @@ in
 
     virtualisation.oci-containers.containers = lib.mkMerge (
       builtins.attrValues (
-          builtins.mapAttrs (k: host: {
-            ${host.unitName} = {
-              inherit (cfg) image;
-              pull = "always";
-              serviceName = host.unitName;
-              extraOptions = [ "--network=host" ];
-              environmentFiles = [ cfg.environmentFile ];
-              volumes = [
-                "${cfg.dataDir}/tsproxy-${host.name}:/state"
-              ];
-              cmd = []
-                ++ ([ "-address" host.address ])
-                ++ (lib.optional host.enableFunnel "-f")
-                ++ (lib.optionals (host.listen != 0) [ "-listen" ":${toString host.listen}" ])
-                ++ ([ "-n" host.name ])
-                ++ (lib.optionals (host.network != "") [ "-net" host.network ])
-                ++ (lib.optional host.enableRaw "-raw")
-                ++ ([ "-s" "/state" ])
-                ++ (lib.optional host.enableTLS "-t")
-              ;
-            };
-          }) cfg.hosts
-        )
+        builtins.mapAttrs (k: host: {
+          ${host.unitName} = {
+            inherit (cfg) image;
+            pull = "always";
+            serviceName = host.unitName;
+            extraOptions = ["--network=host"];
+            environmentFiles = [cfg.environmentFile];
+            volumes = [
+              "${cfg.dataDir}/tsproxy-${host.name}:/state"
+            ];
+            cmd =
+              []
+              ++ ["-address" host.address]
+              ++ (lib.optional host.enableFunnel "-f")
+              ++ (lib.optionals (host.listen != 0) ["-listen" ":${toString host.listen}"])
+              ++ ["-n" host.name]
+              ++ (lib.optionals (host.network != "") ["-net" host.network])
+              ++ (lib.optional host.enableRaw "-raw")
+              ++ ["-s" "/state"]
+              ++ (lib.optional host.enableTLS "-t");
+          };
+        })
+        cfg.hosts
+      )
     );
 
     systemd.services = lib.mkMerge (
       builtins.attrValues (
         builtins.mapAttrs (k: host: {
           ${host.unitName} = {
-
             description = "ts-proxy service for ${host.name}";
-            wantedBy = if host.proxies == [ ] then [ "multi-user.target" ] else host.proxies;
+            wantedBy =
+              if host.proxies == []
+              then ["multi-user.target"]
+              else host.proxies;
 
             after = host.proxies;
             partOf = host.proxies;
@@ -172,7 +169,8 @@ in
               RestartSec = "10s";
             };
           };
-        }) cfg.hosts
+        })
+        cfg.hosts
       )
     );
   };
