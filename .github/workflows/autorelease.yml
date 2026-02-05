@@ -18,6 +18,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      id-token: write
     steps:
       - name: Setup disk space
         uses: lucasew/action-i-only-care-about-nix@main
