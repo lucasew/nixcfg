@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Nix
-        uses: lucasew/action-i-only-care-about-nix@27c3da450090333d06114b7e888069502b4d164d # v1.0.3
+        uses: lucasew/action-i-only-care-about-nix@main
 
       - name: Setup Nix cache
         uses: cachix/cachix-action@0fc020193b5a1fa3ac4575aa3a7d3aa6a35435ad # v16
