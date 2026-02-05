@@ -169,7 +169,7 @@ Uses caching for performance - regenerates only when source files change.`,
 
 				// Skip files generated inline above
 				if strings.Contains(basename, "workspaced-init") ||
-				   strings.Contains(basename, "workspaced-history") {
+					strings.Contains(basename, "workspaced-history") {
 					continue
 				}
 
