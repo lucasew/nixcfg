@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"workspaced/pkg/config"
+	pkgConfig "workspaced/pkg/config"
 
 	"github.com/spf13/cobra"
 )
@@ -12,7 +12,7 @@ func GetColorsCommand() *cobra.Command {
 		Use:   "colors",
 		Short: "Output ANSI escape sequences for the current color palette",
 		RunE: func(c *cobra.Command, args []string) error {
-			cfg, err := config.Load()
+			cfg, err := pkgConfig.Load()
 			if err != nil {
 				return err
 			}
