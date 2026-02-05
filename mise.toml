@@ -99,7 +99,11 @@ run = "echo 'Managed by Nix'"
 
 [tasks."install:tools"]
 description = "Install Mise tools"
-run = "mise install"
+run = """
+    mise install
+    mise install -C nix/pkgs/workspaced
+    mise install -C infra
+"""
 
 [tasks.ci]
 description = "Run CI pipeline locally"
