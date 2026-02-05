@@ -22,12 +22,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a # v21
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+        uses: lucasew/action-i-only-care-about-nix@27c3da450090333d06114b7e888069502b4d164d # v1.0.3
 
       - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@565684385bcd71bad329742eefe8d12f2e765b39 # v13
+        uses: cachix/cachix-action@ad2ddac53f961de1989924296a1f236fdbbbe4ade # v15
+        with:
+          name: lucasew-personal
+          authToken: '${{ secrets.CACHIX_TOKEN }}'
 
       - name: Install mise
         uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3
