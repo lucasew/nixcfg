@@ -34,3 +34,10 @@
 **Root Cause:** Command substitution execution order and stderr handling in CI environment is fragile. `mise run install` does not implicitly run `mise install` for root tools.
 **Solution:** Replaced command substitution with `shfmt -f=0 . | xargs -0 -r ...` to robustly pipe file lists. Added `install:tools` task to explicitly run `mise install`.
 **Pattern:** Prefer pipelines with `xargs -0 -r` over command substitution for passing file lists to tools, as it handles empty lists and filenames with spaces correctly.
+
+## 2026-02-05 - Cleanup Unused Imports in Scripts
+
+**Issue:** `bin/fortune` contained an unused `sys` import and commented-out debug code.
+**Root Cause:** Leftover code from development/debugging that was not cleaned up.
+**Solution:** Removed the unused import and the dead code.
+**Pattern:** Always run linters (like `ruff`) on scripts to catch unused imports and clean up debug artifacts before committing.
