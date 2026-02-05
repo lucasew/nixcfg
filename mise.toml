@@ -10,7 +10,7 @@ depends = ["lint:*"]
 
 [tasks."lint:nix"]
 description = "Lint Nix files"
-run = "command -v nix >/dev/null && nix --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' --accept-flake-config fmt -- --check || echo 'Nix not found, skipping'"
+run = "if command -v nix >/dev/null; then nix --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' --accept-flake-config fmt -- --check; else echo 'Nix not found, skipping'; fi"
 
 [tasks."lint:sh"]
 description = "Lint Shell scripts"
@@ -26,7 +26,7 @@ run = "mise exec ruff -- ruff check ."
 [tasks."lint:go"]
 description = "Lint Go files"
 dir = "nix/pkgs/workspaced"
-run = "mise exec -- golangci-lint run ./..."
+run = "mise exec -- golangci-lint run --timeout 10m ./..."
 
 [tasks."lint:tf"]
 description = "Lint Terraform files"
@@ -39,7 +39,7 @@ depends = ["fmt:*"]
 
 [tasks."fmt:nix"]
 description = "Format Nix files"
-run = "command -v nix >/dev/null && nix --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' --accept-flake-config fmt || echo 'Nix not found, skipping'"
+run = "if command -v nix >/dev/null; then nix --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' --accept-flake-config fmt; else echo 'Nix not found, skipping'; fi"
 
 [tasks."fmt:sh"]
 description = "Format Shell scripts"
@@ -68,7 +68,7 @@ depends = ["test:*"]
 
 [tasks."test:nix"]
 description = "Test Nix configuration"
-run = "command -v nix >/dev/null && nix --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' --accept-flake-config flake check || echo 'Nix not found, skipping'"
+run = "if command -v nix >/dev/null; then nix --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' --accept-flake-config flake check; else echo 'Nix not found, skipping'; fi"
 
 [tasks."test:go"]
 description = "Test Go code"
