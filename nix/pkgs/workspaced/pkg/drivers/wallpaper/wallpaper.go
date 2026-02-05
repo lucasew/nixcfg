@@ -10,16 +10,17 @@ import (
 	"os"
 	"path/filepath"
 	"workspaced/pkg/common"
+	"workspaced/pkg/config"
 )
 
 func SetStatic(ctx context.Context, path string) error {
 	logger := common.GetLogger(ctx)
 	if path == "" {
-		config, err := common.LoadConfig()
+		cfg, err := config.Load()
 		if err != nil {
 			return err
 		}
-		wallpaperDir := config.Desktop.Wallpaper.Dir
+		wallpaperDir := cfg.Desktop.Wallpaper.Dir
 		files, _ := filepath.Glob(filepath.Join(wallpaperDir, "*"))
 		if len(files) == 0 {
 			return fmt.Errorf("no wallpapers found in %s", wallpaperDir)

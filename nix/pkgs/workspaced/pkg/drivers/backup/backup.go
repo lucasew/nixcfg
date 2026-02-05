@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 	"workspaced/pkg/common"
+	"workspaced/pkg/config"
 	"workspaced/pkg/drivers/git"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/drivers/sudo"
@@ -16,7 +17,7 @@ import (
 )
 
 func RunFullBackup(ctx context.Context) error {
-	config, err := common.LoadConfig()
+	cfg, err := config.Load()
 	if err != nil {
 		return err
 	}
@@ -54,7 +55,7 @@ func RunFullBackup(ctx context.Context) error {
 		logger.Info("host identified as riverwood, syncing CANTGIT")
 		home, _ := os.UserHomeDir()
 		src := filepath.Join(home, "WORKSPACE/CANTGIT/")
-		dst := config.Backup.RemotePath + "/CANTGIT"
+		dst := cfg.Backup.RemotePath + "/CANTGIT"
 		if _, err := Rsync(ctx, src, dst, n); err != nil {
 			return err
 		}
@@ -62,7 +63,7 @@ func RunFullBackup(ctx context.Context) error {
 
 	if common.IsPhone() {
 		logger.Info("host identified as phone, starting android backup")
-		if err := runPhoneBackup(ctx, config, updateProgress, n); err != nil {
+		if err := runPhoneBackup(ctx, cfg, updateProgress, n); err != nil {
 			return err
 		}
 	}
@@ -70,7 +71,7 @@ func RunFullBackup(ctx context.Context) error {
 	// Final report
 	updateProgress("Finalizando e obtendo status...")
 	logger.Info("fetching remote status from rsync.net")
-	status, _ := getRemoteStatus(ctx, config)
+	status, _ := getRemoteStatus(ctx, cfg)
 	n.Title = "Backup finalizado"
 	n.Message = status
 	n.Progress = 1.0
@@ -81,8 +82,8 @@ func RunFullBackup(ctx context.Context) error {
 }
 
 func Rsync(ctx context.Context, src, dst string, n *notification.Notification, extraArgs ...string) (string, error) {
-	config, _ := common.LoadConfig()
-	remote := fmt.Sprintf("%s:%s", config.Backup.RsyncnetUser, dst)
+	cfg, _ := config.Load()
+	remote := fmt.Sprintf("%s:%s", cfg.Backup.RsyncnetUser, dst)
 
 	common.GetLogger(ctx).Info("rsync sync", "from", src, "to", remote)
 	args := append([]string{"-avP", src, remote}, extraArgs...)
@@ -120,18 +121,18 @@ func Rsync(ctx context.Context, src, dst string, n *notification.Notification, e
 	return lastLine, err
 }
 
-func runPhoneBackup(ctx context.Context, config *common.GlobalConfig, updateProgress func(string), n *notification.Notification) error {
+func runPhoneBackup(ctx context.Context, cfg *config.Config, updateProgress func(string), n *notification.Notification) error {
 	logger := common.GetLogger(ctx)
 	// Sync Camera and Pictures
 	logger.Info("syncing media and whatsapp")
 	updateProgress("Sincronizando Câmera...")
-	_, _ = Rsync(ctx, "/sdcard/DCIM/Camera/", config.Backup.RemotePath+"/camera", n, "--exclude=.thumbnails")
+	_, _ = Rsync(ctx, "/sdcard/DCIM/Camera/", cfg.Backup.RemotePath+"/camera", n, "--exclude=.thumbnails")
 	updateProgress("Sincronizando Fotos...")
-	_, _ = Rsync(ctx, "/sdcard/Pictures/", config.Backup.RemotePath+"/pictures", n, "--exclude=.thumbnails")
+	_, _ = Rsync(ctx, "/sdcard/Pictures/", cfg.Backup.RemotePath+"/pictures", n, "--exclude=.thumbnails")
 	updateProgress("Sincronizando Mídia WhatsApp...")
-	_, _ = Rsync(ctx, "/sdcard/Android/media/com.whatsapp/WhatsApp/Media/", config.Backup.RemotePath+"/WhatsApp", n, "--exclude=.Links", "--exclude=.Statuses")
+	_, _ = Rsync(ctx, "/sdcard/Android/media/com.whatsapp/WhatsApp/Media/", cfg.Backup.RemotePath+"/WhatsApp", n, "--exclude=.Links", "--exclude=.Statuses")
 	updateProgress("Sincronizando Backups WhatsApp...")
-	_, _ = Rsync(ctx, "/sdcard/Android/media/com.whatsapp/WhatsApp/Backups/", config.Backup.RemotePath+"/WhatsApp", n)
+	_, _ = Rsync(ctx, "/sdcard/Android/media/com.whatsapp/WhatsApp/Backups/", cfg.Backup.RemotePath+"/WhatsApp", n)
 
 	// Termux config staging
 	updateProgress("Sincronizando Configurações Termux...")
@@ -158,12 +159,12 @@ func runPhoneBackup(ctx context.Context, config *common.GlobalConfig, updateProg
 	logger.Info("creating tarball", "path", tarPath)
 	_ = common.RunCmd(ctx, "tar", "-cvf", tarPath, "-C", filepath.Dir(cacheDir), "termux").Run()
 
-	_, err := Rsync(ctx, tarPath, config.Backup.RemotePath, n)
+	_, err := Rsync(ctx, tarPath, cfg.Backup.RemotePath, n)
 	return err
 }
 
-func getRemoteStatus(ctx context.Context, config *common.GlobalConfig) (string, error) {
-	user := config.Backup.RsyncnetUser
+func getRemoteStatus(ctx context.Context, cfg *config.Config) (string, error) {
+	user := cfg.Backup.RsyncnetUser
 
 	// Get quota (raw)
 	quotaOut, _ := common.RunCmd(ctx, "ssh", user, "quota").Output()
