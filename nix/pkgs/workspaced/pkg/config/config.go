@@ -126,7 +126,8 @@ func (c *Config) UnmarshalKey(key string, val interface{}) error {
 		return fmt.Errorf("key not found: %s", key)
 	}
 
-	// Use json as a trick to unmarshal into the target type
+	// Use json as a hack to unmarshal into the target type from map[string]interface{}
+	// This avoids manual type assertion hell but incurs a performance cost.
 	data, err := json.Marshal(current)
 	if err != nil {
 		return err
