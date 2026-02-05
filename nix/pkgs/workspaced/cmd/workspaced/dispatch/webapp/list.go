@@ -5,6 +5,7 @@ import (
 	"workspaced/pkg/common"
 
 	"github.com/spf13/cobra"
+	"workspaced/pkg/config"
 )
 
 func init() {
@@ -13,7 +14,7 @@ func init() {
 			Use:   "list",
 			Short: "List configured webapps",
 			RunE: func(c *cobra.Command, args []string) error {
-				cfg, err := common.LoadConfig()
+				cfg, err := config.LoadConfig()
 				if err != nil {
 					return err
 				}

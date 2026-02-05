@@ -9,15 +9,16 @@ import (
 	"time"
 	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/notification"
+	"workspaced/pkg/config"
 )
 
 func Capture(ctx context.Context, area bool) (string, error) {
-	config, err := common.LoadConfig()
+	cfg, err := config.LoadConfig()
 	if err != nil {
 		return "", err
 	}
 
-	dir := config.Screenshot.Dir
+	dir := cfg.Screenshot.Dir
 	if err := os.MkdirAll(dir, 0755); err != nil {
 		return "", fmt.Errorf("failed to create screenshot dir: %w", err)
 	}

@@ -7,6 +7,7 @@ import (
 	"workspaced/pkg/drivers/wm"
 
 	"github.com/spf13/cobra"
+	"workspaced/pkg/config"
 )
 
 func init() {
@@ -16,13 +17,13 @@ func init() {
 			Short: "Workspace switcher",
 			RunE: func(c *cobra.Command, args []string) error {
 				move, _ := c.Flags().GetBool("move")
-				config, err := common.LoadConfig()
+				cfg, err := config.LoadConfig()
 				if err != nil {
 					return err
 				}
 
 				var keys []string
-				for k := range config.Workspaces {
+				for k := range cfg.Workspaces {
 					keys = append(keys, k)
 				}
 				sort.Strings(keys)
@@ -40,7 +41,7 @@ func init() {
 					return nil
 				}
 
-				workspaceNum, ok := config.Workspaces[selected]
+				workspaceNum, ok := cfg.Workspaces[selected]
 				if !ok {
 					return nil
 				}

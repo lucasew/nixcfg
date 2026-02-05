@@ -9,6 +9,7 @@ import (
 	"workspaced/pkg/common"
 
 	"github.com/spf13/cobra"
+	"workspaced/pkg/config"
 )
 
 func init() {
@@ -17,13 +18,13 @@ func init() {
 			Use:   "launch [name|url]",
 			Short: "Launch a webapp",
 			RunE: func(c *cobra.Command, args []string) error {
-				cfg, err := common.LoadConfig()
+				cfg, err := config.LoadConfig()
 				if err != nil {
 					return err
 				}
 
 				var url string
-				var wa common.WebappConfig
+				var wa config.WebappConfig
 				var found bool
 
 				if len(args) == 0 {
@@ -54,7 +55,7 @@ func init() {
 	})
 }
 
-func launchWebapp(ctx context.Context, url string, wa common.WebappConfig, engine string, isConfigured bool) error {
+func launchWebapp(ctx context.Context, url string, wa config.WebappConfig, engine string, isConfigured bool) error {
 	normalizedURL := common.NormalizeURL(url)
 	args := []string{"--app=" + normalizedURL}
 

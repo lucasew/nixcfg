@@ -5,15 +5,16 @@ import (
 	"fmt"
 	"net"
 	"workspaced/pkg/common"
+	"workspaced/pkg/config"
 )
 
 func Wake(ctx context.Context, host string) error {
-	config, err := common.LoadConfig()
+	cfg, err := config.LoadConfig()
 	if err != nil {
 		return err
 	}
 
-	hostCfg, ok := config.Hosts[host]
+	hostCfg, ok := cfg.Hosts[host]
 	macStr := ""
 	if !ok {
 		return fmt.Errorf("host %s not found in config", host)

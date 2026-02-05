@@ -7,16 +7,17 @@ import (
 	"path/filepath"
 	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/notification"
+	"workspaced/pkg/config"
 )
 
 func QuickSync(ctx context.Context) error {
-	config, err := common.LoadConfig()
+	cfg, err := config.LoadConfig()
 	if err != nil {
 		return err
 	}
 
 	logger := common.GetLogger(ctx)
-	repoDir := config.QuickSync.RepoDir
+	repoDir := cfg.QuickSync.RepoDir
 	entries, err := os.ReadDir(repoDir)
 	if err != nil {
 		return fmt.Errorf("failed to read repo dir %s: %w", repoDir, err)

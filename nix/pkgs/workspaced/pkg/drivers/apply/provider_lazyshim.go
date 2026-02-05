@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 	"workspaced/pkg/common"
+	"workspaced/pkg/config"
 )
 
 type LazyShimProvider struct{}
@@ -16,7 +17,7 @@ func (p *LazyShimProvider) Name() string {
 }
 
 func (p *LazyShimProvider) GetDesiredState(ctx context.Context) ([]DesiredState, error) {
-	cfg, err := common.LoadConfig()
+	cfg, err := config.LoadConfig()
 	if err != nil {
 		return nil, err
 	}
