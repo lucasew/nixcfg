@@ -13,12 +13,12 @@ import (
 )
 
 func Capture(ctx context.Context, area bool) (string, error) {
-	config, err := config.LoadConfig()
+	cfg, err := config.LoadConfig()
 	if err != nil {
 		return "", err
 	}
 
-	dir := config.Screenshot.Dir
+	dir := cfg.Screenshot.Dir
 	if err := os.MkdirAll(dir, 0755); err != nil {
 		return "", fmt.Errorf("failed to create screenshot dir: %w", err)
 	}

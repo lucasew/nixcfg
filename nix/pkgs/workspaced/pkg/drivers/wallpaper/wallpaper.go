@@ -16,11 +16,11 @@ import (
 func SetStatic(ctx context.Context, path string) error {
 	logger := common.GetLogger(ctx)
 	if path == "" {
-		config, err := config.LoadConfig()
+		cfg, err := config.LoadConfig()
 		if err != nil {
 			return err
 		}
-		wallpaperDir := config.Desktop.Wallpaper.Dir
+		wallpaperDir := cfg.Desktop.Wallpaper.Dir
 		files, _ := filepath.Glob(filepath.Join(wallpaperDir, "*"))
 		if len(files) == 0 {
 			return fmt.Errorf("no wallpapers found in %s", wallpaperDir)
