@@ -42,6 +42,9 @@ jobs:
       - name: Install mise
         uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3
 
+      - name: Trust mise config
+        run: mise trust
+
       - name: Install dependencies
         run: mise run install
 
@@ -64,5 +67,8 @@ jobs:
           branch: "autorelease/codegen"
           delete-branch: true
 
-      - name: Run CI
-        run: mise run ci
+      - name: Run Lint
+        run: mise run lint
+
+      - name: Run Test
+        run: mise run test
