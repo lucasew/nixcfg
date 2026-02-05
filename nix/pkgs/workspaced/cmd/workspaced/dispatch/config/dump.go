@@ -2,10 +2,10 @@ package config
 
 import (
 	"fmt"
-	"workspaced/pkg/common"
 
 	"github.com/BurntSushi/toml"
 	"github.com/spf13/cobra"
+	"workspaced/pkg/config"
 )
 
 func GetDumpCommand() *cobra.Command {
@@ -19,7 +19,7 @@ func GetDumpCommand() *cobra.Command {
 
 Outputs the result as TOML format.`,
 		RunE: func(c *cobra.Command, args []string) error {
-			cfg, err := common.LoadConfig()
+			cfg, err := config.LoadConfig()
 			if err != nil {
 				return fmt.Errorf("failed to load config: %w", err)
 			}

@@ -13,10 +13,11 @@ import (
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/drivers/sudo"
 	"workspaced/pkg/types"
+	"workspaced/pkg/config"
 )
 
 func RunFullBackup(ctx context.Context) error {
-	config, err := common.LoadConfig()
+	config, err := config.LoadConfig()
 	if err != nil {
 		return err
 	}
@@ -81,7 +82,7 @@ func RunFullBackup(ctx context.Context) error {
 }
 
 func Rsync(ctx context.Context, src, dst string, n *notification.Notification, extraArgs ...string) (string, error) {
-	config, _ := common.LoadConfig()
+	config, _ := config.LoadConfig()
 	remote := fmt.Sprintf("%s:%s", config.Backup.RsyncnetUser, dst)
 
 	common.GetLogger(ctx).Info("rsync sync", "from", src, "to", remote)
@@ -120,7 +121,7 @@ func Rsync(ctx context.Context, src, dst string, n *notification.Notification, e
 	return lastLine, err
 }
 
-func runPhoneBackup(ctx context.Context, config *common.GlobalConfig, updateProgress func(string), n *notification.Notification) error {
+func runPhoneBackup(ctx context.Context, config *config.GlobalConfig, updateProgress func(string), n *notification.Notification) error {
 	logger := common.GetLogger(ctx)
 	// Sync Camera and Pictures
 	logger.Info("syncing media and whatsapp")
@@ -162,7 +163,7 @@ func runPhoneBackup(ctx context.Context, config *common.GlobalConfig, updateProg
 	return err
 }
 
-func getRemoteStatus(ctx context.Context, config *common.GlobalConfig) (string, error) {
+func getRemoteStatus(ctx context.Context, config *config.GlobalConfig) (string, error) {
 	user := config.Backup.RsyncnetUser
 
 	// Get quota (raw)

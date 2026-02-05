@@ -7,10 +7,11 @@ import (
 	"path/filepath"
 	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/notification"
+	"workspaced/pkg/config"
 )
 
 func QuickSync(ctx context.Context) error {
-	config, err := common.LoadConfig()
+	config, err := config.LoadConfig()
 	if err != nil {
 		return err
 	}
