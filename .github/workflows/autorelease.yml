@@ -32,6 +32,12 @@ jobs:
       - name: Install mise
         uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3
 
+      - name: Trust mise config
+        run: |
+          mise trust
+          mise trust infra
+          mise trust nix/pkgs/workspaced
+
       - name: Install dependencies
         run: mise run install
 

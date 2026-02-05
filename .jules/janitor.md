@@ -41,3 +41,10 @@
 **Root Cause:** Leftover code from development/debugging that was not cleaned up.
 **Solution:** Removed the unused import and the dead code.
 **Pattern:** Always run linters (like `ruff`) on scripts to catch unused imports and clean up debug artifacts before committing.
+
+## 2026-02-05 - Fix CI Trust and Resource Exhaustion
+
+**Issue:** CI failed due to untrusted nested `mise.toml` files and potential timeouts in `test:nix`.
+**Root Cause:** `mise` requires explicit trust for nested configurations, which was missing in the workflow. `test:nix` is resource-intensive and was incorrectly included in the default `test` task.
+**Solution:** Added `mise trust` steps to `.github/workflows/autorelease.yml` and restricted `tasks.test` to depend only on `test:go`.
+**Pattern:** Explicitly trust all nested `mise.toml` files in CI and exclude heavy `nix flake check` from standard test suites.
