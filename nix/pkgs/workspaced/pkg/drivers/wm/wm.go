@@ -48,10 +48,16 @@ type Node struct {
 }
 
 // SwitchToWorkspace switches to the specified workspace number.
-// It uses exec.GetRPC to determine whether to use swaymsg or i3-msg.
+// It uses exec.GetRPC to determine whether to use swaymsg, i3-msg, or hyprctl.
 // If move is true, it moves the current container to that workspace instead of switching focus.
 func SwitchToWorkspace(ctx context.Context, num int, move bool) error {
 	rpc := exec.GetRPC(ctx)
+	if rpc == "hyprctl" {
+		if move {
+			return exec.RunCmd(ctx, rpc, "dispatch", "movetoworkspace", strconv.Itoa(num)).Run()
+		}
+		return exec.RunCmd(ctx, rpc, "dispatch", "workspace", strconv.Itoa(num)).Run()
+	}
 	if move {
 		return exec.RunCmd(ctx, rpc, "move", "container", "to", "workspace", "number", strconv.Itoa(num)).Run()
 	}
@@ -61,6 +67,9 @@ func SwitchToWorkspace(ctx context.Context, num int, move bool) error {
 // ToggleScratchpad toggles the visibility of the scratchpad container.
 func ToggleScratchpad(ctx context.Context) error {
 	rpc := exec.GetRPC(ctx)
+	if rpc == "hyprctl" {
+		return exec.RunCmd(ctx, rpc, "dispatch", "togglespecialworkspace").Run()
+	}
 	return exec.RunCmd(ctx, rpc, "scratchpad", "show").Run()
 }
 
@@ -204,6 +213,29 @@ func RotateWorkspaces(ctx context.Context) error {
 // GetFocusedOutput returns the name and geometry of the currently focused output.
 func GetFocusedOutput(ctx context.Context) (string, *Rect, error) {
 	rpc := exec.GetRPC(ctx)
+	if rpc == "hyprctl" {
+		out, err := exec.RunCmd(ctx, rpc, "monitors", "-j").Output()
+		if err != nil {
+			return "", nil, fmt.Errorf("failed to get hyprland monitors: %w", err)
+		}
+		var monitors []struct {
+			Name    string `json:"name"`
+			Focused bool   `json:"focused"`
+			X       int    `json:"x"`
+			Y       int    `json:"y"`
+			Width   int    `json:"width"`
+			Height  int    `json:"height"`
+		}
+		if err := json.Unmarshal(out, &monitors); err != nil {
+			return "", nil, fmt.Errorf("failed to unmarshal hyprland monitors: %w", err)
+		}
+		for _, m := range monitors {
+			if m.Focused {
+				return m.Name, &Rect{X: m.X, Y: m.Y, Width: m.Width, Height: m.Height}, nil
+			}
+		}
+		return "", nil, fmt.Errorf("no focused hyprland monitor found")
+	}
 	out, err := exec.RunCmd(ctx, rpc, "-t", "get_outputs").Output()
 	if err != nil {
 		return "", nil, fmt.Errorf("failed to get outputs: %w", err)
@@ -252,6 +284,23 @@ func GetFocusedOutput(ctx context.Context) (string, *Rect, error) {
 // GetFocusedWindowRect returns the geometry of the currently focused window.
 func GetFocusedWindowRect(ctx context.Context) (*Rect, error) {
 	rpc := exec.GetRPC(ctx)
+	if rpc == "hyprctl" {
+		out, err := exec.RunCmd(ctx, rpc, "activewindow", "-j").Output()
+		if err != nil {
+			return nil, fmt.Errorf("failed to get hyprland active window: %w", err)
+		}
+		var win struct {
+			At   []int `json:"at"`
+			Size []int `json:"size"`
+		}
+		if err := json.Unmarshal(out, &win); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal hyprland active window: %w", err)
+		}
+		if len(win.At) != 2 || len(win.Size) != 2 {
+			return nil, fmt.Errorf("invalid hyprland active window geometry")
+		}
+		return &Rect{X: win.At[0], Y: win.At[1], Width: win.Size[0], Height: win.Size[1]}, nil
+	}
 	out, err := exec.RunCmd(ctx, rpc, "-t", "get_tree").Output()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get tree: %w", err)

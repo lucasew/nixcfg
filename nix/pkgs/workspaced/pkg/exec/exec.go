@@ -45,14 +45,21 @@ func InheritContextWriters(ctx context.Context, cmd *exec.Cmd) {
 }
 
 // GetRPC determines the appropriate IPC command for the current window manager.
-// It checks for WAYLAND_DISPLAY to decide between "swaymsg" (Wayland) and "i3-msg" (X11).
+// It checks for HYPRLAND_INSTANCE_SIGNATURE for Hyprland,
+// and WAYLAND_DISPLAY to decide between "swaymsg" (Wayland) and "i3-msg" (X11).
 func GetRPC(ctx context.Context) string {
 	if env, ok := ctx.Value(types.EnvKey).([]string); ok {
 		for _, e := range env {
+			if strings.HasPrefix(e, "HYPRLAND_INSTANCE_SIGNATURE=") {
+				return "hyprctl"
+			}
 			if strings.HasPrefix(e, "WAYLAND_DISPLAY=") {
 				return "swaymsg"
 			}
 		}
+	}
+	if os.Getenv("HYPRLAND_INSTANCE_SIGNATURE") != "" {
+		return "hyprctl"
 	}
 	if os.Getenv("WAYLAND_DISPLAY") != "" {
 		return "swaymsg"

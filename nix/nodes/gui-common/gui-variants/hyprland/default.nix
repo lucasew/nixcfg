@@ -121,7 +121,8 @@
       pcmanfm
       playerctl
       brightnessctl
-      gscreenshot
+      grim
+      slurp
       xwaylandvideobridge
       wl-clipboard
       custom.rofi_wayland

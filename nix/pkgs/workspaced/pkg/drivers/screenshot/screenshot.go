@@ -40,7 +40,7 @@ func Capture(ctx context.Context, target Target) (string, error) {
 	path := filepath.Join(dir, filename)
 
 	rpc := exec.GetRPC(ctx)
-	if rpc == "swaymsg" {
+	if rpc == "swaymsg" || rpc == "hyprctl" {
 		return captureWayland(ctx, path, target)
 	}
 	return captureX11(ctx, path, target)

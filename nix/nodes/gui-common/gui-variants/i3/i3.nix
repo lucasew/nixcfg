@@ -42,6 +42,8 @@ in
         pulseaudio
         feh
         brightnessctl
+        maim
+        xclip
       ];
     };
     environment.etc."i3status".text =
