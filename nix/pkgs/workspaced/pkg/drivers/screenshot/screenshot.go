@@ -97,7 +97,7 @@ func captureWayland(ctx context.Context, path string, target Target) (string, er
 		_ = exec.RunCmd(ctx, "sh", "-c", fmt.Sprintf("wl-copy < %s", path)).Run()
 	}
 
-	notifySaved(ctx, path)
+	notifySaved(ctx, path, target)
 	return path, nil
 }
 
@@ -146,7 +146,7 @@ func captureX11(ctx context.Context, path string, target Target) (string, error)
 		_ = exec.RunCmd(ctx, "sh", "-c", fmt.Sprintf("xclip -selection clipboard -t image/png < %s", path)).Run()
 	}
 
-	notifySaved(ctx, path)
+	notifySaved(ctx, path, target)
 	return path, nil
 }
 
@@ -161,9 +161,21 @@ func notifyMissing(ctx context.Context, tool string) {
 	}
 }
 
-func notifySaved(ctx context.Context, path string) {
+func notifySaved(ctx context.Context, path string, target Target) {
+	strategy := "Unknown"
+	switch target {
+	case All:
+		strategy = "All screens"
+	case Output:
+		strategy = "Current monitor"
+	case Window:
+		strategy = "Current window"
+	case Selection:
+		strategy = "Selected area"
+	}
+
 	n := &notification.Notification{
-		Title:   "Screenshot Saved",
+		Title:   fmt.Sprintf("Screenshot Saved (%s)", strategy),
 		Message: path,
 		Icon:    "camera-photo",
 	}
