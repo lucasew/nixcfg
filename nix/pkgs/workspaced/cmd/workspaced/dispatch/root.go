@@ -10,7 +10,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"time"
-	wexec "workspaced/pkg/exec"
 	"workspaced/cmd/workspaced/dispatch/apply"
 	"workspaced/cmd/workspaced/dispatch/audio"
 	"workspaced/cmd/workspaced/dispatch/backup"
@@ -33,6 +32,7 @@ import (
 	"workspaced/cmd/workspaced/dispatch/webapp"
 	"workspaced/cmd/workspaced/dispatch/workspace"
 	"workspaced/cmd/workspaced/is"
+	wexec "workspaced/pkg/exec"
 	"workspaced/pkg/types"
 
 	"github.com/gorilla/websocket"

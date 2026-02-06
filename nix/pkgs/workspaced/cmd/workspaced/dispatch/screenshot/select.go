@@ -12,7 +12,7 @@ func init() {
 			Use:   "select",
 			Short: "Capture selected area",
 			RunE: func(c *cobra.Command, args []string) error {
-				_, err := screenshot.Capture(c.Context(), true)
+				_, err := screenshot.Capture(c.Context(), screenshot.Selection)
 				return err
 			},
 		})

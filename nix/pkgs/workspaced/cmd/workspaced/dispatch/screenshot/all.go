@@ -9,8 +9,8 @@ import (
 func init() {
 	Registry.Register(func(parent *cobra.Command) {
 		parent.AddCommand(&cobra.Command{
-			Use:   "full",
-			Short: "Capture full screen (all outputs)",
+			Use:   "all",
+			Short: "Capture all outputs",
 			RunE: func(c *cobra.Command, args []string) error {
 				_, err := screenshot.Capture(c.Context(), screenshot.All)
 				return err

@@ -15,6 +15,14 @@ import (
 	"workspaced/pkg/logging"
 )
 
+// Rect represents a geometry rectangle.
+type Rect struct {
+	X      int `json:"x"`
+	Y      int `json:"y"`
+	Width  int `json:"width"`
+	Height int `json:"height"`
+}
+
 // Workspace represents a workspace as returned by Sway/i3 IPC.
 type Workspace struct {
 	Name    string `json:"name"`
@@ -26,6 +34,17 @@ type Workspace struct {
 type Output struct {
 	Name             string `json:"name"`
 	CurrentWorkspace string `json:"current_workspace"`
+	Rect             Rect   `json:"rect"`
+	Focused          bool   `json:"focused"`
+}
+
+// Node represents a node in the Sway/i3 tree.
+// Only fields necessary for finding the focused window's geometry are defined.
+type Node struct {
+	Rect          Rect    `json:"rect"`
+	Focused       bool    `json:"focused"`
+	Nodes         []*Node `json:"nodes"`
+	FloatingNodes []*Node `json:"floating_nodes"`
 }
 
 // SwitchToWorkspace switches to the specified workspace number.
@@ -179,5 +198,91 @@ func RotateWorkspaces(ctx context.Context) error {
 		}
 	}
 
+	return nil
+}
+
+// GetFocusedOutput returns the name and geometry of the currently focused output.
+func GetFocusedOutput(ctx context.Context) (string, *Rect, error) {
+	rpc := exec.GetRPC(ctx)
+	out, err := exec.RunCmd(ctx, rpc, "-t", "get_outputs").Output()
+	if err != nil {
+		return "", nil, fmt.Errorf("failed to get outputs: %w", err)
+	}
+
+	var outputs []Output
+	if err := json.Unmarshal(out, &outputs); err != nil {
+		return "", nil, fmt.Errorf("failed to unmarshal outputs: %w", err)
+	}
+
+	for _, o := range outputs {
+		if o.Focused {
+			return o.Name, &o.Rect, nil
+		}
+	}
+
+	// Fallback: Check which workspace is focused, and return its output.
+	wsOut, err := exec.RunCmd(ctx, rpc, "-t", "get_workspaces").Output()
+	if err != nil {
+		return "", nil, fmt.Errorf("failed to get workspaces: %w", err)
+	}
+	var workspaces []Workspace
+	if err := json.Unmarshal(wsOut, &workspaces); err != nil {
+		return "", nil, fmt.Errorf("failed to unmarshal workspaces: %w", err)
+	}
+
+	var focusedOutputName string
+	for _, w := range workspaces {
+		if w.Focused {
+			focusedOutputName = w.Output
+			break
+		}
+	}
+
+	if focusedOutputName != "" {
+		for _, o := range outputs {
+			if o.Name == focusedOutputName {
+				return o.Name, &o.Rect, nil
+			}
+		}
+	}
+
+	return "", nil, fmt.Errorf("no focused output found")
+}
+
+// GetFocusedWindowRect returns the geometry of the currently focused window.
+func GetFocusedWindowRect(ctx context.Context) (*Rect, error) {
+	rpc := exec.GetRPC(ctx)
+	out, err := exec.RunCmd(ctx, rpc, "-t", "get_tree").Output()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get tree: %w", err)
+	}
+
+	var root Node
+	if err := json.Unmarshal(out, &root); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal tree: %w", err)
+	}
+
+	found := findFocusedNode(&root)
+	if found != nil {
+		return &found.Rect, nil
+	}
+
+	return nil, fmt.Errorf("no focused window found")
+}
+
+func findFocusedNode(node *Node) *Node {
+	if node.Focused {
+		return node
+	}
+	for _, n := range node.Nodes {
+		if found := findFocusedNode(n); found != nil {
+			return found
+		}
+	}
+	for _, n := range node.FloatingNodes {
+		if found := findFocusedNode(n); found != nil {
+			return found
+		}
+	}
 	return nil
 }
