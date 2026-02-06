@@ -58,4 +58,4 @@ jobs:
           delete-branch: true
 
       - name: Run CI
-        run: mise run ci
+        run: mise run --jobs 2 ci

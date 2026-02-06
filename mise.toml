@@ -28,7 +28,7 @@ run = "mise exec ruff -- ruff check ."
 [tasks."lint:go"]
 description = "Lint Go files"
 dir = "nix/pkgs/workspaced"
-run = "mise exec -- golangci-lint run --timeout 10m ./..."
+run = "mise exec -- golangci-lint run --timeout 10m --concurrency 2 ./..."
 
 [tasks."lint:tf"]
 description = "Lint Terraform files"
@@ -75,7 +75,7 @@ run = "command -v nix >/dev/null && nix --accept-flake-config --extra-experiment
 [tasks."test:go"]
 description = "Test Go code"
 dir = "nix/pkgs/workspaced"
-run = "mise exec -- go test ./..."
+run = "mise exec -- go test -p 2 ./..."
 
 [tasks.codegen]
 description = "Generate code"
