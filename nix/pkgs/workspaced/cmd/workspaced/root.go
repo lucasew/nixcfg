@@ -15,10 +15,9 @@ import (
 	"workspaced/cmd/workspaced/is"
 	"workspaced/cmd/workspaced/launch"
 	"workspaced/cmd/workspaced/svc"
-  "workspaced/pkg/shellgen"
+	"workspaced/pkg/shellgen"
 
 	"github.com/spf13/cobra"
-
 )
 
 func NewRootCommand() *cobra.Command {

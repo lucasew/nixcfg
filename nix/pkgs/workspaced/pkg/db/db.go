@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"workspaced/pkg/db/sqlc"
 	"workspaced/pkg/env"
-	"workspaced/pkg/types"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/types"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite"

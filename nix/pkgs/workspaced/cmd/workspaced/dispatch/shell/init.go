@@ -9,8 +9,8 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"workspaced/pkg/version"
 	"workspaced/pkg/shellgen"
+	"workspaced/pkg/version"
 
 	"github.com/spf13/cobra"
 )
