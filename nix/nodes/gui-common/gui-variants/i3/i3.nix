@@ -253,8 +253,10 @@ in
         bindsym $mod+Shift+b exec workspaced dispatch workspace next --move
 
 
-        bindsym --release Print exec workspaced dispatch screenshot full
+        bindsym --release Print exec workspaced dispatch screenshot output
         bindsym $mod+Print exec workspaced dispatch screenshot select
+        bindsym $mod+Shift+Print exec workspaced dispatch screenshot window
+        bindsym $mod+Ctrl+Shift+Print exec workspaced dispatch screenshot all
 
         exec --no-startup-id ${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1
 
