@@ -1,4 +1,4 @@
-package prelude
+package shellgen
 
 // GenerateDaemon generates daemon startup code
 func GenerateDaemon() (string, error) {
