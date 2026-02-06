@@ -312,7 +312,6 @@ func LoadConfig() (*GlobalConfig, error) {
 	return &config, nil
 }
 
-
 func (c *Config) UnmarshalKey(key string, val interface{}) error {
 	parts := strings.Split(key, ".")
 	var current interface{} = c.raw

@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 	"workspaced/pkg/common"
+	"workspaced/pkg/config"
 	"workspaced/pkg/drivers/git"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/drivers/sudo"
 	"workspaced/pkg/types"
-	"workspaced/pkg/config"
 )
 
 func RunFullBackup(ctx context.Context) error {

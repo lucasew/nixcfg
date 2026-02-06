@@ -3,6 +3,8 @@
 shfmt = "3.12.0"
 shellcheck = "0.11.0"
 ruff = "0.15.0"
+terraform = "1.9.0"
+tflint = "0.60.0"
 
 [tasks.lint]
 description = "Run all linters"
@@ -15,8 +17,8 @@ run = "command -v nix >/dev/null && nix fmt -- --check || echo 'Nix not found, s
 [tasks."lint:sh"]
 description = "Lint Shell scripts"
 run = """
-    mise exec shfmt shellcheck -- shfmt -d .
-    mise exec shfmt shellcheck -- shfmt -f=0 . | xargs -0 -r mise exec shellcheck -- shellcheck
+    mise exec -- shfmt -d .
+    mise exec -- bash -c 'shfmt -f=0 . | xargs -0 -r shellcheck'
 """
 
 [tasks."lint:py"]
@@ -99,7 +101,10 @@ run = "echo 'Managed by Nix'"
 
 [tasks."install:tools"]
 description = "Install Mise tools"
-run = "mise install"
+run = """
+    mise install
+    mise install -C nix/pkgs/workspaced
+"""
 
 [tasks.ci]
 description = "Run CI pipeline locally"
