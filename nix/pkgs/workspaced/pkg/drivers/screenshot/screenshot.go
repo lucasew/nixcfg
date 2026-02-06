@@ -71,19 +71,25 @@ func captureWayland(ctx context.Context, path string, target Target) (string, er
 	case Selection:
 		if !exec.IsBinaryAvailable(ctx, "slurp") {
 			notifyMissing(ctx, "slurp")
-			return "", fmt.Errorf("slurp not found")
+			return "", fmt.Errorf("screenshot: slurp binary not found in PATH")
 		}
-		out, err := exec.RunCmd(ctx, "slurp").Output()
+		out, err := exec.RunCmd(ctx, "slurp").CombinedOutput()
 		if err != nil {
-			return "", err
+			// Se o usuário cancelar a seleção, o slurp sai com status 1.
+			// Não queremos tratar isso como um erro catastrófico.
+			if len(out) == 0 {
+				return "", nil
+			}
+			return "", fmt.Errorf("slurp failed: %w (output: %q)", err, string(out))
 		}
 		args = append(args, "-g", strings.TrimSpace(string(out)))
 	}
 
 	args = append(args, path)
 
-	if err := exec.RunCmd(ctx, "grim", args...).Run(); err != nil {
-		return "", err
+	cmdGrim := exec.RunCmd(ctx, "grim", args...)
+	if out, err := cmdGrim.CombinedOutput(); err != nil {
+		return "", fmt.Errorf("grim failed to capture: %w (output: %q, command: grim %s)", err, string(out), strings.Join(args, " "))
 	}
 
 	// Copy to clipboard
@@ -118,13 +124,21 @@ func captureX11(ctx context.Context, path string, target Target) (string, error)
 		}
 		args = append(args, "-g", fmt.Sprintf("%dx%d+%d+%d", rect.Width, rect.Height, rect.X, rect.Y))
 	case Selection:
-		args = append(args, "-s")
+		out, err := exec.RunCmd(ctx, "maim", "-s").CombinedOutput()
+		if err != nil {
+			if len(out) == 0 {
+				return "", nil // Provável cancelamento
+			}
+			return "", fmt.Errorf("maim selection failed: %w (output: %q)", err, string(out))
+		}
+		args = append(args, "-g", strings.TrimSpace(string(out)))
 	}
 
 	args = append(args, path)
 
-	if err := exec.RunCmd(ctx, "maim", args...).Run(); err != nil {
-		return "", err
+	cmdMaim := exec.RunCmd(ctx, "maim", args...)
+	if out, err := cmdMaim.CombinedOutput(); err != nil {
+		return "", fmt.Errorf("maim failed to capture: %w (output: %q, command: maim %s)", err, string(out), strings.Join(args, " "))
 	}
 
 	// Copy to clipboard

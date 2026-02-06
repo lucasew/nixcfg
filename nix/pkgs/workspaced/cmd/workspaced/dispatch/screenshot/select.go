@@ -16,7 +16,9 @@ func init() {
 				if err != nil {
 					return err
 				}
-				c.Println(path)
+				if path != "" {
+					c.Println(path)
+				}
 				return nil
 			},
 		})

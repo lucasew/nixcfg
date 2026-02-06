@@ -25,6 +25,7 @@ func NewRootCommand() *cobra.Command {
 		Use:   "workspaced",
 		Short: "Workspace daemon and client",
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+
 			// Ensure logs go to stderr so stdout stays clean for piping/capturing
 			slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, nil)))
 
