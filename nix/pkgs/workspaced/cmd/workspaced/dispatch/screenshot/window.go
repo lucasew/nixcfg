@@ -12,8 +12,12 @@ func init() {
 			Use:   "window",
 			Short: "Capture current window",
 			RunE: func(c *cobra.Command, args []string) error {
-				_, err := screenshot.Capture(c.Context(), screenshot.Window)
-				return err
+				path, err := screenshot.Capture(c.Context(), screenshot.Window)
+				if err != nil {
+					return err
+				}
+				c.Println(path)
+				return nil
 			},
 		})
 	})

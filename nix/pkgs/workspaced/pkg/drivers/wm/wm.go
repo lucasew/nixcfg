@@ -2,7 +2,6 @@ package wm
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -11,70 +10,55 @@ import (
 	"time"
 
 	"workspaced/pkg/drivers/media"
+	"workspaced/pkg/drivers/wm/api"
+	"workspaced/pkg/drivers/wm/hyprland"
+	"workspaced/pkg/drivers/wm/i3ipc"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
 )
 
-// Rect represents a geometry rectangle.
-type Rect struct {
-	X      int `json:"x"`
-	Y      int `json:"y"`
-	Width  int `json:"width"`
-	Height int `json:"height"`
-}
+// Re-export types for backward compatibility within the wm package if needed,
+// but external packages should ideally use wm.Rect etc.
+// We alias them here to keep the wm API surface the same.
+type Rect = api.Rect
+type Workspace = api.Workspace
+type Output = api.Output
+type Node = api.Node
+type Driver = api.Driver
 
-// Workspace represents a workspace as returned by Sway/i3 IPC.
-type Workspace struct {
-	Name    string `json:"name"`
-	Focused bool   `json:"focused"`
-	Output  string `json:"output"`
-}
-
-// Output represents a display output as returned by Sway/i3 IPC.
-type Output struct {
-	Name             string `json:"name"`
-	CurrentWorkspace string `json:"current_workspace"`
-	Rect             Rect   `json:"rect"`
-	Focused          bool   `json:"focused"`
-}
-
-// Node represents a node in the Sway/i3 tree.
-// Only fields necessary for finding the focused window's geometry are defined.
-type Node struct {
-	Rect          Rect    `json:"rect"`
-	Focused       bool    `json:"focused"`
-	Nodes         []*Node `json:"nodes"`
-	FloatingNodes []*Node `json:"floating_nodes"`
+// GetDriver returns the appropriate WM driver for the current environment.
+func GetDriver(ctx context.Context) (api.Driver, error) {
+	rpc := exec.GetRPC(ctx)
+	switch rpc {
+	case "hyprctl":
+		return &hyprland.Driver{}, nil
+	case "swaymsg":
+		return &i3ipc.Driver{Binary: "swaymsg"}, nil
+	case "i3-msg":
+		return &i3ipc.Driver{Binary: "i3-msg"}, nil
+	}
+	return nil, fmt.Errorf("no suitable WM driver found for RPC: %s", rpc)
 }
 
 // SwitchToWorkspace switches to the specified workspace number.
-// It uses exec.GetRPC to determine whether to use swaymsg, i3-msg, or hyprctl.
-// If move is true, it moves the current container to that workspace instead of switching focus.
 func SwitchToWorkspace(ctx context.Context, num int, move bool) error {
-	rpc := exec.GetRPC(ctx)
-	if rpc == "hyprctl" {
-		if move {
-			return exec.RunCmd(ctx, rpc, "dispatch", "movetoworkspace", strconv.Itoa(num)).Run()
-		}
-		return exec.RunCmd(ctx, rpc, "dispatch", "workspace", strconv.Itoa(num)).Run()
+	d, err := GetDriver(ctx)
+	if err != nil {
+		return err
 	}
-	if move {
-		return exec.RunCmd(ctx, rpc, "move", "container", "to", "workspace", "number", strconv.Itoa(num)).Run()
-	}
-	return exec.RunCmd(ctx, rpc, "workspace", "number", strconv.Itoa(num)).Run()
+	return d.SwitchToWorkspace(ctx, num, move)
 }
 
 // ToggleScratchpad toggles the visibility of the scratchpad container.
 func ToggleScratchpad(ctx context.Context) error {
-	rpc := exec.GetRPC(ctx)
-	if rpc == "hyprctl" {
-		return exec.RunCmd(ctx, rpc, "dispatch", "togglespecialworkspace").Run()
+	d, err := GetDriver(ctx)
+	if err != nil {
+		return err
 	}
-	return exec.RunCmd(ctx, rpc, "scratchpad", "show").Run()
+	return d.ToggleScratchpad(ctx)
 }
 
 // ToggleScratchpadWithInfo toggles the scratchpad and shows a media status notification.
-// This is useful for visual feedback when toggling the scratchpad.
 func ToggleScratchpadWithInfo(ctx context.Context) error {
 	if err := ToggleScratchpad(ctx); err != nil {
 		return err
@@ -86,10 +70,6 @@ func ToggleScratchpadWithInfo(ctx context.Context) error {
 }
 
 // NextWorkspace switches to (or moves the container to) the next available workspace.
-// It maintains a counter in XDG_RUNTIME_DIR/workspaced/last_ws to ensure unique,
-// monotonically increasing workspace numbers until the system (or runtime dir) resets.
-//
-// The counter starts at 10 and increments with each call.
 func NextWorkspace(ctx context.Context, move bool) error {
 	runtimeDir := os.Getenv("XDG_RUNTIME_DIR")
 	if runtimeDir == "" {
@@ -117,26 +97,14 @@ func NextWorkspace(ctx context.Context, move bool) error {
 }
 
 // RotateWorkspaces rotates the visible workspaces across all connected outputs.
-// It effectively shifts the workspace on output A to output B, B to C, etc.
-// This creates a "carousel" effect for workspaces.
-//
-// The function:
-// 1. Fetches current workspaces and outputs via IPC.
-// 2. Maps outputs to their currently visible workspace.
-// 3. Rotates the list of screens.
-// 4. Moves workspaces to their new target screens.
-// 5. Restores focus to the originally focused workspace.
 func RotateWorkspaces(ctx context.Context) error {
-	rpc := exec.GetRPC(ctx)
-
-	// Get Workspaces
-	out, err := exec.RunCmd(ctx, rpc, "-t", "get_workspaces").Output()
+	d, err := GetDriver(ctx)
 	if err != nil {
 		return err
 	}
-	var workspaces []Workspace
-	if err := json.Unmarshal(out, &workspaces); err != nil {
-		logging.ReportError(ctx, err)
+
+	workspaces, err := d.GetWorkspaces(ctx)
+	if err != nil {
 		return err
 	}
 
@@ -148,14 +116,8 @@ func RotateWorkspaces(ctx context.Context) error {
 		}
 	}
 
-	// Get Outputs
-	out, err = exec.RunCmd(ctx, rpc, "-t", "get_outputs").Output()
+	outputs, err := d.GetOutputs(ctx)
 	if err != nil {
-		return err
-	}
-	var outputs []Output
-	if err := json.Unmarshal(out, &outputs); err != nil {
-		logging.ReportError(ctx, err)
 		return err
 	}
 
@@ -184,25 +146,33 @@ func RotateWorkspaces(ctx context.Context) error {
 		toScreen := screens[i]
 		ws := workspaceScreens[fromScreen]
 
-		if err := exec.RunCmd(ctx, rpc, "workspace", "number", ws).Run(); err != nil {
+		if err := d.SwitchToWorkspace(ctx, parseWS(ws), false); err != nil {
 			logging.ReportError(ctx, err)
 		}
 		time.Sleep(100 * time.Millisecond)
-		if err := exec.RunCmd(ctx, rpc, "move", "workspace", "to", "output", toScreen).Run(); err != nil {
-			logging.ReportError(ctx, err)
+
+		rpc := exec.GetRPC(ctx)
+		if rpc == "hyprctl" {
+			if err := exec.RunCmd(ctx, rpc, "dispatch", "moveworkspacetomonitor", ws, toScreen).Run(); err != nil {
+				logging.ReportError(ctx, err)
+			}
+		} else {
+			if err := exec.RunCmd(ctx, rpc, "move", "workspace", "to", "output", toScreen).Run(); err != nil {
+				logging.ReportError(ctx, err)
+			}
 		}
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	for _, ws := range workspaceScreens {
-		if err := exec.RunCmd(ctx, rpc, "workspace", "number", ws).Run(); err != nil {
+		if err := d.SwitchToWorkspace(ctx, parseWS(ws), false); err != nil {
 			logging.ReportError(ctx, err)
 		}
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	if focusedWorkspace != "" {
-		if err := exec.RunCmd(ctx, rpc, "workspace", "number", focusedWorkspace).Run(); err != nil {
+		if err := d.SwitchToWorkspace(ctx, parseWS(focusedWorkspace), false); err != nil {
 			logging.ReportError(ctx, err)
 		}
 	}
@@ -210,128 +180,25 @@ func RotateWorkspaces(ctx context.Context) error {
 	return nil
 }
 
+func parseWS(ws string) int {
+	val, _ := strconv.Atoi(ws)
+	return val
+}
+
 // GetFocusedOutput returns the name and geometry of the currently focused output.
-func GetFocusedOutput(ctx context.Context) (string, *Rect, error) {
-	rpc := exec.GetRPC(ctx)
-	if rpc == "hyprctl" {
-		out, err := exec.RunCmd(ctx, rpc, "monitors", "-j").Output()
-		if err != nil {
-			return "", nil, fmt.Errorf("failed to get hyprland monitors: %w", err)
-		}
-		var monitors []struct {
-			Name    string `json:"name"`
-			Focused bool   `json:"focused"`
-			X       int    `json:"x"`
-			Y       int    `json:"y"`
-			Width   int    `json:"width"`
-			Height  int    `json:"height"`
-		}
-		if err := json.Unmarshal(out, &monitors); err != nil {
-			return "", nil, fmt.Errorf("failed to unmarshal hyprland monitors: %w", err)
-		}
-		for _, m := range monitors {
-			if m.Focused {
-				return m.Name, &Rect{X: m.X, Y: m.Y, Width: m.Width, Height: m.Height}, nil
-			}
-		}
-		return "", nil, fmt.Errorf("no focused hyprland monitor found")
-	}
-	out, err := exec.RunCmd(ctx, rpc, "-t", "get_outputs").Output()
+func GetFocusedOutput(ctx context.Context) (string, *api.Rect, error) {
+	d, err := GetDriver(ctx)
 	if err != nil {
-		return "", nil, fmt.Errorf("failed to get outputs: %w", err)
+		return "", nil, err
 	}
-
-	var outputs []Output
-	if err := json.Unmarshal(out, &outputs); err != nil {
-		return "", nil, fmt.Errorf("failed to unmarshal outputs: %w", err)
-	}
-
-	for _, o := range outputs {
-		if o.Focused {
-			return o.Name, &o.Rect, nil
-		}
-	}
-
-	// Fallback: Check which workspace is focused, and return its output.
-	wsOut, err := exec.RunCmd(ctx, rpc, "-t", "get_workspaces").Output()
-	if err != nil {
-		return "", nil, fmt.Errorf("failed to get workspaces: %w", err)
-	}
-	var workspaces []Workspace
-	if err := json.Unmarshal(wsOut, &workspaces); err != nil {
-		return "", nil, fmt.Errorf("failed to unmarshal workspaces: %w", err)
-	}
-
-	var focusedOutputName string
-	for _, w := range workspaces {
-		if w.Focused {
-			focusedOutputName = w.Output
-			break
-		}
-	}
-
-	if focusedOutputName != "" {
-		for _, o := range outputs {
-			if o.Name == focusedOutputName {
-				return o.Name, &o.Rect, nil
-			}
-		}
-	}
-
-	return "", nil, fmt.Errorf("no focused output found")
+	return d.GetFocusedOutput(ctx)
 }
 
 // GetFocusedWindowRect returns the geometry of the currently focused window.
-func GetFocusedWindowRect(ctx context.Context) (*Rect, error) {
-	rpc := exec.GetRPC(ctx)
-	if rpc == "hyprctl" {
-		out, err := exec.RunCmd(ctx, rpc, "activewindow", "-j").Output()
-		if err != nil {
-			return nil, fmt.Errorf("failed to get hyprland active window: %w", err)
-		}
-		var win struct {
-			At   []int `json:"at"`
-			Size []int `json:"size"`
-		}
-		if err := json.Unmarshal(out, &win); err != nil {
-			return nil, fmt.Errorf("failed to unmarshal hyprland active window: %w", err)
-		}
-		if len(win.At) != 2 || len(win.Size) != 2 {
-			return nil, fmt.Errorf("invalid hyprland active window geometry")
-		}
-		return &Rect{X: win.At[0], Y: win.At[1], Width: win.Size[0], Height: win.Size[1]}, nil
-	}
-	out, err := exec.RunCmd(ctx, rpc, "-t", "get_tree").Output()
+func GetFocusedWindowRect(ctx context.Context) (*api.Rect, error) {
+	d, err := GetDriver(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get tree: %w", err)
+		return nil, err
 	}
-
-	var root Node
-	if err := json.Unmarshal(out, &root); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal tree: %w", err)
-	}
-
-	found := findFocusedNode(&root)
-	if found != nil {
-		return &found.Rect, nil
-	}
-
-	return nil, fmt.Errorf("no focused window found")
-}
-
-func findFocusedNode(node *Node) *Node {
-	if node.Focused {
-		return node
-	}
-	for _, n := range node.Nodes {
-		if found := findFocusedNode(n); found != nil {
-			return found
-		}
-	}
-	for _, n := range node.FloatingNodes {
-		if found := findFocusedNode(n); found != nil {
-			return found
-		}
-	}
-	return nil
+	return d.GetFocusedWindowRect(ctx)
 }

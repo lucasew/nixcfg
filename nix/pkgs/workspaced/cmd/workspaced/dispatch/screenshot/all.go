@@ -12,8 +12,12 @@ func init() {
 			Use:   "all",
 			Short: "Capture all outputs",
 			RunE: func(c *cobra.Command, args []string) error {
-				_, err := screenshot.Capture(c.Context(), screenshot.All)
-				return err
+				path, err := screenshot.Capture(c.Context(), screenshot.All)
+				if err != nil {
+					return err
+				}
+				c.Println(path)
+				return nil
 			},
 		})
 	})
