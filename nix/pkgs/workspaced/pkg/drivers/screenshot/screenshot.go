@@ -3,6 +3,8 @@ package screenshot
 import (
 	"context"
 	"fmt"
+	"image"
+	_ "image/png"
 	"os"
 	"path/filepath"
 	"strings"
@@ -153,7 +155,13 @@ func copyFileToClipboard(ctx context.Context, path string) {
 	}
 	defer file.Close()
 
-	if err := clipboard.WriteImageReader(ctx, file); err != nil {
+	img, _, err := image.Decode(file)
+	if err != nil {
+		logging.ReportError(ctx, fmt.Errorf("failed to decode screenshot for clipboard: %w", err))
+		return
+	}
+
+	if err := clipboard.WriteImage(ctx, img); err != nil {
 		logging.ReportError(ctx, err)
 	}
 }

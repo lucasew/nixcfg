@@ -3,14 +3,14 @@ package termux
 import (
 	"context"
 	"fmt"
-	"io"
+	"image"
 	"strings"
 	"workspaced/pkg/exec"
 )
 
 type Driver struct{}
 
-func (d *Driver) WriteImageReader(ctx context.Context, r io.Reader) error {
+func (d *Driver) WriteImage(ctx context.Context, img image.Image) error {
 	return fmt.Errorf("writing images to clipboard is not supported on Termux")
 }
 

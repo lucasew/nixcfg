@@ -3,6 +3,8 @@ package wlcopy
 import (
 	"context"
 	"fmt"
+	"image"
+	"image/png"
 	"io"
 	"strings"
 	"workspaced/pkg/exec"
@@ -10,12 +12,18 @@ import (
 
 type Driver struct{}
 
-func (d *Driver) WriteImageReader(ctx context.Context, r io.Reader) error {
+func (d *Driver) WriteImage(ctx context.Context, img image.Image) error {
 	if !exec.IsBinaryAvailable(ctx, "wl-copy") {
 		return fmt.Errorf("wl-copy not found")
 	}
+	pr, pw := io.Pipe()
+	go func() {
+		_ = png.Encode(pw, img)
+		_ = pw.Close()
+	}()
+
 	cmd := exec.RunCmd(ctx, "wl-copy", "-t", "image/png")
-	cmd.Stdin = r
+	cmd.Stdin = pr
 	return cmd.Run()
 }
 

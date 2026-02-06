@@ -2,10 +2,10 @@ package api
 
 import (
 	"context"
-	"io"
+	"image"
 )
 
 type Driver interface {
-	WriteImageReader(ctx context.Context, r io.Reader) error
+	WriteImage(ctx context.Context, img image.Image) error
 	WriteText(ctx context.Context, text string) error
 }
