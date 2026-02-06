@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	dapi "workspaced/pkg/drivers/api"
 	"workspaced/pkg/drivers/wm/api"
 	"workspaced/pkg/exec"
 )
@@ -27,11 +28,11 @@ func (d *Driver) ToggleScratchpad(ctx context.Context) error {
 func (d *Driver) GetOutputs(ctx context.Context) ([]api.Output, error) {
 	out, err := exec.RunCmd(ctx, d.Binary, "-t", "get_outputs").Output()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
 	var outputs []api.Output
 	if err := json.Unmarshal(out, &outputs); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
 	return outputs, nil
 }
@@ -39,11 +40,11 @@ func (d *Driver) GetOutputs(ctx context.Context) ([]api.Output, error) {
 func (d *Driver) GetWorkspaces(ctx context.Context) ([]api.Workspace, error) {
 	out, err := exec.RunCmd(ctx, d.Binary, "-t", "get_workspaces").Output()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
 	var workspaces []api.Workspace
 	if err := json.Unmarshal(out, &workspaces); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
 	return workspaces, nil
 }
@@ -81,18 +82,18 @@ func (d *Driver) GetFocusedOutput(ctx context.Context) (string, *api.Rect, error
 		}
 	}
 
-	return "", nil, fmt.Errorf("no focused output found")
+	return "", nil, dapi.ErrNoFocusedOutput
 }
 
 func (d *Driver) GetFocusedWindowRect(ctx context.Context) (*api.Rect, error) {
 	out, err := exec.RunCmd(ctx, d.Binary, "-t", "get_tree").Output()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
 
 	var root api.Node
 	if err := json.Unmarshal(out, &root); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
 
 	found := findFocusedNode(&root)
@@ -100,7 +101,7 @@ func (d *Driver) GetFocusedWindowRect(ctx context.Context) (*api.Rect, error) {
 		return &found.Rect, nil
 	}
 
-	return nil, fmt.Errorf("no focused window found")
+	return nil, dapi.ErrNoFocusedWindow
 }
 
 func findFocusedNode(node *api.Node) *api.Node {

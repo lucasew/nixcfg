@@ -3,7 +3,10 @@ package api
 import (
 	"context"
 	"image"
+	"workspaced/pkg/drivers/api"
 )
+
+var ErrDriverNotFound = api.ErrDriverNotFound
 
 type Driver interface {
 	WriteImage(ctx context.Context, img image.Image) error

@@ -2,7 +2,6 @@ package screen
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"strings"
 	"workspaced/pkg/exec"
@@ -29,7 +28,7 @@ func GetDriver(ctx context.Context) (Driver, error) {
 	if display != "" {
 		return &X11Driver{}, nil
 	}
-	return nil, fmt.Errorf("no suitable screen driver found")
+	return nil, ErrDriverNotFound
 }
 
 func Lock(ctx context.Context) error {

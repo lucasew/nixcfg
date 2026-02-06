@@ -7,6 +7,7 @@ import (
 	"image/png"
 	"io"
 	"strings"
+	dapi "workspaced/pkg/drivers/api"
 	"workspaced/pkg/exec"
 )
 
@@ -14,7 +15,7 @@ type Driver struct{}
 
 func (d *Driver) WriteImage(ctx context.Context, img image.Image) error {
 	if !exec.IsBinaryAvailable(ctx, "xclip") {
-		return fmt.Errorf("xclip not found")
+		return fmt.Errorf("%w: xclip", dapi.ErrBinaryNotFound)
 	}
 	pr, pw := io.Pipe()
 	go func() {
@@ -29,7 +30,7 @@ func (d *Driver) WriteImage(ctx context.Context, img image.Image) error {
 
 func (d *Driver) WriteText(ctx context.Context, text string) error {
 	if !exec.IsBinaryAvailable(ctx, "xclip") {
-		return fmt.Errorf("xclip not found")
+		return fmt.Errorf("%w: xclip", dapi.ErrBinaryNotFound)
 	}
 	cmd := exec.RunCmd(ctx, "xclip", "-selection", "clipboard")
 	cmd.Stdin = strings.NewReader(text)

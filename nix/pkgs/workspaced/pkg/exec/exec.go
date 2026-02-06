@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"workspaced/pkg/drivers/api"
 	"workspaced/pkg/types"
 
 	_ "workspaced/pkg/env" // Ensure PATH is set up
@@ -74,7 +75,7 @@ func Which(ctx context.Context, name string) (string, error) {
 		if _, err := os.Stat(name); err == nil {
 			return name, nil
 		}
-		return "", fmt.Errorf("file not found: %s", name)
+		return "", fmt.Errorf("%w: %s", api.ErrBinaryNotFound, name)
 	}
 
 	path := os.Getenv("PATH")
@@ -93,7 +94,7 @@ func Which(ctx context.Context, name string) (string, error) {
 			return fullPath, nil
 		}
 	}
-	return "", fmt.Errorf("%w: %s", ErrCommandNotFound, name)
+	return "", fmt.Errorf("%w: %s", api.ErrBinaryNotFound, name)
 }
 
 // IsBinaryAvailable checks if a command exists in the PATH using the internal Which implementation.

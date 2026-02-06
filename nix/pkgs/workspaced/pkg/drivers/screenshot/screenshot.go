@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"workspaced/pkg/config"
+	dapi "workspaced/pkg/drivers/api"
 	"workspaced/pkg/drivers/clipboard"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/drivers/wm"
@@ -52,7 +53,7 @@ func Capture(ctx context.Context, target Target) (string, error) {
 func captureWayland(ctx context.Context, path string, target Target) (string, error) {
 	if !exec.IsBinaryAvailable(ctx, "grim") {
 		notifyMissing(ctx, "grim")
-		return "", fmt.Errorf("grim not found")
+		return "", fmt.Errorf("%w: grim", dapi.ErrBinaryNotFound)
 	}
 
 	args := []string{}
@@ -62,28 +63,26 @@ func captureWayland(ctx context.Context, path string, target Target) (string, er
 	case Output:
 		name, _, err := wm.GetFocusedOutput(ctx)
 		if err != nil {
-			return "", fmt.Errorf("failed to get focused output: %w", err)
+			return "", err
 		}
 		args = append(args, "-o", name)
 	case Window:
 		rect, err := wm.GetFocusedWindowRect(ctx)
 		if err != nil {
-			return "", fmt.Errorf("failed to get focused window rect: %w", err)
+			return "", err
 		}
 		args = append(args, "-g", fmt.Sprintf("%d,%d %dx%d", rect.X, rect.Y, rect.Width, rect.Height))
 	case Selection:
 		if !exec.IsBinaryAvailable(ctx, "slurp") {
 			notifyMissing(ctx, "slurp")
-			return "", fmt.Errorf("screenshot: slurp binary not found in PATH")
+			return "", fmt.Errorf("%w: slurp", dapi.ErrBinaryNotFound)
 		}
 		out, err := exec.RunCmd(ctx, "slurp").CombinedOutput()
 		if err != nil {
-			// Se o usuário cancelar a seleção, o slurp sai com status 1.
-			// Não queremos tratar isso como um erro catastrófico.
 			if len(out) == 0 {
-				return "", nil
+				return "", dapi.ErrCanceled
 			}
-			return "", fmt.Errorf("slurp failed: %w (output: %q)", err, string(out))
+			return "", fmt.Errorf("%w: slurp failed (output: %q)", dapi.ErrIPC, string(out))
 		}
 		args = append(args, "-g", strings.TrimSpace(string(out)))
 	}
@@ -92,7 +91,7 @@ func captureWayland(ctx context.Context, path string, target Target) (string, er
 
 	cmdGrim := exec.RunCmd(ctx, "grim", args...)
 	if out, err := cmdGrim.CombinedOutput(); err != nil {
-		return "", fmt.Errorf("grim failed to capture: %w (output: %q, command: grim %s)", err, string(out), strings.Join(args, " "))
+		return "", fmt.Errorf("%w: grim failed (output: %q)", dapi.ErrIPC, string(out))
 	}
 
 	copyFileToClipboard(ctx, path)
@@ -104,7 +103,7 @@ func captureWayland(ctx context.Context, path string, target Target) (string, er
 func captureX11(ctx context.Context, path string, target Target) (string, error) {
 	if !exec.IsBinaryAvailable(ctx, "maim") {
 		notifyMissing(ctx, "maim")
-		return "", fmt.Errorf("maim not found")
+		return "", fmt.Errorf("%w: maim", dapi.ErrBinaryNotFound)
 	}
 
 	args := []string{}
@@ -114,22 +113,22 @@ func captureX11(ctx context.Context, path string, target Target) (string, error)
 	case Output:
 		_, rect, err := wm.GetFocusedOutput(ctx)
 		if err != nil {
-			return "", fmt.Errorf("failed to get focused output: %w", err)
+			return "", err
 		}
 		args = append(args, "-g", fmt.Sprintf("%dx%d+%d+%d", rect.Width, rect.Height, rect.X, rect.Y))
 	case Window:
 		rect, err := wm.GetFocusedWindowRect(ctx)
 		if err != nil {
-			return "", fmt.Errorf("failed to get focused window rect: %w", err)
+			return "", err
 		}
 		args = append(args, "-g", fmt.Sprintf("%dx%d+%d+%d", rect.Width, rect.Height, rect.X, rect.Y))
 	case Selection:
 		out, err := exec.RunCmd(ctx, "maim", "-s").CombinedOutput()
 		if err != nil {
 			if len(out) == 0 {
-				return "", nil // Provável cancelamento
+				return "", dapi.ErrCanceled
 			}
-			return "", fmt.Errorf("maim selection failed: %w (output: %q)", err, string(out))
+			return "", fmt.Errorf("%w: maim selection failed (output: %q)", dapi.ErrIPC, string(out))
 		}
 		args = append(args, "-g", strings.TrimSpace(string(out)))
 	}
@@ -138,7 +137,7 @@ func captureX11(ctx context.Context, path string, target Target) (string, error)
 
 	cmdMaim := exec.RunCmd(ctx, "maim", args...)
 	if out, err := cmdMaim.CombinedOutput(); err != nil {
-		return "", fmt.Errorf("maim failed to capture: %w (output: %q, command: maim %s)", err, string(out), strings.Join(args, " "))
+		return "", fmt.Errorf("%w: maim failed (output: %q)", dapi.ErrIPC, string(out))
 	}
 
 	copyFileToClipboard(ctx, path)

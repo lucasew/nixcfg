@@ -37,7 +37,7 @@ func GetDriver(ctx context.Context) (api.Driver, error) {
 	case "i3-msg":
 		return &i3ipc.Driver{Binary: "i3-msg"}, nil
 	}
-	return nil, fmt.Errorf("no suitable WM driver found for RPC: %s", rpc)
+	return nil, fmt.Errorf("%w for RPC: %s", api.ErrDriverNotFound, rpc)
 }
 
 // SwitchToWorkspace switches to the specified workspace number.

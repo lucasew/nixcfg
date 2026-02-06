@@ -1,6 +1,13 @@
 package api
 
-import "context"
+import (
+	"context"
+	"workspaced/pkg/drivers/api"
+)
+
+// Re-export shared errors for local convenience if needed,
+// or just use the shared ones.
+var ErrDriverNotFound = api.ErrDriverNotFound
 
 // Rect represents a geometry rectangle.
 type Rect struct {

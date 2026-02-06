@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log/slog"
 	"os"
@@ -15,6 +16,7 @@ import (
 	"workspaced/cmd/workspaced/is"
 	"workspaced/cmd/workspaced/launch"
 	"workspaced/cmd/workspaced/svc"
+	dapi "workspaced/pkg/drivers/api"
 	"workspaced/pkg/shellgen"
 
 	"github.com/spf13/cobra"
@@ -25,7 +27,6 @@ func NewRootCommand() *cobra.Command {
 		Use:   "workspaced",
 		Short: "Workspace daemon and client",
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-
 			// Ensure logs go to stderr so stdout stays clean for piping/capturing
 			slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, nil)))
 
@@ -67,6 +68,9 @@ func Execute() {
 	shellgen.SetRootCommand(rootCmd)
 
 	if err := rootCmd.Execute(); err != nil {
+		if errors.Is(err, dapi.ErrCanceled) {
+			os.Exit(0)
+		}
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}

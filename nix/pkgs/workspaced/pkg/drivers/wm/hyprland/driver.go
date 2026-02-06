@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	dapi "workspaced/pkg/drivers/api"
 	"workspaced/pkg/drivers/wm/api"
 	"workspaced/pkg/exec"
 )
@@ -26,7 +27,7 @@ func (d *Driver) ToggleScratchpad(ctx context.Context) error {
 func (d *Driver) GetOutputs(ctx context.Context) ([]api.Output, error) {
 	out, err := exec.RunCmd(ctx, "hyprctl", "monitors", "-j").Output()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
 	var monitors []struct {
 		Name            string `json:"name"`
@@ -40,7 +41,7 @@ func (d *Driver) GetOutputs(ctx context.Context) ([]api.Output, error) {
 		} `json:"activeWorkspace"`
 	}
 	if err := json.Unmarshal(out, &monitors); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
 	var outputs []api.Output
 	for _, m := range monitors {
@@ -57,14 +58,14 @@ func (d *Driver) GetOutputs(ctx context.Context) ([]api.Output, error) {
 func (d *Driver) GetWorkspaces(ctx context.Context) ([]api.Workspace, error) {
 	out, err := exec.RunCmd(ctx, "hyprctl", "workspaces", "-j").Output()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
 	var workspaces []struct {
 		Name    string `json:"name"`
 		Monitor string `json:"monitor"`
 	}
 	if err := json.Unmarshal(out, &workspaces); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
 
 	activeWSOut, _ := exec.RunCmd(ctx, "hyprctl", "activeworkspace", "-j").Output()
@@ -94,23 +95,23 @@ func (d *Driver) GetFocusedOutput(ctx context.Context) (string, *api.Rect, error
 			return o.Name, &o.Rect, nil
 		}
 	}
-	return "", nil, fmt.Errorf("no focused monitor found")
+	return "", nil, dapi.ErrNoFocusedOutput
 }
 
 func (d *Driver) GetFocusedWindowRect(ctx context.Context) (*api.Rect, error) {
 	out, err := exec.RunCmd(ctx, "hyprctl", "activewindow", "-j").Output()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
 	var win struct {
 		At   []int `json:"at"`
 		Size []int `json:"size"`
 	}
 	if err := json.Unmarshal(out, &win); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
 	if len(win.At) != 2 || len(win.Size) != 2 {
-		return nil, fmt.Errorf("invalid hyprland active window geometry")
+		return nil, fmt.Errorf("%w: invalid hyprland active window geometry", dapi.ErrIPC)
 	}
 	return &api.Rect{X: win.At[0], Y: win.At[1], Width: win.Size[0], Height: win.Size[1]}, nil
 }

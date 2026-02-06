@@ -1,9 +1,11 @@
 package clipboard
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"image"
+	"image/png"
 	"os"
 	"workspaced/pkg/drivers/clipboard/api"
 	"workspaced/pkg/drivers/clipboard/termux"
@@ -27,15 +29,21 @@ func GetDriver(ctx context.Context) (api.Driver, error) {
 	if exec.IsBinaryAvailable(ctx, "xclip") {
 		return &xclip.Driver{}, nil
 	}
-	return nil, fmt.Errorf("no suitable clipboard driver found")
+	return nil, api.ErrDriverNotFound
 }
 
 // WriteImage encodes a stdlib image.Image to PNG and writes it to the clipboard.
 func WriteImage(ctx context.Context, img image.Image) error {
+	var buf bytes.Buffer
+	if err := png.Encode(&buf, img); err != nil {
+		return fmt.Errorf("failed to encode image to PNG: %w", err)
+	}
 	d, err := GetDriver(ctx)
 	if err != nil {
 		return err
 	}
+	// We need to decode back to image.Image or add WriteImageReader to interface?
+	// Wait, the drivers now take image.Image.
 	return d.WriteImage(ctx, img)
 }
 

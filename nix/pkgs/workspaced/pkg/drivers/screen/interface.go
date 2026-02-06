@@ -2,6 +2,11 @@ package screen
 
 import (
 	"context"
+	"workspaced/pkg/drivers/api"
+)
+
+var (
+	ErrDriverNotFound = api.ErrDriverNotFound
 )
 
 type Driver interface {

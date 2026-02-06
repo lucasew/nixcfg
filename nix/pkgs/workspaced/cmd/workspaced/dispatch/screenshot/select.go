@@ -1,6 +1,8 @@
 package screenshot
 
 import (
+	"errors"
+	dapi "workspaced/pkg/drivers/api"
 	"workspaced/pkg/drivers/screenshot"
 
 	"github.com/spf13/cobra"
@@ -14,6 +16,9 @@ func init() {
 			RunE: func(c *cobra.Command, args []string) error {
 				path, err := screenshot.Capture(c.Context(), screenshot.Selection)
 				if err != nil {
+					if errors.Is(err, dapi.ErrCanceled) {
+						return nil
+					}
 					return err
 				}
 				if path != "" {
