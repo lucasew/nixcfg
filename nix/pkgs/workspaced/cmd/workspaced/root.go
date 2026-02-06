@@ -15,9 +15,10 @@ import (
 	"workspaced/cmd/workspaced/is"
 	"workspaced/cmd/workspaced/launch"
 	"workspaced/cmd/workspaced/svc"
-	"workspaced/pkg/prelude"
+  "workspaced/pkg/shellgen"
 
 	"github.com/spf13/cobra"
+
 )
 
 func NewRootCommand() *cobra.Command {
@@ -62,8 +63,8 @@ func NewRootCommand() *cobra.Command {
 func Execute() {
 	rootCmd := NewRootCommand()
 
-	// Set root command for prelude generators (e.g., completion)
-	prelude.SetRootCommand(rootCmd)
+	// Set root command for shell generators (e.g., completion)
+	shellgen.SetRootCommand(rootCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)

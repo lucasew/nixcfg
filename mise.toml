@@ -10,7 +10,7 @@ depends = ["lint:*"]
 
 [tasks."lint:nix"]
 description = "Lint Nix files"
-run = "command -v nix >/dev/null && nix fmt -- --check || echo 'Nix not found, skipping'"
+run = "command -v nix >/dev/null && nix fmt . -- --check || echo 'Nix not found, skipping'"
 
 [tasks."lint:sh"]
 description = "Lint Shell scripts"
@@ -39,7 +39,7 @@ depends = ["fmt:*"]
 
 [tasks."fmt:nix"]
 description = "Format Nix files"
-run = "command -v nix >/dev/null && nix fmt || echo 'Nix not found, skipping'"
+run = "command -v nix >/dev/null && nix fmt . || echo 'Nix not found, skipping'"
 
 [tasks."fmt:sh"]
 description = "Format Shell scripts"

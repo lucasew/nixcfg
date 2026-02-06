@@ -9,8 +9,8 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"workspaced/pkg/prelude"
 	"workspaced/pkg/version"
+	"workspaced/pkg/shellgen"
 
 	"github.com/spf13/cobra"
 )
@@ -152,14 +152,14 @@ Uses caching for performance - regenerates only when source files change.`,
 			output.WriteString("# This file is cached for performance\n")
 			output.WriteString("# Commands executed in parallel for faster loading\n\n")
 
-			// Generate all inline prelude code in parallel
+			// Generate all inline shell initialization code in parallel
 			t3 := time.Now()
-			inlineCode, err := prelude.Generate()
+			inlineCode, err := shellgen.Generate()
 			if err != nil {
-				return fmt.Errorf("failed to generate inline prelude: %w", err)
+				return fmt.Errorf("failed to generate inline shell initialization: %w", err)
 			}
 			if profile {
-				fmt.Fprintf(os.Stderr, "  Generate inline prelude: %v\n", time.Since(t3))
+				fmt.Fprintf(os.Stderr, "  Generate inline shell initialization: %v\n", time.Since(t3))
 			}
 			output.WriteString(inlineCode)
 

@@ -1,4 +1,4 @@
-package prelude
+package shellgen
 
 // GenerateHistory generates the workspaced history hook
 func GenerateHistory() (string, error) {
