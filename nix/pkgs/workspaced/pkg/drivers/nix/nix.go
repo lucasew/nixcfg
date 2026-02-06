@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"workspaced/pkg/drivers/api"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/drivers/sudo"
 	"workspaced/pkg/env"
@@ -151,7 +152,7 @@ func RemoteBuild(ctx context.Context, ref string, target string, copyBack bool) 
 	cmdBuild := exec.RunCmd(ctx, "ssh", remoteArgs...)
 	exec.InheritContextWriters(ctx, cmdBuild)
 	if err := cmdBuild.Run(); err != nil {
-		return "", fmt.Errorf("remote build failed: %w", err)
+		return "", fmt.Errorf("%w: remote build failed: %w", api.ErrBuildFailed, err)
 	}
 
 	// Get result path
@@ -201,7 +202,7 @@ func Build(ctx context.Context, ref string, useCache bool) (string, error) {
 	cmd := exec.RunCmd(ctx, "nix", "build", fmt.Sprintf("%s#%s", sourcePath, item), "--no-link", "--print-out-paths")
 	out, err := cmd.Output()
 	if err != nil {
-		return "", fmt.Errorf("nix build failed: %w", err)
+		return "", fmt.Errorf("%w: nix build failed: %w", api.ErrBuildFailed, err)
 	}
 
 	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
@@ -246,7 +247,7 @@ func Rebuild(ctx context.Context, action string, flake string) error {
 	}
 
 	if !isSupported {
-		return fmt.Errorf("hostname %s is not a supported NixOS node for rebuild", hostname)
+		return fmt.Errorf("%w: %s", api.ErrHostNotFound, hostname)
 	}
 
 	var toplevel string

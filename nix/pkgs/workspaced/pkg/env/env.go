@@ -1,11 +1,11 @@
 package env
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"slices"
 	"strings"
+	"workspaced/pkg/drivers/api"
 )
 
 // EssentialPaths defines the list of directories that must be present in the PATH
@@ -50,7 +50,7 @@ func GetDotfilesRoot() (string, error) {
 	if info, err := os.Stat(path); err == nil && info.IsDir() {
 		return path, nil
 	}
-	return "", fmt.Errorf("could not find dotfiles root")
+	return "", api.ErrDotfilesRootNotFound
 }
 
 // GetHostname returns the current system hostname.

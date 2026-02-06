@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"workspaced/pkg/drivers/api"
 	"workspaced/pkg/env"
 	"workspaced/pkg/logging"
 )
 
 func SetupTermuxShortcuts(ctx context.Context) error {
 	if !env.IsPhone() {
-		return fmt.Errorf("this command only works on phone (Termux)")
+		return fmt.Errorf("%w: command only works on phone (Termux)", api.ErrNotSupported)
 	}
 
 	home, err := os.UserHomeDir()

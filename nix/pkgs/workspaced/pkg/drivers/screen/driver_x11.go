@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"workspaced/pkg/drivers/api"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
 )
@@ -37,5 +38,5 @@ func (d *X11Driver) Reset(ctx context.Context) error {
 	if env.IsWhiterun() {
 		return exec.RunCmd(ctx, "xrandr", "--output", "HDMI-1", "--auto").Run()
 	}
-	return fmt.Errorf("no x11 reset logic for this host")
+	return api.ErrNotImplemented
 }

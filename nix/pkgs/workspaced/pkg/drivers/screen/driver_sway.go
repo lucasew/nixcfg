@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"workspaced/pkg/drivers/api"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
 )
@@ -37,5 +38,5 @@ func (d *SwayDriver) Reset(ctx context.Context) error {
 	if env.IsWhiterun() {
 		return exec.RunCmd(ctx, "swaymsg", "output", "HDMI-A-1", "mode", "1368x768").Run()
 	}
-	return fmt.Errorf("no sway reset logic for this host")
+	return api.ErrNotImplemented
 }

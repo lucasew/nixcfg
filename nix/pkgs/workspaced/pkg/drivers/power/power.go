@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"workspaced/pkg/config"
+	"workspaced/pkg/drivers/api"
 	"workspaced/pkg/logging"
 )
 
@@ -17,18 +18,18 @@ func Wake(ctx context.Context, host string) error {
 	hostCfg, ok := cfg.Hosts[host]
 	macStr := ""
 	if !ok {
-		return fmt.Errorf("host %s not found in config", host)
+		return fmt.Errorf("%w: %s", api.ErrHostNotFound, host)
 	} else {
 		macStr = hostCfg.MAC
 	}
 
 	if macStr == "" {
-		return fmt.Errorf("host %s has no MAC address configured", host)
+		return fmt.Errorf("%w: host %s has no MAC address", api.ErrConfigNotFound, host)
 	}
 
 	hwAddr, err := net.ParseMAC(macStr)
 	if err != nil {
-		return fmt.Errorf("invalid MAC address for %s: %w", host, err)
+		return fmt.Errorf("%w: %s (%w)", api.ErrInvalidAddr, macStr, err)
 	}
 
 	// WoL magic packet: 6 bytes of 0xFF followed by 16 repetitions of the MAC address

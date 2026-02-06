@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+	"workspaced/pkg/drivers/api"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
@@ -71,7 +72,7 @@ func getArtCachePath(ctx context.Context, url string) (string, error) {
 func RunAction(ctx context.Context, action string) error {
 	if action != "show" {
 		if err := exec.RunCmd(ctx, "playerctl", action).Run(); err != nil {
-			return fmt.Errorf("playerctl command failed: %w", err)
+			return fmt.Errorf("%w: %w", api.ErrIPC, err)
 		}
 	}
 

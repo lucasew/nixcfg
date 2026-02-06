@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"workspaced/pkg/config"
+	"workspaced/pkg/drivers/api"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
 )
@@ -27,7 +28,7 @@ func SetStatic(ctx context.Context, path string) error {
 			return err
 		}
 		if len(files) == 0 {
-			return fmt.Errorf("no wallpapers found in %s", wallpaperDir)
+			return fmt.Errorf("%w: wallpapers in %s", api.ErrNoTargetFound, wallpaperDir)
 		}
 		path = files[rand.Intn(len(files))]
 	}
