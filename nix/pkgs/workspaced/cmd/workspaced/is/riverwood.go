@@ -2,7 +2,7 @@ package is
 
 import (
 	"fmt"
-	"workspaced/pkg/common"
+	"workspaced/pkg/host"
 
 	"github.com/spf13/cobra"
 )
@@ -13,7 +13,7 @@ func init() {
 			Use:   "riverwood",
 			Short: "Check if host is riverwood",
 			RunE: func(c *cobra.Command, args []string) error {
-				if !common.IsRiverwood() {
+				if !host.IsRiverwood() {
 					return fmt.Errorf("not riverwood")
 				}
 				return nil

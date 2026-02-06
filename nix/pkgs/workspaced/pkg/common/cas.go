@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"workspaced/pkg/host"
 )
 
 type CASWriter struct {
@@ -16,9 +17,9 @@ type CASWriter struct {
 }
 
 func NewCASWriter() (*CASWriter, error) {
-	dataDir, err := GetUserDataDir()
-	if err != nil {
-		return nil, err
+	dataDir, hostErr := host.GetUserDataDir()
+	if hostErr != nil {
+		return nil, hostErr
 	}
 	genDir := filepath.Join(dataDir, "generated")
 	if err := os.MkdirAll(genDir, 0755); err != nil {

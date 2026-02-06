@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"workspaced/pkg/common"
+	pkgExec "workspaced/pkg/exec"
 	"workspaced/pkg/drivers/nix"
 
 	"github.com/spf13/cobra"
@@ -75,7 +75,7 @@ func init() {
 
 				// Run
 				ec := exec.Command(binPath, runArgs...)
-				common.InheritContextWriters(ctx, ec)
+				pkgExec.InheritContextWriters(ctx, ec)
 				ec.Stdin = os.Stdin
 				return ec.Run()
 			},

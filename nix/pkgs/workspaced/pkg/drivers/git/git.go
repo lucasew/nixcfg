@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"workspaced/pkg/common"
+	"workspaced/pkg/exec"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/config"
 )
@@ -80,30 +81,30 @@ func SyncRepo(ctx context.Context, path string) error {
 
 	// git add -A
 	logger.Info("git add", "path", path)
-	if err := common.RunCmd(ctx, "git", "-C", path, "add", "-A").Run(); err != nil {
+	if err := exec.RunCmd(ctx, "git", "-C", path, "add", "-A").Run(); err != nil {
 		return fmt.Errorf("git add failed: %w", err)
 	}
 
 	// git commit -sm "backup checkpoint <host>"
 	// Check if there are changes to commit
-	if err := common.RunCmd(ctx, "git", "-C", path, "diff-index", "HEAD", "--exit-code").Run(); err != nil {
+	if err := exec.RunCmd(ctx, "git", "-C", path, "diff-index", "HEAD", "--exit-code").Run(); err != nil {
 		commitMsg := fmt.Sprintf("backup checkpoint %s", hostname)
 		logger.Info("git commit", "path", path, "msg", commitMsg)
-		if err := common.RunCmd(ctx, "git", "-C", path, "commit", "-sm", commitMsg).Run(); err != nil {
+		if err := exec.RunCmd(ctx, "git", "-C", path, "commit", "-sm", commitMsg).Run(); err != nil {
 			return fmt.Errorf("git commit failed: %w", err)
 		}
 	}
 
 	// git pull --rebase
 	logger.Info("git pull --rebase", "path", path)
-	if err := common.RunCmd(ctx, "git", "-C", path, "pull", "--rebase").Run(); err != nil {
-		_ = common.RunCmd(ctx, "git", "-C", path, "rebase", "--abort").Run()
+	if err := exec.RunCmd(ctx, "git", "-C", path, "pull", "--rebase").Run(); err != nil {
+		_ = exec.RunCmd(ctx, "git", "-C", path, "rebase", "--abort").Run()
 		return fmt.Errorf("git pull rebase failed (conflict?): %w", err)
 	}
 
 	// git push
 	logger.Info("git push", "path", path)
-	if err := common.RunCmd(ctx, "git", "-C", path, "push").Run(); err != nil {
+	if err := exec.RunCmd(ctx, "git", "-C", path, "push").Run(); err != nil {
 		return fmt.Errorf("git push failed: %w", err)
 	}
 

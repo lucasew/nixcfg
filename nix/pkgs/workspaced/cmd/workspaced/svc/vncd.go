@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 	"syscall"
-	"workspaced/pkg/common"
+	"workspaced/pkg/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -41,7 +41,7 @@ func runWaylandVNC(ctx context.Context) error {
 		}
 	}
 
-	bin, err := common.Which(ctx, "wayvnc")
+	bin, err := exec.Which(ctx, "wayvnc")
 	if err != nil {
 		return err
 	}
@@ -52,7 +52,7 @@ func runWaylandVNC(ctx context.Context) error {
 
 func runXorgVNC(ctx context.Context) error {
 	slog.Info("Starting x0vncserver")
-	bin, err := common.Which(ctx, "x0vncserver")
+	bin, err := exec.Which(ctx, "x0vncserver")
 	if err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func runXorgVNC(ctx context.Context) error {
 }
 
 func getTailscaleIP(ctx context.Context) (string, error) {
-	out, err := common.RunCmd(ctx, "tailscale", "ip", "-4").Output()
+	out, err := exec.RunCmd(ctx, "tailscale", "ip", "-4").Output()
 	if err != nil {
 		return "", err
 	}

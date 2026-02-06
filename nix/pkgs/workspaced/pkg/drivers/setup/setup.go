@@ -6,10 +6,11 @@ import (
 	"os"
 	"path/filepath"
 	"workspaced/pkg/common"
+	"workspaced/pkg/host"
 )
 
 func SetupTermuxShortcuts(ctx context.Context) error {
-	if !common.IsPhone() {
+	if !host.IsPhone() {
 		return fmt.Errorf("this command only works on phone (Termux)")
 	}
 
@@ -17,7 +18,7 @@ func SetupTermuxShortcuts(ctx context.Context) error {
 	shortcutDir := filepath.Join(home, ".shortcuts")
 	_ = os.MkdirAll(shortcutDir, 0755)
 
-	dotfiles, err := common.GetDotfilesRoot()
+	dotfiles, err := host.GetDotfilesRoot()
 	if err != nil {
 		return err
 	}

@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 	"workspaced/pkg/common"
+	"workspaced/pkg/exec"
 	"workspaced/pkg/drivers/notification"
 
 	"github.com/godbus/dbus/v5"
@@ -61,7 +62,7 @@ func getArtCachePath(url string) (string, error) {
 
 func RunAction(ctx context.Context, action string) error {
 	if action != "show" {
-		if err := common.RunCmd(ctx, "playerctl", action).Run(); err != nil {
+		if err := exec.RunCmd(ctx, "playerctl", action).Run(); err != nil {
 			return fmt.Errorf("playerctl command failed: %w", err)
 		}
 	}

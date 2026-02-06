@@ -10,7 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"workspaced/pkg/common"
+	"workspaced/pkg/exec"
+	"workspaced/pkg/host"
 	"workspaced/pkg/drivers/media"
 )
 
@@ -28,20 +29,20 @@ type Output struct {
 }
 
 // SwitchToWorkspace switches to the specified workspace number.
-// It uses common.GetRPC to determine whether to use swaymsg or i3-msg.
+// It uses host.GetRPC to determine whether to use swaymsg or i3-msg.
 // If move is true, it moves the current container to that workspace instead of switching focus.
 func SwitchToWorkspace(ctx context.Context, num int, move bool) error {
-	rpc := common.GetRPC(ctx)
+	rpc := host.GetRPC(ctx)
 	if move {
-		return common.RunCmd(ctx, rpc, "move", "container", "to", "workspace", "number", strconv.Itoa(num)).Run()
+		return exec.RunCmd(ctx, rpc, "move", "container", "to", "workspace", "number", strconv.Itoa(num)).Run()
 	}
-	return common.RunCmd(ctx, rpc, "workspace", "number", strconv.Itoa(num)).Run()
+	return exec.RunCmd(ctx, rpc, "workspace", "number", strconv.Itoa(num)).Run()
 }
 
 // ToggleScratchpad toggles the visibility of the scratchpad container.
 func ToggleScratchpad(ctx context.Context) error {
-	rpc := common.GetRPC(ctx)
-	return common.RunCmd(ctx, rpc, "scratchpad", "show").Run()
+	rpc := host.GetRPC(ctx)
+	return exec.RunCmd(ctx, rpc, "scratchpad", "show").Run()
 }
 
 // ToggleScratchpadWithInfo toggles the scratchpad and shows a media status notification.
@@ -92,10 +93,10 @@ func NextWorkspace(ctx context.Context, move bool) error {
 // 4. Moves workspaces to their new target screens.
 // 5. Restores focus to the originally focused workspace.
 func RotateWorkspaces(ctx context.Context) error {
-	rpc := common.GetRPC(ctx)
+	rpc := host.GetRPC(ctx)
 
 	// Get Workspaces
-	out, err := common.RunCmd(ctx, rpc, "-t", "get_workspaces").Output()
+	out, err := exec.RunCmd(ctx, rpc, "-t", "get_workspaces").Output()
 	if err != nil {
 		return err
 	}
@@ -111,7 +112,7 @@ func RotateWorkspaces(ctx context.Context) error {
 	}
 
 	// Get Outputs
-	out, err = common.RunCmd(ctx, rpc, "-t", "get_outputs").Output()
+	out, err = exec.RunCmd(ctx, rpc, "-t", "get_outputs").Output()
 	if err != nil {
 		return err
 	}
@@ -143,19 +144,19 @@ func RotateWorkspaces(ctx context.Context) error {
 		toScreen := screens[i]
 		ws := workspaceScreens[fromScreen]
 
-		_ = common.RunCmd(ctx, rpc, "workspace", "number", ws).Run()
+		_ = exec.RunCmd(ctx, rpc, "workspace", "number", ws).Run()
 		time.Sleep(100 * time.Millisecond)
-		_ = common.RunCmd(ctx, rpc, "move", "workspace", "to", "output", toScreen).Run()
+		_ = exec.RunCmd(ctx, rpc, "move", "workspace", "to", "output", toScreen).Run()
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	for _, ws := range workspaceScreens {
-		_ = common.RunCmd(ctx, rpc, "workspace", "number", ws).Run()
+		_ = exec.RunCmd(ctx, rpc, "workspace", "number", ws).Run()
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	if focusedWorkspace != "" {
-		_ = common.RunCmd(ctx, rpc, "workspace", "number", focusedWorkspace).Run()
+		_ = exec.RunCmd(ctx, rpc, "workspace", "number", focusedWorkspace).Run()
 	}
 
 	return nil

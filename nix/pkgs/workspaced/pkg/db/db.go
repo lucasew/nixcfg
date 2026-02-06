@@ -6,7 +6,7 @@ import (
 	"embed"
 	"os"
 	"path/filepath"
-	"workspaced/pkg/common"
+	"workspaced/pkg/host"
 	"workspaced/pkg/db/sqlc"
 	"workspaced/pkg/types"
 
@@ -25,7 +25,7 @@ type DB struct {
 }
 
 func Open() (*DB, error) {
-	dataDir, err := common.GetUserDataDir()
+	dataDir, err := host.GetUserDataDir()
 	if err != nil {
 		return nil, err
 	}

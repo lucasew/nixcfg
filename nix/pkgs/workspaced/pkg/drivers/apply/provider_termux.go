@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"workspaced/pkg/common"
+	"workspaced/pkg/host"
 )
 
 type TermuxProvider struct{}
@@ -15,11 +16,11 @@ func (p *TermuxProvider) Name() string {
 }
 
 func (p *TermuxProvider) GetDesiredState(ctx context.Context) ([]DesiredState, error) {
-	if !common.IsPhone() {
+	if !host.IsPhone() {
 		return nil, nil
 	}
 
-	dotfiles, err := common.GetDotfilesRoot()
+	dotfiles, err := host.GetDotfilesRoot()
 	if err != nil {
 		return nil, err
 	}

@@ -7,7 +7,8 @@ import (
 	"path/filepath"
 
 	"time"
-	"workspaced/pkg/common"
+	"workspaced/pkg/exec"
+	"workspaced/pkg/host"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/config"
 )
@@ -27,7 +28,7 @@ func Capture(ctx context.Context, area bool) (string, error) {
 	filename := fmt.Sprintf("Screenshot_%s.png", timestamp)
 	path := filepath.Join(dir, filename)
 
-	rpc := common.GetRPC(ctx)
+	rpc := host.GetRPC(ctx)
 	if rpc == "swaymsg" {
 		return captureWayland(ctx, path, area)
 	}
@@ -35,18 +36,18 @@ func Capture(ctx context.Context, area bool) (string, error) {
 }
 
 func captureWayland(ctx context.Context, path string, area bool) (string, error) {
-	if !common.IsBinaryAvailable(ctx, "grim") {
+	if !exec.IsBinaryAvailable(ctx, "grim") {
 		notifyMissing(ctx, "grim")
 		return "", fmt.Errorf("grim not found")
 	}
 
 	args := []string{}
 	if area {
-		if !common.IsBinaryAvailable(ctx, "slurp") {
+		if !exec.IsBinaryAvailable(ctx, "slurp") {
 			notifyMissing(ctx, "slurp")
 			return "", fmt.Errorf("slurp not found")
 		}
-		out, err := common.RunCmd(ctx, "slurp").Output()
+		out, err := exec.RunCmd(ctx, "slurp").Output()
 		if err != nil {
 			return "", err
 		}
@@ -54,13 +55,13 @@ func captureWayland(ctx context.Context, path string, area bool) (string, error)
 	}
 	args = append(args, path)
 
-	if err := common.RunCmd(ctx, "grim", args...).Run(); err != nil {
+	if err := exec.RunCmd(ctx, "grim", args...).Run(); err != nil {
 		return "", err
 	}
 
 	// Copy to clipboard
-	if common.IsBinaryAvailable(ctx, "wl-copy") {
-		_ = common.RunCmd(ctx, "sh", "-c", fmt.Sprintf("wl-copy < %s", path)).Run()
+	if exec.IsBinaryAvailable(ctx, "wl-copy") {
+		_ = exec.RunCmd(ctx, "sh", "-c", fmt.Sprintf("wl-copy < %s", path)).Run()
 	}
 
 	notifySaved(ctx, path)
@@ -68,7 +69,7 @@ func captureWayland(ctx context.Context, path string, area bool) (string, error)
 }
 
 func captureX11(ctx context.Context, path string, area bool) (string, error) {
-	if !common.IsBinaryAvailable(ctx, "maim") {
+	if !exec.IsBinaryAvailable(ctx, "maim") {
 		notifyMissing(ctx, "maim")
 		return "", fmt.Errorf("maim not found")
 	}
@@ -79,13 +80,13 @@ func captureX11(ctx context.Context, path string, area bool) (string, error) {
 	}
 	args = append(args, path)
 
-	if err := common.RunCmd(ctx, "maim", args...).Run(); err != nil {
+	if err := exec.RunCmd(ctx, "maim", args...).Run(); err != nil {
 		return "", err
 	}
 
 	// Copy to clipboard
-	if common.IsBinaryAvailable(ctx, "xclip") {
-		_ = common.RunCmd(ctx, "sh", "-c", fmt.Sprintf("xclip -selection clipboard -t image/png < %s", path)).Run()
+	if exec.IsBinaryAvailable(ctx, "xclip") {
+		_ = exec.RunCmd(ctx, "sh", "-c", fmt.Sprintf("xclip -selection clipboard -t image/png < %s", path)).Run()
 	}
 
 	notifySaved(ctx, path)

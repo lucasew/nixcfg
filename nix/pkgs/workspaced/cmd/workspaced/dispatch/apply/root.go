@@ -3,6 +3,7 @@ package apply
 import (
 	"fmt"
 	"workspaced/pkg/common"
+	"workspaced/pkg/host"
 	"workspaced/pkg/drivers/apply"
 	"workspaced/pkg/drivers/nix"
 
@@ -83,13 +84,13 @@ func GetCommand() *cobra.Command {
 			}
 
 			// 5. Home Manager hook
-			if !common.IsPhone() {
+			if !host.IsPhone() {
 				logger.Info("running home-manager rebuild")
 				if dryRun {
 					logger.Info("dry-run: skipping home-manager rebuild")
 				} else {
 					flake := ""
-					if common.IsRiverwood() {
+					if host.IsRiverwood() {
 						logger.Info("performing remote build for home-manager on riverwood")
 						ref := ".#homeConfigurations.main.activationPackage"
 						result, err := nix.RemoteBuild(ctx, ref, "whiterun", true)
@@ -105,15 +106,15 @@ func GetCommand() *cobra.Command {
 			}
 
 			// 6. System specific hooks
-			if common.IsNixOS() {
+			if host.IsNixOS() {
 				logger.Info("running NixOS rebuild", "action", action)
 				if dryRun {
 					logger.Info("dry-run: skipping nixos-rebuild")
 				} else {
 					flake := ""
-					if common.IsRiverwood() {
+					if host.IsRiverwood() {
 						logger.Info("performing remote build for riverwood")
-						hostname := common.GetHostname()
+						hostname := host.GetHostname()
 						ref := fmt.Sprintf(".#nixosConfigurations.%s.config.system.build.toplevel", hostname)
 						result, err := nix.RemoteBuild(ctx, ref, "whiterun", true)
 						if err != nil {

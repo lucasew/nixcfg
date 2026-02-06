@@ -2,7 +2,7 @@ package is
 
 import (
 	"fmt"
-	"workspaced/pkg/common"
+	"workspaced/pkg/host"
 
 	"github.com/spf13/cobra"
 )
@@ -13,7 +13,7 @@ func init() {
 			Use:   "phone",
 			Short: "Check if environment is a phone (Termux)",
 			RunE: func(c *cobra.Command, args []string) error {
-				if !common.IsPhone() {
+				if !host.IsPhone() {
 					return fmt.Errorf("not phone")
 				}
 				return nil

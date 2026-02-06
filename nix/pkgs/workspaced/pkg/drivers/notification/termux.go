@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"hash/fnv"
 	"strconv"
-	"workspaced/pkg/common"
+	"workspaced/pkg/exec"
 )
 
 type TermuxNotifier struct{}
@@ -57,7 +57,7 @@ func (t *TermuxNotifier) Notify(ctx context.Context, n *Notification) error {
 		args = append(args, "-c", message)
 	}
 
-	_, err := common.RunCmd(ctx, "termux-notification", args...).Output()
+	_, err := exec.RunCmd(ctx, "termux-notification", args...).Output()
 	if err != nil {
 		return fmt.Errorf("failed to send termux notification: %w", err)
 	}

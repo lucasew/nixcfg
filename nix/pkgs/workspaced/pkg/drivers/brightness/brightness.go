@@ -6,12 +6,13 @@ import (
 	"strconv"
 	"strings"
 	"workspaced/pkg/common"
+	"workspaced/pkg/exec"
 	"workspaced/pkg/drivers/notification"
 )
 
 func SetBrightness(ctx context.Context, arg string) error {
 	if arg != "" {
-		if err := common.RunCmd(ctx, "brightnessctl", "s", arg).Run(); err != nil {
+		if err := exec.RunCmd(ctx, "brightnessctl", "s", arg).Run(); err != nil {
 			return fmt.Errorf("failed to set brightness: %w", err)
 		}
 	}
@@ -19,7 +20,7 @@ func SetBrightness(ctx context.Context, arg string) error {
 }
 
 func ShowStatus(ctx context.Context) error {
-	out, err := common.RunCmd(ctx, "brightnessctl", "-m").Output()
+	out, err := exec.RunCmd(ctx, "brightnessctl", "-m").Output()
 	if err != nil {
 		return fmt.Errorf("failed to get brightness status: %w", err)
 	}

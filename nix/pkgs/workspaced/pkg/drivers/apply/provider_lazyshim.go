@@ -8,6 +8,7 @@ import (
 	"strings"
 	"workspaced/pkg/common"
 	"workspaced/pkg/config"
+	"workspaced/pkg/host"
 )
 
 type LazyShimProvider struct{}
@@ -22,7 +23,7 @@ func (p *LazyShimProvider) GetDesiredState(ctx context.Context) ([]DesiredState,
 		return nil, err
 	}
 
-	dataDir, err := common.GetUserDataDir()
+	dataDir, err := host.GetUserDataDir()
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +102,7 @@ exec x %s "$@"
 					return nil, err
 				}
 				desired = append(desired, DesiredState{
-					Target: filepath.Join(globalDir, bin),
+					Target: filepath.Join(globalDir, "x"),
 					Source: globalSource,
 					Mode:   0755,
 				})

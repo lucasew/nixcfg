@@ -33,6 +33,7 @@ import (
 	"workspaced/cmd/workspaced/dispatch/workspace"
 	"workspaced/cmd/workspaced/is"
 	"workspaced/pkg/common"
+	pkgExec "workspaced/pkg/exec"
 	"workspaced/pkg/types"
 
 	"github.com/gorilla/websocket"
@@ -233,7 +234,7 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 
 					// Try to restart daemon
 					// 1. Try systemd if available (user says it's not bad if it works)
-					if common.IsBinaryAvailable(context.Background(), "systemctl") {
+					if pkgExec.IsBinaryAvailable(context.Background(), "systemctl") {
 						_ = exec.Command("systemctl", "--user", "restart", "workspaced.service").Run()
 					} else {
 						// 2. Fallback to pkill and background start (works on Android)

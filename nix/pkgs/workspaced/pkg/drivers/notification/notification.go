@@ -3,7 +3,7 @@ package notification
 import (
 	"context"
 
-	"workspaced/pkg/common"
+	"workspaced/pkg/exec"
 )
 
 // StatusNotificationID is the reserved ID for system status notifications (e.g. volume, brightness).
@@ -33,7 +33,7 @@ type Notifier interface {
 // and the standard desktop 'notify-send' backend.
 func (n *Notification) Notify(ctx context.Context) error {
 	var notifier Notifier
-	if common.IsBinaryAvailable(ctx, "termux-notification") {
+	if exec.IsBinaryAvailable(ctx, "termux-notification") {
 		notifier = &TermuxNotifier{}
 	} else {
 		notifier = &NotifySendNotifier{}

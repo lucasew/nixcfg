@@ -10,6 +10,8 @@ import (
 	"os"
 	"path/filepath"
 	"workspaced/pkg/common"
+	"workspaced/pkg/exec"
+	"workspaced/pkg/host"
 	"workspaced/pkg/config"
 )
 
@@ -30,18 +32,18 @@ func SetStatic(ctx context.Context, path string) error {
 
 	logger.Info("setting wallpaper", "path", path)
 
-	rpc := common.GetRPC(ctx)
+	rpc := host.GetRPC(ctx)
 	if rpc == "swaymsg" {
-		return common.RunCmd(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", "swaybg", "-i", path).Run()
+		return exec.RunCmd(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", "swaybg", "-i", path).Run()
 	}
-	return common.RunCmd(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", "feh", "--bg-fill", path).Run()
+	return exec.RunCmd(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", "feh", "--bg-fill", path).Run()
 }
 
 func SetAnimated(ctx context.Context, path string) error {
 	// Simple wrapper for the video logic
 	// Since it uses xrandr and xwinwrap, it's mostly X11
-	// We'll just run it via common.RunCmd
-	return common.RunCmd(ctx, "sh", "-c", fmt.Sprintf("sd wall video %s", path)).Run()
+	// We'll just run it via exec.RunCmd
+	return exec.RunCmd(ctx, "sh", "-c", fmt.Sprintf("sd wall video %s", path)).Run()
 }
 
 type APODResponse struct {

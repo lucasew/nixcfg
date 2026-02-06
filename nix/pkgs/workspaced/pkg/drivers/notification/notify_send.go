@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"workspaced/pkg/common"
+	"workspaced/pkg/exec"
 )
 
 type NotifySendNotifier struct{}
@@ -33,7 +34,7 @@ func (s *NotifySendNotifier) Notify(ctx context.Context, n *Notification) error 
 	args = append(args, n.Title, n.Message)
 
 	common.GetLogger(ctx).Info("running notify-send", "args", strings.Join(args, " "))
-	out, err := common.RunCmd(ctx, "notify-send", args...).Output()
+	out, err := exec.RunCmd(ctx, "notify-send", args...).Output()
 	if err != nil {
 		return fmt.Errorf("failed to send notification: %w", err)
 	}

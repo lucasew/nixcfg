@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 	"path/filepath"
-	"workspaced/pkg/common"
+	"workspaced/pkg/host"
 )
 
 type SymlinkProvider struct{}
@@ -14,7 +14,7 @@ func (p *SymlinkProvider) Name() string {
 }
 
 func (p *SymlinkProvider) GetDesiredState(ctx context.Context) ([]DesiredState, error) {
-	dotfiles, err := common.GetDotfilesRoot()
+	dotfiles, err := host.GetDotfilesRoot()
 	if err != nil {
 		return nil, err
 	}
