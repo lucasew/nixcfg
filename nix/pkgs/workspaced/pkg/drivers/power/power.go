@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"net"
-	"workspaced/pkg/common"
 	"workspaced/pkg/config"
+	"workspaced/pkg/logging"
 )
 
 func Wake(ctx context.Context, host string) error {
@@ -52,6 +52,6 @@ func Wake(ctx context.Context, host string) error {
 		return fmt.Errorf("failed to send magic packet: %w", err)
 	}
 
-	common.GetLogger(ctx).Info("sent Wake-on-LAN magic packet", "host", host, "mac", macStr)
+	logging.GetLogger(ctx).Info("sent Wake-on-LAN magic packet", "host", host, "mac", macStr)
 	return nil
 }

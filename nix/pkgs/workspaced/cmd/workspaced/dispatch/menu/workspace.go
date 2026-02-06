@@ -3,11 +3,12 @@ package menu
 import (
 	"sort"
 	"strings"
-	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/wm"
+	"workspaced/pkg/exec"
+
+	"workspaced/pkg/config"
 
 	"github.com/spf13/cobra"
-	"workspaced/pkg/config"
 )
 
 func init() {
@@ -28,7 +29,7 @@ func init() {
 				}
 				sort.Strings(keys)
 
-				cmd := common.RunCmd(c.Context(), "dmenu")
+				cmd := exec.RunCmd(c.Context(), "dmenu")
 				cmd.Stdin = strings.NewReader(strings.Join(keys, "\n"))
 
 				out, err := cmd.Output()

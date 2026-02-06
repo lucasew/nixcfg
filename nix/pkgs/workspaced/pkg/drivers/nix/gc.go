@@ -7,13 +7,14 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
-	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/sudo"
+	"workspaced/pkg/exec"
+	"workspaced/pkg/logging"
 	"workspaced/pkg/types"
 )
 
 func CleanupProfiles(ctx context.Context) error {
-	logger := common.GetLogger(ctx)
+	logger := logging.GetLogger(ctx)
 	logger.Info("Searching for old Nix profiles to cleanup...")
 
 	baseDir := "/nix/var/nix/profiles"
@@ -91,8 +92,8 @@ func CleanupProfiles(ctx context.Context) error {
 		})
 	} else {
 		// If running interactively, we can just run sudo directly
-		cmd := common.RunCmd(ctx, "rm", filesToRemove...)
-		common.InheritContextWriters(ctx, cmd)
+		cmd := exec.RunCmd(ctx, "rm", filesToRemove...)
+		exec.InheritContextWriters(ctx, cmd)
 		return cmd.Run()
 	}
 }

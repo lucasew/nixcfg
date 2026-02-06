@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"workspaced/pkg/common"
+	"workspaced/pkg/exec"
+	"workspaced/pkg/logging"
 	"workspaced/pkg/types"
 )
 
 func GetDriver(ctx context.Context) (Driver, error) {
-	rpc := common.GetRPC(ctx)
+	rpc := exec.GetRPC(ctx)
 	if rpc == "swaymsg" {
 		return &SwayDriver{}, nil
 	}
@@ -32,8 +33,8 @@ func GetDriver(ctx context.Context) (Driver, error) {
 }
 
 func Lock(ctx context.Context) error {
-	common.GetLogger(ctx).Info("locking session")
-	return common.RunCmd(ctx, "loginctl", "lock-session").Run()
+	logging.GetLogger(ctx).Info("locking session")
+	return exec.RunCmd(ctx, "loginctl", "lock-session").Run()
 }
 
 func SetDPMS(ctx context.Context, on bool) error {
@@ -41,7 +42,7 @@ func SetDPMS(ctx context.Context, on bool) error {
 	if err != nil {
 		return err
 	}
-	common.GetLogger(ctx).Info("setting DPMS", "on", on)
+	logging.GetLogger(ctx).Info("setting DPMS", "on", on)
 	return d.SetDPMS(ctx, on)
 }
 
@@ -70,6 +71,6 @@ func Reset(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	common.GetLogger(ctx).Info("resetting screen layout")
+	logging.GetLogger(ctx).Info("resetting screen layout")
 	return d.Reset(ctx)
 }

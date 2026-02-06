@@ -6,8 +6,11 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"workspaced/pkg/common"
 	"workspaced/pkg/config"
+	"workspaced/pkg/env"
+	"workspaced/pkg/icons"
+	"workspaced/pkg/logging"
+	"workspaced/pkg/text"
 )
 
 type WebappProvider struct{}
@@ -38,7 +41,7 @@ func (p *WebappProvider) GetDesiredState(ctx context.Context) ([]DesiredState, e
 	}
 
 	desired := []DesiredState{}
-	logger := common.GetLogger(ctx)
+	logger := logging.GetLogger(ctx)
 
 	// 0. Add generic launcher
 	borderlessPath := filepath.Join(shortcutsDir, "borderless-browser.desktop")
@@ -64,7 +67,7 @@ Categories=Network;WebBrowser;
 			iconToUse = wa.Icon
 		} else {
 			var err error
-			iconToUse, err = common.GetIconPath(ctx, wa.URL)
+			iconToUse, err = icons.GetIconPath(ctx, wa.URL)
 			if err != nil {
 				logger.Error("failed to get icon path", "webapp", name, "url", wa.URL, "error", err)
 				// Continue without icon as it's optional
@@ -74,7 +77,7 @@ Categories=Network;WebBrowser;
 		// 2. Generate .desktop
 		desktopName := wa.DesktopName
 		if desktopName == "" {
-			desktopName = common.ToTitleCase(name)
+			desktopName = text.ToTitleCase(name)
 		}
 
 		desktopContent := generateWebappDesktopFile(wa, cfg.Browser.Engine, name, desktopName, iconToUse)
@@ -95,7 +98,7 @@ Categories=Network;WebBrowser;
 }
 
 func generateWebappDesktopFile(wa config.WebappConfig, engine, id, name, iconPath string) string {
-	url := common.NormalizeURL(wa.URL)
+	url := env.NormalizeURL(wa.URL)
 	args := []string{"--app=" + url}
 
 	if wa.Profile != "" {

@@ -1,4 +1,4 @@
-package common
+package version
 
 // BuildID is set at compile time via -ldflags
 var BuildID = "dev"

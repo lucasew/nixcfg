@@ -6,8 +6,9 @@ import (
 	"strconv"
 	"strings"
 
-	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/notification"
+	"workspaced/pkg/exec"
+	"workspaced/pkg/logging"
 )
 
 // SetVolume sets the volume of the default sink using pactl.
@@ -15,7 +16,7 @@ import (
 // It also triggers a status notification after the change.
 func SetVolume(ctx context.Context, arg string) error {
 	sink := "@DEFAULT_SINK@"
-	if err := common.RunCmd(ctx, "pactl", "set-sink-volume", sink, arg).Run(); err != nil {
+	if err := exec.RunCmd(ctx, "pactl", "set-sink-volume", sink, arg).Run(); err != nil {
 		return fmt.Errorf("failed to set volume: %w", err)
 	}
 	return ShowStatus(ctx)
@@ -26,7 +27,7 @@ func SetVolume(ctx context.Context, arg string) error {
 // It parses the output of `pactl get-sink-volume` and `pactl get-sink-mute`.
 func ShowStatus(ctx context.Context) error {
 	sink := "@DEFAULT_SINK@"
-	out, err := common.RunCmd(ctx, "pactl", "get-sink-volume", sink).Output()
+	out, err := exec.RunCmd(ctx, "pactl", "get-sink-volume", sink).Output()
 	if err != nil {
 		return fmt.Errorf("failed to get volume: %w", err)
 	}
@@ -43,7 +44,7 @@ func ShowStatus(ctx context.Context) error {
 		}
 	}
 
-	muteOut, _ := common.RunCmd(ctx, "pactl", "get-sink-mute", sink).Output()
+	muteOut, _ := exec.RunCmd(ctx, "pactl", "get-sink-mute", sink).Output()
 	isMuted := strings.Contains(string(muteOut), "yes")
 
 	icon := "audio-volume-high"
@@ -55,7 +56,7 @@ func ShowStatus(ctx context.Context) error {
 		icon = "audio-volume-medium"
 	}
 
-	sinkNameOut, _ := common.RunCmd(ctx, "pactl", "get-default-sink").Output()
+	sinkNameOut, _ := exec.RunCmd(ctx, "pactl", "get-default-sink").Output()
 	sinkName := strings.TrimSpace(string(sinkNameOut))
 
 	n := &notification.Notification{
@@ -67,7 +68,7 @@ func ShowStatus(ctx context.Context) error {
 		HasProgress: true,
 	}
 
-	common.GetLogger(ctx).Info("volume updated", "level", level, "sink", sinkName, "muted", isMuted)
+	logging.GetLogger(ctx).Info("volume updated", "level", level, "sink", sinkName, "muted", isMuted)
 
 	return n.Notify(ctx)
 }

@@ -8,8 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/spf13/cobra"
 	"workspaced/pkg/drivers/screen"
+
+	"github.com/spf13/cobra"
 )
 
 func init() {

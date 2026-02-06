@@ -1,7 +1,7 @@
 package menu
 
 import (
-	"workspaced/pkg/common"
+	"workspaced/pkg/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -12,7 +12,7 @@ func init() {
 			Use:   "window",
 			Short: "Window switcher",
 			RunE: func(c *cobra.Command, args []string) error {
-				return common.RunCmd(c.Context(), "rofi-window").Run()
+				return exec.RunCmd(c.Context(), "rofi-window").Run()
 			},
 		})
 	})

@@ -10,8 +10,9 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
-	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/notification"
+	"workspaced/pkg/exec"
+	"workspaced/pkg/logging"
 
 	"github.com/godbus/dbus/v5"
 )
@@ -61,7 +62,7 @@ func getArtCachePath(url string) (string, error) {
 
 func RunAction(ctx context.Context, action string) error {
 	if action != "show" {
-		if err := common.RunCmd(ctx, "playerctl", action).Run(); err != nil {
+		if err := exec.RunCmd(ctx, "playerctl", action).Run(); err != nil {
 			return fmt.Errorf("playerctl command failed: %w", err)
 		}
 	}
@@ -113,14 +114,14 @@ func ShowStatus(ctx context.Context) error {
 
 		statusVar, err := obj.GetProperty("org.mpris.MediaPlayer2.Player.PlaybackStatus")
 		if err != nil {
-			common.GetLogger(ctx).Debug("failed to get status for player", "player", p, "error", err)
+			logging.GetLogger(ctx).Debug("failed to get status for player", "player", p, "error", err)
 			continue
 		}
 		status := statusVar.Value().(string)
 
 		metadataVar, err := obj.GetProperty("org.mpris.MediaPlayer2.Player.Metadata")
 		if err != nil {
-			common.GetLogger(ctx).Debug("failed to get metadata for player", "player", p, "error", err)
+			logging.GetLogger(ctx).Debug("failed to get metadata for player", "player", p, "error", err)
 			continue
 		}
 		m := metadataVar.Value().(map[string]dbus.Variant)
@@ -172,7 +173,7 @@ func ShowStatus(ctx context.Context) error {
 			}
 		}
 
-		common.GetLogger(ctx).Debug("found player", "name", p, "title", title, "artist", artist, "status", status)
+		logging.GetLogger(ctx).Debug("found player", "name", p, "title", title, "artist", artist, "status", status)
 
 		players = append(players, playerInfo{
 			name:     p,
@@ -208,7 +209,7 @@ func ShowStatus(ctx context.Context) error {
 	}
 
 	if best == nil || best.title == "" {
-		common.GetLogger(ctx).Warn("no active player with title found")
+		logging.GetLogger(ctx).Warn("no active player with title found")
 		return nil
 	}
 
@@ -240,7 +241,7 @@ func ShowStatus(ctx context.Context) error {
 		HasProgress: true,
 	}
 
-	common.GetLogger(ctx).Info("sending media notification",
+	logging.GetLogger(ctx).Info("sending media notification",
 		"player", best.name,
 		"title", title,
 		"artist", message,
@@ -252,7 +253,7 @@ func ShowStatus(ctx context.Context) error {
 }
 
 func Watch(ctx context.Context) {
-	logger := common.GetLogger(ctx)
+	logger := logging.GetLogger(ctx)
 	conn, err := dbus.SessionBus()
 	if err != nil {
 		logger.Error("failed to connect to session bus", "error", err)

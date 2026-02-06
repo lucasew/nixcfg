@@ -3,9 +3,10 @@ package config
 import (
 	"fmt"
 
+	"workspaced/pkg/config"
+
 	"github.com/BurntSushi/toml"
 	"github.com/spf13/cobra"
-	"workspaced/pkg/config"
 )
 
 func GetDumpCommand() *cobra.Command {

@@ -9,8 +9,8 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"workspaced/pkg/common"
 	"workspaced/pkg/prelude"
+	"workspaced/pkg/version"
 
 	"github.com/spf13/cobra"
 )
@@ -51,7 +51,7 @@ Uses caching for performance - regenerates only when source files change.`,
 				return fmt.Errorf("failed to create cache directory: %w", err)
 			}
 
-			buildID := common.GetBuildID()
+			buildID := version.GetBuildID()
 			cacheFile := filepath.Join(cacheDir, fmt.Sprintf("shell-init-%s-%s.bash", shell, buildID))
 
 			// Check if cache exists (build ID already in filename)
@@ -169,7 +169,7 @@ Uses caching for performance - regenerates only when source files change.`,
 
 				// Skip files generated inline above
 				if strings.Contains(basename, "workspaced-init") ||
-				   strings.Contains(basename, "workspaced-history") {
+					strings.Contains(basename, "workspaced-history") {
 					continue
 				}
 

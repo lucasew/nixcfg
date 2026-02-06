@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"workspaced/pkg/common"
+	"workspaced/pkg/env"
+	"workspaced/pkg/logging"
 )
 
 type TermuxProvider struct{}
@@ -15,11 +16,11 @@ func (p *TermuxProvider) Name() string {
 }
 
 func (p *TermuxProvider) GetDesiredState(ctx context.Context) ([]DesiredState, error) {
-	if !common.IsPhone() {
+	if !env.IsPhone() {
 		return nil, nil
 	}
 
-	dotfiles, err := common.GetDotfilesRoot()
+	dotfiles, err := env.GetDotfilesRoot()
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +46,7 @@ func (p *TermuxProvider) GetDesiredState(ctx context.Context) ([]DesiredState, e
 	}
 
 	desired := []DesiredState{}
-	logger := common.GetLogger(ctx)
+	logger := logging.GetLogger(ctx)
 	for _, entry := range entries {
 		if entry.IsDir() {
 			continue
