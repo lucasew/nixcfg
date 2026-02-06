@@ -5,14 +5,25 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-
+	"strings"
 	"time"
+
 	"workspaced/pkg/config"
 	"workspaced/pkg/drivers/notification"
+	"workspaced/pkg/drivers/wm"
 	"workspaced/pkg/exec"
 )
 
-func Capture(ctx context.Context, area bool) (string, error) {
+type Target int
+
+const (
+	All Target = iota
+	Output
+	Window
+	Selection
+)
+
+func Capture(ctx context.Context, target Target) (string, error) {
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		return "", err
@@ -29,19 +40,34 @@ func Capture(ctx context.Context, area bool) (string, error) {
 
 	rpc := exec.GetRPC(ctx)
 	if rpc == "swaymsg" {
-		return captureWayland(ctx, path, area)
+		return captureWayland(ctx, path, target)
 	}
-	return captureX11(ctx, path, area)
+	return captureX11(ctx, path, target)
 }
 
-func captureWayland(ctx context.Context, path string, area bool) (string, error) {
+func captureWayland(ctx context.Context, path string, target Target) (string, error) {
 	if !exec.IsBinaryAvailable(ctx, "grim") {
 		notifyMissing(ctx, "grim")
 		return "", fmt.Errorf("grim not found")
 	}
 
 	args := []string{}
-	if area {
+	switch target {
+	case All:
+		// Default behavior of grim is to capture all outputs
+	case Output:
+		name, _, err := wm.GetFocusedOutput(ctx)
+		if err != nil {
+			return "", fmt.Errorf("failed to get focused output: %w", err)
+		}
+		args = append(args, "-o", name)
+	case Window:
+		rect, err := wm.GetFocusedWindowRect(ctx)
+		if err != nil {
+			return "", fmt.Errorf("failed to get focused window rect: %w", err)
+		}
+		args = append(args, "-g", fmt.Sprintf("%d,%d %dx%d", rect.X, rect.Y, rect.Width, rect.Height))
+	case Selection:
 		if !exec.IsBinaryAvailable(ctx, "slurp") {
 			notifyMissing(ctx, "slurp")
 			return "", fmt.Errorf("slurp not found")
@@ -50,8 +76,9 @@ func captureWayland(ctx context.Context, path string, area bool) (string, error)
 		if err != nil {
 			return "", err
 		}
-		args = append(args, "-g", string(out))
+		args = append(args, "-g", strings.TrimSpace(string(out)))
 	}
+
 	args = append(args, path)
 
 	if err := exec.RunCmd(ctx, "grim", args...).Run(); err != nil {
@@ -67,16 +94,32 @@ func captureWayland(ctx context.Context, path string, area bool) (string, error)
 	return path, nil
 }
 
-func captureX11(ctx context.Context, path string, area bool) (string, error) {
+func captureX11(ctx context.Context, path string, target Target) (string, error) {
 	if !exec.IsBinaryAvailable(ctx, "maim") {
 		notifyMissing(ctx, "maim")
 		return "", fmt.Errorf("maim not found")
 	}
 
 	args := []string{}
-	if area {
+	switch target {
+	case All:
+		// Default behavior of maim is to capture the root window (all screens combined)
+	case Output:
+		_, rect, err := wm.GetFocusedOutput(ctx)
+		if err != nil {
+			return "", fmt.Errorf("failed to get focused output: %w", err)
+		}
+		args = append(args, "-g", fmt.Sprintf("%dx%d+%d+%d", rect.Width, rect.Height, rect.X, rect.Y))
+	case Window:
+		rect, err := wm.GetFocusedWindowRect(ctx)
+		if err != nil {
+			return "", fmt.Errorf("failed to get focused window rect: %w", err)
+		}
+		args = append(args, "-g", fmt.Sprintf("%dx%d+%d+%d", rect.Width, rect.Height, rect.X, rect.Y))
+	case Selection:
 		args = append(args, "-s")
 	}
+
 	args = append(args, path)
 
 	if err := exec.RunCmd(ctx, "maim", args...).Run(); err != nil {
