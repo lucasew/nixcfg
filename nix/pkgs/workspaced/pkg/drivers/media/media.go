@@ -17,7 +17,7 @@ import (
 	"github.com/godbus/dbus/v5"
 )
 
-func getArtCachePath(url string) (string, error) {
+func getArtCachePath(ctx context.Context, url string) (string, error) {
 	if strings.HasPrefix(url, "file://") {
 		return strings.TrimPrefix(url, "file://"), nil
 	}
@@ -45,13 +45,21 @@ func getArtCachePath(url string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer func() { _ = resp.Body.Close() }()
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			logging.ReportError(ctx, err)
+		}
+	}()
 
 	out, err := os.Create(path)
 	if err != nil {
 		return "", err
 	}
-	defer func() { _ = out.Close() }()
+	defer func() {
+		if err := out.Close(); err != nil {
+			logging.ReportError(ctx, err)
+		}
+	}()
 
 	if _, err := io.Copy(out, resp.Body); err != nil {
 		return "", err
@@ -220,7 +228,11 @@ func ShowStatus(ctx context.Context) error {
 
 	iconPath := ""
 	if best.artUrl != "" {
-		iconPath, _ = getArtCachePath(best.artUrl)
+		var err error
+		iconPath, err = getArtCachePath(ctx, best.artUrl)
+		if err != nil {
+			logging.ReportError(ctx, err)
+		}
 	}
 
 	title := best.title
@@ -261,7 +273,10 @@ func Watch(ctx context.Context) {
 	}
 
 	rule := "type='signal',interface='org.freedesktop.DBus.Properties',member='PropertiesChanged',path='/org/mpris/MediaPlayer2'"
-	conn.BusObject().Call("org.freedesktop.DBus.AddMatch", 0, rule)
+	if err := conn.BusObject().Call("org.freedesktop.DBus.AddMatch", 0, rule).Err; err != nil {
+		logger.Error("failed to add dbus match", "error", err)
+		return
+	}
 
 	c := make(chan *dbus.Signal, 10)
 	conn.Signal(c)
@@ -280,7 +295,9 @@ func Watch(ctx context.Context) {
 			changed := signal.Body[1].(map[string]dbus.Variant)
 			if _, ok := changed["Metadata"]; ok {
 				logger.Debug("metadata changed, updating status")
-				_ = ShowStatus(ctx)
+				if err := ShowStatus(ctx); err != nil {
+					logging.ReportError(ctx, err)
+				}
 			}
 		}
 	}

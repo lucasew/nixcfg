@@ -9,6 +9,7 @@ import (
 	"workspaced/pkg/db/sqlc"
 	"workspaced/pkg/env"
 	"workspaced/pkg/types"
+	"workspaced/pkg/logging"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite"
@@ -88,7 +89,11 @@ func (db *DB) BatchRecordHistory(ctx context.Context, events []types.HistoryEven
 	if err != nil {
 		return err
 	}
-	defer func() { _ = tx.Rollback() }()
+	defer func() {
+		if err := tx.Rollback(); err != nil && err != sql.ErrTxDone {
+			logging.ReportError(ctx, err)
+		}
+	}()
 
 	q := db.Queries.WithTx(tx)
 	for _, event := range events {

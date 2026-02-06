@@ -14,9 +14,14 @@ func SetupTermuxShortcuts(ctx context.Context) error {
 		return fmt.Errorf("this command only works on phone (Termux)")
 	}
 
-	home, _ := os.UserHomeDir()
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
 	shortcutDir := filepath.Join(home, ".shortcuts")
-	_ = os.MkdirAll(shortcutDir, 0755)
+	if err := os.MkdirAll(shortcutDir, 0755); err != nil {
+		return err
+	}
 
 	dotfiles, err := env.GetDotfilesRoot()
 	if err != nil {
