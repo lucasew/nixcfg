@@ -3,11 +3,10 @@ package nix
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"workspaced/pkg/drivers/nix"
-	wexec "workspaced/pkg/exec"
+	"workspaced/pkg/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -74,8 +73,8 @@ func init() {
 				}
 
 				// Run
-				ec := exec.Command(binPath, runArgs...)
-				wexec.InheritContextWriters(ctx, ec)
+				ec := exec.RunCmd(ctx, binPath, runArgs...)
+				exec.InheritContextWriters(ctx, ec)
 				ec.Stdin = os.Stdin
 				return ec.Run()
 			},

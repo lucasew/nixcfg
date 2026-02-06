@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"workspaced/pkg/config"
+	"workspaced/pkg/drivers/clipboard"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/drivers/wm"
 	"workspaced/pkg/exec"
@@ -92,10 +93,7 @@ func captureWayland(ctx context.Context, path string, target Target) (string, er
 		return "", fmt.Errorf("grim failed to capture: %w (output: %q, command: grim %s)", err, string(out), strings.Join(args, " "))
 	}
 
-	// Copy to clipboard
-	if exec.IsBinaryAvailable(ctx, "wl-copy") {
-		_ = exec.RunCmd(ctx, "sh", "-c", fmt.Sprintf("wl-copy < %s", path)).Run()
-	}
+	copyFileToClipboard(ctx, path)
 
 	notifySaved(ctx, path, target)
 	return path, nil
@@ -141,13 +139,23 @@ func captureX11(ctx context.Context, path string, target Target) (string, error)
 		return "", fmt.Errorf("maim failed to capture: %w (output: %q, command: maim %s)", err, string(out), strings.Join(args, " "))
 	}
 
-	// Copy to clipboard
-	if exec.IsBinaryAvailable(ctx, "xclip") {
-		_ = exec.RunCmd(ctx, "sh", "-c", fmt.Sprintf("xclip -selection clipboard -t image/png < %s", path)).Run()
-	}
+	copyFileToClipboard(ctx, path)
 
 	notifySaved(ctx, path, target)
 	return path, nil
+}
+
+func copyFileToClipboard(ctx context.Context, path string) {
+	file, err := os.Open(path)
+	if err != nil {
+		logging.ReportError(ctx, fmt.Errorf("failed to open screenshot for clipboard: %w", err))
+		return
+	}
+	defer file.Close()
+
+	if err := clipboard.WriteImageReader(ctx, file); err != nil {
+		logging.ReportError(ctx, err)
+	}
 }
 
 func notifyMissing(ctx context.Context, tool string) {

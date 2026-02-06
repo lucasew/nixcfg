@@ -7,7 +7,6 @@ import (
 	"log/slog"
 	"net"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"time"
 	"workspaced/cmd/workspaced/dispatch/apply"
@@ -32,7 +31,7 @@ import (
 	"workspaced/cmd/workspaced/dispatch/webapp"
 	"workspaced/cmd/workspaced/dispatch/workspace"
 	"workspaced/cmd/workspaced/is"
-	wexec "workspaced/pkg/exec"
+	"workspaced/pkg/exec"
 	"workspaced/pkg/types"
 
 	"github.com/gorilla/websocket"
@@ -165,7 +164,7 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 	defer func() { _ = conn.Close() }()
 
 	// Get client binary hash
-	clientHash, _ := wexec.GetBinaryHash()
+	clientHash, _ := exec.GetBinaryHash()
 
 	req := types.Request{
 		Command:    cmdName,
@@ -233,13 +232,13 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 
 					// Try to restart daemon
 					// 1. Try systemd if available (user says it's not bad if it works)
-					if wexec.IsBinaryAvailable(context.Background(), "systemctl") {
-						_ = exec.Command("systemctl", "--user", "restart", "workspaced.service").Run()
+					if exec.IsBinaryAvailable(context.Background(), "systemctl") {
+						_ = exec.RunCmd(context.Background(), "systemctl", "--user", "restart", "workspaced.service").Run()
 					} else {
 						// 2. Fallback to pkill and background start (works on Android)
-						_ = exec.Command("pkill", "-f", "workspaced daemon").Run()
+						_ = exec.RunCmd(context.Background(), "pkill", "-f", "workspaced daemon").Run()
 						go func() {
-							_ = exec.Command("workspaced", "daemon").Start()
+							_ = exec.RunCmd(context.Background(), "workspaced", "daemon").Start()
 						}()
 					}
 

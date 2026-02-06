@@ -3,10 +3,9 @@ package sync
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"workspaced/pkg/env"
-	wexec "workspaced/pkg/exec"
+	"workspaced/pkg/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -24,7 +23,7 @@ func GetCommand() *cobra.Command {
 
 			// 1. Git pull
 			fmt.Println("==> Pulling dotfiles changes...")
-			pullCmd := wexec.RunCmd(ctx, "git", "-C", root, "pull")
+			pullCmd := exec.RunCmd(ctx, "git", "-C", root, "pull")
 			pullCmd.Stdout = os.Stdout
 			pullCmd.Stderr = os.Stderr
 			if err := pullCmd.Run(); err != nil {
@@ -33,12 +32,12 @@ func GetCommand() *cobra.Command {
 
 			// 2. Rebuild via shim and apply (WORKSPACED_REFRESH triggers rebuild, shim execs the new binary)
 			fmt.Println("==> Rebuilding and applying...")
-			bashPath, err := wexec.Which(ctx, "bash")
+			bashPath, err := exec.Which(ctx, "bash")
 			if err != nil {
 				return fmt.Errorf("bash not found: %w", err)
 			}
 			shimPath := filepath.Join(root, "bin/shim/workspaced")
-			applyCmd := exec.CommandContext(ctx, bashPath, shimPath, "dispatch", "apply")
+			applyCmd := exec.RunCmd(ctx, bashPath, shimPath, "dispatch", "apply")
 			applyCmd.Env = append(os.Environ(), "WORKSPACED_REFRESH=1")
 			applyCmd.Stdout = os.Stdout
 			applyCmd.Stderr = os.Stderr

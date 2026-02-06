@@ -3,9 +3,8 @@ package launch
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"syscall"
-	wexec "workspaced/pkg/exec"
+	"workspaced/pkg/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -24,14 +23,14 @@ func NewCommand() *cobra.Command {
 			terminals := []string{"kitty", "alacritty", "foot", "st", "xterm"}
 
 			for _, term := range terminals {
-				termPath, err := wexec.Which(ctx, term)
+				termPath, err := exec.Which(ctx, term)
 				if err != nil {
 					continue
 				}
 
 				// If we are in the daemon, we want to detach it
 				if os.Getenv("WORKSPACED_DAEMON") == "1" {
-					cmd := exec.Command(termPath, args...)
+					cmd := exec.RunCmd(ctx, termPath, args...)
 					cmd.Stdout = nil
 					cmd.Stderr = nil
 					return cmd.Start()
