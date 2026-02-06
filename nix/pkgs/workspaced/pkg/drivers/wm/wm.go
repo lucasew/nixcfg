@@ -39,10 +39,8 @@ type Output struct {
 }
 
 // Node represents a node in the Sway/i3 tree.
+// Only fields necessary for finding the focused window's geometry are defined.
 type Node struct {
-	ID            int64   `json:"id"`
-	Name          string  `json:"name"`
-	Type          string  `json:"type"`
 	Rect          Rect    `json:"rect"`
 	Focused       bool    `json:"focused"`
 	Nodes         []*Node `json:"nodes"`

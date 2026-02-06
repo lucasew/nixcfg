@@ -12,6 +12,7 @@ import (
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/drivers/wm"
 	"workspaced/pkg/exec"
+	"workspaced/pkg/logging"
 )
 
 type Target int
@@ -141,7 +142,9 @@ func notifyMissing(ctx context.Context, tool string) {
 		Message: fmt.Sprintf("Missing tool: %s", tool),
 		Urgency: "critical",
 	}
-	_ = n.Notify(ctx)
+	if err := n.Notify(ctx); err != nil {
+		logging.ReportError(ctx, err)
+	}
 }
 
 func notifySaved(ctx context.Context, path string) {
@@ -150,5 +153,7 @@ func notifySaved(ctx context.Context, path string) {
 		Message: path,
 		Icon:    "camera-photo",
 	}
-	_ = n.Notify(ctx)
+	if err := n.Notify(ctx); err != nil {
+		logging.ReportError(ctx, err)
+	}
 }
