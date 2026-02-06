@@ -1,4 +1,4 @@
-package prelude
+package shellgen
 
 import (
 	"fmt"
