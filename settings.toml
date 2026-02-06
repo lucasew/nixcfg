@@ -87,6 +87,8 @@ webapp = "brave"
 url = "https://castable-iframe.vercel.app/"
 profile = "castable-iframe"
 
+[webapp.gemini]
+url = "https://gemini.google.com"
 
 [webapp.teste]
 url = "https://google.com"
