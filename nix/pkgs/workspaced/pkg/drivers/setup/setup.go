@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"workspaced/pkg/common"
+	"workspaced/pkg/env"
+	"workspaced/pkg/logging"
 )
 
 func SetupTermuxShortcuts(ctx context.Context) error {
-	if !common.IsPhone() {
+	if !env.IsPhone() {
 		return fmt.Errorf("this command only works on phone (Termux)")
 	}
 
@@ -17,7 +18,7 @@ func SetupTermuxShortcuts(ctx context.Context) error {
 	shortcutDir := filepath.Join(home, ".shortcuts")
 	_ = os.MkdirAll(shortcutDir, 0755)
 
-	dotfiles, err := common.GetDotfilesRoot()
+	dotfiles, err := env.GetDotfilesRoot()
 	if err != nil {
 		return err
 	}
@@ -49,7 +50,7 @@ exec %s/bin/source_me workspaced dispatch _shortcuts termux %s "$@"
 			if err := os.WriteFile(destPath, []byte(content), 0755); err != nil {
 				return fmt.Errorf("failed to write shortcut %s: %w", name, err)
 			}
-			common.GetLogger(ctx).Info("created shortcut", "name", name)
+			logging.GetLogger(ctx).Info("created shortcut", "name", name)
 		}
 	}
 

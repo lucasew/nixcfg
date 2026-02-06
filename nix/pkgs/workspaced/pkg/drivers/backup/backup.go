@@ -8,12 +8,14 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
-	"workspaced/pkg/common"
+	"workspaced/pkg/config"
 	"workspaced/pkg/drivers/git"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/drivers/sudo"
+	"workspaced/pkg/env"
+	"workspaced/pkg/exec"
+	"workspaced/pkg/logging"
 	"workspaced/pkg/types"
-	"workspaced/pkg/config"
 )
 
 func RunFullBackup(ctx context.Context) error {
@@ -22,7 +24,7 @@ func RunFullBackup(ctx context.Context) error {
 		return err
 	}
 
-	logger := common.GetLogger(ctx)
+	logger := logging.GetLogger(ctx)
 	logger.Info("starting full backup")
 
 	n := &notification.Notification{
@@ -31,10 +33,10 @@ func RunFullBackup(ctx context.Context) error {
 	}
 
 	totalSteps := 2 // Git sync + Final report
-	if common.IsRiverwood() {
+	if env.IsRiverwood() {
 		totalSteps++
 	}
-	if common.IsPhone() {
+	if env.IsPhone() {
 		totalSteps += 5 // Camera, Pictures, WA Media, WA Backups, Termux
 	}
 
@@ -50,7 +52,7 @@ func RunFullBackup(ctx context.Context) error {
 	updateProgress("Sincronizando repositórios Git...")
 	_ = git.QuickSync(ctx)
 
-	if common.IsRiverwood() {
+	if env.IsRiverwood() {
 		updateProgress("Sincronizando CANTGIT...")
 		logger.Info("host identified as riverwood, syncing CANTGIT")
 		home, _ := os.UserHomeDir()
@@ -61,7 +63,7 @@ func RunFullBackup(ctx context.Context) error {
 		}
 	}
 
-	if common.IsPhone() {
+	if env.IsPhone() {
 		logger.Info("host identified as phone, starting android backup")
 		if err := runPhoneBackup(ctx, cfg, updateProgress, n); err != nil {
 			return err
@@ -85,9 +87,9 @@ func Rsync(ctx context.Context, src, dst string, n *notification.Notification, e
 	cfg, _ := config.LoadConfig()
 	remote := fmt.Sprintf("%s:%s", cfg.Backup.RsyncnetUser, dst)
 
-	common.GetLogger(ctx).Info("rsync sync", "from", src, "to", remote)
+	logging.GetLogger(ctx).Info("rsync sync", "from", src, "to", remote)
 	args := append([]string{"-avP", src, remote}, extraArgs...)
-	cmd := common.RunCmd(ctx, "rsync", args...)
+	cmd := exec.RunCmd(ctx, "rsync", args...)
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
@@ -122,7 +124,7 @@ func Rsync(ctx context.Context, src, dst string, n *notification.Notification, e
 }
 
 func runPhoneBackup(ctx context.Context, cfg *config.GlobalConfig, updateProgress func(string), n *notification.Notification) error {
-	logger := common.GetLogger(ctx)
+	logger := logging.GetLogger(ctx)
 	// Sync Camera and Pictures
 	logger.Info("syncing media and whatsapp")
 	updateProgress("Sincronizando Câmera...")
@@ -143,7 +145,7 @@ func runPhoneBackup(ctx context.Context, cfg *config.GlobalConfig, updateProgres
 
 	// package list
 	logger.Info("generating package list")
-	pkgList, _ := common.RunCmd(ctx, "dpkg-query", "-f", "${binary:Package}\n", "-W").Output()
+	pkgList, _ := exec.RunCmd(ctx, "dpkg-query", "-f", "${binary:Package}\n", "-W").Output()
 	_ = os.WriteFile(filepath.Join(cacheDir, "packages.txt"), pkgList, 0644)
 
 	// sync home files
@@ -151,13 +153,13 @@ func runPhoneBackup(ctx context.Context, cfg *config.GlobalConfig, updateProgres
 		src := filepath.Join(home, item)
 		if _, err := os.Stat(src); err == nil {
 			logger.Info("syncing home item", "item", item)
-			_ = common.RunCmd(ctx, "rsync", "-avP", src, cacheDir).Run()
+			_ = exec.RunCmd(ctx, "rsync", "-avP", src, cacheDir).Run()
 		}
 	}
 
 	tarPath := filepath.Join(home, ".cache/backup/termux.tar")
 	logger.Info("creating tarball", "path", tarPath)
-	_ = common.RunCmd(ctx, "tar", "-cvf", tarPath, "-C", filepath.Dir(cacheDir), "termux").Run()
+	_ = exec.RunCmd(ctx, "tar", "-cvf", tarPath, "-C", filepath.Dir(cacheDir), "termux").Run()
 
 	_, err := Rsync(ctx, tarPath, cfg.Backup.RemotePath, n)
 	return err
@@ -167,7 +169,7 @@ func getRemoteStatus(ctx context.Context, cfg *config.GlobalConfig) (string, err
 	user := cfg.Backup.RsyncnetUser
 
 	// Get quota (raw)
-	quotaOut, _ := common.RunCmd(ctx, "ssh", user, "quota").Output()
+	quotaOut, _ := exec.RunCmd(ctx, "ssh", user, "quota").Output()
 
 	// Filter out lines with asterisks from quota output
 	var quotaLines []string
@@ -179,14 +181,14 @@ func getRemoteStatus(ctx context.Context, cfg *config.GlobalConfig) (string, err
 	filteredQuota := strings.Join(quotaLines, "\n")
 
 	// Get snapshots (flattened)
-	snapOut, _ := common.RunCmd(ctx, "ssh", user, "ls .zfs/snapshot").Output()
+	snapOut, _ := exec.RunCmd(ctx, "ssh", user, "ls .zfs/snapshot").Output()
 	snapshots := strings.Join(strings.Fields(string(snapOut)), " ")
 
 	return filteredQuota + "\n" + snapshots, nil
 }
 
 func ReplicateZFS(ctx context.Context) error {
-	logger := common.GetLogger(ctx)
+	logger := logging.GetLogger(ctx)
 	// Ported from bin/misc/zfs-backup
 	logger.Info("replicating ZFS vms dataset")
 
@@ -205,9 +207,9 @@ func ReplicateZFS(ctx context.Context) error {
 		return nil
 	}
 
-	if err := common.RunCmd(ctx, "syncoid", "-r", "zroot/vms", "storage/backup/vms").Run(); err != nil {
+	if err := exec.RunCmd(ctx, "syncoid", "-r", "zroot/vms", "storage/backup/vms").Run(); err != nil {
 		return err
 	}
 	logger.Info("replicating ZFS games dataset")
-	return common.RunCmd(ctx, "syncoid", "-r", "zroot/games", "storage/games").Run()
+	return exec.RunCmd(ctx, "syncoid", "-r", "zroot/games", "storage/games").Run()
 }

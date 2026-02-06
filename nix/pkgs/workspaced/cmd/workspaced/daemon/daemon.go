@@ -12,15 +12,17 @@ import (
 	"path/filepath"
 	"time"
 
+	"io"
+	"workspaced/cmd/workspaced/dispatch"
+	"workspaced/pkg/db"
+	"workspaced/pkg/drivers/media"
+	"workspaced/pkg/exec"
+	"workspaced/pkg/logging"
+	"workspaced/pkg/types"
+
 	"github.com/coreos/go-systemd/v22/activation"
 	"github.com/gorilla/websocket"
 	"github.com/spf13/cobra"
-	"io"
-	"workspaced/cmd/workspaced/dispatch"
-	"workspaced/pkg/common"
-	"workspaced/pkg/db"
-	"workspaced/pkg/drivers/media"
-	"workspaced/pkg/types"
 )
 
 type StreamPacketWriter struct {
@@ -181,7 +183,7 @@ func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB) {
 func handleRequest(ctx context.Context, req types.Request, outCh chan types.StreamPacket, database *db.DB) {
 	// Check if binary changed - if so, signal restart needed
 	if req.BinaryHash != "" {
-		daemonHash, err := common.GetBinaryHash()
+		daemonHash, err := exec.GetBinaryHash()
 		if err == nil && daemonHash != req.BinaryHash {
 			slog.Warn("binary hash mismatch, requesting daemon restart",
 				"daemon_hash", daemonHash[:16],
@@ -203,7 +205,7 @@ func handleRequest(ctx context.Context, req types.Request, outCh chan types.Stre
 	slog.Info("executing command", "command", req.Command, "args", req.Args)
 
 	// Create logger
-	handler := &common.ChannelLogHandler{
+	handler := &logging.ChannelLogHandler{
 		Out:    outCh,
 		Parent: slog.Default().Handler(),
 		Ctx:    ctx,

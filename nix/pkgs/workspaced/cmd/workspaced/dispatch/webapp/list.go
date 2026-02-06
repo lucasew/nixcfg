@@ -2,10 +2,11 @@ package webapp
 
 import (
 	"fmt"
-	"workspaced/pkg/common"
+
+	"workspaced/pkg/config"
+	"workspaced/pkg/text"
 
 	"github.com/spf13/cobra"
-	"workspaced/pkg/config"
 )
 
 func init() {
@@ -25,12 +26,12 @@ func init() {
 				}
 
 				fmt.Printf("%-20s %-30s %s\n", "NAME", "DISPLAY NAME", "URL")
-				fmt.Println(common.ToTitleCase(fmt.Sprintf("%-20s %-30s %s", "----", "------------", "---")))
+				fmt.Println(text.ToTitleCase(fmt.Sprintf("%-20s %-30s %s", "----", "------------", "---")))
 
 				for name, wa := range cfg.Webapps {
 					displayName := wa.DesktopName
 					if displayName == "" {
-						displayName = common.ToTitleCase(name)
+						displayName = text.ToTitleCase(name)
 					}
 					fmt.Printf("%-20s %-30s %s\n", name, displayName, wa.URL)
 				}

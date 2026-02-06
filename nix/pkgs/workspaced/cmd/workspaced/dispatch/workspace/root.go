@@ -1,7 +1,7 @@
 package workspace
 
 import (
-	"workspaced/pkg/common/registry"
+	"workspaced/pkg/registry"
 
 	"github.com/spf13/cobra"
 )

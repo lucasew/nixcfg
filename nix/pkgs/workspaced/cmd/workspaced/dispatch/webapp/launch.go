@@ -6,10 +6,12 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"workspaced/pkg/common"
+	"workspaced/pkg/env"
+	"workspaced/pkg/exec"
+
+	"workspaced/pkg/config"
 
 	"github.com/spf13/cobra"
-	"workspaced/pkg/config"
 )
 
 func init() {
@@ -29,7 +31,7 @@ func init() {
 
 				if len(args) == 0 {
 					// Use zenity to ask for URL
-					out, err := common.RunCmd(c.Context(), "zenity", "--entry", "--text=Link to be opened").Output()
+					out, err := exec.RunCmd(c.Context(), "zenity", "--entry", "--text=Link to be opened").Output()
 					if err != nil {
 						return nil // User cancelled
 					}
@@ -56,7 +58,7 @@ func init() {
 }
 
 func launchWebapp(ctx context.Context, url string, wa config.WebappConfig, engine string, isConfigured bool) error {
-	normalizedURL := common.NormalizeURL(url)
+	normalizedURL := env.NormalizeURL(url)
 	args := []string{"--app=" + normalizedURL}
 
 	if isConfigured && wa.Profile != "" {
@@ -73,7 +75,7 @@ func launchWebapp(ctx context.Context, url string, wa config.WebappConfig, engin
 		args = append(args, wa.ExtraFlags...)
 	}
 
-	cmd := common.RunCmd(ctx, engine, args...)
-	common.InheritContextWriters(ctx, cmd)
+	cmd := exec.RunCmd(ctx, engine, args...)
+	exec.InheritContextWriters(ctx, cmd)
 	return cmd.Run()
 }

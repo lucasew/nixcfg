@@ -3,8 +3,8 @@ package sudo
 import (
 	"os"
 	"os/exec"
-	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/sudo"
+	"workspaced/pkg/logging"
 
 	"github.com/spf13/cobra"
 )
@@ -17,7 +17,7 @@ func init() {
 			Args:  cobra.ExactArgs(1),
 			RunE: func(cmd *cobra.Command, args []string) error {
 				ctx := cmd.Context()
-				logger := common.GetLogger(ctx)
+				logger := logging.GetLogger(ctx)
 				slug := args[0]
 				sc, err := sudo.Get(slug)
 				if err != nil {

@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/nix"
 	"workspaced/pkg/drivers/notification"
+	"workspaced/pkg/env"
+	wexec "workspaced/pkg/exec"
+	"workspaced/pkg/logging"
 
 	"github.com/spf13/cobra"
 )
@@ -25,7 +27,7 @@ func init() {
 
 				flake, _ := cmd.Flags().GetString("flake")
 				if flake == "" {
-					root, err := common.GetDotfilesRoot()
+					root, err := env.GetDotfilesRoot()
 					if err != nil {
 						return err
 					}
@@ -35,7 +37,7 @@ func init() {
 				action, _ := cmd.Flags().GetString("action")
 
 				for _, node := range nodes {
-					logger := common.GetLogger(ctx).With("node", node)
+					logger := logging.GetLogger(ctx).With("node", node)
 					logger.Info("Deploying to node")
 					if err := deployNode(ctx, flake, node, action); err != nil {
 						logger.Error("Failed to deploy to node", "error", err)
@@ -60,7 +62,7 @@ func init() {
 }
 
 func deployNode(ctx context.Context, flake, node, action string) error {
-	logger := common.GetLogger(ctx).With("node", node)
+	logger := logging.GetLogger(ctx).With("node", node)
 	// 1. Build outputs
 	logger.Info("Building configuration for node")
 	toplevelPath := fmt.Sprintf("nixosConfigurations.%s.config.system.build.toplevel", node)
@@ -88,10 +90,10 @@ func deployNode(ctx context.Context, flake, node, action string) error {
 	if action == "" {
 		action = "boot"
 		// Check if same nixpkgs is used
-		localUsedOut, err := common.RunCmd(ctx, "realpath", fmt.Sprintf("%s/etc/.nixpkgs-used", toplevel)).Output()
+		localUsedOut, err := wexec.RunCmd(ctx, "realpath", fmt.Sprintf("%s/etc/.nixpkgs-used", toplevel)).Output()
 		if err == nil {
 			localUsed := strings.TrimSpace(string(localUsedOut))
-			remoteUsedOut, err := common.RunCmd(ctx, "ssh", node, "realpath /etc/.nixpkgs-used").Output()
+			remoteUsedOut, err := wexec.RunCmd(ctx, "ssh", node, "realpath /etc/.nixpkgs-used").Output()
 			if err == nil {
 				remoteUsed := strings.TrimSpace(string(remoteUsedOut))
 				if localUsed == remoteUsed {
@@ -103,8 +105,8 @@ func deployNode(ctx context.Context, flake, node, action string) error {
 
 	// 4. Activate Home Manager
 	logger.Info("Activating Home Manager on node")
-	cmdHM := common.RunCmd(ctx, "ssh", node, fmt.Sprintf("%s/bin/home-manager-generation", home))
-	common.InheritContextWriters(ctx, cmdHM)
+	cmdHM := wexec.RunCmd(ctx, "ssh", node, fmt.Sprintf("%s/bin/home-manager-generation", home))
+	wexec.InheritContextWriters(ctx, cmdHM)
 	if err := cmdHM.Run(); err != nil {
 		return fmt.Errorf("failed to activate home-manager on %s: %w", node, err)
 	}
@@ -112,7 +114,7 @@ func deployNode(ctx context.Context, flake, node, action string) error {
 	// 5. Switch System Configuration
 	logger.Info("Switching system configuration on node", "action", action)
 	// Check if already running
-	currentSystemOut, err := common.RunCmd(ctx, "ssh", node, "realpath /run/current-system").Output()
+	currentSystemOut, err := wexec.RunCmd(ctx, "ssh", node, "realpath /run/current-system").Output()
 	if err == nil {
 		currentSystem := strings.TrimSpace(string(currentSystemOut))
 		if currentSystem == toplevel {
@@ -122,8 +124,8 @@ func deployNode(ctx context.Context, flake, node, action string) error {
 	}
 
 	switchCmdArgs := []string{"ssh", "-t", node, "pkexec", fmt.Sprintf("%s/bin/switch-to-configuration", toplevel), action}
-	cmdSwitch := common.RunCmd(ctx, switchCmdArgs[0], switchCmdArgs[1:]...)
-	common.InheritContextWriters(ctx, cmdSwitch)
+	cmdSwitch := wexec.RunCmd(ctx, switchCmdArgs[0], switchCmdArgs[1:]...)
+	wexec.InheritContextWriters(ctx, cmdSwitch)
 	if err := cmdSwitch.Run(); err != nil {
 		return fmt.Errorf("failed to switch configuration on %s: %w", node, err)
 	}

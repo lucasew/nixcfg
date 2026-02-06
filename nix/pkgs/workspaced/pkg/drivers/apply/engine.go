@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"workspaced/pkg/common"
+	"workspaced/pkg/logging"
 )
 
 func GetStatePath() (string, error) {
@@ -55,7 +55,7 @@ func SaveState(state *State) error {
 }
 
 func Plan(ctx context.Context, desired []DesiredState, currentState *State) ([]Action, error) {
-	logger := common.GetLogger(ctx)
+	logger := logging.GetLogger(ctx)
 	actions := []Action{}
 	desiredMap := make(map[string]DesiredState)
 
@@ -141,7 +141,7 @@ func Plan(ctx context.Context, desired []DesiredState, currentState *State) ([]A
 }
 
 func Execute(ctx context.Context, actions []Action, state *State) error {
-	logger := common.GetLogger(ctx)
+	logger := logging.GetLogger(ctx)
 	for _, action := range actions {
 		switch action.Type {
 		case ActionNoop:

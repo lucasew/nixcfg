@@ -2,7 +2,8 @@ package is
 
 import (
 	"fmt"
-	"workspaced/pkg/common"
+	"workspaced/pkg/env"
+	"workspaced/pkg/logging"
 
 	"github.com/spf13/cobra"
 )
@@ -13,16 +14,16 @@ func init() {
 			Use:   "known-node",
 			Short: "Check if host is a known node",
 			RunE: func(c *cobra.Command, args []string) error {
-				logger := common.GetLogger(c.Context())
-				if common.IsRiverwood() {
+				logger := logging.GetLogger(c.Context())
+				if env.IsRiverwood() {
 					logger.Info("riverwood")
 					return nil
 				}
-				if common.IsWhiterun() {
+				if env.IsWhiterun() {
 					logger.Info("whiterun")
 					return nil
 				}
-				if common.IsPhone() {
+				if env.IsPhone() {
 					logger.Info("phone")
 					return nil
 				}

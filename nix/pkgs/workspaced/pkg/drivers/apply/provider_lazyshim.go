@@ -6,8 +6,9 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"workspaced/pkg/common"
+	"workspaced/pkg/cas"
 	"workspaced/pkg/config"
+	"workspaced/pkg/env"
 )
 
 type LazyShimProvider struct{}
@@ -22,7 +23,7 @@ func (p *LazyShimProvider) GetDesiredState(ctx context.Context) ([]DesiredState,
 		return nil, err
 	}
 
-	dataDir, err := common.GetUserDataDir()
+	dataDir, err := env.GetUserDataDir()
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +114,7 @@ exec x %s "$@"
 }
 
 func (p *LazyShimProvider) materialize(content string) (string, error) {
-	cw, err := common.NewCASWriter()
+	cw, err := cas.NewCASWriter()
 	if err != nil {
 		return "", err
 	}

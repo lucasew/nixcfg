@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"workspaced/pkg/common"
+	"workspaced/pkg/env"
 
 	"github.com/BurntSushi/toml"
 )
@@ -211,7 +211,7 @@ func Load() (*Config, error) {
 
 	raw := make(map[string]interface{})
 	home, _ := os.UserHomeDir()
-	dotfiles, _ := common.GetDotfilesRoot()
+	dotfiles, _ := env.GetDotfilesRoot()
 
 	// 1. Merge dotfiles settings
 	if dotfiles != "" {
@@ -250,7 +250,7 @@ func LoadConfig() (*GlobalConfig, error) {
 		return nil, err
 	}
 
-	dotfiles, _ := common.GetDotfilesRoot()
+	dotfiles, _ := env.GetDotfilesRoot()
 
 	// 1. Start with hardcoded defaults
 	config := GlobalConfig{
@@ -304,14 +304,13 @@ func LoadConfig() (*GlobalConfig, error) {
 	}
 
 	// 4. Expand paths
-	config.Desktop.Wallpaper.Dir = common.ExpandPath(config.Desktop.Wallpaper.Dir)
-	config.Desktop.Wallpaper.Default = common.ExpandPath(config.Desktop.Wallpaper.Default)
-	config.Screenshot.Dir = common.ExpandPath(config.Screenshot.Dir)
-	config.QuickSync.RepoDir = common.ExpandPath(config.QuickSync.RepoDir)
+	config.Desktop.Wallpaper.Dir = env.ExpandPath(config.Desktop.Wallpaper.Dir)
+	config.Desktop.Wallpaper.Default = env.ExpandPath(config.Desktop.Wallpaper.Default)
+	config.Screenshot.Dir = env.ExpandPath(config.Screenshot.Dir)
+	config.QuickSync.RepoDir = env.ExpandPath(config.QuickSync.RepoDir)
 
 	return &config, nil
 }
-
 
 func (c *Config) UnmarshalKey(key string, val interface{}) error {
 	parts := strings.Split(key, ".")

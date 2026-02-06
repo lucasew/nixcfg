@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"workspaced/pkg/common"
+	"workspaced/pkg/env"
 )
 
 type ProfileProvider struct{}
@@ -20,7 +20,7 @@ func (p *ProfileProvider) GetDesiredState(ctx context.Context) ([]DesiredState, 
 		return nil, err
 	}
 
-	dotfiles, err := common.GetDotfilesRoot()
+	dotfiles, err := env.GetDotfilesRoot()
 	if err != nil {
 		return nil, err
 	}

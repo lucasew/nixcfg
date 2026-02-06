@@ -1,4 +1,4 @@
-package common
+package cas
 
 import (
 	"crypto/sha256"
@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"workspaced/pkg/env"
 )
 
 type CASWriter struct {
@@ -16,7 +17,7 @@ type CASWriter struct {
 }
 
 func NewCASWriter() (*CASWriter, error) {
-	dataDir, err := GetUserDataDir()
+	dataDir, err := env.GetUserDataDir()
 	if err != nil {
 		return nil, err
 	}

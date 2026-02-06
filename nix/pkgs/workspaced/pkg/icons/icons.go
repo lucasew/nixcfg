@@ -1,4 +1,4 @@
-package common
+package icons
 
 import (
 	"context"
@@ -15,22 +15,12 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"workspaced/pkg/env"
+	"workspaced/pkg/logging"
 )
 
-func GetConfigDir() (string, error) {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return "", err
-	}
-	dir := filepath.Join(home, ".config/workspaced")
-	if err := os.MkdirAll(dir, 0755); err != nil {
-		return "", err
-	}
-	return dir, nil
-}
-
 func GetIconPath(ctx context.Context, url string) (string, error) {
-	configDir, err := GetConfigDir()
+	configDir, err := env.GetConfigDir()
 	if err != nil {
 		return "", err
 	}
@@ -39,7 +29,7 @@ func GetIconPath(ctx context.Context, url string) (string, error) {
 		return "", err
 	}
 
-	normalized := NormalizeURL(url)
+	normalized := env.NormalizeURL(url)
 	hash := sha256.Sum256([]byte(normalized))
 	hashStr := hex.EncodeToString(hash[:])
 	path := filepath.Join(iconsDir, hashStr+".png")
@@ -48,7 +38,7 @@ func GetIconPath(ctx context.Context, url string) (string, error) {
 		return path, nil
 	}
 
-	logger := GetLogger(ctx)
+	logger := logging.GetLogger(ctx)
 	logger.Info("downloading favicon", "url", normalized, "target", path)
 
 	domain := normalized

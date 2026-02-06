@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"syscall"
-	"workspaced/pkg/common"
+	wexec "workspaced/pkg/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -24,7 +24,7 @@ func NewCommand() *cobra.Command {
 			terminals := []string{"kitty", "alacritty", "foot", "st", "xterm"}
 
 			for _, term := range terminals {
-				termPath, err := common.Which(ctx, term)
+				termPath, err := wexec.Which(ctx, term)
 				if err != nil {
 					continue
 				}

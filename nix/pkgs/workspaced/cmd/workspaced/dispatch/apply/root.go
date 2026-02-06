@@ -2,9 +2,10 @@ package apply
 
 import (
 	"fmt"
-	"workspaced/pkg/common"
 	"workspaced/pkg/drivers/apply"
 	"workspaced/pkg/drivers/nix"
+	"workspaced/pkg/env"
+	"workspaced/pkg/logging"
 
 	"github.com/spf13/cobra"
 )
@@ -16,7 +17,7 @@ func GetCommand() *cobra.Command {
 		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
-			logger := common.GetLogger(ctx)
+			logger := logging.GetLogger(ctx)
 
 			action := "switch"
 			if len(args) > 0 {
@@ -83,13 +84,13 @@ func GetCommand() *cobra.Command {
 			}
 
 			// 5. Home Manager hook
-			if !common.IsPhone() {
+			if !env.IsPhone() {
 				logger.Info("running home-manager rebuild")
 				if dryRun {
 					logger.Info("dry-run: skipping home-manager rebuild")
 				} else {
 					flake := ""
-					if common.IsRiverwood() {
+					if env.IsRiverwood() {
 						logger.Info("performing remote build for home-manager on riverwood")
 						ref := ".#homeConfigurations.main.activationPackage"
 						result, err := nix.RemoteBuild(ctx, ref, "whiterun", true)
@@ -105,15 +106,15 @@ func GetCommand() *cobra.Command {
 			}
 
 			// 6. System specific hooks
-			if common.IsNixOS() {
+			if env.IsNixOS() {
 				logger.Info("running NixOS rebuild", "action", action)
 				if dryRun {
 					logger.Info("dry-run: skipping nixos-rebuild")
 				} else {
 					flake := ""
-					if common.IsRiverwood() {
+					if env.IsRiverwood() {
 						logger.Info("performing remote build for riverwood")
-						hostname := common.GetHostname()
+						hostname := env.GetHostname()
 						ref := fmt.Sprintf(".#nixosConfigurations.%s.config.system.build.toplevel", hostname)
 						result, err := nix.RemoteBuild(ctx, ref, "whiterun", true)
 						if err != nil {

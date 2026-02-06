@@ -5,7 +5,8 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"workspaced/pkg/common"
+	"workspaced/pkg/env"
+	wexec "workspaced/pkg/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -16,14 +17,14 @@ func GetCommand() *cobra.Command {
 		Short: "Pull dotfiles changes and apply them",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
-			root, err := common.GetDotfilesRoot()
+			root, err := env.GetDotfilesRoot()
 			if err != nil {
 				return fmt.Errorf("failed to get dotfiles root: %w", err)
 			}
 
 			// 1. Git pull
 			fmt.Println("==> Pulling dotfiles changes...")
-			pullCmd := common.RunCmd(ctx, "git", "-C", root, "pull")
+			pullCmd := wexec.RunCmd(ctx, "git", "-C", root, "pull")
 			pullCmd.Stdout = os.Stdout
 			pullCmd.Stderr = os.Stderr
 			if err := pullCmd.Run(); err != nil {
@@ -32,7 +33,7 @@ func GetCommand() *cobra.Command {
 
 			// 2. Rebuild via shim and apply (WORKSPACED_REFRESH triggers rebuild, shim execs the new binary)
 			fmt.Println("==> Rebuilding and applying...")
-			bashPath, err := common.Which(ctx, "bash")
+			bashPath, err := wexec.Which(ctx, "bash")
 			if err != nil {
 				return fmt.Errorf("bash not found: %w", err)
 			}

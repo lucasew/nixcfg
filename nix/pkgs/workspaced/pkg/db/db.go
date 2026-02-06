@@ -6,8 +6,8 @@ import (
 	"embed"
 	"os"
 	"path/filepath"
-	"workspaced/pkg/common"
 	"workspaced/pkg/db/sqlc"
+	"workspaced/pkg/env"
 	"workspaced/pkg/types"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -25,7 +25,7 @@ type DB struct {
 }
 
 func Open() (*DB, error) {
-	dataDir, err := common.GetUserDataDir()
+	dataDir, err := env.GetUserDataDir()
 	if err != nil {
 		return nil, err
 	}

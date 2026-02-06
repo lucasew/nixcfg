@@ -2,7 +2,7 @@ package is
 
 import (
 	"fmt"
-	"workspaced/pkg/common"
+	"workspaced/pkg/env"
 
 	"github.com/spf13/cobra"
 )
@@ -13,7 +13,7 @@ func init() {
 			Use:   "whiterun",
 			Short: "Check if host is whiterun",
 			RunE: func(c *cobra.Command, args []string) error {
-				if !common.IsWhiterun() {
+				if !env.IsWhiterun() {
 					return fmt.Errorf("not whiterun")
 				}
 				return nil
