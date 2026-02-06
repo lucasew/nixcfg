@@ -12,6 +12,7 @@ import (
 
 	"workspaced/pkg/drivers/media"
 	"workspaced/pkg/exec"
+	"workspaced/pkg/logging"
 )
 
 // Workspace represents a workspace as returned by Sway/i3 IPC.
@@ -50,7 +51,9 @@ func ToggleScratchpadWithInfo(ctx context.Context) error {
 	if err := ToggleScratchpad(ctx); err != nil {
 		return err
 	}
-	_ = media.ShowStatus(ctx)
+	if err := media.ShowStatus(ctx); err != nil {
+		logging.ReportError(ctx, err)
+	}
 	return nil
 }
 
@@ -65,7 +68,9 @@ func NextWorkspace(ctx context.Context, move bool) error {
 		runtimeDir = filepath.Join(os.TempDir(), fmt.Sprintf("workspaced-%d", os.Getuid()))
 	}
 	workspacedDir := filepath.Join(runtimeDir, "workspaced")
-	_ = os.MkdirAll(workspacedDir, 0700)
+	if err := os.MkdirAll(workspacedDir, 0700); err != nil {
+		logging.ReportError(ctx, err)
+	}
 
 	wsFile := filepath.Join(workspacedDir, "last_ws")
 	lastWS := 10
@@ -76,7 +81,9 @@ func NextWorkspace(ctx context.Context, move bool) error {
 	}
 
 	nextWS := lastWS + 1
-	_ = os.WriteFile(wsFile, []byte(strconv.Itoa(nextWS)), 0600)
+	if err := os.WriteFile(wsFile, []byte(strconv.Itoa(nextWS)), 0600); err != nil {
+		logging.ReportError(ctx, err)
+	}
 
 	return SwitchToWorkspace(ctx, nextWS, move)
 }
@@ -100,7 +107,10 @@ func RotateWorkspaces(ctx context.Context) error {
 		return err
 	}
 	var workspaces []Workspace
-	_ = json.Unmarshal(out, &workspaces)
+	if err := json.Unmarshal(out, &workspaces); err != nil {
+		logging.ReportError(ctx, err)
+		return err
+	}
 
 	var focusedWorkspace string
 	for _, w := range workspaces {
@@ -116,7 +126,10 @@ func RotateWorkspaces(ctx context.Context) error {
 		return err
 	}
 	var outputs []Output
-	_ = json.Unmarshal(out, &outputs)
+	if err := json.Unmarshal(out, &outputs); err != nil {
+		logging.ReportError(ctx, err)
+		return err
+	}
 
 	var screens []string
 	workspaceScreens := make(map[string]string)
@@ -143,19 +156,27 @@ func RotateWorkspaces(ctx context.Context) error {
 		toScreen := screens[i]
 		ws := workspaceScreens[fromScreen]
 
-		_ = exec.RunCmd(ctx, rpc, "workspace", "number", ws).Run()
+		if err := exec.RunCmd(ctx, rpc, "workspace", "number", ws).Run(); err != nil {
+			logging.ReportError(ctx, err)
+		}
 		time.Sleep(100 * time.Millisecond)
-		_ = exec.RunCmd(ctx, rpc, "move", "workspace", "to", "output", toScreen).Run()
+		if err := exec.RunCmd(ctx, rpc, "move", "workspace", "to", "output", toScreen).Run(); err != nil {
+			logging.ReportError(ctx, err)
+		}
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	for _, ws := range workspaceScreens {
-		_ = exec.RunCmd(ctx, rpc, "workspace", "number", ws).Run()
+		if err := exec.RunCmd(ctx, rpc, "workspace", "number", ws).Run(); err != nil {
+			logging.ReportError(ctx, err)
+		}
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	if focusedWorkspace != "" {
-		_ = exec.RunCmd(ctx, rpc, "workspace", "number", focusedWorkspace).Run()
+		if err := exec.RunCmd(ctx, rpc, "workspace", "number", focusedWorkspace).Run(); err != nil {
+			logging.ReportError(ctx, err)
+		}
 	}
 
 	return nil

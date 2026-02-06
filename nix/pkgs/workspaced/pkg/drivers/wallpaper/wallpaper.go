@@ -22,7 +22,10 @@ func SetStatic(ctx context.Context, path string) error {
 			return err
 		}
 		wallpaperDir := cfg.Desktop.Wallpaper.Dir
-		files, _ := filepath.Glob(filepath.Join(wallpaperDir, "*"))
+		files, err := filepath.Glob(filepath.Join(wallpaperDir, "*"))
+		if err != nil {
+			return err
+		}
 		if len(files) == 0 {
 			return fmt.Errorf("no wallpapers found in %s", wallpaperDir)
 		}
@@ -62,7 +65,11 @@ func SetAPOD(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	defer func() { _ = resp.Body.Close() }()
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			logging.ReportError(ctx, err)
+		}
+	}()
 
 	var apod APODResponse
 	if err := json.NewDecoder(resp.Body).Decode(&apod); err != nil {
@@ -74,22 +81,35 @@ func SetAPOD(ctx context.Context) error {
 		url = apod.URL
 	}
 
-	home, _ := os.UserHomeDir()
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
 	cacheDir := filepath.Join(home, ".cache/workspaced")
-	_ = os.MkdirAll(cacheDir, 0755)
+	if err := os.MkdirAll(cacheDir, 0755); err != nil {
+		return err
+	}
 	outPath := filepath.Join(cacheDir, "apod.jpg")
 
 	out, err := os.Create(outPath)
 	if err != nil {
 		return err
 	}
-	defer func() { _ = out.Close() }()
+	defer func() {
+		if err := out.Close(); err != nil {
+			logging.ReportError(ctx, err)
+		}
+	}()
 
 	imgResp, err := http.Get(url)
 	if err != nil {
 		return err
 	}
-	defer func() { _ = imgResp.Body.Close() }()
+	defer func() {
+		if err := imgResp.Body.Close(); err != nil {
+			logging.ReportError(ctx, err)
+		}
+	}()
 
 	if _, err := io.Copy(out, imgResp.Body); err != nil {
 		return err

@@ -10,6 +10,7 @@ import (
 	"time"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/types"
+	"workspaced/pkg/logging"
 )
 
 func getQueueDir() (string, error) {
@@ -27,12 +28,18 @@ func getQueueDir() (string, error) {
 func Enqueue(ctx context.Context, cmd *types.SudoCommand) error {
 	if cmd.Slug == "" {
 		b := make([]byte, 3)
-		_, _ = rand.Read(b)
+		if _, err := rand.Read(b); err != nil {
+			return err
+		}
 		cmd.Slug = fmt.Sprintf("%x", b)
 	}
 
 	if cmd.Cwd == "" {
-		cmd.Cwd, _ = os.Getwd()
+		cwd, err := os.Getwd()
+		if err != nil {
+			return err
+		}
+		cmd.Cwd = cwd
 	}
 
 	if len(cmd.Env) == 0 {
@@ -63,12 +70,14 @@ func Enqueue(ctx context.Context, cmd *types.SudoCommand) error {
 		Message: fmt.Sprintf("Command '%s' (slug: %s) pending approval.", cmd.Command, cmd.Slug),
 		Icon:    "dialog-password",
 	}
-	_ = n.Notify(ctx)
+	if err := n.Notify(ctx); err != nil {
+		logging.ReportError(ctx, err)
+	}
 
 	return nil
 }
 
-func List() ([]*types.SudoCommand, error) {
+func List(ctx context.Context) ([]*types.SudoCommand, error) {
 	dir, err := getQueueDir()
 	if err != nil {
 		return nil, err
@@ -84,12 +93,15 @@ func List() ([]*types.SudoCommand, error) {
 		if filepath.Ext(entry.Name()) == ".json" {
 			data, err := os.ReadFile(filepath.Join(dir, entry.Name()))
 			if err != nil {
+				logging.ReportError(ctx, err)
 				continue
 			}
 			var cmd types.SudoCommand
-			if err := json.Unmarshal(data, &cmd); err == nil {
-				cmds = append(cmds, &cmd)
+			if err := json.Unmarshal(data, &cmd); err != nil {
+				logging.ReportError(ctx, err)
+				continue
 			}
+			cmds = append(cmds, &cmd)
 		}
 	}
 	return cmds, nil

@@ -14,7 +14,7 @@ func init() {
 			Use:   "list",
 			Short: "List pending commands",
 			RunE: func(cmd *cobra.Command, args []string) error {
-				cmds, err := sudo.List()
+				cmds, err := sudo.List(cmd.Context())
 				if err != nil {
 					return err
 				}
