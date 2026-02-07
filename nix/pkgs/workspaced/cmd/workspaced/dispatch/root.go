@@ -31,10 +31,8 @@ import (
 	"workspaced/cmd/workspaced/dispatch/webapp"
 	"workspaced/cmd/workspaced/dispatch/workspace"
 	"workspaced/cmd/workspaced/is"
-	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
-	"workspaced/pkg/ipc"
-	"workspaced/pkg/logging"
+	"workspaced/pkg/types"
 
 	"github.com/gorilla/websocket"
 	"github.com/spf13/cobra"
@@ -51,7 +49,7 @@ func NewCommand() *cobra.Command {
 		ctx := c.Context()
 		isDaemon := false
 
-		val := ctx.Value(env.DaemonModeKey)
+		val := ctx.Value(types.DaemonModeKey)
 		if os.Getenv("WORKSPACED_DAEMON") == "1" {
 			isDaemon = true
 		}
@@ -168,7 +166,7 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 	// Get client binary hash
 	clientHash, _ := exec.GetBinaryHash()
 
-	req := ipc.Request{
+	req := types.Request{
 		Command:    cmdName,
 		Args:       args,
 		Env:        os.Environ(),
@@ -177,7 +175,7 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 
 	// Send request as a StreamPacket
 	payload, _ := json.Marshal(req)
-	packet := ipc.StreamPacket{
+	packet := types.StreamPacket{
 		Type:    "request",
 		Payload: payload,
 	}
@@ -187,14 +185,14 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 	}
 
 	for {
-		var packet ipc.StreamPacket
+		var packet types.StreamPacket
 		if err := conn.ReadJSON(&packet); err != nil {
 			return "", true, fmt.Errorf("failed to read response: %w", err)
 		}
 
 		switch packet.Type {
 		case "log":
-			var entry logging.LogEntry
+			var entry types.LogEntry
 			if err := json.Unmarshal(packet.Payload, &entry); err != nil {
 				continue
 			}
@@ -223,7 +221,7 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 				fmt.Fprint(os.Stderr, out)
 			}
 		case "result":
-			var resp ipc.Response
+			var resp types.Response
 			if err := json.Unmarshal(packet.Payload, &resp); err != nil {
 				return "", true, fmt.Errorf("failed to parse result: %w", err)
 			}

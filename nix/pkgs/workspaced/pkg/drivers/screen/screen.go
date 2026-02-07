@@ -7,6 +7,7 @@ import (
 	"strings"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/types"
 )
 
 func GetDriver(ctx context.Context) (Driver, error) {
@@ -16,7 +17,7 @@ func GetDriver(ctx context.Context) (Driver, error) {
 	}
 
 	display := os.Getenv("DISPLAY")
-	if env, ok := ctx.Value(exec.EnvKey).([]string); ok {
+	if env, ok := ctx.Value(types.EnvKey).([]string); ok {
 		for _, e := range env {
 			if strings.HasPrefix(e, "DISPLAY=") {
 				display = strings.TrimPrefix(e, "DISPLAY=")

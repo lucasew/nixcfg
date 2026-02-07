@@ -16,10 +16,9 @@ import (
 	"workspaced/cmd/workspaced/dispatch"
 	"workspaced/pkg/db"
 	"workspaced/pkg/drivers/media"
-	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
-	"workspaced/pkg/ipc"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/types"
 
 	"github.com/coreos/go-systemd/v22/activation"
 	"github.com/gorilla/websocket"
@@ -27,13 +26,13 @@ import (
 )
 
 type StreamPacketWriter struct {
-	Out  chan<- ipc.StreamPacket
+	Out  chan<- types.StreamPacket
 	Type string
 }
 
 func (w *StreamPacketWriter) Write(p []byte) (n int, err error) {
 	payload, _ := json.Marshal(string(p))
-	w.Out <- ipc.StreamPacket{
+	w.Out <- types.StreamPacket{
 		Type:    w.Type,
 		Payload: payload,
 	}
@@ -129,7 +128,7 @@ func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB) {
 	defer cancel()
 
 	// Output channel
-	outCh := make(chan ipc.StreamPacket, 1000)
+	outCh := make(chan types.StreamPacket, 1000)
 	done := make(chan struct{})
 
 	// Pump goroutine: channel -> websocket
@@ -147,7 +146,7 @@ func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB) {
 	// Read loop for packets from client
 	go func() {
 		for {
-			var packet ipc.StreamPacket
+			var packet types.StreamPacket
 			if err := conn.ReadJSON(&packet); err != nil {
 				if !websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway) {
 					slog.Debug("ws read error", "error", err)
@@ -158,14 +157,14 @@ func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB) {
 
 			switch packet.Type {
 			case "request":
-				var req ipc.Request
+				var req types.Request
 				if err := json.Unmarshal(packet.Payload, &req); err != nil {
 					slog.Warn("ws unmarshal request error", "error", err)
 					continue
 				}
 				handleRequest(ctx, req, outCh, database)
 			case "history_event":
-				var event db.HistoryEvent
+				var event types.HistoryEvent
 				if err := json.Unmarshal(packet.Payload, &event); err != nil {
 					slog.Warn("ws unmarshal history event error", "error", err)
 					continue
@@ -181,7 +180,7 @@ func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB) {
 	<-done
 }
 
-func handleRequest(ctx context.Context, req ipc.Request, outCh chan ipc.StreamPacket, database *db.DB) {
+func handleRequest(ctx context.Context, req types.Request, outCh chan types.StreamPacket, database *db.DB) {
 	// Check if binary changed - if so, signal restart needed
 	if req.BinaryHash != "" {
 		daemonHash, err := exec.GetBinaryHash()
@@ -191,11 +190,11 @@ func handleRequest(ctx context.Context, req ipc.Request, outCh chan ipc.StreamPa
 				"client_hash", req.BinaryHash[:16])
 
 			// Send special error that tells client to restart daemon and retry
-			resp := ipc.Response{
+			resp := types.Response{
 				Error: "DAEMON_RESTART_NEEDED",
 			}
 			payload, _ := json.Marshal(resp)
-			outCh <- ipc.StreamPacket{
+			outCh <- types.StreamPacket{
 				Type:    "result",
 				Payload: payload,
 			}
@@ -217,31 +216,31 @@ func handleRequest(ctx context.Context, req ipc.Request, outCh chan ipc.StreamPa
 	stdout := &StreamPacketWriter{Out: outCh, Type: "stdout"}
 	stderr := &StreamPacketWriter{Out: outCh, Type: "stderr"}
 
-	ctx = context.WithValue(ctx, logging.LoggerKey, logger)
-	ctx = context.WithValue(ctx, exec.StdoutKey, stdout)
-	ctx = context.WithValue(ctx, exec.StderrKey, stderr)
-	environ := append(req.Env, "WORKSPACED_DAEMON=1")
-	ctx = context.WithValue(ctx, exec.EnvKey, environ)
-	ctx = context.WithValue(ctx, env.DaemonModeKey, true)
+	ctx = context.WithValue(ctx, types.LoggerKey, logger)
+	ctx = context.WithValue(ctx, types.StdoutKey, stdout)
+	ctx = context.WithValue(ctx, types.StderrKey, stderr)
+	env := append(req.Env, "WORKSPACED_DAEMON=1")
+	ctx = context.WithValue(ctx, types.EnvKey, env)
+	ctx = context.WithValue(ctx, types.DaemonModeKey, true)
 	// Inject DB into context so commands can use it
-	ctx = context.WithValue(ctx, db.DBKey, database)
+	ctx = context.WithValue(ctx, types.DBKey, database)
 
 	output, err := ExecuteViaCobra(ctx, req, stdout, stderr)
 
-	resp := ipc.Response{Output: output}
+	resp := types.Response{Output: output}
 	if err != nil {
 		slog.Error("command failed", "command", req.Command, "error", err)
 		resp.Error = err.Error()
 	}
 
 	payload, _ := json.Marshal(resp)
-	outCh <- ipc.StreamPacket{
+	outCh <- types.StreamPacket{
 		Type:    "result",
 		Payload: payload,
 	}
 }
 
-func ExecuteViaCobra(ctx context.Context, req ipc.Request, stdout, stderr io.Writer) (string, error) {
+func ExecuteViaCobra(ctx context.Context, req types.Request, stdout, stderr io.Writer) (string, error) {
 	targetCmd, targetArgs, err := dispatch.FindCommand(req.Command, req.Args)
 	if err != nil {
 		return "", err

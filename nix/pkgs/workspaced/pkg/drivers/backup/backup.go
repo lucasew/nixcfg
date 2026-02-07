@@ -15,6 +15,7 @@ import (
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/types"
 )
 
 func RunFullBackup(ctx context.Context) error {
@@ -192,13 +193,13 @@ func ReplicateZFS(ctx context.Context) error {
 	logger.Info("replicating ZFS vms dataset")
 
 	if os.Getuid() != 0 {
-		_ = sudo.Enqueue(ctx, &sudo.SudoCommand{
+		_ = sudo.Enqueue(ctx, &types.SudoCommand{
 			Slug:    "zfs-backup-vms",
 			Command: "syncoid",
 			Args:    []string{"-r", "zroot/vms", "storage/backup/vms"},
 		})
 		logger.Info("replicating ZFS games dataset")
-		_ = sudo.Enqueue(ctx, &sudo.SudoCommand{
+		_ = sudo.Enqueue(ctx, &types.SudoCommand{
 			Slug:    "zfs-backup-games",
 			Command: "syncoid",
 			Args:    []string{"-r", "zroot/games", "storage/games"},

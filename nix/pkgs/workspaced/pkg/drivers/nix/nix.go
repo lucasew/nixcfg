@@ -16,6 +16,7 @@ import (
 	"workspaced/pkg/exec"
 	"workspaced/pkg/icons"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/types"
 )
 
 var buildCache sync.Map // key: sourcePath#attribute, value: resultPath
@@ -264,7 +265,7 @@ func Rebuild(ctx context.Context, action string, flake string) error {
 	args := []string{action}
 
 	if os.Getuid() != 0 {
-		return sudo.Enqueue(ctx, &sudo.SudoCommand{
+		return sudo.Enqueue(ctx, &types.SudoCommand{
 			Slug:    "rebuild",
 			Command: cmdName,
 			Args:    args,
@@ -313,7 +314,7 @@ func HomeManagerSwitch(ctx context.Context, action string, flake string) error {
 
 func GetFlakeOutput(ctx context.Context, flake, output string) (string, error) {
 	cmd := exec.RunCmd(ctx, "nix", "build", fmt.Sprintf("%s#%s", flake, output), "--no-link", "--print-out-paths")
-	if stderr, ok := ctx.Value(exec.StderrKey).(io.Writer); ok {
+	if stderr, ok := ctx.Value(types.StderrKey).(io.Writer); ok {
 		cmd.Stderr = stderr
 	}
 	out, err := cmd.Output()
