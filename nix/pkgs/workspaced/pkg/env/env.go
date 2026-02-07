@@ -8,6 +8,14 @@ import (
 	"strings"
 )
 
+// ContextKey is a distinct string type for context values to prevent key collisions.
+type ContextKey string
+
+const (
+	// DaemonModeKey flags whether the application is running as a long-lived daemon.
+	DaemonModeKey ContextKey = "daemon_mode"
+)
+
 // EssentialPaths defines the list of directories that must be present in the PATH
 // for the application to function correctly on NixOS.
 // These typically include locations for wrapped binaries and current system software.

@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 	"workspaced/pkg/db"
-	"workspaced/pkg/types"
+	"workspaced/pkg/ipc"
 
 	"github.com/gorilla/websocket"
 	"github.com/ktr0731/go-fuzzyfinder"
@@ -29,7 +29,7 @@ func GetCommand() *cobra.Command {
 		Use:   "search [query]",
 		Short: "Search history using fuzzy finder",
 		RunE: func(c *cobra.Command, args []string) error {
-			database, ok := c.Context().Value(types.DBKey).(*db.DB)
+			database, ok := c.Context().Value(db.DBKey).(*db.DB)
 			if !ok {
 				var err error
 				database, err = db.Open()
@@ -96,7 +96,7 @@ func GetCommand() *cobra.Command {
 			limit, _ := c.Flags().GetInt32("limit")
 			asJSON, _ := c.Flags().GetBool("json")
 
-			database, ok := c.Context().Value(types.DBKey).(*db.DB)
+			database, ok := c.Context().Value(db.DBKey).(*db.DB)
 			if !ok {
 				var err error
 				database, err = db.Open()
@@ -132,7 +132,7 @@ func GetCommand() *cobra.Command {
 		Use:   "record",
 		Short: "Record a command in history",
 		RunE: func(c *cobra.Command, args []string) error {
-			var event types.HistoryEvent
+			var event db.HistoryEvent
 
 			// Try reading from stdin if no command flag is provided
 			command, _ := c.Flags().GetString("command")
@@ -155,7 +155,7 @@ func GetCommand() *cobra.Command {
 				event.Cwd, _ = os.Getwd()
 			}
 
-			if database, ok := c.Context().Value(types.DBKey).(*db.DB); ok {
+			if database, ok := c.Context().Value(db.DBKey).(*db.DB); ok {
 				return database.RecordHistory(c.Context(), event)
 			}
 
@@ -185,7 +185,7 @@ func GetCommand() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(c *cobra.Command, args []string) error {
 			source := args[0]
-			database, ok := c.Context().Value(types.DBKey).(*db.DB)
+			database, ok := c.Context().Value(db.DBKey).(*db.DB)
 			if !ok {
 				var err error
 				database, err = db.Open()
@@ -195,7 +195,7 @@ func GetCommand() *cobra.Command {
 				defer database.Close()
 			}
 
-			var events []types.HistoryEvent
+			var events []db.HistoryEvent
 			var err error
 
 			switch source {
@@ -224,7 +224,7 @@ func GetCommand() *cobra.Command {
 	return cmd
 }
 
-func ingestBash() ([]types.HistoryEvent, error) {
+func ingestBash() ([]db.HistoryEvent, error) {
 	home, _ := os.UserHomeDir()
 	path := filepath.Join(home, ".bash_history")
 	file, err := os.Open(path)
@@ -233,7 +233,7 @@ func ingestBash() ([]types.HistoryEvent, error) {
 	}
 	defer file.Close()
 
-	var events []types.HistoryEvent
+	var events []db.HistoryEvent
 	scanner := bufio.NewScanner(file)
 	var lastTimestamp int64
 	for scanner.Scan() {
@@ -248,7 +248,7 @@ func ingestBash() ([]types.HistoryEvent, error) {
 		if line == "" {
 			continue
 		}
-		events = append(events, types.HistoryEvent{
+		events = append(events, db.HistoryEvent{
 			Command:   line,
 			Timestamp: lastTimestamp,
 			Cwd:       "/dev/null",
@@ -259,7 +259,7 @@ func ingestBash() ([]types.HistoryEvent, error) {
 	return events, scanner.Err()
 }
 
-func ingestAtuin() ([]types.HistoryEvent, error) {
+func ingestAtuin() ([]db.HistoryEvent, error) {
 	home, _ := os.UserHomeDir()
 	dbPath := filepath.Join(home, ".local/share/atuin/history.db")
 
@@ -276,9 +276,9 @@ func ingestAtuin() ([]types.HistoryEvent, error) {
 	}
 	defer rows.Close()
 
-	var events []types.HistoryEvent
+	var events []db.HistoryEvent
 	for rows.Next() {
-		var e types.HistoryEvent
+		var e db.HistoryEvent
 		var ts int64
 		var exitCode int
 		var duration int64
@@ -309,7 +309,7 @@ func getSocketPath() string {
 	return filepath.Join(runtimeDir, "workspaced.sock")
 }
 
-func sendHistoryEvent(event types.HistoryEvent) error {
+func sendHistoryEvent(event db.HistoryEvent) error {
 	socketPath := getSocketPath()
 	dialer := websocket.Dialer{
 		NetDial: func(network, addr string) (net.Conn, error) {
@@ -325,7 +325,7 @@ func sendHistoryEvent(event types.HistoryEvent) error {
 
 	_ = conn.SetWriteDeadline(time.Now().Add(500 * time.Millisecond))
 	payload, _ := json.Marshal(event)
-	packet := types.StreamPacket{
+	packet := ipc.StreamPacket{
 		Type:    "history_event",
 		Payload: payload,
 	}
