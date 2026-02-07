@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"image"
 	"os"
-	"workspaced/pkg/drivers/clipboard/api"
-	"workspaced/pkg/drivers/clipboard/termux"
-	"workspaced/pkg/drivers/clipboard/wlcopy"
-	"workspaced/pkg/drivers/clipboard/xclip"
+	"workspaced/pkg/clipboard/api"
+	"workspaced/pkg/clipboard/termux"
+	"workspaced/pkg/clipboard/wlcopy"
+	"workspaced/pkg/clipboard/xclip"
 	"workspaced/pkg/exec"
 )
 

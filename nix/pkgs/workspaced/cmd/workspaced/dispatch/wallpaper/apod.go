@@ -1,7 +1,7 @@
 package wallpaper
 
 import (
-	"workspaced/pkg/drivers/wallpaper"
+	"workspaced/pkg/wallpaper"
 
 	"github.com/spf13/cobra"
 )

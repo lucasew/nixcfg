@@ -1,7 +1,7 @@
 package media
 
 import (
-	"workspaced/pkg/drivers/media"
+	"workspaced/pkg/media"
 
 	"github.com/spf13/cobra"
 )

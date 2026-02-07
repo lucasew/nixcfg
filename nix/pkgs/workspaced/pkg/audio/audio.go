@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"workspaced/pkg/drivers/notification"
+	"workspaced/pkg/notification"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
 )

@@ -1,7 +1,7 @@
 package notification
 
 import (
-	"workspaced/pkg/drivers/notification"
+	"workspaced/pkg/notification"
 
 	"github.com/spf13/cobra"
 )

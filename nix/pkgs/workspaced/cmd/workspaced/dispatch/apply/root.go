@@ -3,7 +3,7 @@ package apply
 import (
 	"fmt"
 	"workspaced/pkg/drivers/apply"
-	"workspaced/pkg/drivers/nix"
+	"workspaced/pkg/nix"
 	"workspaced/pkg/env"
 	"workspaced/pkg/logging"
 

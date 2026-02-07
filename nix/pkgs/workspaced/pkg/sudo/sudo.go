@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"time"
-	"workspaced/pkg/drivers/notification"
+	"workspaced/pkg/notification"
 	"workspaced/pkg/logging"
 	"workspaced/pkg/types"
 )

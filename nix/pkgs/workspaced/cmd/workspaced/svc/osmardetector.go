@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"time"
-	"workspaced/pkg/drivers/battery"
+	"workspaced/pkg/battery"
 
 	"github.com/spf13/cobra"
 )

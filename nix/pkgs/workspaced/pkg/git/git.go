@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"workspaced/pkg/config"
-	"workspaced/pkg/drivers/notification"
+	"workspaced/pkg/notification"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
 )

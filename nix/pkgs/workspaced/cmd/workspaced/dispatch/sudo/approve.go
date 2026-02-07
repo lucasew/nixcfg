@@ -3,7 +3,7 @@ package sudo
 import (
 	"os"
 	"os/exec"
-	"workspaced/pkg/drivers/sudo"
+	"workspaced/pkg/sudo"
 	"workspaced/pkg/logging"
 
 	"github.com/spf13/cobra"

@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"workspaced/pkg/drivers/media"
-	"workspaced/pkg/drivers/wm/api"
-	"workspaced/pkg/drivers/wm/hyprland"
-	"workspaced/pkg/drivers/wm/i3ipc"
+	"workspaced/pkg/media"
+	"workspaced/pkg/wm/api"
+	"workspaced/pkg/wm/hyprland"
+	"workspaced/pkg/wm/i3ipc"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
 )

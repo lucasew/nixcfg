@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
-	"workspaced/pkg/drivers/notification"
+	"workspaced/pkg/notification"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
 

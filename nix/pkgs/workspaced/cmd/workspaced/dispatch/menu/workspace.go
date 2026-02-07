@@ -3,7 +3,7 @@ package menu
 import (
 	"sort"
 	"strings"
-	"workspaced/pkg/drivers/wm"
+	"workspaced/pkg/wm"
 	"workspaced/pkg/exec"
 
 	"workspaced/pkg/config"
