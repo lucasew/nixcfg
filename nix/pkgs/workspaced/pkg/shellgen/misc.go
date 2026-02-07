@@ -15,7 +15,7 @@ fi
 
 // GenerateFlags generates environment variables marking the shell state.
 //
-// specifically, `WORKSPACED_SHELL_INIT=1` is exported to allow other tools
+// It exports `WORKSPACED_SHELL_INIT=1`, which allows other tools
 // or scripts to detect that the shell has been initialized by workspaced.
 func GenerateFlags() (string, error) {
 	return `# Flag to indicate workspaced shell init is being used
