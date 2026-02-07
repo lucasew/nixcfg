@@ -4,13 +4,30 @@ import (
 	"context"
 	"encoding/json"
 	"log/slog"
-	"workspaced/pkg/types"
+	"workspaced/pkg/ipc"
 )
+
+// ContextKey is a distinct string type for context values to prevent key collisions.
+type ContextKey string
+
+const (
+	// LoggerKey stores the *slog.Logger instance, allowing contextual logging
+	// (e.g., with request IDs) throughout the request lifecycle.
+	LoggerKey ContextKey = "logger"
+)
+
+// LogEntry is a serializable representation of a structured log record.
+// It is used to marshal log events to JSON for transmission over the wire.
+type LogEntry struct {
+	Level   string         `json:"level"`
+	Message string         `json:"msg"`
+	Attrs   map[string]any `json:"attrs"`
+}
 
 // GetLogger retrieves the logger instance from the context.
 // It returns the default slog logger if no logger is found in the context.
 func GetLogger(ctx context.Context) *slog.Logger {
-	if logger, ok := ctx.Value(types.LoggerKey).(*slog.Logger); ok {
+	if logger, ok := ctx.Value(LoggerKey).(*slog.Logger); ok {
 		return logger
 	}
 	return slog.Default()
@@ -19,7 +36,7 @@ func GetLogger(ctx context.Context) *slog.Logger {
 // ChannelLogHandler is a custom slog.Handler that broadcasts log records to a channel.
 // This is used to stream server-side logs to the client via the daemon connection.
 type ChannelLogHandler struct {
-	Out    chan<- types.StreamPacket
+	Out    chan<- ipc.StreamPacket
 	Parent slog.Handler
 	Ctx    context.Context
 }
@@ -32,7 +49,7 @@ func (h *ChannelLogHandler) Enabled(ctx context.Context, level slog.Level) bool 
 // Handle processes a log record, marshals it to JSON, and sends it as a StreamPacket.
 // It also delegates to the parent handler if one is configured.
 func (h *ChannelLogHandler) Handle(ctx context.Context, r slog.Record) error {
-	entry := types.LogEntry{
+	entry := LogEntry{
 		Level:   r.Level.String(),
 		Message: r.Message,
 		Attrs:   make(map[string]any),
@@ -44,7 +61,7 @@ func (h *ChannelLogHandler) Handle(ctx context.Context, r slog.Record) error {
 	payload, _ := json.Marshal(entry)
 
 	select {
-	case h.Out <- types.StreamPacket{Type: "log", Payload: payload}:
+	case h.Out <- ipc.StreamPacket{Type: "log", Payload: payload}:
 	case <-h.Ctx.Done():
 		return h.Ctx.Err()
 	}
