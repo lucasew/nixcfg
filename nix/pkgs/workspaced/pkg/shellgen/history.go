@@ -1,6 +1,15 @@
 package shellgen
 
-// GenerateHistory generates the workspaced history hook
+// GenerateHistory generates the shell hook for capturing command history.
+//
+// It injects a Bash `PROMPT_COMMAND` that runs after every command execution.
+// The hook:
+// 1. Extracts the last executed command from `history`.
+// 2. Filters out `workspaced`'s own history recording commands to prevent loops.
+// 3. Spawns `workspaced dispatch history record` in the background.
+// 4. Detaches the background process (`&>/dev/null`) to prevent "Job x started/done" noise in the terminal.
+//
+// Additionally, it binds `Ctrl+R` to `workspaced search`, replacing the default history search.
 func GenerateHistory() (string, error) {
 	return `_workspaced_history_hook() {
 	local exit_code=$?

@@ -6,7 +6,12 @@ import (
 	"workspaced/pkg/config"
 )
 
-// GenerateColors generates terminal color codes inline
+// GenerateColors generates a shell script snippet to apply terminal colors.
+//
+// It reads the `desktop.palette.base16` configuration and emits raw ANSI escape codes
+// directly into the shell script. This approach allows setting terminal colors
+// instantaneously upon shell startup without spawning external processes (like `sed` or `cat`),
+// significantly reducing shell startup latency.
 func GenerateColors() (string, error) {
 	cfg, err := config.Load()
 	if err != nil {
@@ -33,6 +38,7 @@ func GenerateColors() (string, error) {
 		return val
 	}
 
+	// Base16 standard colors mapping
 	colors := []string{
 		get("base00"), get("base08"), get("base0B"), get("base0A"),
 		get("base0D"), get("base0E"), get("base0C"), get("base05"),
@@ -43,6 +49,7 @@ func GenerateColors() (string, error) {
 	var codes strings.Builder
 	for i, color := range colors {
 		if color != "" {
+			// OSC 4: Set color palette entry
 			codes.WriteString(fmt.Sprintf("\\033]4;%d;#%s\\033\\\\", i, color))
 		}
 	}
@@ -50,10 +57,13 @@ func GenerateColors() (string, error) {
 	fg := get("base05")
 	bg := get("base00")
 	if fg != "" {
+		// OSC 10: Set default foreground color
 		codes.WriteString(fmt.Sprintf("\\033]10;#%s\\033\\\\", fg))
+		// OSC 12: Set cursor color
 		codes.WriteString(fmt.Sprintf("\\033]12;#%s\\033\\\\", fg))
 	}
 	if bg != "" {
+		// OSC 11: Set default background color
 		codes.WriteString(fmt.Sprintf("\\033]11;#%s\\033\\\\", bg))
 	}
 

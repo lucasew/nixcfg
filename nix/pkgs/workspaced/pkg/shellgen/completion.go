@@ -5,7 +5,13 @@ import (
 	"strings"
 )
 
-// GenerateCompletion generates bash completion using cobra API directly (no exec)
+// GenerateCompletion generates Bash completion scripts for the `workspaced` CLI.
+//
+// Instead of spawning a subprocess to run `workspaced completion bash`, this function
+// uses the internal Cobra API (`GenBashCompletionV2`) directly on the `rootCommand`.
+// This avoids the overhead of a fork/exec cycle, speeding up shell startup.
+//
+// Precondition: `SetRootCommand` must have been called with the active Cobra root command.
 func GenerateCompletion() (string, error) {
 	if rootCommand == nil {
 		return "", fmt.Errorf("root command not set, call SetRootCommand first")

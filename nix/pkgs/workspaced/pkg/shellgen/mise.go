@@ -7,7 +7,12 @@ import (
 	"path/filepath"
 )
 
-// GenerateMise generates mise activation code
+// GenerateMise generates the shell activation code for the `mise` tool.
+//
+// Unlike other generators that produce static content, this function invokes
+// `mise activate bash` to dynamically generate the environment setup script.
+// It assumes `mise` is installed at `~/.local/bin/mise` (standard install location).
+// If `mise` is not found, it returns an empty string to avoid breaking shell init.
 func GenerateMise() (string, error) {
 	misePath := filepath.Join(os.Getenv("HOME"), ".local", "bin", "mise")
 

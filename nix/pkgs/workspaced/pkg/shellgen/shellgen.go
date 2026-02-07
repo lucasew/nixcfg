@@ -11,18 +11,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Generator is a function that generates shell code
+// Generator is a function that generates a snippet of shell initialization code.
+// Generators are executed in parallel by Generate().
 type Generator func() (string, error)
 
-// rootCommand is set by SetRootCommand and used by generators that need it
+// rootCommand is the main CLI command, injected via SetRootCommand.
+// It is required by generators that need to introspect the CLI (e.g., completion).
 var rootCommand *cobra.Command
 
-// SetRootCommand sets the root command for generators that need it (e.g., completion)
+// SetRootCommand injects the root cobra command into the shellgen package.
+// This allows the completion generator to introspect the command structure
+// without creating a circular dependency or relying on global state initialized elsewhere.
 func SetRootCommand(cmd *cobra.Command) {
 	rootCommand = cmd
 }
 
-// generators maps order/name to generator functions
+// generators maps a sortable key to a Generator function.
+// The keys determine the order in which the generated snippets appear in the final output.
+// Convention: "NN-name" where NN is a number (e.g., "00-colors", "10-completion").
 var generators = map[string]Generator{
 	"00-colors":     GenerateColors,
 	"05-flags":      GenerateFlags,
@@ -32,7 +38,15 @@ var generators = map[string]Generator{
 	"20-history":    GenerateHistory,
 }
 
-// Generate executes all generators in parallel and returns ordered output
+// Generate executes all registered generators in parallel and returns the concatenated shell script.
+//
+// It performs the following steps:
+// 1. Executes all generators concurrently to minimize latency.
+// 2. Collects results and timing information (profiling enabled via WORKSPACED_PROFILE=1).
+// 3. Sorts the outputs by their registry key to ensure deterministic order.
+// 4. Concatenates the results into a single string.
+//
+// If any generator fails, an error is returned aggregating all failures.
 func Generate() (string, error) {
 	profile := os.Getenv("WORKSPACED_PROFILE") == "1"
 
