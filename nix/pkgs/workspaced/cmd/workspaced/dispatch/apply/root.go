@@ -2,7 +2,7 @@ package apply
 
 import (
 	"fmt"
-	"workspaced/pkg/drivers/apply"
+	"workspaced/pkg/apply"
 	"workspaced/pkg/drivers/nix"
 	"workspaced/pkg/env"
 	"workspaced/pkg/logging"
@@ -26,8 +26,10 @@ func GetCommand() *cobra.Command {
 
 			dryRun, _ := cmd.Flags().GetBool("dry-run")
 
+			engine := apply.NewEngine(nil)
+
 			// 1. Load state
-			state, err := apply.LoadState()
+			state, err := engine.LoadState()
 			if err != nil {
 				return err
 			}
@@ -53,7 +55,7 @@ func GetCommand() *cobra.Command {
 			}
 
 			// 3. Plan
-			actions, err := apply.Plan(ctx, desired, state)
+			actions, err := engine.Plan(ctx, desired, state)
 			if err != nil {
 				return err
 			}
@@ -75,10 +77,10 @@ func GetCommand() *cobra.Command {
 			} else if dryRun {
 				logger.Info("dry-run: skipping file execution")
 			} else {
-				if err := apply.Execute(ctx, actions, state); err != nil {
+				if err := engine.Execute(ctx, actions, state); err != nil {
 					return err
 				}
-				if err := apply.SaveState(state); err != nil {
+				if err := engine.SaveState(state); err != nil {
 					return err
 				}
 			}
