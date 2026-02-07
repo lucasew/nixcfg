@@ -1,4 +1,4 @@
-package setup
+package termux
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"workspaced/pkg/logging"
 )
 
-func SetupTermuxShortcuts(ctx context.Context) error {
+func SetupShortcuts(ctx context.Context) error {
 	if !env.IsPhone() {
 		return fmt.Errorf("this command only works on phone (Termux)")
 	}

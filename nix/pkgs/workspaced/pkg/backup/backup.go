@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 	"workspaced/pkg/config"
-	"workspaced/pkg/drivers/git"
+	"workspaced/pkg/git"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/drivers/sudo"
 	"workspaced/pkg/env"

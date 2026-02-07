@@ -1,7 +1,7 @@
 package setup
 
 import (
-	"workspaced/pkg/drivers/setup"
+	"workspaced/pkg/termux"
 
 	"github.com/spf13/cobra"
 )
@@ -12,7 +12,7 @@ func init() {
 			Use:   "shortcuts",
 			Short: "Setup Termux shortcuts",
 			RunE: func(c *cobra.Command, args []string) error {
-				return setup.SetupTermuxShortcuts(c.Context())
+				return termux.SetupShortcuts(c.Context())
 			},
 		})
 	})

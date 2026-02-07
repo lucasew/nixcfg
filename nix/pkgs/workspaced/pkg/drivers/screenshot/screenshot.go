@@ -13,7 +13,7 @@ import (
 	"workspaced/pkg/config"
 	"workspaced/pkg/drivers/clipboard"
 	"workspaced/pkg/drivers/notification"
-	"workspaced/pkg/drivers/wm"
+	"workspaced/pkg/wm"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
 )

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
-	"workspaced/pkg/drivers/wm/api"
+	"workspaced/pkg/wm/api"
 	"workspaced/pkg/exec"
 )
 

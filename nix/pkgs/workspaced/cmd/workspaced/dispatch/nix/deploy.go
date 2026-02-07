@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	"workspaced/pkg/drivers/nix"
+	"workspaced/pkg/nix"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
