@@ -34,3 +34,4 @@
 **Root Cause:** Command substitution execution order and stderr handling in CI environment is fragile. `mise run install` does not implicitly run `mise install` for root tools.
 **Solution:** Replaced command substitution with `shfmt -f=0 . | xargs -0 -r ...` to robustly pipe file lists. Added `install:tools` task to explicitly run `mise install`.
 **Pattern:** Prefer pipelines with `xargs -0 -r` over command substitution for passing file lists to tools, as it handles empty lists and filenames with spaces correctly.
+- 2026-02-07: Configure Nix experimental features and Go lint timeouts in mise tasks to prevent CI failures.
