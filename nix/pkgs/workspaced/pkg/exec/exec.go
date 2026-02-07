@@ -9,13 +9,26 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"workspaced/pkg/types"
 
 	_ "workspaced/pkg/env" // Ensure PATH is set up
 )
 
 var (
 	ErrCommandNotFound = fmt.Errorf("command not found")
+)
+
+// ContextKey is a distinct string type for context values to prevent key collisions.
+type ContextKey string
+
+const (
+	// EnvKey stores the environment variables (slice of "KEY=VALUE" strings)
+	// to be injected into subprocesses spawned by the handler.
+	EnvKey ContextKey = "env"
+	// StdoutKey stores an io.Writer for capturing standard output from subprocesses,
+	// typically redirected to the client's response stream.
+	StdoutKey ContextKey = "stdout"
+	// StderrKey stores an io.Writer for capturing standard error from subprocesses.
+	StderrKey ContextKey = "stderr"
 )
 
 // RunCmd creates an exec.Cmd with environment variables injected from the context.
@@ -36,10 +49,10 @@ func RunCmd(ctx context.Context, name string, args ...string) *exec.Cmd {
 // InheritContextWriters configures the command's Stdout and Stderr to write to the writers
 // stored in the context, allowing output capture or redirection.
 func InheritContextWriters(ctx context.Context, cmd *exec.Cmd) {
-	if stdout, ok := ctx.Value(types.StdoutKey).(io.Writer); ok {
+	if stdout, ok := ctx.Value(StdoutKey).(io.Writer); ok {
 		cmd.Stdout = stdout
 	}
-	if stderr, ok := ctx.Value(types.StderrKey).(io.Writer); ok {
+	if stderr, ok := ctx.Value(StderrKey).(io.Writer); ok {
 		cmd.Stderr = stderr
 	}
 }
@@ -48,7 +61,7 @@ func InheritContextWriters(ctx context.Context, cmd *exec.Cmd) {
 // It checks for HYPRLAND_INSTANCE_SIGNATURE for Hyprland,
 // and WAYLAND_DISPLAY to decide between "swaymsg" (Wayland) and "i3-msg" (X11).
 func GetRPC(ctx context.Context) string {
-	if env, ok := ctx.Value(types.EnvKey).([]string); ok {
+	if env, ok := ctx.Value(EnvKey).([]string); ok {
 		for _, e := range env {
 			if strings.HasPrefix(e, "HYPRLAND_INSTANCE_SIGNATURE=") {
 				return "hyprctl"
@@ -78,7 +91,7 @@ func Which(ctx context.Context, name string) (string, error) {
 	}
 
 	path := os.Getenv("PATH")
-	if env, ok := ctx.Value(types.EnvKey).([]string); ok {
+	if env, ok := ctx.Value(EnvKey).([]string); ok {
 		for _, e := range env {
 			if strings.HasPrefix(e, "PATH=") {
 				path = strings.TrimPrefix(e, "PATH=")

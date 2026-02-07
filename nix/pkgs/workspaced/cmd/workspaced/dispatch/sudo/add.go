@@ -2,7 +2,6 @@ package sudo
 
 import (
 	"workspaced/pkg/drivers/sudo"
-	"workspaced/pkg/types"
 
 	"github.com/spf13/cobra"
 )
@@ -16,7 +15,7 @@ func init() {
 			Args:               cobra.MinimumNArgs(1),
 			DisableFlagParsing: false,
 			RunE: func(cmd *cobra.Command, args []string) error {
-				sc := &types.SudoCommand{
+				sc := &sudo.SudoCommand{
 					Slug:    slug,
 					Command: args[0],
 					Args:    args[1:],

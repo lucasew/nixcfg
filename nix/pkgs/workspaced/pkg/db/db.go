@@ -9,7 +9,6 @@ import (
 	"workspaced/pkg/db/sqlc"
 	"workspaced/pkg/env"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/types"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite"
@@ -19,6 +18,23 @@ import (
 
 //go:embed migrations/*.sql
 var migrationFS embed.FS
+
+// ContextKey is a distinct string type for context values to prevent key collisions.
+type ContextKey string
+
+const (
+	// DBKey stores the database connection.
+	DBKey ContextKey = "db"
+)
+
+// HistoryEvent is sent by the shell hook to record a command execution.
+type HistoryEvent struct {
+	Command   string `json:"command"`
+	Cwd       string `json:"cwd"`
+	Timestamp int64  `json:"timestamp"`
+	ExitCode  int    `json:"exit_code"`
+	Duration  int64  `json:"duration_ms"`
+}
 
 type DB struct {
 	*sql.DB
@@ -74,7 +90,7 @@ func runMigrations(db *sql.DB) error {
 	return nil
 }
 
-func (db *DB) RecordHistory(ctx context.Context, event types.HistoryEvent) error {
+func (db *DB) RecordHistory(ctx context.Context, event HistoryEvent) error {
 	return db.Queries.RecordHistory(ctx, sqlc.RecordHistoryParams{
 		Command:    event.Command,
 		Cwd:        event.Cwd,
@@ -84,7 +100,7 @@ func (db *DB) RecordHistory(ctx context.Context, event types.HistoryEvent) error
 	})
 }
 
-func (db *DB) BatchRecordHistory(ctx context.Context, events []types.HistoryEvent) error {
+func (db *DB) BatchRecordHistory(ctx context.Context, events []HistoryEvent) error {
 	tx, err := db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -112,7 +128,7 @@ func (db *DB) BatchRecordHistory(ctx context.Context, events []types.HistoryEven
 	return tx.Commit()
 }
 
-func (db *DB) SearchHistory(ctx context.Context, query string, limit int) ([]types.HistoryEvent, error) {
+func (db *DB) SearchHistory(ctx context.Context, query string, limit int) ([]HistoryEvent, error) {
 	var rows []sqlc.History
 	var err error
 
@@ -131,9 +147,9 @@ func (db *DB) SearchHistory(ctx context.Context, query string, limit int) ([]typ
 		return nil, err
 	}
 
-	events := make([]types.HistoryEvent, len(rows))
+	events := make([]HistoryEvent, len(rows))
 	for i, row := range rows {
-		events[i] = types.HistoryEvent{
+		events[i] = HistoryEvent{
 			Command:   row.Command,
 			Cwd:       row.Cwd,
 			Timestamp: row.Timestamp,

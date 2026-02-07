@@ -10,7 +10,6 @@ import (
 	"workspaced/pkg/drivers/sudo"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/types"
 )
 
 func CleanupProfiles(ctx context.Context) error {
@@ -85,7 +84,7 @@ func CleanupProfiles(ctx context.Context) error {
 	logger.Info(fmt.Sprintf("Found %d old profile links to remove.", len(filesToRemove)))
 
 	if os.Getuid() != 0 {
-		return sudo.Enqueue(ctx, &types.SudoCommand{
+		return sudo.Enqueue(ctx, &sudo.SudoCommand{
 			Slug:    "nix-gc-cleanup",
 			Command: "rm",
 			Args:    filesToRemove,

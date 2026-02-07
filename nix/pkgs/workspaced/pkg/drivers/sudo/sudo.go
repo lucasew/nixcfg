@@ -10,8 +10,18 @@ import (
 	"time"
 	"workspaced/pkg/drivers/notification"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/types"
 )
+
+// SudoCommand defines a privileged command request.
+// It aggregates execution context (cwd, env) and a timestamp for validity checks.
+type SudoCommand struct {
+	Slug      string   `json:"slug"`
+	Command   string   `json:"command"`
+	Args      []string `json:"args"`
+	Cwd       string   `json:"cwd"`
+	Env       []string `json:"env"`
+	Timestamp int64    `json:"timestamp"`
+}
 
 func getQueueDir() (string, error) {
 	home, err := os.UserHomeDir()
@@ -25,7 +35,7 @@ func getQueueDir() (string, error) {
 	return dir, nil
 }
 
-func Enqueue(ctx context.Context, cmd *types.SudoCommand) error {
+func Enqueue(ctx context.Context, cmd *SudoCommand) error {
 	if cmd.Slug == "" {
 		b := make([]byte, 3)
 		if _, err := rand.Read(b); err != nil {
@@ -77,7 +87,7 @@ func Enqueue(ctx context.Context, cmd *types.SudoCommand) error {
 	return nil
 }
 
-func List(ctx context.Context) ([]*types.SudoCommand, error) {
+func List(ctx context.Context) ([]*SudoCommand, error) {
 	dir, err := getQueueDir()
 	if err != nil {
 		return nil, err
@@ -88,7 +98,7 @@ func List(ctx context.Context) ([]*types.SudoCommand, error) {
 		return nil, err
 	}
 
-	var cmds []*types.SudoCommand
+	var cmds []*SudoCommand
 	for _, entry := range entries {
 		if filepath.Ext(entry.Name()) == ".json" {
 			data, err := os.ReadFile(filepath.Join(dir, entry.Name()))
@@ -96,7 +106,7 @@ func List(ctx context.Context) ([]*types.SudoCommand, error) {
 				logging.ReportError(ctx, err)
 				continue
 			}
-			var cmd types.SudoCommand
+			var cmd SudoCommand
 			if err := json.Unmarshal(data, &cmd); err != nil {
 				logging.ReportError(ctx, err)
 				continue
@@ -107,7 +117,7 @@ func List(ctx context.Context) ([]*types.SudoCommand, error) {
 	return cmds, nil
 }
 
-func Get(slug string) (*types.SudoCommand, error) {
+func Get(slug string) (*SudoCommand, error) {
 	dir, err := getQueueDir()
 	if err != nil {
 		return nil, err
@@ -119,7 +129,7 @@ func Get(slug string) (*types.SudoCommand, error) {
 		return nil, err
 	}
 
-	var cmd types.SudoCommand
+	var cmd SudoCommand
 	if err := json.Unmarshal(data, &cmd); err != nil {
 		return nil, err
 	}
