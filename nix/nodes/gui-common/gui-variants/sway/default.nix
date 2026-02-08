@@ -6,7 +6,6 @@
 }:
 
 let
-  custom_rofi = pkgs.custom.rofi_wayland.override { inherit (pkgs.custom) colors; };
   mod = "Mod4";
   lockerSpace = pkgs.makeDesktopItem {
     name = "locker";
@@ -133,7 +132,7 @@ in
       pcmanfm
       kitty
       slurp
-      custom_rofi
+      rofi-wayland
       lockerSpace
       playerctl
       pulseaudio

@@ -106,9 +106,7 @@ in
     emacs = cp ./pkgs/custom/emacs;
     firefox = cp ./pkgs/custom/firefox;
     tixati = cp ./pkgs/custom/tixati.nix;
-    rofi_xorg = cp ./pkgs/custom/rofi.nix;
-    rofi = final.custom.rofi_xorg;
-    rofi_wayland = prev.callPackage ./pkgs/custom/rofi.nix { rofi = final.rofi; };
+    rofi = cp ./pkgs/custom/rofi.nix; # Just returns base rofi package
     pidgin = cp ./pkgs/custom/pidgin.nix;
     send2kindle = cp ./pkgs/custom/send2kindle.nix;
     retroarch = cp ./pkgs/custom/retroarch.nix;

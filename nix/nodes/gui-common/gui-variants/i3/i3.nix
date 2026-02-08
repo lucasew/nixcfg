@@ -6,7 +6,6 @@
 }:
 
 let
-  custom_rofi = pkgs.custom.rofi.override { inherit (pkgs.custom) colors; };
   inherit (pkgs) makeDesktopItem;
   mod = "Mod4";
   lockerSpace = makeDesktopItem {
@@ -29,7 +28,7 @@ in
     # https://thomashunter.name/i3-configurator/
     environment.systemPackages = [
       lockerSpace
-      custom_rofi
+      pkgs.rofi
     ];
 
     services.xserver.displayManager.lightdm.enable = true;
@@ -38,7 +37,7 @@ in
       configFile = "/etc/i3config";
       extraPackages = with pkgs; [
         playerctl
-        custom_rofi
+        rofi
         pulseaudio
         feh
         brightnessctl
