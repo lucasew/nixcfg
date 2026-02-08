@@ -71,19 +71,10 @@ func deployNode(ctx context.Context, flake, node, action string) error {
 		return fmt.Errorf("failed to build toplevel for %s: %w", node, err)
 	}
 
-	homePath := "homeConfigurations.main.activationPackage"
-	home, err := nix.GetFlakeOutput(ctx, flake, homePath)
-	if err != nil {
-		return fmt.Errorf("failed to build home-manager for %s: %w", node, err)
-	}
-
 	// 2. Copy closures
 	logger.Info("Copying closures to node")
 	if err := nix.CopyClosure(ctx, node, toplevel, nix.To); err != nil {
 		return fmt.Errorf("failed to copy toplevel to %s: %w", node, err)
-	}
-	if err := nix.CopyClosure(ctx, node, home, nix.To); err != nil {
-		return fmt.Errorf("failed to copy home-manager to %s: %w", node, err)
 	}
 
 	// 3. Auto-detect action if not specified
@@ -103,15 +94,7 @@ func deployNode(ctx context.Context, flake, node, action string) error {
 		}
 	}
 
-	// 4. Activate Home Manager
-	logger.Info("Activating Home Manager on node")
-	cmdHM := exec.RunCmd(ctx, "ssh", node, fmt.Sprintf("%s/bin/home-manager-generation", home))
-	exec.InheritContextWriters(ctx, cmdHM)
-	if err := cmdHM.Run(); err != nil {
-		return fmt.Errorf("failed to activate home-manager on %s: %w", node, err)
-	}
-
-	// 5. Switch System Configuration
+	// 3. Switch System Configuration
 	logger.Info("Switching system configuration on node", "action", action)
 	// Check if already running
 	currentSystemOut, err := exec.RunCmd(ctx, "ssh", node, "realpath /run/current-system").Output()

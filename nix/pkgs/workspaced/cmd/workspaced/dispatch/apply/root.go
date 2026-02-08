@@ -96,29 +96,7 @@ func GetCommand() *cobra.Command {
 				}
 			}
 
-			// 5. Home Manager hook
-			if !env.IsPhone() {
-				logger.Info("running home-manager rebuild")
-				if dryRun {
-					logger.Info("dry-run: skipping home-manager rebuild")
-				} else {
-					flake := ""
-					if env.IsRiverwood() {
-						logger.Info("performing remote build for home-manager on riverwood")
-						ref := ".#homeConfigurations.main.activationPackage"
-						result, err := nix.RemoteBuild(ctx, ref, "whiterun", true)
-						if err != nil {
-							return fmt.Errorf("remote build for home-manager failed: %w", err)
-						}
-						flake = result
-					}
-					if err := nix.HomeManagerSwitch(ctx, action, flake); err != nil {
-						return err
-					}
-				}
-			}
-
-			// 6. System specific hooks
+			// 5. System specific hooks
 			if env.IsNixOS() {
 				logger.Info("running NixOS rebuild", "action", action)
 				if dryRun {

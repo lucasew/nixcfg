@@ -17,7 +17,7 @@
 - **ravenrock**: Cloud (GCP), Turbo VM (currently unused).
 
 ## Common Commands
-- **Apply**: `sudo nixos-rebuild switch --flake .` or `home-manager switch --flake .#main`
+- **Apply**: `sudo nixos-rebuild switch --flake .`
 - **Apply (Go)**: `workspaced apply` (for Go packages in `nix/pkgs/workspaced`)
 - **Deploy**: `sd nix rrun .#deploy`
 - **Build**: `nix build .#nixosConfigurations.MACHINE.config.system.build.toplevel`

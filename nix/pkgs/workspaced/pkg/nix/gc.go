@@ -51,7 +51,7 @@ func CleanupProfiles(ctx context.Context) error {
 			if entry.Type()&os.ModeSymlink != 0 {
 				name := entry.Name()
 				// Profiles usually don't have hyphens in the base name,
-				// or they are specifically 'system', 'default', 'profile', 'home-manager'
+				// or they are specifically 'system', 'default', 'profile'
 				if !strings.Contains(name, "-") {
 					target, err := os.Readlink(filepath.Join(dir, name))
 					if err == nil {

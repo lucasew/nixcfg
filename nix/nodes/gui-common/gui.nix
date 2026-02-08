@@ -6,6 +6,7 @@
 
   environment.systemPackages = with pkgs; [
     lxappearance
+    glib # gsettings - necessário para temas GTK reagirem em tempo real
   ];
 
   fonts.packages = with pkgs; [

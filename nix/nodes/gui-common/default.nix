@@ -33,7 +33,6 @@ in
   environment.systemPackages = with pkgs; [
     workspaced
     parallel
-    home-manager
     paper-icon-theme
     p7zip
     unzip # archiving
