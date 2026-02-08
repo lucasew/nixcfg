@@ -53,8 +53,8 @@ video_obs_live = 8000
 waypipe = 9999
 
 [desktop.wallpaper]
-dir = "~/.dotfiles/assets/wallpapers"
-default = "default.jpg"
+dir = "~/.dotfiles/assets"
+default = "wall.jpg"
 
 [backup]
 rsyncnet_user = "de3163@de3163.rsync.net"

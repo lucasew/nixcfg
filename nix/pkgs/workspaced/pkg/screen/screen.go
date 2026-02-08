@@ -28,6 +28,13 @@ func GetDriver(ctx context.Context) (Driver, error) {
 	if display != "" {
 		return &X11Driver{}, nil
 	}
+
+	// Provide more helpful error message
+	logger := logging.GetLogger(ctx)
+	logger.Error("screen driver not found",
+		"wayland_display", os.Getenv("WAYLAND_DISPLAY"),
+		"display", display,
+		"hint", "ensure WAYLAND_DISPLAY or DISPLAY environment variable is set")
 	return nil, ErrDriverNotFound
 }
 

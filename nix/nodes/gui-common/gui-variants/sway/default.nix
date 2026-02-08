@@ -136,6 +136,7 @@ in
       kitty
       slurp
       rofi
+      swaybg
       lockerSpace
       playerctl
       pulseaudio

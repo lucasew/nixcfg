@@ -4,7 +4,7 @@ import "errors"
 
 var (
 	// Driver life-cycle
-	ErrDriverNotFound = errors.New("driver not found")
+	ErrDriverNotFound = errors.New("screen driver not found: WAYLAND_DISPLAY or DISPLAY environment variable not set. Try: export WAYLAND_DISPLAY=wayland-1")
 	ErrNotSupported   = errors.New("operation not supported")
 	ErrCanceled       = errors.New("operation canceled")
 	ErrNotImplemented = errors.New("not implemented")
