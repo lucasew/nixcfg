@@ -7,6 +7,9 @@ alias ç='sd'
 export EDITOR=${EDITOR:-hx}
 alias e=$EDITOR
 alias sdw=sd
+function checkpoint {
+	git commit -m "checkpoint" "$@"
+}
 
 function reset_term {
 	tput reset

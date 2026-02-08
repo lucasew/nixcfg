@@ -2,7 +2,6 @@ package screen
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"workspaced/pkg/drivers/api"
 	"workspaced/pkg/env"
