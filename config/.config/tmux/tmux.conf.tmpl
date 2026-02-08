@@ -1,0 +1,23 @@
+# Auto-generated from template by workspaced
+
+# Reload config
+bind r source-file ~/.config/tmux/tmux.conf; display-message "Configurações recarregadas!"
+
+# Split and create windows in same pwd
+bind '"' split-window -c '#{pane_current_path}'
+bind % split-window -h -c '#{pane_current_path}'
+bind c new-window -c '#{pane_current_path}'
+
+# Status bar
+set -g status-right-length 60
+set -g status-right "⏰ %x %k:%M 👤 #(whoami)@#(hostname) 🔋 #(cat /sys/class/power_supply/BAT1/capacity 2>/dev/null || echo 'N/A')%"
+set -g set-titles on
+
+# Base16 colors
+set -g pane-border-style fg=#{{ .Palette.Base01 }}
+set -g pane-active-border-style fg=#{{ .Palette.Base03 }}
+set -g status-style bg=#{{ .Palette.Base00 }},fg=#{{ .Palette.Base05 }}
+
+# Terminal
+set -g default-terminal "tmux-256color"
+set -ga terminal-overrides ",xterm-256color:Tc"
