@@ -1,7 +1,7 @@
 package sudo
 
 import (
-	"workspaced/pkg/drivers/sudo"
+	"workspaced/pkg/sudo"
 	"workspaced/pkg/types"
 
 	"github.com/spf13/cobra"

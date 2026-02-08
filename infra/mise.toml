@@ -1,4 +1,4 @@
 # Warning: Do not unify this file with others. Keep tool definitions localized.
 [tools]
-terraform = "1.9.0"
 tflint = "0.61.0"
+terraform = "1.14.4"

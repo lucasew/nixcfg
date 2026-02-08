@@ -9,7 +9,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"workspaced/pkg/drivers/api"
+	"workspaced/pkg/api"
 	"workspaced/pkg/types"
 
 	_ "workspaced/pkg/env" // Ensure PATH is set up

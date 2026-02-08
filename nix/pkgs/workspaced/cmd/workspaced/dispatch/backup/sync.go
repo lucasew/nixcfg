@@ -1,7 +1,7 @@
 package backup
 
 import (
-	"workspaced/pkg/drivers/git"
+	"workspaced/pkg/git"
 
 	"github.com/spf13/cobra"
 )

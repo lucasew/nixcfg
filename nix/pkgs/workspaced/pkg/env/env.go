@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
-	"workspaced/pkg/drivers/api"
+	"workspaced/pkg/api"
 )
 
 // EssentialPaths defines the list of directories that must be present in the PATH

@@ -8,3 +8,6 @@
 	email = "lucas59356@gmail.com"
 	name = "lucasew"
 	signingkey = ~/.ssh/id_ed25519.pub
+
+[alias]
+	checkpoint = commit -m "checkpoint"

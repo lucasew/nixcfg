@@ -1,7 +1,7 @@
 package screenshot
 
 import (
-	"workspaced/pkg/drivers/screenshot"
+	"workspaced/pkg/screenshot"
 
 	"github.com/spf13/cobra"
 )
