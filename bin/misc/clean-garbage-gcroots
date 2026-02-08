@@ -61,17 +61,17 @@ function remove() {
 	if stat -- "$@" >/dev/null 2>/dev/null; then
 		echo "$@"
 		if [[ "$ENABLE_RM" == 1 ]]; then
-			verbose removed: $@
+			verbose removed: "$@"
 			rm -- "$@" || true
 		fi
 	else
-		verbose want to delete but not found: $@
+		verbose want to delete but not found: "$@"
 	fi
 }
 
 for f in /nix/var/nix/gcroots/auto/*; do
 	f="$(readlink "$f")"
-	verbose gcroot input: $f
+	verbose gcroot input: "$f"
 	if [[ $DONT_LOOK_HOME == 0 ]]; then
 		if [[ "$f" =~ ^/home ]]; then
 			if [[ "$f" =~ /result$ ]] || [[ "$DONT_LOOK_ONLY_FOR_RESULT_IN_HOME" == 1 ]]; then
