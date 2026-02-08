@@ -58,11 +58,11 @@ while true; do
 done
 
 function remove() {
-	if stat "$@" >/dev/null 2>/dev/null; then
+	if stat -- "$@" >/dev/null 2>/dev/null; then
 		echo "$@"
 		if [[ "$ENABLE_RM" == 1 ]]; then
 			verbose removed: $@
-			rm "$@" || true
+			rm -- "$@" || true
 		fi
 	else
 		verbose want to delete but not found: $@
@@ -75,13 +75,13 @@ for f in /nix/var/nix/gcroots/auto/*; do
 	if [[ $DONT_LOOK_HOME == 0 ]]; then
 		if [[ "$f" =~ ^/home ]]; then
 			if [[ "$f" =~ /result$ ]] || [[ "$DONT_LOOK_ONLY_FOR_RESULT_IN_HOME" == 1 ]]; then
-				remove $f
+				remove "$f"
 			fi
 		fi
 	fi
 	if [[ "$DONT_LOOK_TMP" == 0 ]]; then
 		if [[ "$f" =~ ^/tmp ]]; then
-			remove $f
+			remove "$f"
 		fi
 	fi
 done

@@ -50,3 +50,5 @@
 **Vulnerability:** The `bin/nix/rbuild` script was vulnerable to remote command injection. It passed user-controlled input (the flake reference item) directly to `ssh` without proper escaping. This allowed a malicious user (or malicious flake reference) to execute arbitrary commands on the remote build host.
 **Learning:** When executing commands via SSH, arguments are joined by spaces and interpreted by the remote shell. Passing unescaped variables directly to `ssh` allows argument injection and command execution (e.g., using semicolons).
 **Prevention:** Always construct the remote command string locally using `printf %q` to ensure all arguments are properly escaped before passing the resulting string as a single argument to `ssh`.
+
+- 2025-02-08: [Arbitrary File Deletion] Unquoted variable expansion in file cleanup scripts allows attackers to split paths and delete arbitrary files via crafted symlinks.
