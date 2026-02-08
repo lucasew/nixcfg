@@ -1,7 +1,7 @@
 package brightness
 
 import (
-	"workspaced/pkg/drivers/brightness"
+	"workspaced/pkg/brightness"
 
 	"github.com/spf13/cobra"
 )

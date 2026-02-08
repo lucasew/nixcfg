@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"workspaced/pkg/drivers/screen"
+	"workspaced/pkg/screen"
 
 	"github.com/spf13/cobra"
 )

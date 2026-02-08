@@ -1,7 +1,7 @@
 package audio
 
 import (
-	"workspaced/pkg/drivers/audio"
+	"workspaced/pkg/audio"
 
 	"github.com/spf13/cobra"
 )

@@ -16,7 +16,7 @@ import (
 	"workspaced/cmd/workspaced/is"
 	"workspaced/cmd/workspaced/launch"
 	"workspaced/cmd/workspaced/svc"
-	dapi "workspaced/pkg/drivers/api"
+	dapi "workspaced/pkg/api"
 	"workspaced/pkg/shellgen"
 
 	"github.com/spf13/cobra"
