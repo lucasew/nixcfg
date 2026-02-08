@@ -32,35 +32,30 @@ func GetCommand() *cobra.Command {
 				return fmt.Errorf("git pull failed: %w", err)
 			}
 
-			// 2. Rebuild (and optionally apply)
+			// 2. Determine command to run
+			var shimArgs []string
+			var actionMsg string
 			if rebuildOnly {
-				fmt.Println("==> Rebuilding only...")
-				bashPath, err := exec.Which(ctx, "bash")
-				if err != nil {
-					return fmt.Errorf("bash not found: %w", err)
-				}
-				shimPath := filepath.Join(root, "bin/shim/workspaced")
-				rebuildCmd := exec.RunCmd(ctx, bashPath, shimPath, "--version")
-				rebuildCmd.Env = append(os.Environ(), "WORKSPACED_REFRESH=1")
-				rebuildCmd.Stdout = os.Stdout
-				rebuildCmd.Stderr = os.Stderr
-				if err := rebuildCmd.Run(); err != nil {
-					return fmt.Errorf("rebuild failed: %w", err)
-				}
+				shimArgs = []string{"--version"}
+				actionMsg = "==> Rebuilding only..."
 			} else {
-				fmt.Println("==> Rebuilding and applying...")
-				bashPath, err := exec.Which(ctx, "bash")
-				if err != nil {
-					return fmt.Errorf("bash not found: %w", err)
-				}
-				shimPath := filepath.Join(root, "bin/shim/workspaced")
-				applyCmd := exec.RunCmd(ctx, bashPath, shimPath, "dispatch", "apply")
-				applyCmd.Env = append(os.Environ(), "WORKSPACED_REFRESH=1")
-				applyCmd.Stdout = os.Stdout
-				applyCmd.Stderr = os.Stderr
-				if err := applyCmd.Run(); err != nil {
-					return fmt.Errorf("rebuild/apply failed: %w", err)
-				}
+				shimArgs = []string{"dispatch", "apply"}
+				actionMsg = "==> Rebuilding and applying..."
+			}
+
+			// 3. Execute rebuild (and optionally apply)
+			fmt.Println(actionMsg)
+			bashPath, err := exec.Which(ctx, "bash")
+			if err != nil {
+				return fmt.Errorf("bash not found: %w", err)
+			}
+			shimPath := filepath.Join(root, "bin/shim/workspaced")
+			shimCmd := exec.RunCmd(ctx, bashPath, append([]string{shimPath}, shimArgs...)...)
+			shimCmd.Env = append(os.Environ(), "WORKSPACED_REFRESH=1")
+			shimCmd.Stdout = os.Stdout
+			shimCmd.Stderr = os.Stderr
+			if err := shimCmd.Run(); err != nil {
+				return fmt.Errorf("command failed: %w", err)
 			}
 
 			return nil
