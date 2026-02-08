@@ -1,0 +1,29 @@
+# Auto-generated from template by workspaced
+
+[colors.primary]
+background = "#{{ .Palette.Base00 }}"
+foreground = "#{{ .Palette.Base05 }}"
+
+[colors.cursor]
+text   = "#{{ .Palette.Base00 }}"
+cursor = "#{{ .Palette.Base05 }}"
+
+[colors.normal]
+black   = "#{{ .Palette.Base00 }}"
+red     = "#{{ .Palette.Base08 }}"
+green   = "#{{ .Palette.Base0B }}"
+yellow  = "#{{ .Palette.Base0A }}"
+blue    = "#{{ .Palette.Base0D }}"
+magenta = "#{{ .Palette.Base0E }}"
+cyan    = "#{{ .Palette.Base0C }}"
+white   = "#{{ .Palette.Base05 }}"
+
+[colors.bright]
+black   = "#{{ .Palette.Base03 }}"
+red     = "#{{ .Palette.Base08 }}"
+green   = "#{{ .Palette.Base0B }}"
+yellow  = "#{{ .Palette.Base0A }}"
+blue    = "#{{ .Palette.Base0D }}"
+magenta = "#{{ .Palette.Base0E }}"
+cyan    = "#{{ .Palette.Base0C }}"
+white   = "#{{ .Palette.Base07 }}"
