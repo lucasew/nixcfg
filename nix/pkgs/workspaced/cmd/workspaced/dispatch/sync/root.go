@@ -11,6 +11,8 @@ import (
 )
 
 func GetCommand() *cobra.Command {
+	var rebuildOnly bool
+
 	cmd := &cobra.Command{
 		Use:   "sync",
 		Short: "Pull dotfiles changes and apply them",
@@ -30,23 +32,41 @@ func GetCommand() *cobra.Command {
 				return fmt.Errorf("git pull failed: %w", err)
 			}
 
-			// 2. Rebuild via shim and apply (WORKSPACED_REFRESH triggers rebuild, shim execs the new binary)
-			fmt.Println("==> Rebuilding and applying...")
-			bashPath, err := exec.Which(ctx, "bash")
-			if err != nil {
-				return fmt.Errorf("bash not found: %w", err)
-			}
-			shimPath := filepath.Join(root, "bin/shim/workspaced")
-			applyCmd := exec.RunCmd(ctx, bashPath, shimPath, "dispatch", "apply")
-			applyCmd.Env = append(os.Environ(), "WORKSPACED_REFRESH=1")
-			applyCmd.Stdout = os.Stdout
-			applyCmd.Stderr = os.Stderr
-			if err := applyCmd.Run(); err != nil {
-				return fmt.Errorf("rebuild/apply failed: %w", err)
+			// 2. Rebuild (and optionally apply)
+			if rebuildOnly {
+				fmt.Println("==> Rebuilding only...")
+				bashPath, err := exec.Which(ctx, "bash")
+				if err != nil {
+					return fmt.Errorf("bash not found: %w", err)
+				}
+				shimPath := filepath.Join(root, "bin/shim/workspaced")
+				rebuildCmd := exec.RunCmd(ctx, bashPath, shimPath, "--version")
+				rebuildCmd.Env = append(os.Environ(), "WORKSPACED_REFRESH=1")
+				rebuildCmd.Stdout = os.Stdout
+				rebuildCmd.Stderr = os.Stderr
+				if err := rebuildCmd.Run(); err != nil {
+					return fmt.Errorf("rebuild failed: %w", err)
+				}
+			} else {
+				fmt.Println("==> Rebuilding and applying...")
+				bashPath, err := exec.Which(ctx, "bash")
+				if err != nil {
+					return fmt.Errorf("bash not found: %w", err)
+				}
+				shimPath := filepath.Join(root, "bin/shim/workspaced")
+				applyCmd := exec.RunCmd(ctx, bashPath, shimPath, "dispatch", "apply")
+				applyCmd.Env = append(os.Environ(), "WORKSPACED_REFRESH=1")
+				applyCmd.Stdout = os.Stdout
+				applyCmd.Stderr = os.Stderr
+				if err := applyCmd.Run(); err != nil {
+					return fmt.Errorf("rebuild/apply failed: %w", err)
+				}
 			}
 
 			return nil
 		},
 	}
+
+	cmd.Flags().BoolVar(&rebuildOnly, "rebuild-only", false, "Only rebuild, skip apply")
 	return cmd
 }
