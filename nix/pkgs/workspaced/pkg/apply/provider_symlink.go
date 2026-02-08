@@ -57,11 +57,12 @@ func (p *SymlinkProvider) GetDesiredState(ctx context.Context) ([]DesiredState, 
 			return err
 		}
 
-		// Check if file is a template (.tmpl as second-to-last component)
-		// Example: colors.tmpl.toml → colors.toml
+		// Check if file is a template
+		// Supports: colors.tmpl.toml → colors.toml  OR  colors.tmpl → colors
 		filename := filepath.Base(rel)
 		parts := strings.Split(filename, ".")
-		isTemplate := len(parts) >= 3 && parts[len(parts)-2] == "tmpl"
+		isTemplate := (len(parts) >= 3 && parts[len(parts)-2] == "tmpl") ||
+		              (len(parts) >= 2 && parts[len(parts)-1] == "tmpl")
 
 		if isTemplate {
 			// Read and render template
@@ -76,8 +77,15 @@ func (p *SymlinkProvider) GetDesiredState(ctx context.Context) ([]DesiredState, 
 			}
 
 			// Remove .tmpl from filename
-			newParts := append(parts[:len(parts)-2], parts[len(parts)-1])
-			newFilename := strings.Join(newParts, ".")
+			var newFilename string
+			if parts[len(parts)-1] == "tmpl" {
+				// file.tmpl → file
+				newFilename = strings.Join(parts[:len(parts)-1], ".")
+			} else {
+				// file.tmpl.ext → file.ext
+				newParts := append(parts[:len(parts)-2], parts[len(parts)-1])
+				newFilename = strings.Join(newParts, ".")
+			}
 
 			// Write rendered content to temp file
 			renderedPath := filepath.Join(renderedDir, rel)

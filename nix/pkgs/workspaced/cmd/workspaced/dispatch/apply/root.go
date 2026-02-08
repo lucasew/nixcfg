@@ -2,9 +2,11 @@ package apply
 
 import (
 	"fmt"
+	"os"
 	"workspaced/pkg/apply"
 	"workspaced/pkg/nix"
 	"workspaced/pkg/env"
+	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
 
 	"github.com/spf13/cobra"
@@ -80,6 +82,17 @@ func GetCommand() *cobra.Command {
 				}
 				if err := apply.SaveState(state); err != nil {
 					return err
+				}
+
+				// Reload GTK theme if not on Termux
+				if !env.IsPhone() {
+					home, _ := os.UserHomeDir()
+					dummyTheme := home + "/.themes/dummy"
+					if _, err := os.Stat(dummyTheme); err == nil {
+						// Switch to dummy and back to force GTK reload
+						exec.RunCmd(ctx, "gsettings", "set", "org.gnome.desktop.interface", "gtk-theme", "dummy").Run()
+						exec.RunCmd(ctx, "gsettings", "set", "org.gnome.desktop.interface", "gtk-theme", "base16").Run()
+					}
 				}
 			}
 
