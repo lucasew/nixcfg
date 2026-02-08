@@ -29,7 +29,7 @@ func init() {
 				}
 				sort.Strings(keys)
 
-				cmd := exec.RunCmd(c.Context(), "dmenu")
+				cmd := exec.RunCmd(c.Context(), "rofi", "-dmenu", "-show-icons")
 				cmd.Stdin = strings.NewReader(strings.Join(keys, "\n"))
 
 				out, err := cmd.Output()

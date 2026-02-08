@@ -12,7 +12,7 @@ func init() {
 			Use:   "launch",
 			Short: "Application launcher",
 			RunE: func(c *cobra.Command, args []string) error {
-				return exec.RunCmd(c.Context(), "rofi-launch").Run()
+				return exec.RunCmd(c.Context(), "rofi", "-show", "combi", "-combi-modi", "drun", "-show-icons").Run()
 			},
 		})
 	})

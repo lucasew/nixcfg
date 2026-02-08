@@ -153,8 +153,13 @@ focus_on_window_activation urgent
 exec_always systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP WAYLAND_DISPLAY DISPLAY SWAYSOCK PATH
 exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
+# Waybar
+bar {
+  swaybar_command waybar
+}
+
 # Autostart services
-exec_always systemctl restart --user xss-lock nm-applet.service blueberry-tray.service kdeconnect.service kdeconnect-indicator.service dunst.service swayidle.service waybar.service
+exec_always systemctl restart --user xss-lock nm-applet.service blueberry-tray.service kdeconnect.service kdeconnect-indicator.service dunst.service swayidle.service
 exec_always systemctl --user restart xdg-desktop-portal
 exec_always env WORKSPACED_REFRESH=1 workspaced
 exec_always workspaced dispatch screen reset

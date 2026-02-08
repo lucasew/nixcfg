@@ -12,7 +12,7 @@ func init() {
 			Use:   "window",
 			Short: "Window switcher",
 			RunE: func(c *cobra.Command, args []string) error {
-				return exec.RunCmd(c.Context(), "rofi-window").Run()
+				return exec.RunCmd(c.Context(), "rofi", "-show", "combi", "-combi-modi", "window", "-show-icons").Run()
 			},
 		})
 	})
