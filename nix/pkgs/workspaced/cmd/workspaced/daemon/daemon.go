@@ -15,7 +15,7 @@ import (
 	"io"
 	"workspaced/cmd/workspaced/dispatch"
 	"workspaced/pkg/db"
-	"workspaced/pkg/drivers/media"
+	"workspaced/pkg/media"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
 	"workspaced/pkg/types"

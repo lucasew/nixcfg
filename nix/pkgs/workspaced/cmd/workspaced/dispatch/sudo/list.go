@@ -3,7 +3,7 @@ package sudo
 import (
 	"sort"
 	"time"
-	"workspaced/pkg/drivers/sudo"
+	"workspaced/pkg/sudo"
 
 	"github.com/spf13/cobra"
 )

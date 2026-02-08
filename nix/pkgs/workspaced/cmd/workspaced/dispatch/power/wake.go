@@ -1,7 +1,7 @@
 package power
 
 import (
-	"workspaced/pkg/drivers/power"
+	"workspaced/pkg/power"
 
 	"github.com/spf13/cobra"
 )
