@@ -17,25 +17,7 @@ func GetColorsCommand() *cobra.Command {
 				return err
 			}
 
-			var desktop map[string]interface{}
-			if err := cfg.UnmarshalKey("desktop", &desktop); err != nil {
-				return err
-			}
-
-			palette, ok := desktop["palette"].(map[string]interface{})
-			if !ok {
-				return fmt.Errorf("palette not found")
-			}
-
-			base16, ok := palette["base16"].(map[string]interface{})
-			if !ok {
-				return fmt.Errorf("base16 palette not found")
-			}
-
-			get := func(key string) string {
-				val, _ := base16[key].(string)
-				return val
-			}
+			get := cfg.Palette.Get
 
 			colors := []string{
 				get("base00"), get("base08"), get("base0B"), get("base0A"),

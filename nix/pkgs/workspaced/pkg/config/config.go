@@ -6,6 +6,7 @@ import (
 	"maps"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"workspaced/pkg/env"
 
@@ -28,6 +29,7 @@ type GlobalConfig struct {
 	Browser    BrowserConfig             `toml:"browser"`
 	Webapps    map[string]WebappConfig   `toml:"webapp"`
 	LazyTools  map[string]LazyToolConfig `toml:"lazy_tools"`
+	Palette    PaletteConfig             `toml:"palette"`
 }
 
 type DesktopConfig struct {
@@ -81,6 +83,38 @@ type BackupConfig struct {
 type QuickSyncConfig struct {
 	RepoDir    string `toml:"repo_dir"`
 	RemotePath string `toml:"remote_path"`
+}
+
+type PaletteConfig struct {
+	Base00 string `toml:"base00"`
+	Base01 string `toml:"base01"`
+	Base02 string `toml:"base02"`
+	Base03 string `toml:"base03"`
+	Base04 string `toml:"base04"`
+	Base05 string `toml:"base05"`
+	Base06 string `toml:"base06"`
+	Base07 string `toml:"base07"`
+	Base08 string `toml:"base08"`
+	Base09 string `toml:"base09"`
+	Base0A string `toml:"base0A"`
+	Base0B string `toml:"base0B"`
+	Base0C string `toml:"base0C"`
+	Base0D string `toml:"base0D"`
+	Base0E string `toml:"base0E"`
+	Base0F string `toml:"base0F"`
+}
+
+func (p PaletteConfig) Get(key string) string {
+	v := reflect.ValueOf(p)
+	t := v.Type()
+
+	for i := 0; i < t.NumField(); i++ {
+		field := t.Field(i)
+		if tag := field.Tag.Get("toml"); tag == key {
+			return v.Field(i).String()
+		}
+	}
+	return ""
 }
 
 // Merge returns a new WallpaperConfig with values from other overriding non-empty values
