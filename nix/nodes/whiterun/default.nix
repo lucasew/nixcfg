@@ -29,7 +29,6 @@ in
     ./transmission.nix
   ];
 
-  stylix.enable = true;
 
   services.minecraft-server.enable = true;
 

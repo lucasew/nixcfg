@@ -24,7 +24,6 @@ in
     ./earlyoom.nix
   ];
 
-  stylix.enable = true;
 
   boot = {
     extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];

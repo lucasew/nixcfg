@@ -12,8 +12,6 @@
     ./theme
   ];
 
-  stylix.enable = true;
-
   home = {
     homeDirectory = /home/lucasew;
     inherit (global) username;
