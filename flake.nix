@@ -22,10 +22,6 @@
 
     nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
 
-    home-manager.url = "home-manager/release-25.11";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-
-
     cloud-savegame.url = "github:lucasew/cloud-savegame";
     cloud-savegame.flake = false;
 
@@ -60,7 +56,6 @@
       self,
       nix-index-database,
       nixpkgs,
-      home-manager,
       nbr,
       nur,
       nixos-hardware,
@@ -173,7 +168,6 @@
                 whiterun.config.system.build.toplevel
                 # ivarstead.config.system.build.toplevel
               ])
-              ++ (with self.homeConfigurations; [ main.activationPackage ])
             # ++ (with self.devShells.${system}; [
             #   (pkgs.writeShellScriptBin "s" "echo ${default.outPath}")
             # ])
@@ -246,16 +240,6 @@
           };
           recovery = {
             modules = [ ./nix/nodes/recovery ];
-            inherit pkgs;
-          };
-        };
-      };
-
-      homeConfigurations = pkgs.callPackage ./nix/homes {
-        inherit extraArgs;
-        nodes = {
-          main = {
-            modules = [ ./nix/homes/main ];
             inherit pkgs;
           };
         };

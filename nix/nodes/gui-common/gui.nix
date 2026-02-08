@@ -4,6 +4,10 @@
     desktopManager.xterm.enable = false;
   };
 
+  environment.systemPackages = with pkgs; [
+    lxappearance
+  ];
+
   fonts.packages = with pkgs; [
     siji
     noto-fonts
