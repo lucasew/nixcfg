@@ -8,5 +8,6 @@
     custom.colorpipe
   ];
 
-  gtk.enable = true;
+  # Desabilita gerenciamento de mimeapps e gtk - gerenciado pelo workspaced
+  xdg.mimeApps.enable = false;
 }

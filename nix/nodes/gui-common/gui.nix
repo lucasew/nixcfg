@@ -26,4 +26,7 @@
     latitude = -24.0;
     longitude = -54.0;
   };
+
+  # dconf para persistir configurações GTK (lxappearance, etc)
+  programs.dconf.enable = true;
 }
