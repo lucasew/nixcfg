@@ -86,22 +86,22 @@ type QuickSyncConfig struct {
 }
 
 type PaletteConfig struct {
-	Base00 string `toml:"base00"`
-	Base01 string `toml:"base01"`
-	Base02 string `toml:"base02"`
-	Base03 string `toml:"base03"`
-	Base04 string `toml:"base04"`
-	Base05 string `toml:"base05"`
-	Base06 string `toml:"base06"`
-	Base07 string `toml:"base07"`
-	Base08 string `toml:"base08"`
-	Base09 string `toml:"base09"`
-	Base0A string `toml:"base0A"`
-	Base0B string `toml:"base0B"`
-	Base0C string `toml:"base0C"`
-	Base0D string `toml:"base0D"`
-	Base0E string `toml:"base0E"`
-	Base0F string `toml:"base0F"`
+	Base00 string `toml:"base00" json:"base00"`
+	Base01 string `toml:"base01" json:"base01"`
+	Base02 string `toml:"base02" json:"base02"`
+	Base03 string `toml:"base03" json:"base03"`
+	Base04 string `toml:"base04" json:"base04"`
+	Base05 string `toml:"base05" json:"base05"`
+	Base06 string `toml:"base06" json:"base06"`
+	Base07 string `toml:"base07" json:"base07"`
+	Base08 string `toml:"base08" json:"base08"`
+	Base09 string `toml:"base09" json:"base09"`
+	Base0A string `toml:"base0A" json:"base0A"`
+	Base0B string `toml:"base0B" json:"base0B"`
+	Base0C string `toml:"base0C" json:"base0C"`
+	Base0D string `toml:"base0D" json:"base0D"`
+	Base0E string `toml:"base0E" json:"base0E"`
+	Base0F string `toml:"base0F" json:"base0F"`
 }
 
 func (p PaletteConfig) Get(key string) string {
@@ -115,6 +115,60 @@ func (p PaletteConfig) Get(key string) string {
 		}
 	}
 	return ""
+}
+
+// Merge returns a new PaletteConfig with values from other overriding non-empty values
+func (p PaletteConfig) Merge(other PaletteConfig) PaletteConfig {
+	result := p
+	if other.Base00 != "" {
+		result.Base00 = other.Base00
+	}
+	if other.Base01 != "" {
+		result.Base01 = other.Base01
+	}
+	if other.Base02 != "" {
+		result.Base02 = other.Base02
+	}
+	if other.Base03 != "" {
+		result.Base03 = other.Base03
+	}
+	if other.Base04 != "" {
+		result.Base04 = other.Base04
+	}
+	if other.Base05 != "" {
+		result.Base05 = other.Base05
+	}
+	if other.Base06 != "" {
+		result.Base06 = other.Base06
+	}
+	if other.Base07 != "" {
+		result.Base07 = other.Base07
+	}
+	if other.Base08 != "" {
+		result.Base08 = other.Base08
+	}
+	if other.Base09 != "" {
+		result.Base09 = other.Base09
+	}
+	if other.Base0A != "" {
+		result.Base0A = other.Base0A
+	}
+	if other.Base0B != "" {
+		result.Base0B = other.Base0B
+	}
+	if other.Base0C != "" {
+		result.Base0C = other.Base0C
+	}
+	if other.Base0D != "" {
+		result.Base0D = other.Base0D
+	}
+	if other.Base0E != "" {
+		result.Base0E = other.Base0E
+	}
+	if other.Base0F != "" {
+		result.Base0F = other.Base0F
+	}
+	return result
 }
 
 // Merge returns a new WallpaperConfig with values from other overriding non-empty values
@@ -233,6 +287,7 @@ func (g GlobalConfig) Merge(other GlobalConfig) GlobalConfig {
 	result.Backup = result.Backup.Merge(other.Backup)
 	result.QuickSync = result.QuickSync.Merge(other.QuickSync)
 	result.Browser = result.Browser.Merge(other.Browser)
+	result.Palette = result.Palette.Merge(other.Palette)
 
 	return result
 }

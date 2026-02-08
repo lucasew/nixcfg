@@ -348,7 +348,7 @@ enabled = false
 [desktop.raw.dconf."org/gnome/desktop/periphereals/touchpad"]
 tap-to-click = true
 
-[desktop.palette.base16]
+[palette]
 base00 = "251530"
 base01 = "41407c"
 base02 = "706492"
