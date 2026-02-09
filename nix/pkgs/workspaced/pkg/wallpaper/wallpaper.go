@@ -37,19 +37,23 @@ func SetStatic(ctx context.Context, path string) error {
 
 	rpc := exec.GetRPC(ctx)
 	if rpc == "swaymsg" {
-		cmd := exec.RunCmd(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", "swaybg", "-i", path)
+		swaybg, err := exec.Which(ctx, "swaybg")
+		if err != nil {
+			return err
+		}
+		cmd := exec.RunCmd(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", swaybg, "-i", path)
 		if err := cmd.Run(); err != nil {
 			logger.Error("failed to set wallpaper with swaybg", "error", err, "hint", "ensure swaybg is installed")
 			return err
 		}
 		return nil
 	}
-	cmd := exec.RunCmd(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", "feh", "--bg-fill", path)
-	if err := cmd.Run(); err != nil {
-		logger.Error("failed to set wallpaper with feh", "error", err, "hint", "ensure feh is installed")
+	feh, err := exec.Which(ctx, "feh")
+	if err != nil {
 		return err
 	}
-	return nil
+	cmd := exec.RunCmd(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", feh, "--bg-fill", path)
+	return cmd.Run()
 }
 
 func SetAnimated(ctx context.Context, path string) error {

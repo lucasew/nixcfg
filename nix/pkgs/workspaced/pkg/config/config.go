@@ -30,6 +30,7 @@ type GlobalConfig struct {
 	Webapps    map[string]WebappConfig   `toml:"webapp"`
 	LazyTools  map[string]LazyToolConfig `toml:"lazy_tools"`
 	Palette    PaletteConfig             `toml:"palette"`
+	Fonts      FontsConfig               `toml:"fonts"`
 }
 
 type DesktopConfig struct {
@@ -102,6 +103,13 @@ type PaletteConfig struct {
 	Base0D string `toml:"base0D" json:"base0D"`
 	Base0E string `toml:"base0E" json:"base0E"`
 	Base0F string `toml:"base0F" json:"base0F"`
+}
+
+type FontsConfig struct {
+	Serif     string `toml:"serif"`
+	SansSerif string `toml:"sans_serif"`
+	Monospace string `toml:"monospace"`
+	Emoji     string `toml:"emoji"`
 }
 
 func (p PaletteConfig) Get(key string) string {

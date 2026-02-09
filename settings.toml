@@ -55,6 +55,12 @@ waypipe = 9999
 [editor]
 default = "hx"
 
+[fonts]
+serif = "Fira Code Light"
+sans_serif = "Fira Code Light"
+monospace = "Fira Code Light"
+emoji = "Apple Color Emoji"
+
 [desktop.wallpaper]
 dir = "~/.dotfiles/assets"
 default = "wall.jpg"

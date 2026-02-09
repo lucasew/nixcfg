@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<!-- Auto-generated from template by workspaced -->
+<fontconfig>
+  <!-- Default font families -->
+  <alias>
+    <family>serif</family>
+    <prefer>
+      <family>{{ .Fonts.Serif }}</family>
+    </prefer>
+  </alias>
+
+  <alias>
+    <family>sans-serif</family>
+    <prefer>
+      <family>{{ .Fonts.SansSerif }}</family>
+    </prefer>
+  </alias>
+
+  <alias>
+    <family>monospace</family>
+    <prefer>
+      <family>{{ .Fonts.Monospace }}</family>
+    </prefer>
+  </alias>
+
+  <alias>
+    <family>emoji</family>
+    <prefer>
+      <family>{{ .Fonts.Emoji }}</family>
+    </prefer>
+  </alias>
+
+  <!-- Enable anti-aliasing -->
+  <match target="font">
+    <edit name="antialias" mode="assign">
+      <bool>true</bool>
+    </edit>
+    <edit name="hinting" mode="assign">
+      <bool>true</bool>
+    </edit>
+    <edit name="hintstyle" mode="assign">
+      <const>hintslight</const>
+    </edit>
+    <edit name="rgba" mode="assign">
+      <const>rgb</const>
+    </edit>
+  </match>
+</fontconfig>
