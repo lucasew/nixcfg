@@ -29,6 +29,9 @@ func NewRootCommand() *cobra.Command {
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			// Ensure logs go to stderr so stdout stays clean for piping/capturing
 			slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, nil)))
+			if os.Getenv("WORKSPACED_DEBUG") != "" {
+				slog.SetLogLoggerLevel(slog.LevelDebug)
+			}
 
 			path := os.Getenv("PATH")
 			systemPath := "/run/current-system/sw/bin"
@@ -71,7 +74,7 @@ func Execute() {
 		if errors.Is(err, dapi.ErrCanceled) {
 			os.Exit(0)
 		}
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		slog.Error("error", "err", err)
 		os.Exit(1)
 	}
 }
