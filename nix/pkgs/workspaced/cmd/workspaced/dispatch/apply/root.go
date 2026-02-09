@@ -87,7 +87,7 @@ func GetCommand() *cobra.Command {
 				// Reload GTK theme if not on Termux
 				if !env.IsPhone() {
 					home, _ := os.UserHomeDir()
-					dummyTheme := home + "/.themes/dummy"
+					dummyTheme := home + "/.local/share/themes/dummy"
 					if _, err := os.Stat(dummyTheme); err == nil {
 						// Switch to dummy and back to force GTK reload
 						exec.RunCmd(ctx, "dconf", "write", "/org/gnome/desktop/interface/gtk-theme", "'dummy'").Run()

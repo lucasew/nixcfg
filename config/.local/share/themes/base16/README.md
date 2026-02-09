@@ -17,7 +17,7 @@ gsettings set org.gnome.desktop.interface gtk-theme base16
 
 ### 2. Criar tema dummy para reload automático:
 ```bash
-ln -Ts ~/.themes/base16 ~/.themes/dummy
+ln -Ts ~/.local/share/themes/base16 ~/.local/share/themes/dummy
 ```
 
 ## Uso
