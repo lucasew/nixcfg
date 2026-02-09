@@ -6,7 +6,8 @@
 
   environment.systemPackages = with pkgs; [
     lxappearance
-    glib # gsettings - necessário para temas GTK reagirem em tempo real
+    glib # gsettings
+    gsettings-desktop-schemas # schemas necessários para GTK
   ];
 
   fonts.packages = with pkgs; [
@@ -34,4 +35,10 @@
 
   # dconf para persistir configurações GTK (lxappearance, etc)
   programs.dconf.enable = true;
+
+  # Configurar gsettings schemas
+  services.dbus.packages = with pkgs; [
+    dconf
+    gsettings-desktop-schemas
+  ];
 }
