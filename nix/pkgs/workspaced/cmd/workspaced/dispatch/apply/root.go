@@ -90,8 +90,8 @@ func GetCommand() *cobra.Command {
 					dummyTheme := home + "/.themes/dummy"
 					if _, err := os.Stat(dummyTheme); err == nil {
 						// Switch to dummy and back to force GTK reload
-						exec.RunCmd(ctx, "gsettings", "set", "org.gnome.desktop.interface", "gtk-theme", "dummy").Run()
-						exec.RunCmd(ctx, "gsettings", "set", "org.gnome.desktop.interface", "gtk-theme", "base16").Run()
+						exec.RunCmd(ctx, "dconf", "write", "/org/gnome/desktop/interface/gtk-theme", "'dummy'").Run()
+						exec.RunCmd(ctx, "dconf", "write", "/org/gnome/desktop/interface/gtk-theme", "'base16'").Run()
 					}
 				}
 			}

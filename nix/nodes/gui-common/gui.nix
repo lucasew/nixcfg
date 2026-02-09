@@ -4,11 +4,7 @@
     desktopManager.xterm.enable = false;
   };
 
-  environment.systemPackages = with pkgs; [
-    lxappearance
-    glib # gsettings
-    gsettings-desktop-schemas # schemas necessários para GTK
-  ];
+  environment.systemPackages = [ ];
 
   fonts.packages = with pkgs; [
     siji
@@ -33,12 +29,6 @@
     longitude = -54.0;
   };
 
-  # dconf para persistir configurações GTK (lxappearance, etc)
+  # dconf para persistir configurações GTK
   programs.dconf.enable = true;
-
-  # Configurar gsettings schemas
-  services.dbus.packages = with pkgs; [
-    dconf
-    gsettings-desktop-schemas
-  ];
 }
