@@ -4,18 +4,14 @@
   config,
   lib,
   ...
-}:
-let
+}: let
   inherit (global) username;
-in
-{
-
+in {
   config = lib.mkIf config.programs.adb.enable {
-    users.users.${username}.extraGroups = [ "adbusers" ];
+    users.users.${username}.extraGroups = ["adbusers"];
     services.udev.packages = with pkgs; [
       gnome3.gnome-settings-daemon
       android-udev-rules
     ];
   };
-
 }

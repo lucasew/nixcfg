@@ -3,11 +3,9 @@
   lib,
   global,
   ...
-}:
-let
+}: let
   inherit (global) username;
-in
-{
+in {
   imports = [
     ../common
     ./gui-variants
@@ -54,7 +52,7 @@ in
   programs.man.enable = true;
 
   programs.dconf.enable = true;
-  services.dbus.packages = with pkgs; [ dconf ];
+  services.dbus.packages = with pkgs; [dconf];
   services.gvfs.enable = true;
   services.tumbler.enable = true;
 

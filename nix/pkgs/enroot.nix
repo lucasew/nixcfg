@@ -1,8 +1,8 @@
-{ stdenv
-, fetchFromGitHub
-, flock
+{
+  stdenv,
+  fetchFromGitHub,
+  flock,
 }:
-
 stdenv.mkDerivation (finalAttrs: {
   pname = "enroot";
   version = "3.5.0";
@@ -16,8 +16,8 @@ stdenv.mkDerivation (finalAttrs: {
   };
 
   postPatch = ''
-  substituteInPlace Makefile \
-    --replace-fail 'git submodule update' 'echo git submodule update'
+    substituteInPlace Makefile \
+      --replace-fail 'git submodule update' 'echo git submodule update'
   '';
 
   makeTarget = "install";

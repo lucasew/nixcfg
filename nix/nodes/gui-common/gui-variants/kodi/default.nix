@@ -3,9 +3,7 @@
   config,
   pkgs,
   ...
-}:
-
-{
+}: {
   config = lib.mkIf config.services.xserver.desktopManager.kodi.enable {
     hardware.graphics.enable = true;
 

@@ -4,10 +4,10 @@
   lib,
   utils,
   ...
-}:
-let
+}: let
   inherit (utils) escapeSystemdPath;
-  inherit (lib)
+  inherit
+    (lib)
     mdDoc
     mkOption
     mkMerge
@@ -16,12 +16,11 @@ let
     types
     ;
   cfg = config.environment.dotd;
-in
-{
+in {
   options = {
     environment.dotd = mkOption {
       description = mdDoc "Module to create .d like directories and special files that when read get the contents of the files in the .d folder in sort order";
-      default = { };
+      default = {};
       example = {
         "nix/machines".enable = true;
         "i3/config".enable = true;
@@ -37,25 +36,22 @@ in
       );
     };
   };
-  config.systemd =
-    let
-      dotdKeys = builtins.attrNames cfg;
-    in
+  config.systemd = let
+    dotdKeys = builtins.attrNames cfg;
+  in
     mkMerge (
       builtins.map (
-        key:
-        let
+        key: let
           item = cfg.${key};
           normalizedKey = escapeSystemdPath key;
-        in
-        {
+        in {
           tmpfiles.rules = [
             "p+ \"${key}\" 0644 root root" # recreate the named pipe
             "d \"${key}.d\" 0755 root root" # create the .d folder but don't clean it periodically
           ];
           paths."dotd-${normalizedKey}-watcher" = {
             inherit (item) enable;
-            wantedBy = [ "default.target" ];
+            wantedBy = ["default.target"];
             pathConfig = {
               PathChanged = "${key}.d";
             };
@@ -71,7 +67,7 @@ in
             "dotd-${normalizedKey}" = {
               inherit (item) enable;
               restartIfChanged = true;
-              wantedBy = [ "default.target" ];
+              wantedBy = ["default.target"];
               environment = {
                 DOTD_FILE = "${key}";
                 DOTD_FOLDER = "${key}.d";
@@ -87,6 +83,7 @@ in
             };
           };
         }
-      ) dotdKeys
+      )
+      dotdKeys
     );
 }

@@ -3,13 +3,9 @@
   lib,
   config,
   ...
-}:
-
-let
+}: let
   cfg = config.security.polkit.agent;
-in
-
-{
+in {
   options = {
     security.polkit.agent = {
       enable = lib.mkEnableOption "polkit agent";
@@ -25,9 +21,9 @@ in
     # from: https://nixos.wiki/wiki/Polkit
     systemd.user.services.polkit-agent = {
       description = "Polkit Agent";
-      wantedBy = [ "graphical-session.target" ];
-      wants = [ "graphical-session.target" ];
-      after = [ "graphical-session.target" ];
+      wantedBy = ["graphical-session.target"];
+      wants = ["graphical-session.target"];
+      after = ["graphical-session.target"];
       serviceConfig = {
         Type = "simple";
         ExecStart = cfg.agent;

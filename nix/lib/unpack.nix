@@ -1,7 +1,6 @@
-{ stdenvNoCC }:
-{
+{stdenvNoCC}: {
   src,
-  patches ? [ ],
+  patches ? [],
 }:
 stdenvNoCC.mkDerivation {
   name = "source";

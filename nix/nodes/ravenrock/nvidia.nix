@@ -1,11 +1,13 @@
-{ pkgs, config, ... }:
-let
-  our_cudatoolkit = pkgs.cudatoolkit;
-in
 {
+  pkgs,
+  config,
+  ...
+}: let
+  our_cudatoolkit = pkgs.cudatoolkit;
+in {
   nix = {
     settings = {
-      substituters = [ "https://cuda-maintainers.cachix.org" ];
+      substituters = ["https://cuda-maintainers.cachix.org"];
       trusted-public-keys = [
         "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
       ];
@@ -18,7 +20,7 @@ in
 
   hardware.graphics.enable = true;
 
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = ["nvidia"];
 
   environment.systemPackages = [
     # our_cudatoolkit

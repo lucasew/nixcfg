@@ -4,8 +4,7 @@
   pkgs,
   lib,
   ...
-}:
-{
+}: {
   config = lib.mkIf config.virtualisation.libvirtd.enable {
     users.users.${global.username} = {
       extraGroups = [
@@ -13,6 +12,6 @@
         "libvirtd"
       ];
     };
-    systemd.services.libvirtd.path = with pkgs; [ virtiofsd ];
+    systemd.services.libvirtd.path = with pkgs; [virtiofsd];
   };
 }

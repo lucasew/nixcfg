@@ -3,9 +3,7 @@
   lib,
   config,
   ...
-}:
-
-let
+}: let
   inherit (pkgs) makeDesktopItem;
   lockerSpace = makeDesktopItem {
     name = "locker";
@@ -14,15 +12,14 @@ let
     type = "Application";
     exec = "sdw utils i3wm lock-screen";
   };
-in
-{
+in {
   imports = [
     ../../workspaced.nix
   ];
 
   config = lib.mkIf config.services.xserver.windowManager.i3.enable {
     # Portal configuration
-    xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
     xdg.portal.config.common.default = "*";
     xdg.portal.xdgOpenUsePortal = true;
 
@@ -37,16 +34,16 @@ in
 
     # i3 window manager
     services.xserver.windowManager.i3.extraPackages = with pkgs; [
-        playerctl
-        rofi
-        pulseaudio
-        feh
-        brightnessctl
-        maim
-        xclip
-        i3status
-        unstable.i3pystatus
-        mate.mate-polkit
-      ];
+      playerctl
+      rofi
+      pulseaudio
+      feh
+      brightnessctl
+      maim
+      xclip
+      i3status
+      unstable.i3pystatus
+      mate.mate-polkit
+    ];
   };
 }

@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   boot = {
     tmp.cleanOnBoot = true;
   };

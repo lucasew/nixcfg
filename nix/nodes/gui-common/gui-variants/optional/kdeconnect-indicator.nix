@@ -3,11 +3,9 @@
   pkgs,
   lib,
   ...
-}:
-let
+}: let
   cfg = config.programs.kdeconnect;
-in
-{
+in {
   config = lib.mkIf cfg.enable {
     systemd.user.services.kdeconnect = {
       enable = true;
@@ -16,7 +14,7 @@ in
     };
     systemd.user.services.kdeconnect-indicator = {
       enable = true;
-      path = [ cfg.package ];
+      path = [cfg.package];
       script = "kdeconnect-indicator";
       restartIfChanged = true;
     };

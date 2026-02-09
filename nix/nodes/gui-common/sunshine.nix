@@ -3,15 +3,11 @@
   pkgs,
   lib,
   ...
-}:
-
-let
+}: let
   cfg = config.services.sunshine;
-in
-
-{
+in {
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = [ cfg.package ];
+    environment.systemPackages = [cfg.package];
 
     services.sunshine.settings = {
       motion_as_ds4 = true;

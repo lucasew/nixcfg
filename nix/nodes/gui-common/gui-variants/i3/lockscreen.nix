@@ -4,8 +4,7 @@
   config,
   ...
 }:
-with pkgs.custom.colors.colors;
-let
+with pkgs.custom.colors.colors; let
   inherit (pkgs) i3lock-color;
   inherit (lib) concatStringsSep;
   locker-params = [
@@ -33,12 +32,12 @@ let
     "--bshl-color=${base08}"
   ];
 in
-lib.mkIf (config.programs.xss-lock.enable && config.services.xserver.windowManager.i3.enable) {
-  programs.xss-lock = {
-    lockerCommand = lib.mkDefault ''
-      ${lib.getExe i3lock-color} ${lib.escapeShellArgs locker-params}
-    '';
-    extraOptions = [ ];
-  };
-  systemd.user.services.xss-lock.restartIfChanged = true;
-}
+  lib.mkIf (config.programs.xss-lock.enable && config.services.xserver.windowManager.i3.enable) {
+    programs.xss-lock = {
+      lockerCommand = lib.mkDefault ''
+        ${lib.getExe i3lock-color} ${lib.escapeShellArgs locker-params}
+      '';
+      extraOptions = [];
+    };
+    systemd.user.services.xss-lock.restartIfChanged = true;
+  }

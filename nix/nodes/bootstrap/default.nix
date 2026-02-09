@@ -5,9 +5,9 @@
   self,
   config,
   ...
-}:
-let
-  inherit (pkgs)
+}: let
+  inherit
+    (pkgs)
     vim
     gitMinimal
     file
@@ -16,8 +16,7 @@ let
     killall
     script-directory-wrapper
     ;
-in
-{
+in {
   imports = [
     ./bash-extra.nix
     ./ccache.nix

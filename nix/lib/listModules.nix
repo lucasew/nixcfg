@@ -5,4 +5,4 @@ let
   loadGivenModules = import <dotfiles/lib/loadGivenModules.nix>;
   items = lsName <dotfiles/modules>;
 in
-loadGivenModules items
+  loadGivenModules items

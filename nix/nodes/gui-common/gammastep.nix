@@ -3,14 +3,10 @@
   lib,
   pkgs,
   ...
-}:
-
-let
+}: let
   inherit (lib) mkOption types mkIf mkPackageOption;
   cfg = config.services.gammastep;
-in
-
-{
+in {
   options.services.gammastep = {
     enable = mkOption {
       type = types.bool;
@@ -21,7 +17,7 @@ in
       '';
     };
 
-    package = mkPackageOption pkgs "gammastep" { };
+    package = mkPackageOption pkgs "gammastep" {};
   };
 
   config = mkIf cfg.enable {
@@ -29,7 +25,7 @@ in
     # See: config/.config/gammastep/config.ini.tmpl
 
     systemd.user.services.gammastep = {
-      path = [ cfg.package ];
+      path = [cfg.package];
       script = ''
         # Wait for WAYLAND_DISPLAY to be available
         while [ -z "$WAYLAND_DISPLAY" ]; do
@@ -41,8 +37,8 @@ in
         RestartSec = 3;
         Restart = "on-failure";
       };
-      wantedBy = [ "graphical-session.target" ];
-      partOf = [ "graphical-session.target" ];
+      wantedBy = ["graphical-session.target"];
+      partOf = ["graphical-session.target"];
     };
   };
 }

@@ -1,9 +1,8 @@
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   fhs = pkgs.buildFHSUserEnv {
     name = "usb_tixati";
-    targetPkgs =
-      pkgs: with pkgs; [
+    targetPkgs = pkgs:
+      with pkgs; [
         glib
         zlib
         dbus
@@ -23,4 +22,4 @@ let
     exec = "${fhs}/bin/usb_tixati";
   };
 in
-desktop
+  desktop

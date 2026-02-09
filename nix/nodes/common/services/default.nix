@@ -1,5 +1,4 @@
-{ lib, ... }:
-{
+{lib, ...}: {
   imports = [
     ./cloud-savegame.nix
     ./cockpit-extra.nix

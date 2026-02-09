@@ -1,6 +1,4 @@
-{ config, ... }:
-
-{
+{config, ...}: {
   networking.ports.prometheus-exporter-nginx.enable = true;
   services.nginx.statusPage = true;
 

@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   # SSH config now managed by workspaced
   # See: config/.ssh/config.tmpl and config/.ssh/authorized_keys
 

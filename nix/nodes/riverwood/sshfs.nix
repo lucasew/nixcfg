@@ -1,19 +1,19 @@
-{ lib, pkgs, ... }:
-
-let
+{
+  lib,
+  pkgs,
+  ...
+}: let
   sshfsArgs = lib.escapeShellArgs [
     "-f"
     "-o"
     "reconnect,ServerAliveInterval=15,ServerAliveCountMax=3,allow_other,default_permissions,cache=no"
   ];
-in
-
-{
-  environment.systemPackages = [ pkgs.sshfs ];
+in {
+  environment.systemPackages = [pkgs.sshfs];
 
   systemd.user.services = {
     "sshfs-TMP2" = {
-      path = with pkgs; [ sshfs ];
+      path = with pkgs; [sshfs];
       script = ''
         . ${../../../bin/prelude/30-integrations-ssh-agent.sh}
         exec sshfs $(whoami)@whiterun:/home/$(whoami)/TMP2 /home/$(whoami)/TMP2 ${sshfsArgs}
@@ -22,7 +22,7 @@ in
     };
 
     "sshfs-WORKSPACE" = {
-      path = with pkgs; [ sshfs ];
+      path = with pkgs; [sshfs];
       script = ''
         . ${../../../bin/prelude/30-integrations-ssh-agent.sh}
         exec sshfs $(whoami)@whiterun:/home/$(whoami)/WORKSPACE /home/$(whoami)/WORKSPACE ${sshfsArgs}

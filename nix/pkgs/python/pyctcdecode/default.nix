@@ -7,7 +7,6 @@
   pygtrie,
   kenlm,
 }:
-
 buildPythonPackage rec {
   pname = "pyctcdecode";
   version = "0.5.0";
@@ -23,12 +22,12 @@ buildPythonPackage rec {
     kenlm
   ];
 
-  nativeCheckInputs = [ unittestCheckHook ];
+  nativeCheckInputs = [unittestCheckHook];
 
   meta = {
     description = "CTC beam search decoder for speech recognition";
     homepage = "https://github.com/kensho-technologies/pyctcdecode";
-    maintainers = [ lib.maintainers.lucasew ];
+    maintainers = [lib.maintainers.lucasew];
     license = lib.licenses.asl20;
   };
 }

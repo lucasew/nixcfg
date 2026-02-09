@@ -3,9 +3,7 @@
   config,
   lib,
   ...
-}:
-
-{
+}: {
   options.services.dunst.enable = lib.mkEnableOption "dunst";
 
   config = lib.mkIf config.services.dunst.enable {
@@ -13,10 +11,10 @@
     # See: config/.config/dunst/dunstrc.tmpl
 
     systemd.user.services.dunst = {
-      wantedBy = [ "graphical-session.target" ];
+      wantedBy = ["graphical-session.target"];
       enable = true;
       restartIfChanged = true;
-      path = [ pkgs.dunst ];
+      path = [pkgs.dunst];
       script = ''
         dunst -config ~/.config/dunst/dunstrc
       '';

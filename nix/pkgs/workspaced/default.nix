@@ -1,5 +1,4 @@
-{ writeShellScriptBin }:
-
+{writeShellScriptBin}:
 writeShellScriptBin "workspaced" ''
   dotfilesFolder=
   if [ -d ~/.dotfiles ]; then

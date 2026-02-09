@@ -3,8 +3,7 @@
   config,
   lib,
   ...
-}:
-{
+}: {
   options = {
     services.rtorrent.enableSandboxSample = lib.mkEnableOption "sandbox sample for rtorrent";
   };
@@ -166,7 +165,7 @@
         RestrictSUIDSGID = true;
 
         SystemCallArchitectures = "native";
-        SystemCallFilter = [ "~@privileged" ];
+        SystemCallFilter = ["~@privileged"];
 
         TemporaryFileSystem = "/:ro";
 
@@ -187,24 +186,24 @@
         NODE_ENV = "production";
       };
 
-      wantedBy = [ "multi-user.target" ];
+      wantedBy = ["multi-user.target"];
 
-      after = [ "rtorrent.service" ];
+      after = ["rtorrent.service"];
     };
 
     systemd.services.rtorrent-sandbox-sample.serviceConfig =
       lib.mkIf config.services.rtorrent.enableSandboxSample
-        (
-          lib.mkMerge [
-            config.systemd.services.rtorrent.serviceConfig
-            {
-              ExecStart = lib.mkForce "/run/rtorrent-poc-payload";
-              ExecStartPre = lib.mkForce "";
-              RuntimeDirectory = lib.mkForce "rtorrent-sandbox-poc";
-              BindPaths = [ "/run" ];
-            }
-          ]
-        );
+      (
+        lib.mkMerge [
+          config.systemd.services.rtorrent.serviceConfig
+          {
+            ExecStart = lib.mkForce "/run/rtorrent-poc-payload";
+            ExecStartPre = lib.mkForce "";
+            RuntimeDirectory = lib.mkForce "rtorrent-sandbox-poc";
+            BindPaths = ["/run"];
+          }
+        ]
+      );
 
     services.ts-proxy.hosts = {
       rtorrent = {

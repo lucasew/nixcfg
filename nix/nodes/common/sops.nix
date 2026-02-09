@@ -1,5 +1,3 @@
-{ self, ... }:
-{
-  imports = [ self.inputs.sops-nix.nixosModules.sops ];
-
+{self, ...}: {
+  imports = [self.inputs.sops-nix.nixosModules.sops];
 }

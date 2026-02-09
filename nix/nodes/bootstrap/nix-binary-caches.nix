@@ -1,8 +1,6 @@
-{ lib, ... }:
-let
+{lib, ...}: let
   flakeRaw = import ../../../flake.nix;
-in
-{
+in {
   nix.settings = {
     substituters = lib.mkAfter flakeRaw.nixConfig.extra-substituters;
     trusted-public-keys = lib.mkAfter flakeRaw.nixConfig.extra-trusted-public-keys;

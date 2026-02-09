@@ -3,11 +3,9 @@
   pkgs,
   config,
   ...
-}:
-let
+}: let
   hostname = "riverwood";
-in
-{
+in {
   imports = [
     ./hardware-configuration.nix
     ../gui-common
@@ -24,10 +22,9 @@ in
     ./earlyoom.nix
   ];
 
-
   boot = {
-    extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];
-    kernelModules = [ "v4l2loopback" ];
+    extraModulePackages = [config.boot.kernelPackages.v4l2loopback];
+    kernelModules = ["v4l2loopback"];
     # exclusive_caps precisa pro chromium detectar
     # devices é o número de câmeras virtuais
     extraModprobeConfig = ''
@@ -79,7 +76,7 @@ in
   programs.kdeconnect.enable = true;
 
   boot = {
-    supportedFilesystems = [ "ntfs" ];
+    supportedFilesystems = ["ntfs"];
     loader = {
       efi = {
         canTouchEfiVariables = true;

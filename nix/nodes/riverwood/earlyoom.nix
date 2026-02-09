@@ -1,6 +1,9 @@
-{ config, lib, pkgs, ... }:
-
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   # Configuração do earlyoom para riverwood
   # SIGTERM quando memória livre atinge 10% (90% de uso)
   # SIGKILL quando memória livre atinge 5% (95% de uso)

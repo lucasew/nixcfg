@@ -3,9 +3,7 @@
   pkgs,
   lib,
   ...
-}:
-
-let
+}: let
   lockerSpace = pkgs.makeDesktopItem {
     name = "locker";
     desktopName = "Bloquear Tela";
@@ -14,50 +12,47 @@ let
     exec = "sdw utils i3wm lock-screen";
   };
   locker-params = let
-    dict-args =
-      with pkgs.custom.colors.colors; {
+    dict-args = with pkgs.custom.colors.colors; {
+      color = base00; # background
 
-        color = base00; # background
+      text-color = base05;
+      text-clear-color = base05;
+      text-caps-lock-color = base05;
+      text-ver-color = base05;
+      text-wrong-color = base05;
+      layout-text-color = base05;
 
-        text-color = base05;
-        text-clear-color = base05;
-        text-caps-lock-color = base05;
-        text-ver-color = base05;
-        text-wrong-color = base05;
-        layout-text-color = base05;
+      ring-color = base01;
+      ring-clear-color = base0D;
+      ring-caps-lock-color = base0C;
+      ring-ver-color = base0A;
+      ring-wrong-color = base08;
 
-        ring-color = base01;
-        ring-clear-color = base0D;
-        ring-caps-lock-color = base0C;
-        ring-ver-color = base0A;
-        ring-wrong-color = base08;
+      key-hl-color = base06;
+      bs-hl-color = base08;
 
-        key-hl-color = base06;
-        bs-hl-color = base08;
-
-        inside-color = "00000000";
-        inside-clear-color = "00000000";
-        inside-caps-lock-color = "00000000";
-        inside-ver-color = "00000000";
-        inside-wrong-color = "00000000";
-        line-color = "00000000";
-        line-clear-color = "00000000";
-        line-caps-lock-color = "00000000";
-        line-ver-color = "00000000";
-        line-wrong-color = "00000000";
-        layout-bg-color = "00000000";
-        layout-border-color = "00000000";
-      };
+      inside-color = "00000000";
+      inside-clear-color = "00000000";
+      inside-caps-lock-color = "00000000";
+      inside-ver-color = "00000000";
+      inside-wrong-color = "00000000";
+      line-color = "00000000";
+      line-clear-color = "00000000";
+      line-caps-lock-color = "00000000";
+      line-ver-color = "00000000";
+      line-wrong-color = "00000000";
+      layout-bg-color = "00000000";
+      layout-border-color = "00000000";
+    };
 
     swaylock-list-args = lib.pipe dict-args [
       (builtins.mapAttrs (k: v: ["--${k}" "${v}"]))
       (builtins.attrValues)
       (lib.flatten)
     ];
-  in swaylock-list-args;
-in
-
-{
+  in
+    swaylock-list-args;
+in {
   imports = [
     ../optional/flatpak.nix
     ../optional/kdeconnect-indicator.nix
@@ -80,8 +75,8 @@ in
 
     # Swayidle for power management
     systemd.user.services.swayidle = {
-      partOf = [ "graphical-session.target" ];
-      path = with pkgs; [ swayidle procps ];
+      partOf = ["graphical-session.target"];
+      path = with pkgs; [swayidle procps];
       restartIfChanged = true;
       script = ''
         PATH=$PATH:/run/current-system/sw/bin
@@ -97,7 +92,7 @@ in
     xdg.portal = {
       enable = true;
       xdgOpenUsePortal = true;
-      extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
+      extraPortals = [pkgs.xdg-desktop-portal-wlr];
       config.common.default = "wlr";
       wlr.enable = true;
     };
@@ -109,11 +104,11 @@ in
 
     # System tray services
     systemd.user.services.nm-applet = {
-      path = with pkgs; [ networkmanagerapplet ];
+      path = with pkgs; [networkmanagerapplet];
       script = "nm-applet";
     };
     systemd.user.services.blueberry-tray = {
-      path = with pkgs; [ blueberry ];
+      path = with pkgs; [blueberry];
       script = "blueberry-tray; while true; do sleep 3600; done";
     };
 
@@ -144,6 +139,5 @@ in
       brightnessctl
       unstable.i3pystatus
     ];
-
   };
 }

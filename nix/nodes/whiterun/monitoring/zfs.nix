@@ -1,6 +1,4 @@
-{ config, ... }:
-
-{
+{config, ...}: {
   networking.ports.prometheus-exporter-zfs.enable = true;
 
   services.prometheus = {

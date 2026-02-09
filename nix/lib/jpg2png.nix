@@ -1,8 +1,10 @@
-{ imagemagick, runCommandNoCC }:
 {
+  imagemagick,
+  runCommandNoCC,
+}: {
   image,
   name ? "image.png",
 }:
-runCommandNoCC name { } ''
+runCommandNoCC name {} ''
   ${imagemagick}/bin/convert ${image} $out
 ''

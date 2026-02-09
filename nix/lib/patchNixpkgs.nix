@@ -1,11 +1,9 @@
 {
   nixpkgs ? <nixpkgs>,
-  patches ? [ ],
+  patches ? [],
   system ? builtins.currentSystem,
-  bootstrapPkgs ? import nixpkgs { inherit system; },
-}:
-
-let
+  bootstrapPkgs ? import nixpkgs {inherit system;},
+}: let
   inherit (builtins) length;
   hasPatches = (length patches) > 0;
 
@@ -22,4 +20,6 @@ let
     inherit patches;
   };
 in
-if hasPatches then patchedNixpkgs else nixpkgs
+  if hasPatches
+  then patchedNixpkgs
+  else nixpkgs

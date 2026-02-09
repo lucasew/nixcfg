@@ -24,28 +24,24 @@
   nix,
   unstable,
   callPackage,
-}:
-
-let
-  containerConf =
-    {
-      name,
-      extraCommands ? "",
-      tag ? self.shortRev or self.dirtyShortRev,
-      user ? "lucasew",
-      contents ? [ ],
-      interactive ? false,
-      withNix ? false,
-      ...
-    }@args:
-    let
-      args' = builtins.removeAttrs args [
-        "interactive"
-        "withNix"
-        "overrideDerivation"
-        "override"
-      ];
-    in
+}: let
+  containerConf = {
+    name,
+    extraCommands ? "",
+    tag ? self.shortRev or self.dirtyShortRev,
+    user ? "lucasew",
+    contents ? [],
+    interactive ? false,
+    withNix ? false,
+    ...
+  } @ args: let
+    args' = builtins.removeAttrs args [
+      "interactive"
+      "withNix"
+      "overrideDerivation"
+      "override"
+    ];
+  in
     unstable.dockerTools.streamLayeredImage (
       args'
       // {
@@ -57,15 +53,15 @@ let
             dockerTools.binSh
             (dockerTools.fakeNss.override {
               extraPasswdLines =
-                [ "${user}:x:1000:1000:new ${user}:/state:/bin/bash" ]
+                ["${user}:x:1000:1000:new ${user}:/state:/bin/bash"]
                 ++ lib.optionals withNix (
                   lib.genList (
-                    i:
-                    "nixbld${toString (i + 1)}:x:${toString (i + 30001)}:30000::/var/empty:/run/current-system/sw/bin/nologin"
-                  ) 32
+                    i: "nixbld${toString (i + 1)}:x:${toString (i + 30001)}:30000::/var/empty:/run/current-system/sw/bin/nologin"
+                  )
+                  32
                 );
               extraGroupLines =
-                [ "${user}:x:1000:" ]
+                ["${user}:x:1000:"]
                 ++ lib.optional withNix "nixbld:x:30000:${
                   lib.concatStringsSep "," (lib.genList (i: "nixbld${toString (i + 1)}") 32)
                 }";
@@ -90,7 +86,7 @@ let
             gnused
             ncurses
           ]
-          ++ lib.optionals withNix [ nix ]
+          ++ lib.optionals withNix [nix]
           ++ contents;
 
         fakeRootCommands =
@@ -132,6 +128,9 @@ let
       }
     );
 in
-builtins.mapAttrs (
-  k: v: if v == "directory" then containerConf ({ name = k; } // (callPackage (./${k}) { })) else null
-) (builtins.readDir ./.)
+  builtins.mapAttrs (
+    k: v:
+      if v == "directory"
+      then containerConf ({name = k;} // (callPackage ./${k} {}))
+      else null
+  ) (builtins.readDir ./.)

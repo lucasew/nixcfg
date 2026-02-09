@@ -1,6 +1,8 @@
-{ self, lib, ... }:
-
 {
+  self,
+  lib,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
     ../gui-common
@@ -14,8 +16,8 @@
   services.xserver.desktopManager.kodi.enable = true;
 
   networking.firewall = {
-    allowedTCPPorts = [ 8080 ];
-    allowedUDPPorts = [ 8080 ];
+    allowedTCPPorts = [8080];
+    allowedUDPPorts = [8080];
   };
 
   networking.hostName = "atomicpi";
@@ -34,7 +36,7 @@
     };
   };
 
-  gc-hold.paths = lib.mkForce [ ];
+  gc-hold.paths = lib.mkForce [];
 
   virtualisation.docker.enable = false;
 

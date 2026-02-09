@@ -3,38 +3,34 @@
   pkgs,
   lib,
   ...
-}:
-
-let
+}: let
   cfg = config.services.ngircd;
 
-  toml = pkgs.formats.toml { };
+  toml = pkgs.formats.toml {};
 
   configFile =
     pkgs.runCommand "ngircd.conf"
-      {
-        config = toml.generate "ngircd_input.conf" cfg.config;
+    {
+      config = toml.generate "ngircd_input.conf" cfg.config;
 
-        preferLocalBuild = true;
-      }
-      ''
-        cp $config $out
+      preferLocalBuild = true;
+    }
+    ''
+      cp $config $out
 
-        # TODO: proper generator
-        substituteInPlace $out \
-          --replace '= false' '= "no"' \
-          --replace '= true' '= "yes"'
-        sed -i 's;^\[\[\([^\]*\)\]\]$;[\1];' $out # general, for example, may appear twice, fixing syntax
-        sed -i 's;^\([^ ]*\) = \"\([^"]*\)"$;\1 = \2;' $out # fix quote enclosing
-        sed -i 's;^\([^=]*\)=;  \1=;' $out
+      # TODO: proper generator
+      substituteInPlace $out \
+        --replace '= false' '= "no"' \
+        --replace '= true' '= "yes"'
+      sed -i 's;^\[\[\([^\]*\)\]\]$;[\1];' $out # general, for example, may appear twice, fixing syntax
+      sed -i 's;^\([^ ]*\) = \"\([^"]*\)"$;\1 = \2;' $out # fix quote enclosing
+      sed -i 's;^\([^=]*\)=;  \1=;' $out
 
 
-        ${lib.getExe cfg.package} --config $out --configtest
-      '';
-
-in
-{
-  disabledModules = [ "services/networking/ngircd.nix" ];
+      ${lib.getExe cfg.package} --config $out --configtest
+    '';
+in {
+  disabledModules = ["services/networking/ngircd.nix"];
 
   options = {
     services.ngircd = {
@@ -46,7 +42,7 @@ in
         type = toml.type;
       };
 
-      package = lib.mkPackageOption pkgs "ngircd" { };
+      package = lib.mkPackageOption pkgs "ngircd" {};
     };
   };
 
@@ -57,7 +53,7 @@ in
     systemd.services.ngircd = {
       description = "The ngircd IRC server";
 
-      wantedBy = [ "multi-user.target" ];
+      wantedBy = ["multi-user.target"];
 
       serviceConfig = {
         ExecStart = "${lib.getExe cfg.package} --config /etc/ngircd.conf --nodaemon --syslog";
@@ -89,7 +85,7 @@ in
       group = "ngircd";
       description = "ngircd user.";
     };
-    users.groups.ngircd = { };
+    users.groups.ngircd = {};
 
     # Logic related to my config
     # TODO: did I read socket activation????
@@ -124,7 +120,7 @@ in
       enableTLS = true;
       enableRaw = true;
       address = "127.0.0.1:${toString config.networking.ports.ircd.port}";
-      proxies = [ "ngircd.service" ];
+      proxies = ["ngircd.service"];
       listen = 6697;
     };
   };

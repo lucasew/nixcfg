@@ -1,9 +1,4 @@
-{
-  helix,
-  ...
-}:
-
-{
+{helix, ...}: {
   interactive = true;
   contents = [
     helix

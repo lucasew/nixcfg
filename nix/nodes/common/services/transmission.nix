@@ -3,13 +3,9 @@
   lib,
   pkgs,
   ...
-}:
-
-let
+}: let
   inherit (lib) mkIf;
-in
-
-{
+in {
   config = mkIf config.services.transmission.enable {
     networking.ports = {
       transmission-000.enable = true;

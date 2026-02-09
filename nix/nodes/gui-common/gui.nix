@@ -1,10 +1,9 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   services.xserver = {
     desktopManager.xterm.enable = false;
   };
 
-  environment.systemPackages = [ ];
+  environment.systemPackages = [];
 
   fonts.packages = with pkgs; [
     siji

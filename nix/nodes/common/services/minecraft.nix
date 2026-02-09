@@ -3,22 +3,18 @@
   pkgs,
   lib,
   ...
-}:
-
-let
+}: let
   inherit (config.networking.ports.minecraft) port;
-
-in
-{
+in {
   config = lib.mkIf config.services.minecraft-server.enable {
     networking.ports.minecraft.enable = true;
     systemd.services.minecraft-server = {
-      wantedBy = lib.mkForce [ ]; # don't start on boot
+      wantedBy = lib.mkForce []; # don't start on boot
     };
 
     systemd.services.minecraft-server-backup = {
       description = "Minecraft server backup";
-      path = [ pkgs.zip ];
+      path = [pkgs.zip];
       script = ''
         function rcon {
           if [[ -p /run/minecraft-server.stdin ]]; then
@@ -57,7 +53,7 @@ in
       enableRaw = true;
       enableFunnel = true;
       address = "127.0.0.1:${toString port}";
-      proxies = [ "minecraft-server.service" ];
+      proxies = ["minecraft-server.service"];
       listen = 10000;
     };
   };

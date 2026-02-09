@@ -3,8 +3,7 @@
   config,
   lib,
   ...
-}:
-let
+}: let
   node = global.hosts.${config.networking.hostName}.tailscale_ip or null;
 
   nginxDomains = builtins.attrNames config.services.nginx.virtualHosts;
@@ -16,15 +15,17 @@ let
 
   tinydnsLines = map (item: "+${item}:${node}:${toString ttl}") allMySubdomains;
   tinydnsData =
-    if node != null then (builtins.concatStringsSep "\n" (lib.unique tinydnsLines)) else "";
+    if node != null
+    then (builtins.concatStringsSep "\n" (lib.unique tinydnsLines))
+    else "";
 
   ttl = 30;
 in
-lib.mkIf (node != null) {
-  services.tinydns = {
-    data = ''
-      .${baseDomain}:${node}:ns:${toString ttl}
-      ${tinydnsData}
-    '';
-  };
-}
+  lib.mkIf (node != null) {
+    services.tinydns = {
+      data = ''
+        .${baseDomain}:${node}:ns:${toString ttl}
+        ${tinydnsData}
+      '';
+    };
+  }

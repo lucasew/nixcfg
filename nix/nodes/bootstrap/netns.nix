@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   systemd.services."netns@" = {
     description = "%I network namespace";
     serviceConfig = {

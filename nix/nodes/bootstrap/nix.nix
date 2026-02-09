@@ -3,11 +3,9 @@
   pkgs,
   lib,
   ...
-}:
-let
+}: let
   inherit (global) username;
-in
-{
+in {
   nix = {
     package = pkgs.lix;
     gc = {

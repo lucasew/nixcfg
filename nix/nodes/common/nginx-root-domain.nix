@@ -4,12 +4,10 @@
   pkgs,
   lib,
   ...
-}:
-
-let
-
+}: let
   inherit (lib) concatStringsSep attrValues mapAttrs;
-  inherit (pkgs.custom.colors.colors)
+  inherit
+    (pkgs.custom.colors.colors)
     base00
     base01
     base02
@@ -28,33 +26,25 @@ let
     base0F
     ;
 
-  mkDate =
-    dateStr:
-    let
-      dateChars = lib.stringToCharacters dateStr;
-      step =
-        value: stepVal:
-        if builtins.typeOf stepVal == "string" then
-          (step (value + stepVal))
-        else if builtins.typeOf stepVal == "int" then
-          (step (value + (builtins.elemAt dateChars stepVal)))
-        else
-          value;
-    in
+  mkDate = dateStr: let
+    dateChars = lib.stringToCharacters dateStr;
+    step = value: stepVal:
+      if builtins.typeOf stepVal == "string"
+      then (step (value + stepVal))
+      else if builtins.typeOf stepVal == "int"
+      then (step (value + (builtins.elemAt dateChars stepVal)))
+      else value;
+  in
     step "";
 
-  mkInput =
-    inputName:
-    let
-      input = self.inputs.${inputName};
-      revDate =
-        if (input.sourceInfo or null) != null then
-          mkDate input.sourceInfo.lastModifiedDate 0 1 2 3 "/" 4 5 "/" 6 7 " " 8 9 ":" 10 11 ":" 12 13 null
-        else
-          "unknown";
-      fullRev = "${inputName}@${input.shortRev or "unknown"} (${revDate})";
-    in
-    ''<span><b>${inputName}</b> <span class="hidden-part">${
+  mkInput = inputName: let
+    input = self.inputs.${inputName};
+    revDate =
+      if (input.sourceInfo or null) != null
+      then mkDate input.sourceInfo.lastModifiedDate 0 1 2 3 "/" 4 5 "/" 6 7 " " 8 9 ":" 10 11 ":" 12 13 null
+      else "unknown";
+    fullRev = "${inputName}@${input.shortRev or "unknown"} (${revDate})";
+  in ''<span><b>${inputName}</b> <span class="hidden-part">${
       input.sourceInfo.lastModifiedDate or "unknown"
     }-${input.shortRev or "unknown"}</span></span>'';
 
@@ -162,18 +152,17 @@ let
             <h2>Nginx hosts</h2>
             <div class="small-cards-container">
             ${concatStringsSep "\n" (
-              attrValues (
-                mapAttrs (
-                  k: v:
-                  if builtins.length v.listen > 0 then
-                    ""
-                  else
-                    ''
-                      <a class="btn btn-light" target="_blank" href="http://${k}">${k}</a>
-                    ''
-                ) (config.services.nginx.virtualHosts)
-              )
-            )}
+      attrValues (
+        mapAttrs (
+          k: v:
+            if builtins.length v.listen > 0
+            then ""
+            else ''
+              <a class="btn btn-light" target="_blank" href="http://${k}">${k}</a>
+            ''
+        ) (config.services.nginx.virtualHosts)
+      )
+    )}
             </div>
           </section>
 
@@ -181,20 +170,21 @@ let
             <h2>Tailscale services</h2>
             <div class="small-cards-container">
             ${concatStringsSep "\n" (
-              attrValues (
-                mapAttrs (
-                  k: v:
-                  if v.enableRaw then
-                    ""
-                  else
-                    ''
-                      <a class="btn btn-light" target="_blank" href="${
-                        if v.enableTLS then "https" else "http"
-                      }://${v.name}.${config.services.ts-proxy.network-domain}">${v.name}</a>
-                    ''
-                ) (config.services.ts-proxy.hosts)
-              )
-            )}
+      attrValues (
+        mapAttrs (
+          k: v:
+            if v.enableRaw
+            then ""
+            else ''
+              <a class="btn btn-light" target="_blank" href="${
+                if v.enableTLS
+                then "https"
+                else "http"
+              }://${v.name}.${config.services.ts-proxy.network-domain}">${v.name}</a>
+            ''
+        ) (config.services.ts-proxy.hosts)
+      )
+    )}
             </div>
           </section>
 
@@ -202,12 +192,12 @@ let
             <h2>Inputs</h2><br>
                 <div class="small-cards-container">
                   <span><b>nixcfg</b> <span class="hidden-part">${self.shortRev or "unknown"}  (${
-                    mkDate self.sourceInfo.lastModifiedDate 0 1 2 3 "/" 4 5 "/" 6 7 " " 8 9 ":" 10 11 ":" 12 13 null
-                  })</span></span>
+      mkDate self.sourceInfo.lastModifiedDate 0 1 2 3 "/" 4 5 "/" 6 7 " " 8 9 ":" 10 11 ":" 12 13 null
+    })</span></span>
 
                   ${builtins.concatStringsSep " " (
-                    map (mkInput) (builtins.sort (a: b: a < b) (builtins.attrNames self.inputs))
-                  )}
+      map mkInput (builtins.sort (a: b: a < b) (builtins.attrNames self.inputs))
+    )}
                 </div>
           </section>
 
@@ -215,8 +205,7 @@ let
 
       </html>
   '';
-in
-{
+in {
   environment.etc."rootdomain/index.html".source = pkgs.writeText "template.html" template;
   environment.etc."rootdomain/favicon.ico".source = pkgs.fetchurl {
     url = "https://search.nixos.org/images/nix-logo.png";
@@ -226,8 +215,7 @@ in
   services.nginx.virtualHosts."${config.networking.hostName}" = {
     locations."/".root = "/etc/rootdomain";
   };
-  services.nginx.virtualHosts."${config.networking.hostName}.${config.services.ts-proxy.network-domain}" =
-    {
-      locations."/".root = "/etc/rootdomain";
-    };
+  services.nginx.virtualHosts."${config.networking.hostName}.${config.services.ts-proxy.network-domain}" = {
+    locations."/".root = "/etc/rootdomain";
+  };
 }
