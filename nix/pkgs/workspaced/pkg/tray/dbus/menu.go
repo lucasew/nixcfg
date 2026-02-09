@@ -1,4 +1,4 @@
-package tray
+package dbus
 
 import (
 	"context"
@@ -131,6 +131,10 @@ type LayoutNode struct {
 func (m *DBusMenu) GetLayout(parentId int32, recursionDepth int32, propertyNames []string) (uint32, LayoutNode, *dbus.Error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
+
+	// Acquire read lock on tray to access MenuItems safely
+	m.tray.mu.RLock()
+	defer m.tray.mu.RUnlock()
 
 	root := LayoutNode{
 		ID:         0,

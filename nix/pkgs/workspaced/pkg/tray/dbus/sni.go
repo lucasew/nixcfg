@@ -1,4 +1,4 @@
-package tray
+package dbus
 
 import (
 	"github.com/godbus/dbus/v5"
