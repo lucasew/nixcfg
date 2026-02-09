@@ -52,6 +52,9 @@ video_obs_live = 8000
 
 waypipe = 9999
 
+[editor]
+default = "hx"
+
 [desktop.wallpaper]
 dir = "~/.dotfiles/assets"
 default = "wall.jpg"
