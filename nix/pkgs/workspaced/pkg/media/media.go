@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 	"workspaced/pkg/api"
-	"workspaced/pkg/notification"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/notification"
 
 	"github.com/godbus/dbus/v5"
 )

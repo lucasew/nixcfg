@@ -3,8 +3,8 @@ package sudo
 import (
 	"os"
 	"os/exec"
-	"workspaced/pkg/sudo"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/sudo"
 
 	"github.com/spf13/cobra"
 )

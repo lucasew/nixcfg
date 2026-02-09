@@ -8,8 +8,8 @@ import (
 	"os"
 	"path/filepath"
 	"time"
-	"workspaced/pkg/notification"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/notification"
 	"workspaced/pkg/types"
 )
 

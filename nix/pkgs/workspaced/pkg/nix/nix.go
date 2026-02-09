@@ -11,12 +11,12 @@ import (
 	"strings"
 	"sync"
 	"workspaced/pkg/api"
-	"workspaced/pkg/notification"
-	"workspaced/pkg/sudo"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/icons"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/notification"
+	"workspaced/pkg/sudo"
 	"workspaced/pkg/types"
 )
 

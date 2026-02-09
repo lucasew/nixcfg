@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	"workspaced/pkg/nix"
-	"workspaced/pkg/notification"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/nix"
+	"workspaced/pkg/notification"
 
 	"github.com/spf13/cobra"
 )

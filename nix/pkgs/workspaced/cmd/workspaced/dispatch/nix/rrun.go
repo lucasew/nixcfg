@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"workspaced/pkg/nix"
 	"workspaced/pkg/exec"
+	"workspaced/pkg/nix"
 
 	"github.com/spf13/cobra"
 )

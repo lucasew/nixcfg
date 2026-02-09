@@ -3,8 +3,8 @@ package menu
 import (
 	"sort"
 	"strings"
-	"workspaced/pkg/wm"
 	"workspaced/pkg/exec"
+	"workspaced/pkg/wm"
 
 	"workspaced/pkg/config"
 

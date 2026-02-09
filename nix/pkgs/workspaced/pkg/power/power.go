@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"net"
-	"workspaced/pkg/config"
 	"workspaced/pkg/api"
+	"workspaced/pkg/config"
 	"workspaced/pkg/logging"
 )
 

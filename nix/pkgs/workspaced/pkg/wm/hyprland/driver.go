@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strconv"
 	dapi "workspaced/pkg/api"
-	"workspaced/pkg/wm/api"
 	"workspaced/pkg/exec"
+	"workspaced/pkg/wm/api"
 )
 
 type Driver struct{}

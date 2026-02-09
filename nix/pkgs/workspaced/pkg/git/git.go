@@ -6,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 	"workspaced/pkg/config"
-	"workspaced/pkg/notification"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/notification"
 )
 
 func QuickSync(ctx context.Context) error {

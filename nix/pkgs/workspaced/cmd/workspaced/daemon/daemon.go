@@ -15,9 +15,9 @@ import (
 	"io"
 	"workspaced/cmd/workspaced/dispatch"
 	"workspaced/pkg/db"
-	"workspaced/pkg/media"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/media"
 	"workspaced/pkg/types"
 
 	"github.com/coreos/go-systemd/v22/activation"

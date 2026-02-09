@@ -62,7 +62,7 @@ func (p *SymlinkProvider) GetDesiredState(ctx context.Context) ([]DesiredState, 
 		filename := filepath.Base(rel)
 		parts := strings.Split(filename, ".")
 		isTemplate := (len(parts) >= 2 && parts[len(parts)-1] == "tmpl") ||
-		              (len(parts) >= 3 && parts[len(parts)-2] == "tmpl")
+			(len(parts) >= 3 && parts[len(parts)-2] == "tmpl")
 
 		if isTemplate {
 			// Read and render template

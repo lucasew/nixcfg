@@ -80,9 +80,12 @@ description = "Generate code"
 depends = ["codegen:*"]
 
 [tasks."codegen:go"]
-description = "Tidy Go modules"
+description = "Generate Go code and tidy modules"
 dir = "nix/pkgs/workspaced"
-run = "mise exec -- go mod tidy"
+run = """
+    mise exec -- sqlc generate
+    mise exec -- go mod tidy
+"""
 
 [tasks.install]
 description = "Install dependencies"
@@ -99,7 +102,11 @@ run = "echo 'Managed by Nix'"
 
 [tasks."install:tools"]
 description = "Install Mise tools"
-run = "mise install"
+run = """
+    mise install
+    mise install -C nix/pkgs/workspaced
+    mise install -C infra
+"""
 
 [tasks.ci]
 description = "Run CI pipeline locally"

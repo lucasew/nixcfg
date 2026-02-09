@@ -10,13 +10,13 @@ import (
 	"strings"
 	"time"
 
-	"workspaced/pkg/config"
 	dapi "workspaced/pkg/api"
 	"workspaced/pkg/clipboard"
-	"workspaced/pkg/notification"
-	"workspaced/pkg/wm"
+	"workspaced/pkg/config"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/notification"
+	"workspaced/pkg/wm"
 )
 
 type Target int

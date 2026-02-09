@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"strings"
 
-	"workspaced/pkg/notification"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/notification"
 )
 
 // SetVolume sets the volume of the default sink using pactl.

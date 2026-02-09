@@ -9,12 +9,12 @@ import (
 	"strings"
 	"time"
 
+	"workspaced/pkg/exec"
+	"workspaced/pkg/logging"
 	"workspaced/pkg/media"
 	"workspaced/pkg/wm/api"
 	"workspaced/pkg/wm/hyprland"
 	"workspaced/pkg/wm/i3ipc"
-	"workspaced/pkg/exec"
-	"workspaced/pkg/logging"
 )
 
 // Re-export types for backward compatibility within the wm package if needed,

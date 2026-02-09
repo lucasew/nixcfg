@@ -9,12 +9,12 @@ import (
 	"strings"
 	"time"
 	"workspaced/pkg/config"
-	"workspaced/pkg/git"
-	"workspaced/pkg/notification"
-	"workspaced/pkg/sudo"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
+	"workspaced/pkg/git"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/notification"
+	"workspaced/pkg/sudo"
 	"workspaced/pkg/types"
 )
 
