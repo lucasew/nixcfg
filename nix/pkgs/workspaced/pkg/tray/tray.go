@@ -10,6 +10,7 @@ import (
 	"workspaced/pkg/logging"
 )
 
+// MenuItem represents a single item in the tray menu.
 type MenuItem struct {
 	ID       int32
 	Label    string
