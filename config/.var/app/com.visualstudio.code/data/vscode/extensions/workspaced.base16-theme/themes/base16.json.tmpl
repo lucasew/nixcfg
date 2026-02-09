@@ -1,0 +1,49 @@
+{
+  "$schema": "vscode://schemas/color-theme",
+  "name": "Base16",
+  "type": "dark",
+  "colors": {
+    "foreground": "#{{ .Palette.Base05 }}",
+    "editor.background": "#{{ .Palette.Base00 }}",
+    "editor.foreground": "#{{ .Palette.Base05 }}",
+    "editorCursor.foreground": "#{{ .Palette.Base05 }}",
+    "editor.selectionBackground": "#{{ .Palette.Base02 }}",
+    "editor.lineHighlightBackground": "#{{ .Palette.Base01 }}",
+    "sideBar.background": "#{{ .Palette.Base01 }}",
+    "activityBar.background": "#{{ .Palette.Base01 }}",
+    "statusBar.background": "#{{ .Palette.Base01 }}",
+    "titleBar.activeBackground": "#{{ .Palette.Base01 }}",
+    "tab.activeBackground": "#{{ .Palette.Base02 }}",
+    "tab.inactiveBackground": "#{{ .Palette.Base01 }}"
+  },
+  "tokenColors": [
+    {
+      "name": "Comment",
+      "scope": ["comment"],
+      "settings": {
+        "foreground": "#{{ .Palette.Base03 }}"
+      }
+    },
+    {
+      "name": "String",
+      "scope": ["string"],
+      "settings": {
+        "foreground": "#{{ .Palette.Base0B }}"
+      }
+    },
+    {
+      "name": "Keyword",
+      "scope": ["keyword"],
+      "settings": {
+        "foreground": "#{{ .Palette.Base0E }}"
+      }
+    },
+    {
+      "name": "Function",
+      "scope": ["entity.name.function"],
+      "settings": {
+        "foreground": "#{{ .Palette.Base0D }}"
+      }
+    }
+  ]
+}

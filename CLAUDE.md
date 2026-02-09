@@ -38,3 +38,19 @@ When adding new config fields to `nix/pkgs/workspaced/pkg/config/config.go`:
 - Resultado: valores do settings.toml são ignorados, templates geram campos vazios
 - Sintoma: código compila OK, TOML é lido, mas `{{ .Field }}` retorna string vazia
 - Sempre implementar Merge() para structs nested no GlobalConfig!
+
+## VSCode Theme Integration
+Templates do VSCode devem seguir a estrutura de extensão:
+- **Localização**:
+  - VSCode Flatpak: `config/.var/app/com.visualstudio.code/data/vscode/extensions/workspaced.base16-theme/`
+  - VSCode normal: `config/.vscode/extensions/workspaced.base16-theme/`
+- **Estrutura necessária**:
+  - `package.json` - manifesto da extensão (não precisa ser template)
+  - `themes/base16.json.tmpl` - template do tema com sintaxe Go template
+- **Conversão de templates tinted-theming**:
+  - Mustache `{{base00-hex}}` → Go template `{{ .Palette.Base00 }}`
+  - **IMPORTANTE**: JSON não suporta comentários - remover todos os `//`
+  - Criar template simples e válido, não converter diretamente o tinted-vscode
+- **package.json** deve apontar para `./themes/base16.json` (sem .tmpl)
+- Após `workspaced apply`, tema fica no diretório de extensões do VSCode
+- VSCode reconhece automaticamente extensões no startup
