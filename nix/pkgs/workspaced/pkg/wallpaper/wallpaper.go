@@ -35,13 +35,17 @@ func SetStatic(ctx context.Context, path string) error {
 
 	logger.Info("setting wallpaper", "path", path)
 
+	// Stop existing wallpaper-change service if it exists
+	stopCmd := exec.RunCmd(ctx, "systemctl", "--user", "stop", "wallpaper-change.service")
+	_ = stopCmd.Run() // Ignore errors if service doesn't exist
+
 	rpc := exec.GetRPC(ctx)
 	if rpc == "swaymsg" {
 		swaybg, err := exec.Which(ctx, "swaybg")
 		if err != nil {
 			return err
 		}
-		
+
 		if err = exec.RunCmd(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", swaybg, "-i", path).Run(); err != nil {
 			return fmt.Errorf("can't run swaybg in systemd unit: %w", err)
 		}
