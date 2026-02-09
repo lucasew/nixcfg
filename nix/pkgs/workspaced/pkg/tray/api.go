@@ -62,6 +62,7 @@ func Get(name string) (Driver, error) {
 }
 
 // GetDefault returns the appropriate tray driver for the current environment.
+// It prioritizes DBus if the DBUS_SESSION_BUS_ADDRESS environment variable is set.
 func GetDefault() (Driver, error) {
 	// For now, prioritize DBus if available
 	if os.Getenv("DBUS_SESSION_BUS_ADDRESS") != "" {
