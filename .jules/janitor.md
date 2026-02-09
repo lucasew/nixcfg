@@ -36,3 +36,4 @@
 **Pattern:** Prefer pipelines with `xargs -0 -r` over command substitution for passing file lists to tools, as it handles empty lists and filenames with spaces correctly.
 - 2026-06-03: [errcheck] Always check error returns for exec.RunCmd calls, reporting failures via logging.ReportError.
 <!-- Trigger CI retry -->
+<!-- Trigger CI retry 2 -->
