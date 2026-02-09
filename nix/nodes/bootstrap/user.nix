@@ -34,7 +34,6 @@ in
           "ssh"
         ];
         initialPassword = "changeme";
-        openssh.authorizedKeys.keyFiles = [ ../../../authorized_keys ];
       };
     };
   };
