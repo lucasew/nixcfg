@@ -112,6 +112,23 @@ type FontsConfig struct {
 	Emoji     string `toml:"emoji"`
 }
 
+func (f FontsConfig) Merge(other FontsConfig) FontsConfig {
+	result := f
+	if other.Serif != "" {
+		result.Serif = other.Serif
+	}
+	if other.SansSerif != "" {
+		result.SansSerif = other.SansSerif
+	}
+	if other.Monospace != "" {
+		result.Monospace = other.Monospace
+	}
+	if other.Emoji != "" {
+		result.Emoji = other.Emoji
+	}
+	return result
+}
+
 func (p PaletteConfig) Get(key string) string {
 	v := reflect.ValueOf(p)
 	t := v.Type()
@@ -296,6 +313,7 @@ func (g GlobalConfig) Merge(other GlobalConfig) GlobalConfig {
 	result.QuickSync = result.QuickSync.Merge(other.QuickSync)
 	result.Browser = result.Browser.Merge(other.Browser)
 	result.Palette = result.Palette.Merge(other.Palette)
+	result.Fonts = result.Fonts.Merge(other.Fonts)
 
 	return result
 }
