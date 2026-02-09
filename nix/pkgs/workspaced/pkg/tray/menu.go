@@ -1,11 +1,13 @@
 package tray
 
 import (
+	"context"
 	"sync"
 
 	"github.com/godbus/dbus/v5"
 	"github.com/godbus/dbus/v5/introspect"
 	"github.com/godbus/dbus/v5/prop"
+	"workspaced/pkg/logging"
 )
 
 type DBusMenu struct {
@@ -189,6 +191,8 @@ func (m *DBusMenu) EmitLayoutUpdated() {
 	m.mu.Unlock()
 
 	if m.tray.conn != nil {
-		m.tray.conn.Emit("/MenuBar", "com.canonical.dbusmenu.LayoutUpdated", rev, int32(0))
+		if err := m.tray.conn.Emit("/MenuBar", "com.canonical.dbusmenu.LayoutUpdated", rev, int32(0)); err != nil {
+			logging.ReportError(context.Background(), err)
+		}
 	}
 }
