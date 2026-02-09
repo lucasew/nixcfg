@@ -4,7 +4,9 @@
     desktopManager.xterm.enable = false;
   };
 
-  environment.systemPackages = [ ];
+  environment.systemPackages = with pkgs; [
+    adw-gtk3  # Tema GTK3/GTK4 compatível com libadwaita
+  ];
 
   fonts.packages = with pkgs; [
     siji
