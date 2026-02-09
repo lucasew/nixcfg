@@ -11,14 +11,14 @@ import (
 )
 
 type DBusMenu struct {
-	tray     *Tray
+	driver   *Driver
 	revision uint32
 	mu       sync.Mutex
 }
 
-func NewDBusMenu(t *Tray) *DBusMenu {
+func NewDBusMenu(d *Driver) *DBusMenu {
 	return &DBusMenu{
-		tray:     t,
+		driver:   d,
 		revision: 1,
 	}
 }
@@ -132,9 +132,8 @@ func (m *DBusMenu) GetLayout(parentId int32, recursionDepth int32, propertyNames
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	// Acquire read lock on tray to access MenuItems safely
-	m.tray.mu.RLock()
-	defer m.tray.mu.RUnlock()
+	m.driver.mu.RLock()
+	defer m.driver.mu.RUnlock()
 
 	root := LayoutNode{
 		ID:         0,
@@ -142,9 +141,15 @@ func (m *DBusMenu) GetLayout(parentId int32, recursionDepth int32, propertyNames
 		Children:   []dbus.Variant{},
 	}
 
-	for _, item := range m.tray.MenuItems {
+	// Simple recursion for now, assuming MenuItem structure matches
+	// But tray.MenuItem is different from LayoutNode.
+	// Also need ID generation or mapping if using arbitrary structure.
+	// For now, simple list.
+	for i, item := range m.driver.state.Menu {
+		// Use index + 1 as ID for simplicity in this MVP
+		id := int32(i + 1)
 		child := LayoutNode{
-			ID:         item.ID,
+			ID:         id,
 			Properties: map[string]dbus.Variant{"label": dbus.MakeVariant(item.Label)},
 			Children:   []dbus.Variant{},
 		}
@@ -170,14 +175,15 @@ func (m *DBusMenu) GetProperty(id int32, name string) (dbus.Variant, *dbus.Error
 
 func (m *DBusMenu) Event(id int32, eventId string, data dbus.Variant, timestamp uint32) *dbus.Error {
 	if eventId == "clicked" {
-		m.tray.mu.RLock()
-		defer m.tray.mu.RUnlock()
-		for _, item := range m.tray.MenuItems {
-			if item.ID == id {
-				if item.Callback != nil {
-					go item.Callback()
-				}
-				break
+		m.driver.mu.RLock()
+		defer m.driver.mu.RUnlock()
+
+		// Map ID back to index
+		idx := int(id) - 1
+		if idx >= 0 && idx < len(m.driver.state.Menu) {
+			item := m.driver.state.Menu[idx]
+			if item.Callback != nil {
+				go item.Callback()
 			}
 		}
 	}
@@ -194,8 +200,8 @@ func (m *DBusMenu) EmitLayoutUpdated() {
 	rev := m.revision
 	m.mu.Unlock()
 
-	if m.tray.conn != nil {
-		if err := m.tray.conn.Emit("/MenuBar", "com.canonical.dbusmenu.LayoutUpdated", rev, int32(0)); err != nil {
+	if m.driver.conn != nil {
+		if err := m.driver.conn.Emit("/MenuBar", "com.canonical.dbusmenu.LayoutUpdated", rev, int32(0)); err != nil {
 			logging.ReportError(context.Background(), err)
 		}
 	}
