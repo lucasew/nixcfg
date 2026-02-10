@@ -3,8 +3,6 @@
 shfmt = "3.12.0"
 shellcheck = "0.11.0"
 ruff = "0.15.0"
-terraform = "1.9.0"
-tflint = "0.60.0"
 
 [tasks.lint]
 description = "Run all linters"
@@ -12,13 +10,13 @@ depends = ["lint:*"]
 
 [tasks."lint:nix"]
 description = "Lint Nix files"
-run = "if command -v nix >/dev/null; then nix --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' --accept-flake-config fmt -- --check; else echo 'Nix not found, skipping'; fi"
+run = "command -v nix >/dev/null && nix fmt . -- --check || echo 'Nix not found, skipping'"
 
 [tasks."lint:sh"]
 description = "Lint Shell scripts"
 run = """
-    mise exec -- shfmt -d .
-    mise exec -- bash -c 'shfmt -f=0 . | xargs -0 -r shellcheck'
+    mise exec shfmt shellcheck -- shfmt -d .
+    mise exec shfmt shellcheck -- shfmt -f=0 . | xargs -0 -r mise exec shellcheck -- shellcheck
 """
 
 [tasks."lint:py"]
@@ -41,7 +39,7 @@ depends = ["fmt:*"]
 
 [tasks."fmt:nix"]
 description = "Format Nix files"
-run = "if command -v nix >/dev/null; then nix --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' --accept-flake-config fmt; else echo 'Nix not found, skipping'; fi"
+run = "command -v nix >/dev/null && nix fmt . || echo 'Nix not found, skipping'"
 
 [tasks."fmt:sh"]
 description = "Format Shell scripts"
@@ -66,15 +64,11 @@ run = "mise exec -- terraform fmt -recursive"
 
 [tasks.test]
 description = "Run tests"
-depends = ["test:go"]
+depends = ["test:*"]
 
 [tasks."test:nix"]
 description = "Test Nix configuration"
-run = "if command -v nix >/dev/null; then nix --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' --accept-flake-config flake check; else echo 'Nix not found, skipping'; fi"
-
-[tasks."build:release"]
-description = "Build Nix release"
-run = "command -v nix >/dev/null && nix build .#release --accept-flake-config || echo 'Nix not found, skipping'"
+run = "command -v nix >/dev/null && nix flake check || echo 'Nix not found, skipping'"
 
 [tasks."test:go"]
 description = "Test Go code"
@@ -82,17 +76,13 @@ dir = "nix/pkgs/workspaced"
 run = "mise exec -- go test -p 2 ./..."
 
 [tasks.codegen]
-description = "Generate code and format"
+description = "Generate code"
 depends = ["codegen:*"]
-run = "mise run fmt"
 
 [tasks."codegen:go"]
-description = "Generate Go code and tidy modules"
+description = "Tidy Go modules"
 dir = "nix/pkgs/workspaced"
-run = """
-    mise exec -- sqlc generate
-    mise exec -- go mod tidy
-"""
+run = "mise exec -- go mod tidy"
 
 [tasks.install]
 description = "Install dependencies"
@@ -109,11 +99,7 @@ run = "echo 'Managed by Nix'"
 
 [tasks."install:tools"]
 description = "Install Mise tools"
-run = """
-    mise install
-    mise install -C nix/pkgs/workspaced
-    mise install -C infra
-"""
+run = "mise install"
 
 [tasks.ci]
 description = "Run CI pipeline locally"
