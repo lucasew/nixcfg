@@ -18,7 +18,7 @@ func (d *Driver) Name() string {
 
 func (d *Driver) Extract(ctx context.Context, img image.Image, opts api.Options) (*config.PaletteConfig, error) {
 	// Use deterministic RNG for reproducibility (like Stylix)
-	rng := rand.New(rand.NewSource(42))
+	rand.Seed(42)
 
 	// 1. Sample colors from image
 	colors := api.SampleImage(img, opts.MaxSamples)
@@ -35,7 +35,7 @@ func (d *Driver) Extract(ctx context.Context, img image.Image, opts api.Options)
 	slog.Info("converted to LAB color space")
 
 	// 3. Initialize population
-	population := initPopulation(rng, labColors, opts.ColorCount, numSurvivors+numNewborns)
+	population := initPopulation(labColors, opts.ColorCount, numSurvivors+numNewborns)
 	slog.Info("initialized population", "size", len(population), "colors_per_palette", opts.ColorCount)
 
 	// 4. Evolution loop
@@ -74,7 +74,7 @@ func (d *Driver) Extract(ctx context.Context, img image.Image, opts api.Options)
 		}
 
 		// Generate offspring via crossover + mutation
-		population = evolve(rng, survivors, labColors)
+		population = evolve(survivors, labColors)
 
 		generation++
 	}
