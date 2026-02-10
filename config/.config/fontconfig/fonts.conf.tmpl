@@ -1,61 +1,28 @@
 <?xml version="1.0"?>
-<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
-<!-- Auto-generated from template by workspaced -->
+<!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
 <fontconfig>
-  <!-- Accept emoji fonts -->
-  <selectfont>
-    <acceptfont>
-      <pattern><patelt name="family"><string>Apple Color Emoji</string></patelt></pattern>
-      <pattern><patelt name="family"><string>Noto Color Emoji</string></patelt></pattern>
-      <pattern><patelt name="family"><string>WhatsAppEmoji</string></patelt></pattern>
-    </acceptfont>
-  </selectfont>
-
-  <!-- Font rendering -->
-  <match target="font">
-    <edit name="antialias" mode="assign"><bool>true</bool></edit>
-    <edit name="hinting" mode="assign"><bool>true</bool></edit>
-    <edit name="hintstyle" mode="assign"><const>hintslight</const></edit>
-    <edit name="rgba" mode="assign"><const>rgb</const></edit>
-    <edit name="embeddedbitmap" mode="assign"><bool>true</bool></edit>
-  </match>
-
-  <!-- Default fonts with emoji fallback -->
   <alias>
     <family>serif</family>
     <prefer>
       <family>{{ .Fonts.Serif }}</family>
-      <family>{{ .Fonts.Emoji }}</family>
     </prefer>
   </alias>
-
   <alias>
-    <family>sans-serif</family>
+    <family>sans</family>
     <prefer>
       <family>{{ .Fonts.SansSerif }}</family>
-      <family>{{ .Fonts.Emoji }}</family>
     </prefer>
   </alias>
-
   <alias>
     <family>monospace</family>
     <prefer>
       <family>{{ .Fonts.Monospace }}</family>
+    </prefer>
+  </alias>
+  <alias>
+    <family>emoji</family>
+    <prefer>
       <family>{{ .Fonts.Emoji }}</family>
     </prefer>
   </alias>
-
-  <!-- Emoji font settings -->
-  <match target="font">
-    <test name="family" compare="contains"><string>Emoji</string></test>
-    <edit name="hinting" mode="assign"><bool>false</bool></edit>
-    <edit name="embeddedbitmap" mode="assign"><bool>true</bool></edit>
-    <edit name="scalable" mode="assign"><bool>true</bool></edit>
-  </match>
-
-  <!-- Apple Color Emoji size fix -->
-  <match target="font">
-    <test name="family"><string>Apple Color Emoji</string></test>
-    <edit name="pixelsize" mode="assign"><double>32</double></edit>
-  </match>
 </fontconfig>

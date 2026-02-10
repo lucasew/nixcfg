@@ -17,6 +17,7 @@
 
 * {
     font-family: "{{ .Fonts.SansSerif }}", "{{ .Fonts.Emoji }}";
+    font-weight: 300;
     font-size: 13px;
     min-height: 26px;
 }
