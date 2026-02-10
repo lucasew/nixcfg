@@ -123,6 +123,52 @@ func getFavicon(ctx context.Context, url string) (string, error) {
 	return iconPath, nil
 }
 
+func processDotDDirectory(ctx context.Context, dirPath string, cfg *config.Config) ([]byte, error) {
+	// Check if directory exists
+	if _, err := os.Stat(dirPath); os.IsNotExist(err) {
+		return nil, nil // Empty content if directory doesn't exist
+	}
+
+	// Read directory entries
+	entries, err := os.ReadDir(dirPath)
+	if err != nil {
+		return nil, err
+	}
+
+	// Sort entries alphabetically (ReadDir already returns sorted)
+	var fileNames []string
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			fileNames = append(fileNames, entry.Name())
+		}
+	}
+
+	var result bytes.Buffer
+	for _, fileName := range fileNames {
+		filePath := filepath.Join(dirPath, fileName)
+		content, err := os.ReadFile(filePath)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read %s: %w", fileName, err)
+		}
+
+		// Check if file is a template (ends with .tmpl)
+		if strings.HasSuffix(fileName, ".tmpl") {
+			rendered, err := renderTemplate(ctx, string(content), cfg)
+			if err != nil {
+				return nil, fmt.Errorf("failed to render template %s: %w", fileName, err)
+			}
+			result.Write(rendered)
+		} else {
+			result.Write(content)
+		}
+
+		// Add newline separator between files
+		result.WriteString("\n")
+	}
+
+	return result.Bytes(), nil
+}
+
 type SymlinkProvider struct{}
 
 func (p *SymlinkProvider) Name() string {
@@ -160,11 +206,46 @@ func (p *SymlinkProvider) GetDesiredState(ctx context.Context) ([]DesiredState, 
 		if err != nil {
 			return err
 		}
+
+		rel, err := filepath.Rel(configDir, path)
+		if err != nil {
+			return err
+		}
+
+		// Handle .d.tmpl directories (concatenation)
+		if info.IsDir() && strings.HasSuffix(info.Name(), ".d.tmpl") {
+			// Process concatenation
+			targetName := strings.TrimSuffix(info.Name(), ".d.tmpl")
+
+			concatenated, err := processDotDDirectory(ctx, path, cfg)
+			if err != nil {
+				return fmt.Errorf("failed to process .d.tmpl directory %s: %w", path, err)
+			}
+
+			// Write concatenated content
+			dir := filepath.Dir(rel)
+			renderedPath := filepath.Join(renderedDir, dir, targetName)
+			if err := os.MkdirAll(filepath.Dir(renderedPath), 0755); err != nil {
+				return err
+			}
+			if err := os.WriteFile(renderedPath, concatenated, 0644); err != nil {
+				return err
+			}
+
+			targetRel := filepath.Join(dir, targetName)
+			desired = append(desired, DesiredState{
+				Target: filepath.Join(home, targetRel),
+				Source: renderedPath,
+				Mode:   0644,
+			})
+
+			// Skip processing files inside this directory
+			return filepath.SkipDir
+		}
+
 		if info.IsDir() {
 			return nil
 		}
-
-		rel, err := filepath.Rel(configDir, path)
 		if err != nil {
 			return err
 		}

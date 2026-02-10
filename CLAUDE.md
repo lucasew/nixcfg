@@ -11,6 +11,7 @@
 - **Secrets**: `sops-nix` managed in `nix/nodes/common/sops.nix`.
 - **Global Settings**: `flake.nix` contains `global` attr (user, email, IPs, DE).
 - **Workspaced**: User configs/dotfiles in `config/`. Settings in `settings.toml`. Templates use `{{ .Field }}` syntax.
+  - **⚠️ CRITICAL**: See `nix/pkgs/workspaced/TEMPLATES.md` for complete template system documentation (5 types: static, simple, multi-file, index, .d.tmpl)
 
 ## Machine Context
 - **riverwood**: Laptop, Intel CPU/GPU, ext4, Sway/i3.
