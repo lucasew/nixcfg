@@ -92,6 +92,23 @@ func makeFuncMap(ctx context.Context) template.FuncMap {
 	"normalizeURL": func(url string) string {
 		return env.NormalizeURL(url)
 	},
+	// Filesystem helpers
+	"readDir": func(path string) ([]string, error) {
+		entries, err := os.ReadDir(path)
+		if err != nil {
+			return nil, err
+		}
+		var names []string
+		for _, entry := range entries {
+			if !entry.IsDir() {
+				names = append(names, entry.Name())
+			}
+		}
+		return names, nil
+	},
+	"isPhone": func() bool {
+		return env.IsPhone()
+	},
 	}
 }
 
@@ -189,8 +206,16 @@ func (p *SymlinkProvider) GetDesiredState(ctx context.Context) ([]DesiredState, 
 			// Check if this is a multi-file template
 			if multiFiles, isMulti := parseMultiFile(rendered); isMulti {
 				// Multi-file: template name becomes directory, each file inside
+				// Special case: _index.tmpl -> files go directly in parent dir
 				dir := filepath.Dir(rel)
-				baseDir := filepath.Join(dir, newFilename)
+				var baseDir string
+				if newFilename == "_index" {
+					// _index.tmpl: use parent directory directly
+					baseDir = dir
+				} else {
+					// regular.tmpl: create subdirectory
+					baseDir = filepath.Join(dir, newFilename)
+				}
 
 				for _, mf := range multiFiles {
 					// Write each file to temp
