@@ -59,7 +59,7 @@ default = "hx"
 serif = "Fira Code Light"
 sans_serif = "Fira Code Light"
 monospace = "Fira Code Light"
-emoji = "Noto Color Emoji"
+emoji = "Apple Color Emoji"
 
 [desktop.wallpaper]
 dir = "~/.dotfiles/assets"
