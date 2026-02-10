@@ -21,17 +21,30 @@ func calculateFitness(ind Individual, imageColors []api.LAB, polarity api.Polari
 	primarySim := maxDeltaE(ind.colors[:8])
 	score -= primarySim / 10.0 // Penalize high maximum distance (want low spread)
 
-	// Accent differentiation (base08-0F should be different from each other)
+	// Accent differentiation (base08-0F should be VERY different from each other)
 	accentDiff := minDeltaE(ind.colors[8:16])
-	score += accentDiff // Reward high minimum distance (want all distinct)
+	score += accentDiff * 2.0 // Double weight - want distinct colors
+
+	// CRITICAL: Penalize duplicate or near-duplicate accents very heavily
+	duplicatePenalty := calculateDuplicatePenalty(ind.colors[8:16])
+	score -= duplicatePenalty * 50.0 // Massive penalty for duplicates
+
+	// Penalize accents that are too similar (under threshold)
+	if accentDiff < 20.0 {
+		score -= (20.0 - accentDiff) * 3.0 // Heavy penalty for similar accents
+	}
 
 	// Image similarity (colors should appear in the image)
 	imageSim := calculateImageSimilarity(ind.colors, imageColors)
-	score += imageSim * 10.0 // Strong weight on matching image
+	score += imageSim * 5.0 // Reduced weight to allow more variety
 
 	// Contrast requirements (critical for readability)
 	contrastScore := calculateContrastScore(ind.colors)
 	score += contrastScore * 5.0 // Strong weight on readability
+
+	// Color diversity (hue variation in accents)
+	hueDiversity := calculateHueDiversity(ind.colors[8:16])
+	score += hueDiversity * 3.0 // Reward varied hues
 
 	// Lightness scheme matching
 	if polarity != api.PolarityAny {
@@ -168,6 +181,59 @@ func calculateContrastScore(colors []api.LAB) float64 {
 	}
 
 	return score
+}
+
+// calculateDuplicatePenalty heavily penalizes duplicate or near-duplicate colors
+func calculateDuplicatePenalty(colors []api.LAB) float64 {
+	penalty := 0.0
+
+	for i := 0; i < len(colors); i++ {
+		for j := i + 1; j < len(colors); j++ {
+			diff := api.DeltaE(colors[i], colors[j])
+
+			// If colors are identical or nearly identical
+			if diff < 5.0 {
+				penalty += 10.0 // Very high penalty per duplicate
+			} else if diff < 10.0 {
+				penalty += 5.0 // High penalty for very similar
+			} else if diff < 15.0 {
+				penalty += 2.0 // Moderate penalty for similar
+			}
+		}
+	}
+
+	return penalty
+}
+
+// calculateHueDiversity measures hue variation in accent colors
+// Returns higher score for colors spread across color wheel
+func calculateHueDiversity(colors []api.LAB) float64 {
+	if len(colors) < 2 {
+		return 0
+	}
+
+	// Calculate variance in A and B channels (chromaticity)
+	var aSum, bSum float64
+	for _, c := range colors {
+		aSum += c.A
+		bSum += c.B
+	}
+	aMean := aSum / float64(len(colors))
+	bMean := bSum / float64(len(colors))
+
+	var aVariance, bVariance float64
+	for _, c := range colors {
+		aVariance += math.Pow(c.A-aMean, 2)
+		bVariance += math.Pow(c.B-bMean, 2)
+	}
+	aVariance /= float64(len(colors))
+	bVariance /= float64(len(colors))
+
+	// Higher variance = more color diversity
+	diversity := math.Sqrt(aVariance + bVariance)
+
+	// Normalize to reasonable range (0-20)
+	return math.Min(diversity/5.0, 20.0)
 }
 
 // scoredIndividual pairs an individual with its fitness score

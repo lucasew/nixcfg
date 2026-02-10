@@ -12,21 +12,23 @@ const (
 	mutationRate = 0.75
 )
 
-// initPopulation creates the initial random population
+// initPopulation creates the initial random population with random colors
+// Evolution will converge toward image colors through fitness function
 func initPopulation(colors []api.LAB, count int, size int) []Individual {
-	if len(colors) == 0 {
-		return nil
-	}
-
 	population := make([]Individual, size)
+
 	for i := 0; i < size; i++ {
 		individual := Individual{
 			colors: make([]api.LAB, count),
 		}
 
-		// Randomly sample colors from image
+		// Generate completely random colors in LAB space
 		for j := 0; j < count; j++ {
-			individual.colors[j] = colors[rand.Intn(len(colors))]
+			individual.colors[j] = api.LAB{
+				L: rand.Float64() * 100,        // Lightness: 0-100
+				A: rand.Float64()*200 - 100,    // Green-Red: -100 to +100
+				B: rand.Float64()*200 - 100,    // Blue-Yellow: -100 to +100
+			}
 		}
 
 		population[i] = individual
