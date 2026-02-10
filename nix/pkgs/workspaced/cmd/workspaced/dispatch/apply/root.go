@@ -40,7 +40,6 @@ func GetCommand() *cobra.Command {
 				&apply.SymlinkProvider{},
 				&apply.TermuxProvider{},
 				&apply.WebappProvider{},
-				&apply.LazyShimProvider{},
 			}
 
 			desired := []apply.DesiredState{}
