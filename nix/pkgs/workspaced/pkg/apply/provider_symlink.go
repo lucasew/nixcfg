@@ -12,6 +12,9 @@ import (
 	"text/template"
 	"workspaced/pkg/config"
 	"workspaced/pkg/env"
+	"workspaced/pkg/icons"
+	"workspaced/pkg/logging"
+	"workspaced/pkg/text"
 )
 
 var ErrFileSkipped = errors.New("file skipped")
@@ -21,7 +24,8 @@ const (
 	markerFileEnd   = "<<<WORKSPACED_ENDFILE>>>"
 )
 
-var templateFuncMap = template.FuncMap{
+func makeFuncMap(ctx context.Context) template.FuncMap {
+	return template.FuncMap{
 	"skip": func() (string, error) {
 		return "", ErrFileSkipped
 	},
@@ -75,6 +79,31 @@ var templateFuncMap = template.FuncMap{
 		}
 		return falseVal
 	},
+	// Webapp helpers
+	"favicon": func(url string) (string, error) {
+		return getFavicon(ctx, url)
+	},
+	"isWayland": func() bool {
+		return os.Getenv("WAYLAND_DISPLAY") != ""
+	},
+	"titleCase": func(s string) string {
+		return text.ToTitleCase(s)
+	},
+	"normalizeURL": func(url string) string {
+		return env.NormalizeURL(url)
+	},
+	}
+}
+
+func getFavicon(ctx context.Context, url string) (string, error) {
+	iconPath, err := icons.GetIconPath(ctx, url)
+	if err != nil {
+		logger := logging.GetLogger(ctx)
+		logger.Error("failed to get favicon", "url", url, "error", err)
+		// Return fallback icon
+		return "applications-internet", nil
+	}
+	return iconPath, nil
 }
 
 type SymlinkProvider struct{}
@@ -137,7 +166,7 @@ func (p *SymlinkProvider) GetDesiredState(ctx context.Context) ([]DesiredState, 
 				return err
 			}
 
-			rendered, err := renderTemplate(string(content), cfg)
+			rendered, err := renderTemplate(ctx, string(content), cfg)
 			if err != nil {
 				if errors.Is(err, ErrFileSkipped) {
 					// Skip this file - don't add to desired state
@@ -218,8 +247,8 @@ func (p *SymlinkProvider) GetDesiredState(ctx context.Context) ([]DesiredState, 
 	return desired, nil
 }
 
-func renderTemplate(content string, cfg *config.Config) ([]byte, error) {
-	tmpl, err := template.New("config").Funcs(templateFuncMap).Parse(content)
+func renderTemplate(ctx context.Context, content string, cfg *config.Config) ([]byte, error) {
+	tmpl, err := template.New("config").Funcs(makeFuncMap(ctx)).Parse(content)
 	if err != nil {
 		return nil, err
 	}
