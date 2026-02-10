@@ -1,11 +1,9 @@
 {{- range $name, $tool := .LazyTools }}
-{{- $pkg := $tool.Pkg }}
-{{- if not $pkg }}{{ $pkg = $name }}{{ end }}
+{{- $pkg := $tool.Pkg }}{{ if not $pkg }}{{ $pkg = $name }}{{ end }}
 {{- $bins := $tool.Bins }}
 {{- if eq (len $bins) 0 }}
   {{- $binName := $tool.Alias }}
   {{- if not $binName }}
-    {{- /* Clean up name (e.g. github:owner/repo -> repo) */}}
     {{- $parts := split $name ":" }}
     {{- $binName = last $parts }}
     {{- $parts = split $binName "/" }}

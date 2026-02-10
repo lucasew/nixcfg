@@ -1,18 +1,17 @@
-{{- /* Generate 'x' shim first */ -}}
+{{- /* Script x: adds lazy shims to PATH */ -}}
 {{- file "x" "0755" }}
 #!/usr/bin/env bash
 export PATH="{{ userDataDir }}/shim/lazy:$PATH"
 exec "$@"
 {{- endfile }}
 
-{{- /* Generate global shims for tools marked as global */ -}}
+{{- /* Global shims for tools marked as global */ -}}
 {{- range $name, $tool := .LazyTools }}
 {{- if $tool.Global }}
 {{- $bins := $tool.Bins }}
 {{- if eq (len $bins) 0 }}
   {{- $binName := $tool.Alias }}
   {{- if not $binName }}
-    {{- /* Clean up name (e.g. github:owner/repo -> repo) */}}
     {{- $parts := split $name ":" }}
     {{- $binName = last $parts }}
     {{- $parts = split $binName "/" }}

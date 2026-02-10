@@ -10,7 +10,6 @@ import (
 	"workspaced/cmd/workspaced/daemon"
 	"workspaced/cmd/workspaced/dispatch"
 	"workspaced/cmd/workspaced/dispatch/apply"
-	"workspaced/cmd/workspaced/dispatch/config"
 	"workspaced/cmd/workspaced/dispatch/history"
 	"workspaced/cmd/workspaced/dispatch/sync"
 	"workspaced/cmd/workspaced/is"
@@ -49,7 +48,6 @@ func NewRootCommand() *cobra.Command {
 	// Top-level aliases for common commands
 	cmd.AddCommand(apply.GetCommand())
 	cmd.AddCommand(sync.GetCommand())
-	cmd.AddCommand(config.GetColorsCommand())
 
 	// History search alias
 	searchCmd := history.GetCommand()

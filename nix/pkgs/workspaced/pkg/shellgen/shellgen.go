@@ -24,7 +24,6 @@ func SetRootCommand(cmd *cobra.Command) {
 
 // generators maps order/name to generator functions
 var generators = map[string]Generator{
-	"00-colors":     GenerateColors,
 	"05-flags":      GenerateFlags,
 	"06-daemon":     GenerateDaemon,
 	"10-completion": GenerateCompletion,
