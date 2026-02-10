@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"syscall"
 	"time"
 
 	"io"
@@ -24,6 +25,8 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/spf13/cobra"
 )
+
+var shouldRestartDaemon bool
 
 type StreamPacketWriter struct {
 	Out  chan<- types.StreamPacket
@@ -178,6 +181,22 @@ func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB) {
 
 	<-ctx.Done()
 	<-done
+
+	// If binary changed, exec ourselves to restart
+	if shouldRestartDaemon {
+		slog.Info("restarting daemon with new binary")
+		exePath, err := os.Executable()
+		if err != nil {
+			slog.Error("failed to get executable path", "error", err)
+			return
+		}
+
+		// Exec ourselves with daemon argument
+		err = syscall.Exec(exePath, []string{exePath, "daemon"}, os.Environ())
+		if err != nil {
+			slog.Error("failed to exec daemon", "error", err)
+		}
+	}
 }
 
 func handleRequest(ctx context.Context, req types.Request, outCh chan types.StreamPacket, database *db.DB) {
@@ -185,13 +204,16 @@ func handleRequest(ctx context.Context, req types.Request, outCh chan types.Stre
 	if req.BinaryHash != "" {
 		daemonHash, err := exec.GetBinaryHash()
 		if err == nil && daemonHash != req.BinaryHash {
-			slog.Warn("binary hash mismatch, requesting daemon restart",
+			slog.Warn("binary hash mismatch, daemon will exec itself",
 				"daemon_hash", daemonHash[:16],
 				"client_hash", req.BinaryHash[:16])
 
-			// Send special error that tells client to restart daemon and retry
+			// Signal daemon to restart after closing this connection
+			shouldRestartDaemon = true
+
+			// Send response and close connection
 			resp := types.Response{
-				Error: "DAEMON_RESTART_NEEDED",
+				Error: "DAEMON_RESTARTING",
 			}
 			payload, _ := json.Marshal(resp)
 			outCh <- types.StreamPacket{

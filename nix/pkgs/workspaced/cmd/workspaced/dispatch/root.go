@@ -228,27 +228,15 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 				return "", true, fmt.Errorf("failed to parse result: %w", err)
 			}
 			if resp.Error != "" {
-				// Check if daemon needs restart
-				if resp.Error == "DAEMON_RESTART_NEEDED" {
-					slog.Info("daemon binary outdated, restarting daemon and retrying")
+				// Check if daemon is restarting itself
+				if resp.Error == "DAEMON_RESTARTING" || resp.Error == "DAEMON_RESTART_NEEDED" {
+					slog.Info("daemon restarting with new binary, retrying locally")
 
-					// Try to restart daemon
-					// 1. Try systemd if available (user says it's not bad if it works)
-					if exec.IsBinaryAvailable(context.Background(), "systemctl") {
-						_ = exec.RunCmd(context.Background(), "systemctl", "--user", "restart", "workspaced.service").Run()
-					} else {
-						// 2. Fallback to pkill and background start (works on Android)
-						_ = exec.RunCmd(context.Background(), "pkill", "-f", "workspaced daemon").Run()
-						go func() {
-							_ = exec.RunCmd(context.Background(), "workspaced", "daemon").Start()
-						}()
-					}
+					// Daemon is exec'ing itself, just wait a bit and run locally
+					// Next command will connect to the new daemon
+					time.Sleep(200 * time.Millisecond)
 
-					// Wait a bit for daemon to restart
-					time.Sleep(500 * time.Millisecond)
-
-					// Retry the command locally (new daemon will be picked up next time)
-					// Return not connected so caller runs locally, which will connect to new daemon
+					// Run locally this time, next call will hit new daemon
 					return "", false, nil
 				}
 				return "", true, fmt.Errorf("%s", resp.Error)

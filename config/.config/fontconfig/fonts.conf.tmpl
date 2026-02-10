@@ -7,6 +7,7 @@
     <family>serif</family>
     <prefer>
       <family>{{ .Fonts.Serif }}</family>
+      <family>{{ .Fonts.Emoji }}</family>
     </prefer>
   </alias>
 
@@ -14,6 +15,7 @@
     <family>sans-serif</family>
     <prefer>
       <family>{{ .Fonts.SansSerif }}</family>
+      <family>{{ .Fonts.Emoji }}</family>
     </prefer>
   </alias>
 
@@ -21,6 +23,7 @@
     <family>monospace</family>
     <prefer>
       <family>{{ .Fonts.Monospace }}</family>
+      <family>{{ .Fonts.Emoji }}</family>
     </prefer>
   </alias>
 
@@ -44,6 +47,9 @@
     </edit>
     <edit name="rgba" mode="assign">
       <const>rgb</const>
+    </edit>
+    <edit name="embeddedbitmap" mode="assign">
+      <bool>true</bool>
     </edit>
   </match>
 </fontconfig>

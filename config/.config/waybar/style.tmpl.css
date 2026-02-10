@@ -15,8 +15,11 @@
 @define-color base0E #{{ .Palette.Base0E }};
 @define-color base0F #{{ .Palette.Base0F }};
 
+* {
+    font-family: '{{ .Fonts.Monospace }}', '{{ .Fonts.Emoji }}', sans-serif;
+}
+
 window {
-    font-family: 'Fira Code', sans-serif;
     font-size: 1em;
     font-weight: 400;
     transition: none;
