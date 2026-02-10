@@ -38,7 +38,6 @@ func GetCommand() *cobra.Command {
 			providers := []apply.Provider{
 				&apply.ProfileProvider{},
 				&apply.DconfProvider{},
-				&apply.DesktopProvider{},
 				&apply.SymlinkProvider{},
 				&apply.TermuxProvider{},
 				&apply.WebappProvider{},
