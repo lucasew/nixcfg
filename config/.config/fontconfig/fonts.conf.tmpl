@@ -2,39 +2,44 @@
 <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
 <!-- Auto-generated from template by workspaced -->
 <fontconfig>
-  <!-- Default font families -->
-  <alias>
-    <family>serif</family>
-    <prefer>
-      <family>{{ .Fonts.Serif }}</family>
-      <family>{{ .Fonts.Emoji }}</family>
-    </prefer>
-  </alias>
+  
+  <match target="pattern">
+    <test qual="any" name="family"><string>serif</string></test>
+    <edit name="family" mode="assign" binding="strong">
+      <string>{{ .Fonts.Serif }}</string>
+      <string>{{ .Fonts.Emoji }}</string>
+    </edit>
+  </match>
 
-  <alias>
-    <family>sans-serif</family>
-    <prefer>
-      <family>{{ .Fonts.SansSerif }}</family>
-      <family>{{ .Fonts.Emoji }}</family>
-    </prefer>
-  </alias>
+  <match target="pattern">
+    <test qual="any" name="family"><string>sans-serif</string></test>
+    <edit name="family" mode="assign" binding="strong">
+      <string>{{ .Fonts.SansSerif }}</string>
+      <string>{{ .Fonts.Emoji }}</string>
+    </edit>
+  </match>
 
-  <alias>
-    <family>monospace</family>
-    <prefer>
-      <family>{{ .Fonts.Monospace }}</family>
-      <family>{{ .Fonts.Emoji }}</family>
-    </prefer>
-  </alias>
+  <match target="pattern">
+    <test qual="any" name="family"><string>monospace</string></test>
+    <edit name="family" mode="assign" binding="strong">
+      <string>{{ .Fonts.Monospace }}</string>
+      <string>{{ .Fonts.Emoji }}</string>
+    </edit>
+  </match>
 
-  <alias>
-    <family>emoji</family>
-    <prefer>
-      <family>{{ .Fonts.Emoji }}</family>
-    </prefer>
-  </alias>
+  <match target="pattern">
+    <edit name="family" mode="append" binding="weak">
+      <string>{{ .Fonts.Emoji }}</string>
+    </edit>
+  </match>
 
-  <!-- Enable anti-aliasing -->
+  <match target="pattern">
+    <test qual="any" name="family"><string>emoji</string></test>
+    <edit name="family" mode="assign" binding="strong">
+      <string>{{ .Fonts.Emoji }}</string>
+    </edit>
+  </match>
+
   <match target="font">
     <edit name="antialias" mode="assign">
       <bool>true</bool>
