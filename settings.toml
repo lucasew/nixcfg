@@ -56,9 +56,9 @@ waypipe = 9999
 default = "hx"
 
 [fonts]
-serif = "Fira Code Light"
-sans_serif = "Fira Code Light"
-monospace = "Fira Code Light"
+serif = "Fira Code"
+sans_serif = "Fira Code"
+monospace = "Fira Code"
 emoji = "Apple Color Emoji"
 
 [desktop.wallpaper]
