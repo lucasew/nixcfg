@@ -215,6 +215,10 @@ url = "jules.google.com"
 [webapp.claude-code-web]
 url = "claude.ai/code"
 
+[lazy_tools."github:zed-industries/zed"]
+version = "0.222.4"
+bins = ["zed"]
+
 [lazy_tools."bun"]
 version = "1.3.8"
 
@@ -340,20 +344,20 @@ enabled = false
 [desktop.raw.dconf."org/gnome/desktop/periphereals/touchpad"]
 tap-to-click = true
 
-[palette]                                                                                                                                              
-base00 = "001900"                                                                                                                                    
-base01 = "364e13"                                                                                                                                    
-base02 = "417bf0"                                                                                                                                    
-base03 = "7ba4f4"                                                                                                                                    
-base04 = "98c2f4"                                                                                                                                    
-base05 = "ebdfff"                                                                                                                                    
-base06 = "f2f3f4"                                                                                                                                    
-base07 = "bdd3f1"                                                                                                                                    
-base08 = "006d00"                                                                                                                                    
-base09 = "f2f3f4"                                                                                                                                    
-base0A = "ffcac2"                                                                                                                                    
-base0B = "008df1"                                                                                                                                    
-base0C = "3a5312"                                                                                                                                    
-base0D = "ee79ff"                                                                                                                                    
-base0E = "417bf0"                                                                                                                                    
-base0F = "00dee8" 
+[palette]
+base00 = "001900"
+base01 = "364e13"
+base02 = "417bf0"
+base03 = "7ba4f4"
+base04 = "98c2f4"
+base05 = "ebdfff"
+base06 = "f2f3f4"
+base07 = "bdd3f1"
+base08 = "006d00"
+base09 = "f2f3f4"
+base0A = "ffcac2"
+base0B = "008df1"
+base0C = "3a5312"
+base0D = "ee79ff"
+base0E = "417bf0"
+base0F = "00dee8"
