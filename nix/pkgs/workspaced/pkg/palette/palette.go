@@ -9,6 +9,7 @@ import (
 	_ "image/png"
 	"os"
 
+	"workspaced/pkg/config"
 	"workspaced/pkg/palette/api"
 	"workspaced/pkg/palette/genetic"
 )
@@ -24,7 +25,7 @@ func GetDriver(ctx context.Context, name string) (api.Driver, error) {
 }
 
 // ExtractFromFile loads an image from a file and extracts a color palette
-func ExtractFromFile(ctx context.Context, path string, driver string, opts api.Options) (*api.Palette, error) {
+func ExtractFromFile(ctx context.Context, path string, driver string, opts api.Options) (*config.PaletteConfig, error) {
 	// Load image from file
 	f, err := os.Open(path)
 	if err != nil {

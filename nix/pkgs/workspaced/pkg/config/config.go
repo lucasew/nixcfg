@@ -103,6 +103,15 @@ type PaletteConfig struct {
 	Base0D string `toml:"base0D" json:"base0D"`
 	Base0E string `toml:"base0E" json:"base0E"`
 	Base0F string `toml:"base0F" json:"base0F"`
+	// Base24 extended colors
+	Base10 string `toml:"base10,omitempty" json:"base10,omitempty"`
+	Base11 string `toml:"base11,omitempty" json:"base11,omitempty"`
+	Base12 string `toml:"base12,omitempty" json:"base12,omitempty"`
+	Base13 string `toml:"base13,omitempty" json:"base13,omitempty"`
+	Base14 string `toml:"base14,omitempty" json:"base14,omitempty"`
+	Base15 string `toml:"base15,omitempty" json:"base15,omitempty"`
+	Base16 string `toml:"base16,omitempty" json:"base16,omitempty"`
+	Base17 string `toml:"base17,omitempty" json:"base17,omitempty"`
 }
 
 type FontsConfig struct {
@@ -193,6 +202,57 @@ func (p PaletteConfig) Merge(other PaletteConfig) PaletteConfig {
 	if other.Base0F != "" {
 		result.Base0F = other.Base0F
 	}
+	if other.Base10 != "" {
+		result.Base10 = other.Base10
+	}
+	if other.Base11 != "" {
+		result.Base11 = other.Base11
+	}
+	if other.Base12 != "" {
+		result.Base12 = other.Base12
+	}
+	if other.Base13 != "" {
+		result.Base13 = other.Base13
+	}
+	if other.Base14 != "" {
+		result.Base14 = other.Base14
+	}
+	if other.Base15 != "" {
+		result.Base15 = other.Base15
+	}
+	if other.Base16 != "" {
+		result.Base16 = other.Base16
+	}
+	if other.Base17 != "" {
+		result.Base17 = other.Base17
+	}
+
+	// Auto-fill base24 extended colors by repeating accent colors if empty
+	if result.Base10 == "" && result.Base08 != "" {
+		result.Base10 = result.Base08
+	}
+	if result.Base11 == "" && result.Base09 != "" {
+		result.Base11 = result.Base09
+	}
+	if result.Base12 == "" && result.Base0A != "" {
+		result.Base12 = result.Base0A
+	}
+	if result.Base13 == "" && result.Base0B != "" {
+		result.Base13 = result.Base0B
+	}
+	if result.Base14 == "" && result.Base0C != "" {
+		result.Base14 = result.Base0C
+	}
+	if result.Base15 == "" && result.Base0D != "" {
+		result.Base15 = result.Base0D
+	}
+	if result.Base16 == "" && result.Base0E != "" {
+		result.Base16 = result.Base0E
+	}
+	if result.Base17 == "" && result.Base0F != "" {
+		result.Base17 = result.Base0F
+	}
+
 	return result
 }
 

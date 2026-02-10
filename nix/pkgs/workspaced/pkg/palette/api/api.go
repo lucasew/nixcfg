@@ -8,6 +8,7 @@ import (
 	"math"
 
 	"workspaced/pkg/api"
+	"workspaced/pkg/config"
 )
 
 var ErrDriverNotFound = api.ErrDriverNotFound
@@ -26,36 +27,6 @@ const (
 	PolarityLight
 )
 
-// Palette represents a base16/base24 color palette
-type Palette struct {
-	Base00 string `json:"base00"` // Background
-	Base01 string `json:"base01"` // Lighter background
-	Base02 string `json:"base02"` // Selection background
-	Base03 string `json:"base03"` // Comments, invisibles
-	Base04 string `json:"base04"` // Dark foreground
-	Base05 string `json:"base05"` // Default foreground
-	Base06 string `json:"base06"` // Light foreground
-	Base07 string `json:"base07"` // Light background
-	Base08 string `json:"base08"` // Red
-	Base09 string `json:"base09"` // Orange
-	Base0A string `json:"base0A"` // Yellow
-	Base0B string `json:"base0B"` // Green
-	Base0C string `json:"base0C"` // Cyan
-	Base0D string `json:"base0D"` // Blue
-	Base0E string `json:"base0E"` // Purple
-	Base0F string `json:"base0F"` // Brown
-
-	// Base24 extras (optional)
-	Base10 string `json:"base10,omitempty"` // Extended colors
-	Base11 string `json:"base11,omitempty"`
-	Base12 string `json:"base12,omitempty"`
-	Base13 string `json:"base13,omitempty"`
-	Base14 string `json:"base14,omitempty"`
-	Base15 string `json:"base15,omitempty"`
-	Base16 string `json:"base16,omitempty"`
-	Base17 string `json:"base17,omitempty"`
-}
-
 // Options configures palette extraction
 type Options struct {
 	Polarity   Polarity
@@ -65,7 +36,7 @@ type Options struct {
 
 // Driver extracts color palettes from images
 type Driver interface {
-	Extract(ctx context.Context, img image.Image, opts Options) (*Palette, error)
+	Extract(ctx context.Context, img image.Image, opts Options) (*config.PaletteConfig, error)
 	Name() string
 }
 

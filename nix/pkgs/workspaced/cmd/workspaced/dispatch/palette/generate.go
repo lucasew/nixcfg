@@ -9,6 +9,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/spf13/cobra"
 
+	"workspaced/pkg/config"
 	"workspaced/pkg/palette"
 	"workspaced/pkg/palette/api"
 )
@@ -97,7 +98,7 @@ func parsePolarityFlag(s string) (api.Polarity, error) {
 }
 
 // printPaletteTOML outputs palette in TOML format
-func printPaletteTOML(pal *api.Palette) error {
+func printPaletteTOML(pal *config.PaletteConfig) error {
 	// Create a map for TOML encoding
 	paletteMap := map[string]interface{}{
 		"palette": pal,
