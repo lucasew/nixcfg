@@ -29,6 +29,10 @@ func calculateFitness(ind Individual, imageColors []api.LAB, polarity api.Polari
 	imageSim := calculateImageSimilarity(ind.colors, imageColors)
 	score += imageSim * 10.0 // Strong weight on matching image
 
+	// Contrast requirements (critical for readability)
+	contrastScore := calculateContrastScore(ind.colors)
+	score += contrastScore * 5.0 // Strong weight on readability
+
 	// Lightness scheme matching
 	if polarity != api.PolarityAny {
 		lightnessError := calculateLightnessError(ind.colors, polarity)
@@ -123,6 +127,47 @@ func calculateLightnessError(colors []api.LAB, polarity api.Polarity) float64 {
 	}
 
 	return errorSum
+}
+
+// calculateContrastScore rewards palettes with good contrast for readability
+func calculateContrastScore(colors []api.LAB) float64 {
+	if len(colors) < 16 {
+		return 0
+	}
+
+	var score float64
+
+	// Base00 (background) vs Base05 (foreground) - must have high contrast
+	bgFgContrast := math.Abs(colors[0].L - colors[5].L)
+	if bgFgContrast >= 50 {
+		score += 10.0 // Excellent contrast
+	} else if bgFgContrast >= 40 {
+		score += 5.0 // Good contrast
+	} else {
+		score -= (50 - bgFgContrast) // Penalize poor contrast
+	}
+
+	// Base07 (light background) vs Base02 (selection) - moderate contrast
+	lightBgSelectionContrast := math.Abs(colors[7].L - colors[2].L)
+	if lightBgSelectionContrast >= 15 && lightBgSelectionContrast <= 40 {
+		score += 3.0 // Good selection visibility
+	}
+
+	// Accent colors (Base08-0F) vs background (Base00) - should be visible
+	minAccentContrast := 100.0
+	for i := 8; i < 16; i++ {
+		contrast := math.Abs(colors[i].L - colors[0].L)
+		if contrast < minAccentContrast {
+			minAccentContrast = contrast
+		}
+	}
+	if minAccentContrast >= 25 {
+		score += 5.0 // All accents visible on background
+	} else {
+		score -= (25 - minAccentContrast) / 2 // Penalize invisible accents
+	}
+
+	return score
 }
 
 // scoredIndividual pairs an individual with its fitness score

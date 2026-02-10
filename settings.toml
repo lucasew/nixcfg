@@ -356,21 +356,20 @@ enabled = false
 
 [desktop.raw.dconf."org/gnome/desktop/periphereals/touchpad"]
 tap-to-click = true
-
-[palette]
-base00 = "30430e"
-base01 = "364e13"
-base02 = "417bf0"
-base03 = "7ba4f4"
-base04 = "98c2f4"
-base05 = "f2f3f4"
-base06 = "f2f3f4"
-base07 = "f2f3f4"
-base08 = "8da6f2"
-base09 = "364e13"
-base0A = "98c2f4"
-base0B = "7ba4f4"
-base0C = "30430e"
-base0D = "417bf0"
-base0E = "bdd3f1"
-base0F = "f2f3f4"
+[palette]                                                                                 
+base00 = "30430e"                                                                      
+base01 = "364e13"                                                                      
+base02 = "417bf0"                                                                       
+base03 = "7ba4f4"                                                                      
+base04 = "98c2f4"                                                                       
+base05 = "f2f3f4"                                                                      
+base06 = "f2f3f4"                                                                     
+base07 = "bdd3f1"                                                                      
+base08 = "8da6f2"                                                                       
+base09 = "417bf0"                                                                      
+base0A = "98c2f4"                                                                       
+base0B = "98c2f4"                                                                      
+base0C = "98c2f4"                                                                       
+base0D = "8da6f2"                                                                       
+base0E = "7ba4f4"                                                                       
+base0F = "98c2f4"
