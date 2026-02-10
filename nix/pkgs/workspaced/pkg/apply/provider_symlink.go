@@ -3,6 +3,7 @@ package apply
 import (
 	"bytes"
 	"context"
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
@@ -10,6 +11,14 @@ import (
 	"workspaced/pkg/config"
 	"workspaced/pkg/env"
 )
+
+var ErrFileSkipped = errors.New("file skipped")
+
+var templateFuncMap = template.FuncMap{
+	"skip": func() (string, error) {
+		return "", ErrFileSkipped
+	},
+}
 
 type SymlinkProvider struct{}
 
@@ -73,6 +82,10 @@ func (p *SymlinkProvider) GetDesiredState(ctx context.Context) ([]DesiredState, 
 
 			rendered, err := renderTemplate(string(content), cfg)
 			if err != nil {
+				if errors.Is(err, ErrFileSkipped) {
+					// Skip this file - don't add to desired state
+					return nil
+				}
 				return err
 			}
 
@@ -123,7 +136,7 @@ func (p *SymlinkProvider) GetDesiredState(ctx context.Context) ([]DesiredState, 
 }
 
 func renderTemplate(content string, cfg *config.Config) ([]byte, error) {
-	tmpl, err := template.New("config").Parse(content)
+	tmpl, err := template.New("config").Funcs(templateFuncMap).Parse(content)
 	if err != nil {
 		return nil, err
 	}
