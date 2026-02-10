@@ -66,11 +66,15 @@ run = "mise exec -- terraform fmt -recursive"
 
 [tasks.test]
 description = "Run tests"
-depends = ["test:*"]
+depends = ["test:go"]
 
 [tasks."test:nix"]
 description = "Test Nix configuration"
 run = "if command -v nix >/dev/null; then nix --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' --accept-flake-config flake check; else echo 'Nix not found, skipping'; fi"
+
+[tasks."build:release"]
+description = "Build Nix release"
+run = "command -v nix >/dev/null && nix build .#release --accept-flake-config || echo 'Nix not found, skipping'"
 
 [tasks."test:go"]
 description = "Test Go code"
@@ -78,13 +82,17 @@ dir = "nix/pkgs/workspaced"
 run = "mise exec -- go test -p 2 ./..."
 
 [tasks.codegen]
-description = "Generate code"
+description = "Generate code and format"
 depends = ["codegen:*"]
+run = "mise run fmt"
 
 [tasks."codegen:go"]
-description = "Tidy Go modules"
+description = "Generate Go code and tidy modules"
 dir = "nix/pkgs/workspaced"
-run = "mise exec -- go mod tidy"
+run = """
+    mise exec -- sqlc generate
+    mise exec -- go mod tidy
+"""
 
 [tasks.install]
 description = "Install dependencies"
@@ -104,6 +112,7 @@ description = "Install Mise tools"
 run = """
     mise install
     mise install -C nix/pkgs/workspaced
+    mise install -C infra
 """
 
 [tasks.ci]
