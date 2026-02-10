@@ -13,7 +13,7 @@ const (
 )
 
 // initPopulation creates the initial random population
-func initPopulation(colors []api.LAB, count int, size int) []Individual {
+func initPopulation(rng *rand.Rand, colors []api.LAB, count int, size int) []Individual {
 	if len(colors) == 0 {
 		return nil
 	}
@@ -26,7 +26,7 @@ func initPopulation(colors []api.LAB, count int, size int) []Individual {
 
 		// Randomly sample colors from image
 		for j := 0; j < count; j++ {
-			individual.colors[j] = colors[rand.Intn(len(colors))]
+			individual.colors[j] = colors[rng.Intn(len(colors))]
 		}
 
 		population[i] = individual
@@ -61,8 +61,8 @@ func crossover(p1, p2 Individual) Individual {
 
 // mutate randomly replaces one color with probability 'rate'
 // Based on Stylix Ai/Evolutionary.hs mutate function
-func mutate(ind Individual, colors []api.LAB, rate float64) Individual {
-	if len(colors) == 0 || rand.Float64() > rate {
+func mutate(rng *rand.Rand, ind Individual, colors []api.LAB, rate float64) Individual {
+	if len(colors) == 0 || rng.Float64() > rate {
 		return ind
 	}
 
@@ -73,15 +73,15 @@ func mutate(ind Individual, colors []api.LAB, rate float64) Individual {
 	copy(mutated.colors, ind.colors)
 
 	// Replace one random color
-	pos := rand.Intn(len(mutated.colors))
-	mutated.colors[pos] = colors[rand.Intn(len(colors))]
+	pos := rng.Intn(len(mutated.colors))
+	mutated.colors[pos] = colors[rng.Intn(len(colors))]
 
 	return mutated
 }
 
 // evolve creates next generation from survivors
 // Based on Stylix Ai/Evolutionary.hs evolvePopulation
-func evolve(survivors []scoredIndividual, imageColors []api.LAB) []Individual {
+func evolve(rng *rand.Rand, survivors []scoredIndividual, imageColors []api.LAB) []Individual {
 	newPopulation := make([]Individual, 0, numSurvivors+numNewborns)
 
 	// Elitism: keep best individual unchanged
@@ -92,15 +92,15 @@ func evolve(survivors []scoredIndividual, imageColors []api.LAB) []Individual {
 	// Generate offspring via crossover
 	for i := 1; i < numSurvivors+numNewborns; i++ {
 		// Select two random parents
-		p1 := survivors[rand.Intn(len(survivors))].individual
-		p2 := survivors[rand.Intn(len(survivors))].individual
+		p1 := survivors[rng.Intn(len(survivors))].individual
+		p2 := survivors[rng.Intn(len(survivors))].individual
 
 		// Crossover
 		offspring := crossover(p1, p2)
 
 		// Mutate (skip first individual - elite)
 		if i > 0 {
-			offspring = mutate(offspring, imageColors, mutationRate)
+			offspring = mutate(rng, offspring, imageColors, mutationRate)
 		}
 
 		newPopulation = append(newPopulation, offspring)

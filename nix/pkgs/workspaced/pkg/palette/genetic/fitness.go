@@ -8,8 +8,7 @@ import (
 
 // Individual represents a candidate palette solution
 type Individual struct {
-	colors  []api.LAB
-	fitness float64
+	colors []api.LAB
 }
 
 // calculateFitness evaluates how good a palette is
