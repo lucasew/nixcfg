@@ -18,6 +18,9 @@ var templateFuncMap = template.FuncMap{
 	"skip": func() (string, error) {
 		return "", ErrFileSkipped
 	},
+	"dotfiles": func() (string, error) {
+		return env.GetDotfilesRoot()
+	},
 }
 
 type SymlinkProvider struct{}
