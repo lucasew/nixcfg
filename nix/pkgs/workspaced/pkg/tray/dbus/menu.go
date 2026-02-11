@@ -63,6 +63,10 @@ func (m *DBusMenu) Export(conn *dbus.Conn, path dbus.ObjectPath) error {
 						{Name: "data", Type: "v", Direction: "in"},
 						{Name: "timestamp", Type: "u", Direction: "in"},
 					}},
+					{Name: "EventGroup", Args: []introspect.Arg{
+						{Name: "events", Type: "a(isvu)", Direction: "in"},
+						{Name: "idErrors", Type: "ai", Direction: "out"},
+					}},
 					{Name: "AboutToShow", Args: []introspect.Arg{
 						{Name: "id", Type: "i", Direction: "in"},
 						{Name: "updatesNeeded", Type: "b", Direction: "out"},
@@ -76,16 +80,12 @@ func (m *DBusMenu) Export(conn *dbus.Conn, path dbus.ObjectPath) error {
 				},
 				Signals: []introspect.Signal{
 					{Name: "ItemsPropertiesUpdated", Args: []introspect.Arg{
-						{Name: "updates", Type: "a(ia{sv})"},
+						{Name: "updatedProps", Type: "a(ia{sv})"},
 						{Name: "removedProps", Type: "a(ias)"},
 					}},
 					{Name: "LayoutUpdated", Args: []introspect.Arg{
 						{Name: "revision", Type: "u"},
 						{Name: "parent", Type: "i"},
-					}},
-					{Name: "ItemActivationRequested", Args: []introspect.Arg{
-						{Name: "id", Type: "i"},
-						{Name: "timestamp", Type: "u"},
 					}},
 				},
 			},
@@ -116,13 +116,16 @@ func (m *DBusMenu) Export(conn *dbus.Conn, path dbus.ObjectPath) error {
 	_, err = prop.Export(conn, path, prop.Map{
 		"com.canonical.dbusmenu": convertedProps,
 	})
-	return err
+	if err != nil {
+		return err
+	}
+
+	// Signal that layout is ready
+	m.EmitLayoutUpdated()
+	return nil
 }
 
 // LayoutNode represents (ia{sv}av)
-// i: id
-// a{sv}: properties
-// av: children (variants of LayoutNode)
 type LayoutNode struct {
 	ID         int32
 	Properties map[string]dbus.Variant
@@ -136,10 +139,9 @@ func (m *DBusMenu) GetLayout(parentId int32, recursionDepth int32, propertyNames
 	m.driver.mu.RLock()
 	defer m.driver.mu.RUnlock()
 
-	slog.Debug("dbus menu GetLayout", "parentId", parentId)
+	slog.Info("dbus menu GetLayout", "parentId", parentId, "recursionDepth", recursionDepth)
 
 	if parentId != 0 {
-		// We only support a flat menu for now
 		return m.revision, LayoutNode{ID: parentId}, nil
 	}
 
@@ -157,6 +159,7 @@ func (m *DBusMenu) GetLayout(parentId int32, recursionDepth int32, propertyNames
 				"label":   dbus.MakeVariant(item.Label),
 				"enabled": dbus.MakeVariant(true),
 				"visible": dbus.MakeVariant(true),
+				"type":    dbus.MakeVariant("standard"),
 			},
 			Children: []dbus.Variant{},
 		}
@@ -175,6 +178,8 @@ func (m *DBusMenu) GetGroupProperties(ids []int32, propertyNames []string) ([]st
 
 	m.driver.mu.RLock()
 	defer m.driver.mu.RUnlock()
+
+	slog.Info("dbus menu GetGroupProperties", "ids", ids)
 
 	res := []struct {
 		ID         int32
@@ -221,6 +226,8 @@ func (m *DBusMenu) GetProperty(id int32, name string) (dbus.Variant, *dbus.Error
 	m.driver.mu.RLock()
 	defer m.driver.mu.RUnlock()
 
+	slog.Info("dbus menu GetProperty", "id", id, "name", name)
+
 	if id == 0 {
 		if name == "children-display" {
 			return dbus.MakeVariant("submenu"), nil
@@ -231,8 +238,15 @@ func (m *DBusMenu) GetProperty(id int32, name string) (dbus.Variant, *dbus.Error
 	idx := int(id) - 1
 	if idx >= 0 && idx < len(m.driver.state.Menu) {
 		item := m.driver.state.Menu[idx]
-		if name == "label" {
+		switch name {
+		case "label":
 			return dbus.MakeVariant(item.Label), nil
+		case "enabled":
+			return dbus.MakeVariant(true), nil
+		case "visible":
+			return dbus.MakeVariant(true), nil
+		case "type":
+			return dbus.MakeVariant("standard"), nil
 		}
 	}
 
@@ -240,25 +254,45 @@ func (m *DBusMenu) GetProperty(id int32, name string) (dbus.Variant, *dbus.Error
 }
 
 func (m *DBusMenu) Event(id int32, eventId string, data dbus.Variant, timestamp uint32) *dbus.Error {
-	slog.Info("dbus menu event", "id", id, "eventId", eventId)
-	if eventId == "clicked" {
+	slog.Info("!!! EVENT !!!", "id", id, "eventId", eventId, "data", data.Value(), "timestamp", timestamp)
+	m.handleEvent(id, eventId, data, timestamp)
+	return nil
+}
+
+type EventGroupItem struct {
+	ID        int32
+	EventID   string
+	Data      dbus.Variant
+	Timestamp uint32
+}
+
+func (m *DBusMenu) EventGroup(events []EventGroupItem) ([]int32, *dbus.Error) {
+	slog.Info("!!! EVENT GROUP !!!", "len", len(events))
+	for _, e := range events {
+		m.handleEvent(e.ID, e.EventID, e.Data, e.Timestamp)
+	}
+	return []int32{}, nil
+}
+
+func (m *DBusMenu) handleEvent(id int32, eventId string, data dbus.Variant, timestamp uint32) {
+	if eventId == "clicked" || eventId == "activate" {
 		m.driver.mu.RLock()
 		defer m.driver.mu.RUnlock()
 
-		// Map ID back to index
 		idx := int(id) - 1
 		if idx >= 0 && idx < len(m.driver.state.Menu) {
 			item := m.driver.state.Menu[idx]
 			if item.Callback != nil {
+				slog.Info("executing menu callback", "label", item.Label)
 				go item.Callback()
 			}
 		}
 	}
-	return nil
 }
 
 func (m *DBusMenu) AboutToShow(id int32) (bool, *dbus.Error) {
-	return true, nil
+	slog.Info("dbus menu AboutToShow", "id", id)
+	return false, nil
 }
 
 func (m *DBusMenu) EmitLayoutUpdated() {

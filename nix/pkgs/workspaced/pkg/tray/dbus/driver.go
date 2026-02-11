@@ -84,6 +84,10 @@ func (d *Driver) Run(ctx context.Context) error {
 		slog.Warn("failed to emit NewMenu signal", "error", err)
 	}
 
+	if err := d.conn.Emit("/StatusNotifierItem", "org.kde.StatusNotifierItem.NewStatus", "Active"); err != nil {
+		slog.Warn("failed to emit NewStatus signal", "error", err)
+	}
+
 	// Register with watcher
 	watcher := d.conn.Object("org.kde.StatusNotifierWatcher", "/StatusNotifierWatcher")
 	call := watcher.Call("org.kde.StatusNotifierWatcher.RegisterStatusNotifierItem", 0, serviceName)

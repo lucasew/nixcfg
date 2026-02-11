@@ -103,6 +103,10 @@ func getSocketPath() string {
 func RunDaemon() error {
 	var listener net.Listener
 
+	// Ensure logs go to stderr
+	slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelDebug})))
+	slog.Info("daemon starting", "pid", os.Getpid())
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -139,6 +143,7 @@ func RunDaemon() error {
 				{
 					Label: "Exit",
 					Callback: func() {
+						time.Sleep(100 * time.Millisecond) // Give time for DBus reply
 						cancel()
 					},
 				},
