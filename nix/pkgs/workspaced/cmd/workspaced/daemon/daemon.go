@@ -82,6 +82,11 @@ func RunDaemon() error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	initialMtime, err := exec.GetBinaryMtime()
+	if err != nil {
+		slog.Warn("failed to get initial binary mtime", "error", err)
+	}
+
 	database, err := db.Open()
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
@@ -108,7 +113,7 @@ func RunDaemon() error {
 
 	server := &http.Server{
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			handleWS(w, r, database)
+			handleWS(w, r, database, initialMtime)
 		}),
 	}
 
@@ -119,7 +124,7 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool { return true },
 }
 
-func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB) {
+func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB, initialMtime time.Time) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		slog.Error("ws upgrade error", "error", err)
@@ -165,7 +170,7 @@ func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB) {
 					slog.Warn("ws unmarshal request error", "error", err)
 					continue
 				}
-				handleRequest(ctx, req, outCh, database)
+				handleRequest(ctx, req, outCh, database, initialMtime)
 			case "history_event":
 				var event types.HistoryEvent
 				if err := json.Unmarshal(packet.Payload, &event); err != nil {
@@ -199,7 +204,29 @@ func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB) {
 	}
 }
 
-func handleRequest(ctx context.Context, req types.Request, outCh chan types.StreamPacket, database *db.DB) {
+func handleRequest(ctx context.Context, req types.Request, outCh chan types.StreamPacket, database *db.DB, initialMtime time.Time) {
+	// Check if binary changed (mtime) - if so, signal restart needed
+	if !initialMtime.IsZero() {
+		currentMtime, err := exec.GetBinaryMtime()
+		if err == nil && !currentMtime.Equal(initialMtime) {
+			slog.Warn("binary mtime mismatch, daemon will exec itself",
+				"initial_mtime", initialMtime,
+				"current_mtime", currentMtime)
+
+			shouldRestartDaemon = true
+
+			resp := types.Response{
+				Error: "DAEMON_RESTARTING",
+			}
+			payload, _ := json.Marshal(resp)
+			outCh <- types.StreamPacket{
+				Type:    "result",
+				Payload: payload,
+			}
+			return
+		}
+	}
+
 	// Check if binary changed - if so, signal restart needed
 	if req.BinaryHash != "" {
 		daemonHash, err := exec.GetBinaryHash()

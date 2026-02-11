@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 	"workspaced/pkg/api"
 	"workspaced/pkg/types"
 
@@ -127,4 +128,19 @@ func GetBinaryHash() (string, error) {
 	}
 
 	return fmt.Sprintf("%x", hash.Sum(nil)), nil
+}
+
+// GetBinaryMtime returns the modification time of the current executable.
+func GetBinaryMtime() (time.Time, error) {
+	exePath, err := os.Executable()
+	if err != nil {
+		return time.Time{}, fmt.Errorf("failed to get executable path: %w", err)
+	}
+
+	info, err := os.Stat(exePath)
+	if err != nil {
+		return time.Time{}, fmt.Errorf("failed to stat executable: %w", err)
+	}
+
+	return info.ModTime(), nil
 }
