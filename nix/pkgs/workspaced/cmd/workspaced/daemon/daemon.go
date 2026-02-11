@@ -144,10 +144,14 @@ func RunDaemon() error {
 					Label: "Apply",
 					Callback: func() {
 						slog.Info("tray: triggering apply")
-						// Trigger apply logic - for now we can just call the command via Cobra
 						_, err := ExecuteViaCobra(ctx, types.Request{Command: "apply", Args: []string{}}, os.Stdout, os.Stderr)
 						if err != nil {
 							slog.Error("tray apply failed", "error", err)
+						}
+						if HasBinaryChanged() {
+							slog.Info("binary changed after apply, restarting daemon")
+							shouldRestartDaemon = true
+							cancel()
 						}
 					},
 				},
