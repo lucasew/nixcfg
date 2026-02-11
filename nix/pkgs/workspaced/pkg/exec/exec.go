@@ -5,10 +5,12 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"io"
+	"log/slog"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 	"workspaced/pkg/api"
 	"workspaced/pkg/types"
 
@@ -73,8 +75,10 @@ func GetRPC(ctx context.Context) string {
 func Which(ctx context.Context, name string) (string, error) {
 	if filepath.IsAbs(name) {
 		if _, err := os.Stat(name); err == nil {
+			slog.Debug("which", "binary", name, "result", name)
 			return name, nil
 		}
+		slog.Debug("which", "binary", name, "result", api.ErrBinaryNotFound)
 		return "", fmt.Errorf("%w: %s", api.ErrBinaryNotFound, name)
 	}
 
@@ -91,9 +95,11 @@ func Which(ctx context.Context, name string) (string, error) {
 	for _, dir := range filepath.SplitList(path) {
 		fullPath := filepath.Join(dir, name)
 		if info, err := os.Stat(fullPath); err == nil && !info.IsDir() {
+			slog.Debug("which", "binary", name, "result", fullPath)
 			return fullPath, nil
 		}
 	}
+	slog.Debug("which", "binary", name, "result", api.ErrBinaryNotFound)
 	return "", fmt.Errorf("%w: %s", api.ErrBinaryNotFound, name)
 }
 
@@ -122,4 +128,19 @@ func GetBinaryHash() (string, error) {
 	}
 
 	return fmt.Sprintf("%x", hash.Sum(nil)), nil
+}
+
+// GetBinaryMtime returns the modification time of the current executable.
+func GetBinaryMtime() (time.Time, error) {
+	exePath, err := os.Executable()
+	if err != nil {
+		return time.Time{}, fmt.Errorf("failed to get executable path: %w", err)
+	}
+
+	info, err := os.Stat(exePath)
+	if err != nil {
+		return time.Time{}, fmt.Errorf("failed to stat executable: %w", err)
+	}
+
+	return info.ModTime(), nil
 }

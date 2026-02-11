@@ -1,0 +1,29 @@
+{{- /* Generic borderless browser launcher */ -}}
+{{- file "workspaced-webapp-borderless-browser.desktop" "0644" }}
+[Desktop Entry]
+Type=Application
+Name=Borderless Browser
+Icon=applications-internet
+Exec=workspaced dispatch webapp launch
+Categories=Network;WebBrowser;
+{{- endfile }}
+
+{{- /* Generate desktop file for each webapp */ -}}
+{{- range $name, $wa := .Webapps }}
+{{- $url := normalizeURL $wa.URL }}
+{{- $icon := default "applications-internet" $wa.Icon }}
+{{- if not $wa.Icon }}
+  {{- $icon = favicon $url }}
+{{- end }}
+{{- $desktopName := default (titleCase $name) $wa.DesktopName }}
+{{- $engine := $.Browser.Engine }}
+{{- file (printf "workspaced-webapp-%s.desktop" $name) "0644" }}
+[Desktop Entry]
+Type=Application
+Name={{ $desktopName }}
+Icon={{ $icon }}
+Exec={{ $engine }} --app={{ $url }}{{- if $wa.Profile }} --user-data-dir={{ userDataDir }}/webapp/profiles/{{ $wa.Profile }}{{- end }}{{- if isWayland }} --enable-features=UseOzonePlatform --ozone-platform=wayland{{- end }}{{- range $wa.ExtraFlags }} {{ . }}{{- end }}
+Categories=Network;WebBrowser;
+StartupWMClass={{ $name }}
+{{- endfile }}
+{{- end }}

@@ -25,7 +25,7 @@ func SetStatic(ctx context.Context, path string) error {
 		wallpaperDir := cfg.Desktop.Wallpaper.Dir
 		files, err := filepath.Glob(filepath.Join(wallpaperDir, "*"))
 		if err != nil {
-			return err
+			return fmt.Errorf("error when listing wallpaper candidates: %w", err)
 		}
 		if len(files) == 0 {
 			return fmt.Errorf("%w: wallpapers in %s", api.ErrNoTargetFound, wallpaperDir)
@@ -35,16 +35,19 @@ func SetStatic(ctx context.Context, path string) error {
 
 	logger.Info("setting wallpaper", "path", path)
 
+	// Stop existing wallpaper-change service if it exists
+	stopCmd := exec.RunCmd(ctx, "systemctl", "--user", "stop", "wallpaper-change.service")
+	_ = stopCmd.Run() // Ignore errors if service doesn't exist
+
 	rpc := exec.GetRPC(ctx)
 	if rpc == "swaymsg" {
 		swaybg, err := exec.Which(ctx, "swaybg")
 		if err != nil {
 			return err
 		}
-		cmd := exec.RunCmd(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", swaybg, "-i", path)
-		if err := cmd.Run(); err != nil {
-			logger.Error("failed to set wallpaper with swaybg", "error", err, "hint", "ensure swaybg is installed")
-			return err
+
+		if err = exec.RunCmd(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", swaybg, "-i", path).Run(); err != nil {
+			return fmt.Errorf("can't run swaybg in systemd unit: %w", err)
 		}
 		return nil
 	}
@@ -53,7 +56,11 @@ func SetStatic(ctx context.Context, path string) error {
 		return err
 	}
 	cmd := exec.RunCmd(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", feh, "--bg-fill", path)
-	return cmd.Run()
+	err = cmd.Run()
+	if err != nil {
+		return fmt.Errorf("can't run feh in systemd unit: %w", err)
+	}
+	return nil
 }
 
 func SetAnimated(ctx context.Context, path string) error {

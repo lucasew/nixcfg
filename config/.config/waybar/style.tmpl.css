@@ -15,15 +15,19 @@
 @define-color base0E #{{ .Palette.Base0E }};
 @define-color base0F #{{ .Palette.Base0F }};
 
+* {
+    font-family: "{{ .Fonts.SansSerif }}", "{{ .Fonts.Emoji }}";
+    font-weight: 300;
+    font-size: 13px;
+    min-height: 26px;
+}
+
 window {
-    font-family: 'Fira Code', sans-serif;
-    font-size: 1em;
-    font-weight: 400;
     transition: none;
     box-shadow: none;
     background-color: @base00;
     color: @base04;
-    min-height: 0;
+    min-height: 32px;
 }
 #tray, #mode, #battery, #cpu, #memory, #network, #pulseaudio, #idle_inhibitor, #backlight, #custom-storage, #custom-updates, #custom-weather, #custom-mail, #clock, #temperature, #window {
     background-color: @base00;

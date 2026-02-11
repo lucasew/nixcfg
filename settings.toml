@@ -56,10 +56,10 @@ waypipe = 9999
 default = "hx"
 
 [fonts]
-serif = "Fira Code Light"
-sans_serif = "Fira Code Light"
-monospace = "Fira Code Light"
-emoji = "Apple Color Emoji"
+serif = "Fira Code"
+sans_serif = "Fira Code"
+monospace = "Fira Code"
+emoji = "Noto Color Emoji"
 
 [desktop.wallpaper]
 dir = "~/.dotfiles/assets"
@@ -215,6 +215,10 @@ url = "jules.google.com"
 [webapp.claude-code-web]
 url = "claude.ai/code"
 
+[lazy_tools."github:zed-industries/zed"]
+version = "0.222.4"
+bins = ["zed"]
+
 [lazy_tools."bun"]
 version = "1.3.8"
 
@@ -315,23 +319,6 @@ global = true
 version = "2.86.0"
 global = true
 
-[desktop_scripts.nixcfg-quicksync]
-
-name = "nixcfg: Sincronização Rápida"
-description = "Quick sync dotfiles configuration"
-icon = "sync-synchronizing"
-exec = "workspaced dispatch backup sync"
-terminal = true
-categories = "System;Utility;"
-
-[desktop_scripts.nixcfg-backup]
-name = "nixcfg: Backup"
-description = "Backup dotfiles and important data"
-icon = "sync-synchronizing"
-exec = "workspaced dispatch backup run"
-terminal = true
-categories = "System;Utility;"
-
 [desktop]
 dark_mode = true
 
@@ -358,19 +345,19 @@ enabled = false
 tap-to-click = true
 
 [palette]
-base00 = "251530"
-base01 = "41407c"
-base02 = "706492"
-base03 = "ac97b6"
-base04 = "dfaca8"
-base05 = "fed5e5"
-base06 = "ffe8fc"
-base07 = "ffe7ea"
-base08 = "9f89ad"
-base09 = "b68581"
-base0A = "c37d87"
-base0B = "ac878f"
-base0C = "be8176"
-base0D = "ba828b"
-base0E = "9989b6"
-base0F = "be7e8c"
+base00 = "282c34"
+base01 = "353b45"
+base02 = "3e4451"
+base03 = "545862"
+base04 = "565c64"
+base05 = "abb2bf"
+base06 = "b6bdca"
+base07 = "c8ccd4"
+base08 = "e06c75"
+base09 = "d19a66"
+base0A = "e5c07b"
+base0B = "98c379"
+base0C = "56b6c2"
+base0D = "61afef"
+base0E = "c678dd"
+base0F = "be5046"

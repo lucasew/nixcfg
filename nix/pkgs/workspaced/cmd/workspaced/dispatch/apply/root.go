@@ -37,13 +37,8 @@ func GetCommand() *cobra.Command {
 
 			// 2. Collect desired state
 			providers := []apply.Provider{
-				&apply.ProfileProvider{},
 				&apply.DconfProvider{},
-				&apply.DesktopProvider{},
 				&apply.SymlinkProvider{},
-				&apply.TermuxProvider{},
-				&apply.WebappProvider{},
-				&apply.LazyShimProvider{},
 			}
 
 			desired := []apply.DesiredState{}
@@ -88,14 +83,14 @@ func GetCommand() *cobra.Command {
 				// Reload GTK theme if not on Termux
 				if !env.IsPhone() {
 					home, _ := os.UserHomeDir()
-					dummyTheme := filepath.Join(home, ".themes/dummy")
+					dummyTheme := home + "/.local/share/themes/dummy"
 					if _, err := os.Stat(dummyTheme); err == nil {
 						// Switch to dummy and back to force GTK reload
 						if err := exec.RunCmd(ctx, "dconf", "write", "/org/gnome/desktop/interface/gtk-theme", "'dummy'").Run(); err != nil {
-							logging.ReportError(ctx, err)
+							logger.Warn("failed to switch to dummy theme", "error", err)
 						}
 						if err := exec.RunCmd(ctx, "dconf", "write", "/org/gnome/desktop/interface/gtk-theme", "'base16'").Run(); err != nil {
-							logging.ReportError(ctx, err)
+							logger.Warn("failed to switch to base16 theme", "error", err)
 						}
 					}
 				}

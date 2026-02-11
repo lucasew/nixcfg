@@ -10,7 +10,6 @@ import (
 	"workspaced/cmd/workspaced/daemon"
 	"workspaced/cmd/workspaced/dispatch"
 	"workspaced/cmd/workspaced/dispatch/apply"
-	"workspaced/cmd/workspaced/dispatch/config"
 	"workspaced/cmd/workspaced/dispatch/history"
 	"workspaced/cmd/workspaced/dispatch/sync"
 	"workspaced/cmd/workspaced/is"
@@ -29,6 +28,9 @@ func NewRootCommand() *cobra.Command {
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			// Ensure logs go to stderr so stdout stays clean for piping/capturing
 			slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, nil)))
+			if os.Getenv("WORKSPACED_DEBUG") != "" {
+				slog.SetLogLoggerLevel(slog.LevelDebug)
+			}
 
 			path := os.Getenv("PATH")
 			systemPath := "/run/current-system/sw/bin"
@@ -46,7 +48,6 @@ func NewRootCommand() *cobra.Command {
 	// Top-level aliases for common commands
 	cmd.AddCommand(apply.GetCommand())
 	cmd.AddCommand(sync.GetCommand())
-	cmd.AddCommand(config.GetColorsCommand())
 
 	// History search alias
 	searchCmd := history.GetCommand()
@@ -71,7 +72,7 @@ func Execute() {
 		if errors.Is(err, dapi.ErrCanceled) {
 			os.Exit(0)
 		}
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		slog.Error("error", "err", err)
 		os.Exit(1)
 	}
 }

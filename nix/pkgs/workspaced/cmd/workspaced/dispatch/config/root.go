@@ -14,7 +14,6 @@ func GetCommand() *cobra.Command {
 		Short: "Manage configuration",
 	}
 
-	cmd.AddCommand(GetColorsCommand())
 	cmd.AddCommand(GetGetCommand())
 	cmd.AddCommand(GetDumpCommand())
 

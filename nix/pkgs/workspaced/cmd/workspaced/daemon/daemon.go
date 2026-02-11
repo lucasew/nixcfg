@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"syscall"
 	"time"
 
 	"io"
@@ -24,6 +25,27 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/spf13/cobra"
 )
+
+var (
+	shouldRestartDaemon bool
+	initialMtime        time.Time
+)
+
+func init() {
+	var err error
+	initialMtime, err = exec.GetBinaryMtime()
+	if err != nil {
+		slog.Warn("failed to get initial binary mtime", "error", err)
+	}
+}
+
+func HasBinaryChanged() bool {
+	if initialMtime.IsZero() {
+		return false
+	}
+	currentMtime, err := exec.GetBinaryMtime()
+	return err == nil && !currentMtime.Equal(initialMtime)
+}
 
 type StreamPacketWriter struct {
 	Out  chan<- types.StreamPacket
@@ -178,20 +200,57 @@ func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB) {
 
 	<-ctx.Done()
 	<-done
+
+	// If binary changed, exec ourselves to restart
+	if shouldRestartDaemon {
+		slog.Info("restarting daemon with new binary")
+		exePath, err := os.Executable()
+		if err != nil {
+			slog.Error("failed to get executable path", "error", err)
+			return
+		}
+
+		// Exec ourselves with daemon argument
+		err = syscall.Exec(exePath, []string{exePath, "daemon"}, os.Environ())
+		if err != nil {
+			slog.Error("failed to exec daemon", "error", err)
+		}
+	}
 }
 
 func handleRequest(ctx context.Context, req types.Request, outCh chan types.StreamPacket, database *db.DB) {
+	// Check if binary changed (mtime) - if so, signal restart needed
+	if HasBinaryChanged() {
+		slog.Warn("binary mtime mismatch, daemon will exec itself",
+			"initial_mtime", initialMtime)
+
+		shouldRestartDaemon = true
+
+		resp := types.Response{
+			Error: "DAEMON_RESTARTING",
+		}
+		payload, _ := json.Marshal(resp)
+		outCh <- types.StreamPacket{
+			Type:    "result",
+			Payload: payload,
+		}
+		return
+	}
+
 	// Check if binary changed - if so, signal restart needed
 	if req.BinaryHash != "" {
 		daemonHash, err := exec.GetBinaryHash()
 		if err == nil && daemonHash != req.BinaryHash {
-			slog.Warn("binary hash mismatch, requesting daemon restart",
+			slog.Warn("binary hash mismatch, daemon will exec itself",
 				"daemon_hash", daemonHash[:16],
 				"client_hash", req.BinaryHash[:16])
 
-			// Send special error that tells client to restart daemon and retry
+			// Signal daemon to restart after closing this connection
+			shouldRestartDaemon = true
+
+			// Send response and close connection
 			resp := types.Response{
-				Error: "DAEMON_RESTART_NEEDED",
+				Error: "DAEMON_RESTARTING",
 			}
 			payload, _ := json.Marshal(resp)
 			outCh <- types.StreamPacket{

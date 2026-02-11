@@ -4,7 +4,13 @@
     desktopManager.xterm.enable = false;
   };
 
-  environment.systemPackages = [ ];
+  environment.systemPackages = with pkgs; [
+    adw-gtk3  # Tema GTK3/GTK4 compatível com libadwaita
+    libsForQt5.qt5ct  # Qt5 configuration tool
+    libsForQt5.qtstyleplugin-kvantum  # Kvantum theme engine for Qt5
+    kdePackages.qt6ct  # Qt6 configuration tool
+    kdePackages.qtstyleplugin-kvantum  # Kvantum theme engine for Qt6
+  ];
 
   fonts.packages = with pkgs; [
     siji
