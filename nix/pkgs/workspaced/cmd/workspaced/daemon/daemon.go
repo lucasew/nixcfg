@@ -26,7 +26,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var shouldRestartDaemon bool
+var (
+	shouldRestartDaemon bool
+	initialMtime        time.Time
+)
+
+func init() {
+	var err error
+	initialMtime, err = exec.GetBinaryMtime()
+	if err != nil {
+		slog.Warn("failed to get initial binary mtime", "error", err)
+	}
+}
+
+func HasBinaryChanged() bool {
+	if initialMtime.IsZero() {
+		return false
+	}
+	currentMtime, err := exec.GetBinaryMtime()
+	return err == nil && !currentMtime.Equal(initialMtime)
+}
 
 type StreamPacketWriter struct {
 	Out  chan<- types.StreamPacket
@@ -200,6 +219,24 @@ func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB) {
 }
 
 func handleRequest(ctx context.Context, req types.Request, outCh chan types.StreamPacket, database *db.DB) {
+	// Check if binary changed (mtime) - if so, signal restart needed
+	if HasBinaryChanged() {
+		slog.Warn("binary mtime mismatch, daemon will exec itself",
+			"initial_mtime", initialMtime)
+
+		shouldRestartDaemon = true
+
+		resp := types.Response{
+			Error: "DAEMON_RESTARTING",
+		}
+		payload, _ := json.Marshal(resp)
+		outCh <- types.StreamPacket{
+			Type:    "result",
+			Payload: payload,
+		}
+		return
+	}
+
 	// Check if binary changed - if so, signal restart needed
 	if req.BinaryHash != "" {
 		daemonHash, err := exec.GetBinaryHash()
