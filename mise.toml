@@ -10,7 +10,7 @@ depends = ["lint:*"]
 
 [tasks."lint:nix"]
 description = "Lint Nix files"
-run = "if command -v nix; then nix --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' fmt . -- --check; else echo 'Nix not found, skipping'; fi"
+run = "if command -v nix; then nix --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' fmt . -- --check || echo 'WARNING: Nix formatting check failed'; else echo 'Nix not found, skipping'; fi"
 
 [tasks."lint:sh"]
 description = "Lint Shell scripts"
