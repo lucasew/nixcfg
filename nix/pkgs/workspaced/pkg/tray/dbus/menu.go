@@ -139,8 +139,6 @@ func (m *DBusMenu) GetLayout(parentId int32, recursionDepth int32, propertyNames
 	m.driver.mu.RLock()
 	defer m.driver.mu.RUnlock()
 
-	slog.Info("dbus menu GetLayout", "parentId", parentId, "recursionDepth", recursionDepth)
-
 	if parentId != 0 {
 		return m.revision, LayoutNode{ID: parentId}, nil
 	}
@@ -178,8 +176,6 @@ func (m *DBusMenu) GetGroupProperties(ids []int32, propertyNames []string) ([]st
 
 	m.driver.mu.RLock()
 	defer m.driver.mu.RUnlock()
-
-	slog.Info("dbus menu GetGroupProperties", "ids", ids)
 
 	res := []struct {
 		ID         int32
@@ -226,8 +222,6 @@ func (m *DBusMenu) GetProperty(id int32, name string) (dbus.Variant, *dbus.Error
 	m.driver.mu.RLock()
 	defer m.driver.mu.RUnlock()
 
-	slog.Info("dbus menu GetProperty", "id", id, "name", name)
-
 	if id == 0 {
 		if name == "children-display" {
 			return dbus.MakeVariant("submenu"), nil
@@ -254,7 +248,6 @@ func (m *DBusMenu) GetProperty(id int32, name string) (dbus.Variant, *dbus.Error
 }
 
 func (m *DBusMenu) Event(id int32, eventId string, data dbus.Variant, timestamp uint32) *dbus.Error {
-	slog.Info("!!! EVENT !!!", "id", id, "eventId", eventId, "data", data.Value(), "timestamp", timestamp)
 	m.handleEvent(id, eventId, data, timestamp)
 	return nil
 }
@@ -267,7 +260,6 @@ type EventGroupItem struct {
 }
 
 func (m *DBusMenu) EventGroup(events []EventGroupItem) ([]int32, *dbus.Error) {
-	slog.Info("!!! EVENT GROUP !!!", "len", len(events))
 	for _, e := range events {
 		m.handleEvent(e.ID, e.EventID, e.Data, e.Timestamp)
 	}
@@ -291,7 +283,6 @@ func (m *DBusMenu) handleEvent(id int32, eventId string, data dbus.Variant, time
 }
 
 func (m *DBusMenu) AboutToShow(id int32) (bool, *dbus.Error) {
-	slog.Info("dbus menu AboutToShow", "id", id)
 	return false, nil
 }
 

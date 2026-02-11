@@ -81,7 +81,7 @@ var Command = &cobra.Command{
 			}
 		}
 
-		if err := RunDaemon(); err != nil {
+		if err := RunDaemon(); err != nil && err != http.ErrServerClosed {
 			slog.Error("daemon failure", "error", err)
 			os.Exit(1)
 		}
@@ -140,6 +140,27 @@ func RunDaemon() error {
 			Title: "workspaced",
 			Icon:  icon,
 			Menu: []tray.MenuItem{
+				{
+					Label: "Apply",
+					Callback: func() {
+						slog.Info("tray: triggering apply")
+						// Trigger apply logic - for now we can just call the command via Cobra
+						_, err := ExecuteViaCobra(ctx, types.Request{Command: "apply", Args: []string{}}, os.Stdout, os.Stderr)
+						if err != nil {
+							slog.Error("tray apply failed", "error", err)
+						}
+					},
+				},
+				{
+					Label: "Sync",
+					Callback: func() {
+						slog.Info("tray: triggering sync")
+						_, err := ExecuteViaCobra(ctx, types.Request{Command: "sync", Args: []string{}}, os.Stdout, os.Stderr)
+						if err != nil {
+							slog.Error("tray sync failed", "error", err)
+						}
+					},
+				},
 				{
 					Label: "Exit",
 					Callback: func() {
