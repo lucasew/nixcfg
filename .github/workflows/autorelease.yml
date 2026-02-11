@@ -57,5 +57,8 @@ jobs:
           branch: "autorelease/codegen"
           delete-branch: true
 
-      - name: Run CI
-        run: mise run ci
+      - name: Run Lint
+        run: mise run lint
+
+      - name: Run Test
+        run: mise run test
