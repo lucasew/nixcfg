@@ -26,7 +26,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var shouldRestartDaemon bool
+var (
+	shouldRestartDaemon bool
+	initialMtime        time.Time
+)
+
+func init() {
+	var err error
+	initialMtime, err = exec.GetBinaryMtime()
+	if err != nil {
+		slog.Warn("failed to get initial binary mtime", "error", err)
+	}
+}
+
+func HasBinaryChanged() bool {
+	if initialMtime.IsZero() {
+		return false
+	}
+	currentMtime, err := exec.GetBinaryMtime()
+	return err == nil && !currentMtime.Equal(initialMtime)
+}
 
 type StreamPacketWriter struct {
 	Out  chan<- types.StreamPacket
@@ -82,11 +101,6 @@ func RunDaemon() error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	initialMtime, err := exec.GetBinaryMtime()
-	if err != nil {
-		slog.Warn("failed to get initial binary mtime", "error", err)
-	}
-
 	database, err := db.Open()
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
@@ -113,7 +127,7 @@ func RunDaemon() error {
 
 	server := &http.Server{
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			handleWS(w, r, database, initialMtime)
+			handleWS(w, r, database)
 		}),
 	}
 
@@ -124,7 +138,7 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool { return true },
 }
 
-func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB, initialMtime time.Time) {
+func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		slog.Error("ws upgrade error", "error", err)
@@ -170,7 +184,7 @@ func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB, initialMt
 					slog.Warn("ws unmarshal request error", "error", err)
 					continue
 				}
-				handleRequest(ctx, req, outCh, database, initialMtime)
+				handleRequest(ctx, req, outCh, database)
 			case "history_event":
 				var event types.HistoryEvent
 				if err := json.Unmarshal(packet.Payload, &event); err != nil {
@@ -204,27 +218,23 @@ func handleWS(w http.ResponseWriter, r *http.Request, database *db.DB, initialMt
 	}
 }
 
-func handleRequest(ctx context.Context, req types.Request, outCh chan types.StreamPacket, database *db.DB, initialMtime time.Time) {
+func handleRequest(ctx context.Context, req types.Request, outCh chan types.StreamPacket, database *db.DB) {
 	// Check if binary changed (mtime) - if so, signal restart needed
-	if !initialMtime.IsZero() {
-		currentMtime, err := exec.GetBinaryMtime()
-		if err == nil && !currentMtime.Equal(initialMtime) {
-			slog.Warn("binary mtime mismatch, daemon will exec itself",
-				"initial_mtime", initialMtime,
-				"current_mtime", currentMtime)
+	if HasBinaryChanged() {
+		slog.Warn("binary mtime mismatch, daemon will exec itself",
+			"initial_mtime", initialMtime)
 
-			shouldRestartDaemon = true
+		shouldRestartDaemon = true
 
-			resp := types.Response{
-				Error: "DAEMON_RESTARTING",
-			}
-			payload, _ := json.Marshal(resp)
-			outCh <- types.StreamPacket{
-				Type:    "result",
-				Payload: payload,
-			}
-			return
+		resp := types.Response{
+			Error: "DAEMON_RESTARTING",
 		}
+		payload, _ := json.Marshal(resp)
+		outCh <- types.StreamPacket{
+			Type:    "result",
+			Payload: payload,
+		}
+		return
 	}
 
 	// Check if binary changed - if so, signal restart needed

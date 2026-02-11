@@ -3,6 +3,6 @@
 
 # Switch to dummy and back to force GTK reload
 if [ -L ~/.local/share/themes/dummy ]; then
-    gsettings set org.gnome.desktop.interface gtk-theme dummy 2>/dev/null
-    gsettings set org.gnome.desktop.interface gtk-theme base16 2>/dev/null
+	gsettings set org.gnome.desktop.interface gtk-theme dummy 2>/dev/null
+	gsettings set org.gnome.desktop.interface gtk-theme base16 2>/dev/null
 fi
