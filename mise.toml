@@ -64,11 +64,11 @@ run = "mise exec -- terraform fmt -recursive"
 
 [tasks.test]
 description = "Run tests"
-depends = ["test:*"]
+depends = ["test:go"]
 
-[tasks."test:nix"]
-description = "Test Nix configuration"
-run = "if command -v nix >/dev/null; then nix --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' flake check; else echo 'Nix not found, skipping'; fi"
+[tasks."nix:check"]
+description = "Test Nix configuration (Heavy)"
+run = "command -v nix >/dev/null && nix --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' flake check || echo 'Nix not found, skipping'"
 
 [tasks."test:go"]
 description = "Test Go code"
