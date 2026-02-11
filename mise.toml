@@ -6,7 +6,7 @@ ruff = "0.15.0"
 
 [tasks.lint]
 description = "Run all linters"
-depends = ["lint:*"]
+depends = ["lint:sh", "lint:py", "lint:go", "lint:tf"]
 
 [tasks."lint:nix"]
 description = "Lint Nix files"
