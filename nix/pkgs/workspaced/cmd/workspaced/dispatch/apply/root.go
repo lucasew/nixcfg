@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 	"workspaced/pkg/apply"
-	"workspaced/pkg/nix"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/nix"
 
 	"github.com/spf13/cobra"
 )
