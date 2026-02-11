@@ -3,7 +3,6 @@ package apply
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"workspaced/pkg/apply"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"

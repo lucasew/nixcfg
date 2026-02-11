@@ -13,12 +13,17 @@ import (
 	"syscall"
 	"time"
 
+	"image"
+	_ "image/png"
 	"io"
 	"workspaced/cmd/workspaced/dispatch"
 	"workspaced/pkg/db"
-	"workspaced/pkg/media"
 	"workspaced/pkg/exec"
+	"workspaced/pkg/icons"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/media"
+	"workspaced/pkg/tray"
+	_ "workspaced/pkg/tray/dbus"
 	"workspaced/pkg/types"
 
 	"github.com/coreos/go-systemd/v22/activation"
@@ -109,6 +114,43 @@ func RunDaemon() error {
 
 	go media.Watch(ctx)
 
+	// Initialize tray
+	go func() {
+		t, err := tray.GetDefault()
+		if err != nil {
+			slog.Debug("no tray driver found, skipping", "error", err)
+			return
+		}
+
+		iconPath, err := icons.GetIconPath(ctx, "https://github.com")
+		var icon image.Image
+		if err == nil {
+			f, err := os.Open(iconPath)
+			if err == nil {
+				defer f.Close()
+				icon, _, _ = image.Decode(f)
+			}
+		}
+
+		t.SetState(tray.State{
+			Title: "workspaced",
+			Icon:  icon,
+			Menu: []tray.MenuItem{
+				{
+					Label: "Exit",
+					Callback: func() {
+						cancel()
+					},
+				},
+			},
+		})
+
+		slog.Info("starting tray driver")
+		if err := t.Run(ctx); err != nil {
+			slog.Error("tray driver failed", "error", err)
+		}
+	}()
+
 	listeners, err := activation.Listeners()
 	if err == nil && len(listeners) > 0 {
 		listener = listeners[0]
@@ -130,6 +172,12 @@ func RunDaemon() error {
 			handleWS(w, r, database)
 		}),
 	}
+
+	go func() {
+		<-ctx.Done()
+		slog.Info("context cancelled, shutting down server")
+		_ = server.Close()
+	}()
 
 	return server.Serve(listener)
 }

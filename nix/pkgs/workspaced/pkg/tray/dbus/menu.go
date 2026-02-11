@@ -163,13 +163,67 @@ func (m *DBusMenu) GetGroupProperties(ids []int32, propertyNames []string) ([]st
 	ID         int32
 	Properties map[string]dbus.Variant
 }, *dbus.Error) {
-	return []struct {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	m.driver.mu.RLock()
+	defer m.driver.mu.RUnlock()
+
+	res := []struct {
 		ID         int32
 		Properties map[string]dbus.Variant
-	}{}, nil
+	}{}
+
+	for _, id := range ids {
+		if id == 0 {
+			res = append(res, struct {
+				ID         int32
+				Properties map[string]dbus.Variant
+			}{
+				ID:         0,
+				Properties: map[string]dbus.Variant{"children-display": dbus.MakeVariant("submenu")},
+			})
+			continue
+		}
+
+		idx := int(id) - 1
+		if idx >= 0 && idx < len(m.driver.state.Menu) {
+			item := m.driver.state.Menu[idx]
+			res = append(res, struct {
+				ID         int32
+				Properties map[string]dbus.Variant
+			}{
+				ID:         id,
+				Properties: map[string]dbus.Variant{"label": dbus.MakeVariant(item.Label)},
+			})
+		}
+	}
+
+	return res, nil
 }
 
 func (m *DBusMenu) GetProperty(id int32, name string) (dbus.Variant, *dbus.Error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	m.driver.mu.RLock()
+	defer m.driver.mu.RUnlock()
+
+	if id == 0 {
+		if name == "children-display" {
+			return dbus.MakeVariant("submenu"), nil
+		}
+		return dbus.MakeVariant(""), nil
+	}
+
+	idx := int(id) - 1
+	if idx >= 0 && idx < len(m.driver.state.Menu) {
+		item := m.driver.state.Menu[idx]
+		if name == "label" {
+			return dbus.MakeVariant(item.Label), nil
+		}
+	}
+
 	return dbus.MakeVariant(""), nil
 }
 
