@@ -10,12 +10,13 @@ depends = ["lint:*"]
 
 [tasks."lint:nix"]
 description = "Lint Nix files"
-run = "if command -v nix; then nix --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' fmt . -- --check || echo 'WARNING: Nix formatting check failed'; else echo 'Nix not found, skipping'; fi"
+run = "command -v nix >/dev/null && nix fmt . -- --check || echo 'Nix not found, skipping'"
 
 [tasks."lint:sh"]
 description = "Lint Shell scripts"
 run = """
-    mise exec -- bash -c 'shfmt -d . && shfmt -f=0 . | xargs -0 -r shellcheck'
+    mise exec shfmt shellcheck -- shfmt -d .
+    mise exec shfmt shellcheck -- shfmt -f=0 . | xargs -0 -r mise exec shellcheck -- shellcheck
 """
 
 [tasks."lint:py"]
@@ -38,7 +39,7 @@ depends = ["fmt:*"]
 
 [tasks."fmt:nix"]
 description = "Format Nix files"
-run = "if command -v nix; then nix --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' fmt .; else echo 'Nix not found, skipping'; fi"
+run = "command -v nix >/dev/null && nix fmt . || echo 'Nix not found, skipping'"
 
 [tasks."fmt:sh"]
 description = "Format Shell scripts"
@@ -67,7 +68,7 @@ depends = ["test:*"]
 
 [tasks."test:nix"]
 description = "Test Nix configuration"
-run = "if command -v nix; then nix --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' flake check; else echo 'Nix not found, skipping'; fi"
+run = "command -v nix >/dev/null && nix flake check || echo 'Nix not found, skipping'"
 
 [tasks."test:go"]
 description = "Test Go code"
