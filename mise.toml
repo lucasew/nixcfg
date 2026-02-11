@@ -76,8 +76,9 @@ dir = "nix/pkgs/workspaced"
 run = "mise exec -- go test -p 2 ./..."
 
 [tasks.codegen]
-description = "Generate code"
+description = "Generate code and format"
 depends = ["codegen:*"]
+run = "mise run fmt"
 
 [tasks."codegen:go"]
 description = "Tidy Go modules"
