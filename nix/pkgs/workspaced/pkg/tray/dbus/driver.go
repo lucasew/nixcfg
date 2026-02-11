@@ -3,6 +3,7 @@ package dbus
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 	"sync"
 
@@ -68,7 +69,7 @@ func (d *Driver) Run(ctx context.Context) error {
 		return fmt.Errorf("failed to export DBusMenu: %w", err)
 	}
 
-	// Request name
+	// Register name
 	serviceName := fmt.Sprintf("org.kde.StatusNotifierItem-%d-1", os.Getpid())
 	reply, err := d.conn.RequestName(serviceName, dbus.NameFlagDoNotQueue)
 	if err != nil {
@@ -76,6 +77,11 @@ func (d *Driver) Run(ctx context.Context) error {
 	}
 	if reply != dbus.RequestNameReplyPrimaryOwner {
 		return fmt.Errorf("name already taken")
+	}
+
+	// Emit NewMenu signal to let watcher know we have a menu
+	if err := d.conn.Emit("/StatusNotifierItem", "org.kde.StatusNotifierItem.NewMenu"); err != nil {
+		slog.Warn("failed to emit NewMenu signal", "error", err)
 	}
 
 	// Register with watcher

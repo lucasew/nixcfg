@@ -2,6 +2,7 @@ package dbus
 
 import (
 	"context"
+	"log/slog"
 	"sync"
 
 	"github.com/godbus/dbus/v5"
@@ -135,23 +136,29 @@ func (m *DBusMenu) GetLayout(parentId int32, recursionDepth int32, propertyNames
 	m.driver.mu.RLock()
 	defer m.driver.mu.RUnlock()
 
+	slog.Debug("dbus menu GetLayout", "parentId", parentId)
+
+	if parentId != 0 {
+		// We only support a flat menu for now
+		return m.revision, LayoutNode{ID: parentId}, nil
+	}
+
 	root := LayoutNode{
 		ID:         0,
 		Properties: map[string]dbus.Variant{"children-display": dbus.MakeVariant("submenu")},
 		Children:   []dbus.Variant{},
 	}
 
-	// Simple recursion for now, assuming MenuItem structure matches
-	// But tray.MenuItem is different from LayoutNode.
-	// Also need ID generation or mapping if using arbitrary structure.
-	// For now, simple list.
 	for i, item := range m.driver.state.Menu {
-		// Use index + 1 as ID for simplicity in this MVP
 		id := int32(i + 1)
 		child := LayoutNode{
-			ID:         id,
-			Properties: map[string]dbus.Variant{"label": dbus.MakeVariant(item.Label)},
-			Children:   []dbus.Variant{},
+			ID: id,
+			Properties: map[string]dbus.Variant{
+				"label":   dbus.MakeVariant(item.Label),
+				"enabled": dbus.MakeVariant(true),
+				"visible": dbus.MakeVariant(true),
+			},
+			Children: []dbus.Variant{},
 		}
 		root.Children = append(root.Children, dbus.MakeVariant(child))
 	}
@@ -193,8 +200,13 @@ func (m *DBusMenu) GetGroupProperties(ids []int32, propertyNames []string) ([]st
 				ID         int32
 				Properties map[string]dbus.Variant
 			}{
-				ID:         id,
-				Properties: map[string]dbus.Variant{"label": dbus.MakeVariant(item.Label)},
+				ID: id,
+				Properties: map[string]dbus.Variant{
+					"label":   dbus.MakeVariant(item.Label),
+					"enabled": dbus.MakeVariant(true),
+					"visible": dbus.MakeVariant(true),
+					"type":    dbus.MakeVariant("standard"),
+				},
 			})
 		}
 	}
@@ -228,6 +240,7 @@ func (m *DBusMenu) GetProperty(id int32, name string) (dbus.Variant, *dbus.Error
 }
 
 func (m *DBusMenu) Event(id int32, eventId string, data dbus.Variant, timestamp uint32) *dbus.Error {
+	slog.Info("dbus menu event", "id", id, "eventId", eventId)
 	if eventId == "clicked" {
 		m.driver.mu.RLock()
 		defer m.driver.mu.RUnlock()
@@ -245,7 +258,7 @@ func (m *DBusMenu) Event(id int32, eventId string, data dbus.Variant, timestamp 
 }
 
 func (m *DBusMenu) AboutToShow(id int32) (bool, *dbus.Error) {
-	return false, nil
+	return true, nil
 }
 
 func (m *DBusMenu) EmitLayoutUpdated() {

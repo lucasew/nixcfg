@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"image"
+	"log/slog"
 
 	"github.com/godbus/dbus/v5"
 	"github.com/godbus/dbus/v5/introspect"
@@ -53,13 +54,21 @@ func imageToSNIPixmap(img image.Image) ([]SNIPixmap, error) {
 			// binary.Write to bytes.Buffer strictly returns nil error unless OOM, but we must check.
 			var err error
 			err = binary.Write(data, binary.BigEndian, uint8(a>>8))
-			if err != nil { return nil, fmt.Errorf("failed to write pixmap data: %w", err) }
+			if err != nil {
+				return nil, fmt.Errorf("failed to write pixmap data: %w", err)
+			}
 			err = binary.Write(data, binary.BigEndian, uint8(r>>8))
-			if err != nil { return nil, fmt.Errorf("failed to write pixmap data: %w", err) }
+			if err != nil {
+				return nil, fmt.Errorf("failed to write pixmap data: %w", err)
+			}
 			err = binary.Write(data, binary.BigEndian, uint8(g>>8))
-			if err != nil { return nil, fmt.Errorf("failed to write pixmap data: %w", err) }
+			if err != nil {
+				return nil, fmt.Errorf("failed to write pixmap data: %w", err)
+			}
 			err = binary.Write(data, binary.BigEndian, uint8(b>>8))
-			if err != nil { return nil, fmt.Errorf("failed to write pixmap data: %w", err) }
+			if err != nil {
+				return nil, fmt.Errorf("failed to write pixmap data: %w", err)
+			}
 		}
 	}
 
@@ -107,6 +116,15 @@ func (s *StatusNotifierItem) Export(conn *dbus.Conn, path dbus.ObjectPath) error
 					{Name: "AttentionIconName", Type: "s", Access: "read"},
 					{Name: "AttentionIconPixmap", Type: "a(iiay)", Access: "read"},
 					{Name: "ToolTip", Type: "(sa(iiay)ss)", Access: "read"},
+				},
+				Signals: []introspect.Signal{
+					{Name: "NewTitle"},
+					{Name: "NewIcon"},
+					{Name: "NewAttentionIcon"},
+					{Name: "NewOverlayIcon"},
+					{Name: "NewToolTip"},
+					{Name: "NewStatus", Args: []introspect.Arg{{Name: "status", Type: "s"}}},
+					{Name: "NewMenu"},
 				},
 			},
 		},
@@ -162,14 +180,17 @@ func (s *StatusNotifierItem) Export(conn *dbus.Conn, path dbus.ObjectPath) error
 }
 
 func (s *StatusNotifierItem) ContextMenu(x, y int32) *dbus.Error {
+	slog.Info("sni context menu", "x", x, "y", y)
 	return nil
 }
 
 func (s *StatusNotifierItem) Activate(x, y int32) *dbus.Error {
+	slog.Info("sni activate", "x", x, "y", y)
 	return nil
 }
 
 func (s *StatusNotifierItem) SecondaryActivate(x, y int32) *dbus.Error {
+	slog.Info("sni secondary activate", "x", x, "y", y)
 	return nil
 }
 
