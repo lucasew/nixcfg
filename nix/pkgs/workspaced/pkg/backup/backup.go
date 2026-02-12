@@ -9,12 +9,12 @@ import (
 	"strings"
 	"time"
 	"workspaced/pkg/config"
-	"workspaced/pkg/git"
-	"workspaced/pkg/notification"
-	"workspaced/pkg/sudo"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
+	"workspaced/pkg/git"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/notification"
+	"workspaced/pkg/sudo"
 	"workspaced/pkg/types"
 )
 
@@ -45,7 +45,7 @@ func RunFullBackup(ctx context.Context) error {
 		currentStep++
 		n.Message = msg
 		n.Progress = float64(currentStep) / float64(totalSteps)
-		_ = n.Notify(ctx)
+		logging.ReportError(ctx, notification.Notify(ctx, n))
 	}
 
 	// Always sync git repos first
@@ -77,7 +77,7 @@ func RunFullBackup(ctx context.Context) error {
 	n.Title = "Backup finalizado"
 	n.Message = status
 	n.Progress = 1.0
-	_ = n.Notify(ctx)
+	logging.ReportError(ctx, notification.Notify(ctx, n))
 
 	logger.Info("full backup completed")
 	return nil
@@ -113,7 +113,7 @@ func Rsync(ctx context.Context, src, dst string, n *notification.Notification, e
 		if time.Since(lastUpdate) > time.Second {
 			if n != nil {
 				n.Message = line
-				_ = n.Notify(ctx)
+				logging.ReportError(ctx, notification.Notify(ctx, n))
 			}
 			lastUpdate = time.Now()
 		}

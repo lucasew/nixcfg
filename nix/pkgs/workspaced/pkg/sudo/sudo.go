@@ -8,8 +8,8 @@ import (
 	"os"
 	"path/filepath"
 	"time"
-	"workspaced/pkg/notification"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/notification"
 	"workspaced/pkg/types"
 )
 
@@ -70,9 +70,7 @@ func Enqueue(ctx context.Context, cmd *types.SudoCommand) error {
 		Message: fmt.Sprintf("Command '%s' (slug: %s) pending approval.", cmd.Command, cmd.Slug),
 		Icon:    "dialog-password",
 	}
-	if err := n.Notify(ctx); err != nil {
-		logging.ReportError(ctx, err)
-	}
+	logging.ReportError(ctx, notification.Notify(ctx, n))
 
 	return nil
 }

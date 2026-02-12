@@ -6,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 	"workspaced/pkg/config"
-	"workspaced/pkg/notification"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/notification"
 )
 
 func QuickSync(ctx context.Context) error {
@@ -53,7 +53,7 @@ func QuickSync(ctx context.Context) error {
 		repoPath := filepath.Join(repoDir, repoName)
 		n.Message = fmt.Sprintf("Sincronizando %s...", repoName)
 		n.Progress = float64(i) / float64(total)
-		_ = n.Notify(ctx)
+		logging.ReportError(ctx, notification.Notify(ctx, n))
 
 		logger.Info("syncing repository", "repo", repoName)
 		if err := SyncRepo(ctx, repoPath); err != nil {
@@ -64,13 +64,13 @@ func QuickSync(ctx context.Context) error {
 				Urgency: "critical",
 				Icon:    "dialog-warning",
 			}
-			_ = errN.Notify(ctx)
+			logging.ReportError(ctx, notification.Notify(ctx, errN))
 		}
 	}
 
 	n.Message = "Sincronização concluída."
 	n.Progress = 1.0
-	_ = n.Notify(ctx)
+	logging.ReportError(ctx, notification.Notify(ctx, n))
 
 	return nil
 }

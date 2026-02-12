@@ -25,7 +25,7 @@ func GetCommand() *cobra.Command {
 				Urgency:  urgency,
 				Progress: progress,
 			}
-			return n.Notify(ctx)
+			return notification.Notify(ctx, n)
 		},
 	}
 

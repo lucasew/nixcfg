@@ -22,7 +22,7 @@ func (p *Provider) Name() string { return "Termux" }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	if os.Getenv("TERMUX_VERSION") == "" && !exec.IsBinaryAvailable(ctx, "termux-clipboard-set") {
-		return fmt.Errorf("termux not detected")
+		return fmt.Errorf("%w: termux not detected", driver.ErrIncompatible)
 	}
 	return nil
 }
