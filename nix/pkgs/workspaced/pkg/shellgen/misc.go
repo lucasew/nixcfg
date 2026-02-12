@@ -19,7 +19,7 @@ func GenerateFlags() (string, error) {
 	root, _ := env.GetDotfilesRoot()
 	return fmt.Sprintf(`# Flag to indicate workspaced shell init is being used
 export WORKSPACED_SHELL_INIT=1
-export SD_ROOT=%q
+export SD_ROOT=%q/bin
 export DOTFILES=%q
 export NIXCFG_ROOT_PATH=%q
 `, root, root, root), nil
