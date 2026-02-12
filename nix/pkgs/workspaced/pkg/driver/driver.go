@@ -52,9 +52,14 @@ func Register[T any](provider DriverProvider[T]) {
 	Drivers[t][name] = provider
 
 	doctorList = append(doctorList, doctorEntry{
-		InterfaceName: t.String(),
-		DriverName:    provider.Name(),
-		Check:         provider.CheckCompatibility,
+		InterfaceName: func() string {
+			if t.PkgPath() != "" {
+				return t.PkgPath() + "." + t.Name()
+			}
+			return t.String()
+		}(),
+		DriverName: provider.Name(),
+		Check:      provider.CheckCompatibility,
 	})
 }
 
