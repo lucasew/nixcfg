@@ -8,14 +8,28 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus/v5"
+	"workspaced/pkg/driver"
 	"workspaced/pkg/logging"
 	"workspaced/pkg/tray"
 )
 
 func init() {
-	tray.Register("dbus", func() tray.Driver {
-		return NewDriver()
-	})
+	driver.Register[tray.Driver](&Provider{})
+}
+
+type Provider struct{}
+
+func (p *Provider) Name() string { return "DBus" }
+
+func (p *Provider) CheckCompatibility(ctx context.Context) error {
+	if os.Getenv("DBUS_SESSION_BUS_ADDRESS") == "" {
+		return fmt.Errorf("DBUS_SESSION_BUS_ADDRESS not set")
+	}
+	return nil
+}
+
+func (p *Provider) New(ctx context.Context) (tray.Driver, error) {
+	return NewDriver(), nil
 }
 
 type Driver struct {

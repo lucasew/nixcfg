@@ -6,9 +6,30 @@ import (
 	"fmt"
 	"strconv"
 	dapi "workspaced/pkg/api"
-	"workspaced/pkg/wm/api"
+	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
+	"workspaced/pkg/wm/api"
 )
+
+func init() {
+	driver.Register[api.Driver](&Provider{})
+}
+
+type Provider struct{}
+
+func (p *Provider) Name() string { return "Hyprland" }
+
+func (p *Provider) CheckCompatibility(ctx context.Context) error {
+	rpc := exec.GetRPC(ctx)
+	if rpc != "hyprctl" {
+		return driver.ErrIncompatible
+	}
+	return nil
+}
+
+func (p *Provider) New(ctx context.Context) (api.Driver, error) {
+	return &Driver{}, nil
+}
 
 type Driver struct{}
 

@@ -9,12 +9,11 @@ import (
 	"strings"
 	"time"
 
-	"workspaced/pkg/media"
-	"workspaced/pkg/wm/api"
-	"workspaced/pkg/wm/hyprland"
-	"workspaced/pkg/wm/i3ipc"
+	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/media"
+	"workspaced/pkg/wm/api"
 )
 
 // Re-export types for backward compatibility within the wm package if needed,
@@ -26,23 +25,9 @@ type Output = api.Output
 type Node = api.Node
 type Driver = api.Driver
 
-// GetDriver returns the appropriate WM driver for the current environment.
-func GetDriver(ctx context.Context) (api.Driver, error) {
-	rpc := exec.GetRPC(ctx)
-	switch rpc {
-	case "hyprctl":
-		return &hyprland.Driver{}, nil
-	case "swaymsg":
-		return &i3ipc.Driver{Binary: "swaymsg"}, nil
-	case "i3-msg":
-		return &i3ipc.Driver{Binary: "i3-msg"}, nil
-	}
-	return nil, fmt.Errorf("%w for RPC: %s", api.ErrDriverNotFound, rpc)
-}
-
 // SwitchToWorkspace switches to the specified workspace number.
 func SwitchToWorkspace(ctx context.Context, num int, move bool) error {
-	d, err := GetDriver(ctx)
+	d, err := driver.Get[api.Driver](ctx)
 	if err != nil {
 		return err
 	}
@@ -51,7 +36,7 @@ func SwitchToWorkspace(ctx context.Context, num int, move bool) error {
 
 // ToggleScratchpad toggles the visibility of the scratchpad container.
 func ToggleScratchpad(ctx context.Context) error {
-	d, err := GetDriver(ctx)
+	d, err := driver.Get[api.Driver](ctx)
 	if err != nil {
 		return err
 	}
@@ -98,7 +83,7 @@ func NextWorkspace(ctx context.Context, move bool) error {
 
 // RotateWorkspaces rotates the visible workspaces across all connected outputs.
 func RotateWorkspaces(ctx context.Context) error {
-	d, err := GetDriver(ctx)
+	d, err := driver.Get[api.Driver](ctx)
 	if err != nil {
 		return err
 	}
@@ -187,7 +172,7 @@ func parseWS(ws string) int {
 
 // GetFocusedOutput returns the name and geometry of the currently focused output.
 func GetFocusedOutput(ctx context.Context) (string, *api.Rect, error) {
-	d, err := GetDriver(ctx)
+	d, err := driver.Get[api.Driver](ctx)
 	if err != nil {
 		return "", nil, err
 	}
@@ -196,7 +181,7 @@ func GetFocusedOutput(ctx context.Context) (string, *api.Rect, error) {
 
 // GetFocusedWindowRect returns the geometry of the currently focused window.
 func GetFocusedWindowRect(ctx context.Context) (*api.Rect, error) {
-	d, err := GetDriver(ctx)
+	d, err := driver.Get[api.Driver](ctx)
 	if err != nil {
 		return nil, err
 	}

@@ -1,16 +1,38 @@
-package screen
+package sway
 
 import (
 	"context"
 	"strings"
 	"workspaced/pkg/api"
+	"workspaced/pkg/driver"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
+	"workspaced/pkg/screen"
 )
 
-type SwayDriver struct{}
+func init() {
+	driver.Register[screen.Driver](&Provider{})
+}
 
-func (d *SwayDriver) SetDPMS(ctx context.Context, on bool) error {
+type Provider struct{}
+
+func (p *Provider) Name() string { return "Wayland (sway)" }
+
+func (p *Provider) CheckCompatibility(ctx context.Context) error {
+	rpc := exec.GetRPC(ctx)
+	if rpc != "swaymsg" {
+		return driver.ErrIncompatible
+	}
+	return nil
+}
+
+func (p *Provider) New(ctx context.Context) (screen.Driver, error) {
+	return &Driver{}, nil
+}
+
+type Driver struct{}
+
+func (d *Driver) SetDPMS(ctx context.Context, on bool) error {
 	state := "off"
 	if on {
 		state = "on"
@@ -18,7 +40,7 @@ func (d *SwayDriver) SetDPMS(ctx context.Context, on bool) error {
 	return exec.RunCmd(ctx, "swaymsg", "output * dpms "+state).Run()
 }
 
-func (d *SwayDriver) IsDPMSOn(ctx context.Context) (bool, error) {
+func (d *Driver) IsDPMSOn(ctx context.Context) (bool, error) {
 	out, err := exec.RunCmd(ctx, "swaymsg", "-t", "get_outputs").Output()
 	if err != nil {
 		return false, err
@@ -26,7 +48,7 @@ func (d *SwayDriver) IsDPMSOn(ctx context.Context) (bool, error) {
 	return strings.Contains(string(out), `"dpms": true`), nil
 }
 
-func (d *SwayDriver) Reset(ctx context.Context) error {
+func (d *Driver) Reset(ctx context.Context) error {
 	if env.IsRiverwood() {
 		// eDP-1 (notebook) on the LEFT (0,0), HDMI-A-1 on the RIGHT
 		if err := exec.RunCmd(ctx, "swaymsg", "output", "eDP-1", "mode", "1366x768", "pos", "0", "0").Run(); err != nil {

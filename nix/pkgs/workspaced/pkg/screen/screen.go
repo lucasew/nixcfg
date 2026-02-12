@@ -2,41 +2,10 @@ package screen
 
 import (
 	"context"
-	"os"
-	"strings"
+	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/types"
 )
-
-func GetDriver(ctx context.Context) (Driver, error) {
-	rpc := exec.GetRPC(ctx)
-	if rpc == "swaymsg" {
-		return &SwayDriver{}, nil
-	}
-
-	display := os.Getenv("DISPLAY")
-	if env, ok := ctx.Value(types.EnvKey).([]string); ok {
-		for _, e := range env {
-			if strings.HasPrefix(e, "DISPLAY=") {
-				display = strings.TrimPrefix(e, "DISPLAY=")
-				break
-			}
-		}
-	}
-
-	if display != "" {
-		return &X11Driver{}, nil
-	}
-
-	// Provide more helpful error message
-	logger := logging.GetLogger(ctx)
-	logger.Error("screen driver not found",
-		"wayland_display", os.Getenv("WAYLAND_DISPLAY"),
-		"display", display,
-		"hint", "ensure WAYLAND_DISPLAY or DISPLAY environment variable is set")
-	return nil, ErrDriverNotFound
-}
 
 func Lock(ctx context.Context) error {
 	logging.GetLogger(ctx).Info("locking session")
@@ -44,7 +13,7 @@ func Lock(ctx context.Context) error {
 }
 
 func SetDPMS(ctx context.Context, on bool) error {
-	d, err := GetDriver(ctx)
+	d, err := driver.Get[Driver](ctx)
 	if err != nil {
 		return err
 	}
@@ -53,7 +22,7 @@ func SetDPMS(ctx context.Context, on bool) error {
 }
 
 func ToggleDPMS(ctx context.Context) error {
-	d, err := GetDriver(ctx)
+	d, err := driver.Get[Driver](ctx)
 	if err != nil {
 		return err
 	}
@@ -65,7 +34,7 @@ func ToggleDPMS(ctx context.Context) error {
 }
 
 func IsDPMSOn(ctx context.Context) (bool, error) {
-	d, err := GetDriver(ctx)
+	d, err := driver.Get[Driver](ctx)
 	if err != nil {
 		return false, err
 	}
@@ -73,7 +42,7 @@ func IsDPMSOn(ctx context.Context) (bool, error) {
 }
 
 func Reset(ctx context.Context) error {
-	d, err := GetDriver(ctx)
+	d, err := driver.Get[Driver](ctx)
 	if err != nil {
 		return err
 	}

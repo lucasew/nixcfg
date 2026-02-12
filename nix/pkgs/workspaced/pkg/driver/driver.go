@@ -20,6 +20,7 @@ type DriverProvider[T any] interface {
 }
 
 var Drivers = map[reflect.Type]map[string]any{}
+var LoadedDrivers = map[reflect.Type]any{}
 
 func Register[T any](provider DriverProvider[T]) {
 	var t reflect.Type = reflect.TypeFor[T]()
@@ -55,12 +56,20 @@ func Get[T any](ctx context.Context) (T, error) {
 	if t.Kind() != reflect.Interface {
 		return zero, ErrNotInterface
 	}
+	if driver, ok := LoadedDrivers[t]; ok {
+		return driver.(T), nil
+	}
 	if providers, ok := Drivers[t]; ok {
 		if len(providers) == 0 {
 			return zero, ErrNotFound
 		}
 		for _, provider := range providers {
 			d := provider.(DriverProvider[T])
+			driver, err := d.New(ctx)
+			if errors.Is(err, ErrIncompatible) {
+				continue
+			}
+			LoadedDrivers[t] = driver
 			return d.New(ctx)
 		}
 	}

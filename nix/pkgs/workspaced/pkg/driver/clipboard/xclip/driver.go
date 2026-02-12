@@ -8,8 +8,30 @@ import (
 	"io"
 	"strings"
 	dapi "workspaced/pkg/api"
+	"workspaced/pkg/clipboard/api"
+	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
 )
+
+func init() {
+	driver.Register[api.Driver](&Provider{})
+}
+
+type Provider struct{}
+
+func (p *Provider) Name() string { return "X11 (xclip)" }
+
+func (p *Provider) CheckCompatibility(ctx context.Context) error {
+	if !exec.IsBinaryAvailable(ctx, "xclip") {
+		return fmt.Errorf("xclip binary not found")
+	}
+	// Fallback driver, usually always valid if binary exists
+	return nil
+}
+
+func (p *Provider) New(ctx context.Context) (api.Driver, error) {
+	return &Driver{}, nil
+}
 
 type Driver struct{}
 

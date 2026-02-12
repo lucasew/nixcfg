@@ -6,9 +6,41 @@ import (
 	"fmt"
 	"strconv"
 	dapi "workspaced/pkg/api"
-	"workspaced/pkg/wm/api"
+	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
+	"workspaced/pkg/wm/api"
 )
+
+func init() {
+	driver.Register[api.Driver](&SwayProvider{})
+	driver.Register[api.Driver](&I3Provider{})
+}
+
+type SwayProvider struct{}
+
+func (p *SwayProvider) Name() string { return "Sway" }
+func (p *SwayProvider) CheckCompatibility(ctx context.Context) error {
+	if exec.GetRPC(ctx) != "swaymsg" {
+		return driver.ErrIncompatible
+	}
+	return nil
+}
+func (p *SwayProvider) New(ctx context.Context) (api.Driver, error) {
+	return &Driver{Binary: "swaymsg"}, nil
+}
+
+type I3Provider struct{}
+
+func (p *I3Provider) Name() string { return "i3" }
+func (p *I3Provider) CheckCompatibility(ctx context.Context) error {
+	if exec.GetRPC(ctx) != "i3-msg" {
+		return driver.ErrIncompatible
+	}
+	return nil
+}
+func (p *I3Provider) New(ctx context.Context) (api.Driver, error) {
+	return &Driver{Binary: "i3-msg"}, nil
+}
 
 type Driver struct {
 	Binary string

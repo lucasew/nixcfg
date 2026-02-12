@@ -15,8 +15,10 @@ import (
 	"workspaced/cmd/workspaced/dispatch/brightness"
 	"workspaced/cmd/workspaced/dispatch/config"
 	"workspaced/cmd/workspaced/dispatch/demo"
+	"workspaced/cmd/workspaced/dispatch/doctor"
 	"workspaced/cmd/workspaced/dispatch/history"
 	"workspaced/cmd/workspaced/dispatch/media"
+
 	"workspaced/cmd/workspaced/dispatch/menu"
 	"workspaced/cmd/workspaced/dispatch/nix"
 	"workspaced/cmd/workspaced/dispatch/notification"
@@ -34,6 +36,15 @@ import (
 	"workspaced/cmd/workspaced/is"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/types"
+
+	_ "workspaced/pkg/driver/clipboard/termux"
+	_ "workspaced/pkg/driver/clipboard/wlcopy"
+	_ "workspaced/pkg/driver/clipboard/xclip"
+	_ "workspaced/pkg/driver/screen/sway"
+	_ "workspaced/pkg/driver/screen/x11"
+	_ "workspaced/pkg/driver/tray/dbus"
+	_ "workspaced/pkg/driver/wm/hyprland"
+	_ "workspaced/pkg/driver/wm/i3ipc"
 
 	"github.com/gorilla/websocket"
 	"github.com/spf13/cobra"
@@ -115,6 +126,7 @@ func NewCommand() *cobra.Command {
 	cmd.AddCommand(brightness.GetCommand())
 	cmd.AddCommand(config.GetCommand())
 	cmd.AddCommand(demo.GetCommand())
+	cmd.AddCommand(doctor.Command)
 	cmd.AddCommand(history.GetCommand())
 	cmd.AddCommand(is.GetCommand())
 	cmd.AddCommand(media.GetCommand())

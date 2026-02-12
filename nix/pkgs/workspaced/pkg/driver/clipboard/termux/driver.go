@@ -4,10 +4,32 @@ import (
 	"context"
 	"fmt"
 	"image"
+	"os"
 	"strings"
 	dapi "workspaced/pkg/api"
+	"workspaced/pkg/clipboard/api"
+	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
 )
+
+func init() {
+	driver.Register[api.Driver](&Provider{})
+}
+
+type Provider struct{}
+
+func (p *Provider) Name() string { return "Termux" }
+
+func (p *Provider) CheckCompatibility(ctx context.Context) error {
+	if os.Getenv("TERMUX_VERSION") == "" && !exec.IsBinaryAvailable(ctx, "termux-clipboard-set") {
+		return fmt.Errorf("termux not detected")
+	}
+	return nil
+}
+
+func (p *Provider) New(ctx context.Context) (api.Driver, error) {
+	return &Driver{}, nil
+}
 
 type Driver struct{}
 
