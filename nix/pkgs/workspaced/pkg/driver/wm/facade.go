@@ -12,30 +12,20 @@ import (
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/media"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/wm/api"
 )
 
-// Re-export types for backward compatibility within the wm package if needed,
-// but external packages should ideally use wm.Rect etc.
-// We alias them here to keep the wm API surface the same.
-type Rect = api.Rect
-type Workspace = api.Workspace
-type Output = api.Output
-type Node = api.Node
-type Driver = api.Driver
-
-// SwitchToWorkspace switches to the specified workspace number.
-func SwitchToWorkspace(ctx context.Context, num int, move bool) error {
-	d, err := driver.Get[api.Driver](ctx)
+// SwitchToWorkspace switches to the specified workspace.
+func SwitchToWorkspace(ctx context.Context, ws string, move bool) error {
+	d, err := driver.Get[Driver](ctx)
 	if err != nil {
 		return err
 	}
-	return d.SwitchToWorkspace(ctx, num, move)
+	return d.SwitchToWorkspace(ctx, ws, move)
 }
 
 // ToggleScratchpad toggles the visibility of the scratchpad container.
 func ToggleScratchpad(ctx context.Context) error {
-	d, err := driver.Get[api.Driver](ctx)
+	d, err := driver.Get[Driver](ctx)
 	if err != nil {
 		return err
 	}
@@ -72,8 +62,8 @@ func NextWorkspace(ctx context.Context, move bool) error {
 		}
 	}
 
-	nextWS := lastWS + 1
-	if err := os.WriteFile(wsFile, []byte(strconv.Itoa(nextWS)), 0600); err != nil {
+	nextWS := strconv.Itoa(lastWS + 1)
+	if err := os.WriteFile(wsFile, []byte(nextWS), 0600); err != nil {
 		logging.ReportError(ctx, err)
 	}
 
@@ -82,7 +72,7 @@ func NextWorkspace(ctx context.Context, move bool) error {
 
 // RotateWorkspaces rotates the visible workspaces across all connected outputs.
 func RotateWorkspaces(ctx context.Context) error {
-	d, err := driver.Get[api.Driver](ctx)
+	d, err := driver.Get[Driver](ctx)
 	if err != nil {
 		return err
 	}
@@ -130,7 +120,7 @@ func RotateWorkspaces(ctx context.Context) error {
 		toScreen := screens[i]
 		ws := workspaceScreens[fromScreen]
 
-		if err := d.SwitchToWorkspace(ctx, parseWS(ws), false); err != nil {
+		if err := d.SwitchToWorkspace(ctx, ws, false); err != nil {
 			logging.ReportError(ctx, err)
 		}
 		time.Sleep(100 * time.Millisecond)
@@ -142,14 +132,14 @@ func RotateWorkspaces(ctx context.Context) error {
 	}
 
 	for _, ws := range workspaceScreens {
-		if err := d.SwitchToWorkspace(ctx, parseWS(ws), false); err != nil {
+		if err := d.SwitchToWorkspace(ctx, ws, false); err != nil {
 			logging.ReportError(ctx, err)
 		}
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	if focusedWorkspace != "" {
-		if err := d.SwitchToWorkspace(ctx, parseWS(focusedWorkspace), false); err != nil {
+		if err := d.SwitchToWorkspace(ctx, focusedWorkspace, false); err != nil {
 			logging.ReportError(ctx, err)
 		}
 	}
@@ -157,14 +147,9 @@ func RotateWorkspaces(ctx context.Context) error {
 	return nil
 }
 
-func parseWS(ws string) int {
-	val, _ := strconv.Atoi(ws)
-	return val
-}
-
 // GetFocusedOutput returns the name and geometry of the currently focused output.
-func GetFocusedOutput(ctx context.Context) (string, *api.Rect, error) {
-	d, err := driver.Get[api.Driver](ctx)
+func GetFocusedOutput(ctx context.Context) (string, *Rect, error) {
+	d, err := driver.Get[Driver](ctx)
 	if err != nil {
 		return "", nil, err
 	}
@@ -172,8 +157,8 @@ func GetFocusedOutput(ctx context.Context) (string, *api.Rect, error) {
 }
 
 // GetFocusedWindowRect returns the geometry of the currently focused window.
-func GetFocusedWindowRect(ctx context.Context) (*api.Rect, error) {
-	d, err := driver.Get[api.Driver](ctx)
+func GetFocusedWindowRect(ctx context.Context) (*Rect, error) {
+	d, err := driver.Get[Driver](ctx)
 	if err != nil {
 		return nil, err
 	}

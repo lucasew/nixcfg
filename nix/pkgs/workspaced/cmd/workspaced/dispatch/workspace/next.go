@@ -1,7 +1,7 @@
 package workspace
 
 import (
-	"workspaced/pkg/wm"
+	"workspaced/pkg/driver/wm"
 
 	"github.com/spf13/cobra"
 )

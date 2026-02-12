@@ -16,7 +16,7 @@ import (
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
 	"workspaced/pkg/notification"
-	"workspaced/pkg/wm"
+	"workspaced/pkg/driver/wm"
 )
 
 type Target int

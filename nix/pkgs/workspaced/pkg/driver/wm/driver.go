@@ -1,4 +1,4 @@
-package api
+package wm
 
 import (
 	"context"
@@ -41,7 +41,7 @@ type Node struct {
 }
 
 type Driver interface {
-	SwitchToWorkspace(ctx context.Context, num int, move bool) error
+	SwitchToWorkspace(ctx context.Context, ws string, move bool) error
 	ToggleScratchpad(ctx context.Context) error
 	GetFocusedOutput(ctx context.Context) (string, *Rect, error)
 	GetFocusedWindowRect(ctx context.Context) (*Rect, error)

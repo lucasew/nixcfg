@@ -2,9 +2,10 @@ package menu
 
 import (
 	"sort"
+	"strconv"
 	"strings"
-	"workspaced/pkg/wm"
 	"workspaced/pkg/exec"
+	"workspaced/pkg/driver/wm"
 
 	"workspaced/pkg/config"
 
@@ -47,7 +48,7 @@ func init() {
 					return nil
 				}
 
-				return wm.SwitchToWorkspace(c.Context(), workspaceNum, move)
+				return wm.SwitchToWorkspace(c.Context(), strconv.Itoa(workspaceNum), move)
 			},
 		}
 		cmd.Flags().Bool("move", false, "Move container to workspace")

@@ -4,11 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"strconv"
 	dapi "workspaced/pkg/api"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
-	"workspaced/pkg/wm/api"
+	api "workspaced/pkg/driver/wm"
 )
 
 func init() {
@@ -58,11 +57,11 @@ func (d *Driver) MoveWorkspaceToOutput(ctx context.Context, workspace string, ou
 	return exec.RunCmd(ctx, d.Binary, "workspace", workspace, "move", "workspace", "to", "output", output).Run()
 }
 
-func (d *Driver) SwitchToWorkspace(ctx context.Context, num int, move bool) error {
+func (d *Driver) SwitchToWorkspace(ctx context.Context, ws string, move bool) error {
 	if move {
-		return exec.RunCmd(ctx, d.Binary, "move", "container", "to", "workspace", "number", strconv.Itoa(num)).Run()
+		return exec.RunCmd(ctx, d.Binary, "move", "container", "to", "workspace", ws).Run()
 	}
-	return exec.RunCmd(ctx, d.Binary, "workspace", "number", strconv.Itoa(num)).Run()
+	return exec.RunCmd(ctx, d.Binary, "workspace", ws).Run()
 }
 
 func (d *Driver) ToggleScratchpad(ctx context.Context) error {
