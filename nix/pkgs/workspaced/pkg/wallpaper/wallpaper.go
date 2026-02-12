@@ -9,10 +9,12 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"workspaced/pkg/config"
 	"workspaced/pkg/api"
+	"workspaced/pkg/config"
+	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	wapi "workspaced/pkg/wallpaper/api"
 )
 
 func SetStatic(ctx context.Context, path string) error {
@@ -39,28 +41,11 @@ func SetStatic(ctx context.Context, path string) error {
 	stopCmd := exec.RunCmd(ctx, "systemctl", "--user", "stop", "wallpaper-change.service")
 	_ = stopCmd.Run() // Ignore errors if service doesn't exist
 
-	rpc := exec.GetRPC(ctx)
-	if rpc == "swaymsg" {
-		swaybg, err := exec.Which(ctx, "swaybg")
-		if err != nil {
-			return err
-		}
-
-		if err = exec.RunCmd(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", swaybg, "-i", path).Run(); err != nil {
-			return fmt.Errorf("can't run swaybg in systemd unit: %w", err)
-		}
-		return nil
-	}
-	feh, err := exec.Which(ctx, "feh")
+	d, err := driver.Get[wapi.Driver](ctx)
 	if err != nil {
 		return err
 	}
-	cmd := exec.RunCmd(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", feh, "--bg-fill", path)
-	err = cmd.Run()
-	if err != nil {
-		return fmt.Errorf("can't run feh in systemd unit: %w", err)
-	}
-	return nil
+	return d.SetStatic(ctx, path)
 }
 
 func SetAnimated(ctx context.Context, path string) error {

@@ -6,18 +6,23 @@ import (
 	"strconv"
 	"strings"
 
-	"workspaced/pkg/notification"
+	"workspaced/pkg/audio/api"
+	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	napi "workspaced/pkg/notification/api"
 )
 
-// SetVolume sets the volume of the default sink using pactl.
+// SetVolume sets the volume of the default sink using the available driver.
 // The arg parameter accepts format like "50%", "+10%", "-10%".
 // It also triggers a status notification after the change.
 func SetVolume(ctx context.Context, arg string) error {
-	sink := "@DEFAULT_SINK@"
-	if err := exec.RunCmd(ctx, "pactl", "set-sink-volume", sink, arg).Run(); err != nil {
-		return fmt.Errorf("failed to set volume: %w", err)
+	d, err := driver.Get[api.Driver](ctx)
+	if err != nil {
+		return err
+	}
+	if err := d.SetVolume(ctx, arg); err != nil {
+		return err
 	}
 	return ShowStatus(ctx)
 }
@@ -59,16 +64,15 @@ func ShowStatus(ctx context.Context) error {
 	sinkNameOut, _ := exec.RunCmd(ctx, "pactl", "get-default-sink").Output()
 	sinkName := strings.TrimSpace(string(sinkNameOut))
 
-	n := &notification.Notification{
-		ID:          notification.StatusNotificationID,
+	logging.GetLogger(ctx).Info("volume updated", "level", level, "sink", sinkName, "muted", isMuted)
+
+	n := napi.Notification{
+		ID:          napi.StatusNotificationID,
 		Title:       "Volume",
 		Message:     sinkName,
 		Icon:        icon,
 		Progress:    float64(level) / 100.0,
 		HasProgress: true,
 	}
-
-	logging.GetLogger(ctx).Info("volume updated", "level", level, "sink", sinkName, "muted", isMuted)
-
 	return n.Notify(ctx)
 }

@@ -5,16 +5,20 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"workspaced/pkg/brightness/api"
+	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/notification"
+	napi "workspaced/pkg/notification/api"
 )
 
 func SetBrightness(ctx context.Context, arg string) error {
-	if arg != "" {
-		if err := exec.RunCmd(ctx, "brightnessctl", "s", arg).Run(); err != nil {
-			return fmt.Errorf("failed to set brightness: %w", err)
-		}
+	d, err := driver.Get[api.Driver](ctx)
+	if err != nil {
+		return err
+	}
+	if err := d.SetBrightness(ctx, arg); err != nil {
+		return err
 	}
 	return ShowStatus(ctx)
 }
@@ -40,8 +44,8 @@ func ShowStatus(ctx context.Context) error {
 			continue
 		}
 
-		n := &notification.Notification{
-			ID:          notification.StatusNotificationID,
+		n := napi.Notification{
+			ID:          napi.StatusNotificationID,
 			Title:       "Brightness",
 			Message:     devname,
 			Icon:        "display-brightness",
