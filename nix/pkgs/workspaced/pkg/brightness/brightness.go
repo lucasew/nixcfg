@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"workspaced/pkg/notification"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/notification"
 )
 
 func SetBrightness(ctx context.Context, arg string) error {
@@ -25,8 +25,8 @@ func ShowStatus(ctx context.Context) error {
 		return fmt.Errorf("failed to get brightness status: %w", err)
 	}
 
-	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
-	for _, line := range lines {
+	lines := strings.SplitSeq(strings.TrimSpace(string(out)), "\n")
+	for line := range lines {
 		parts := strings.Split(line, ",")
 		if len(parts) < 5 {
 			continue
