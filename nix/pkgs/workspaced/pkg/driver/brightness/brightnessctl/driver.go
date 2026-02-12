@@ -3,13 +3,15 @@ package brightnessctl
 import (
 	"context"
 	"fmt"
-	"workspaced/pkg/brightness/api"
+	"strconv"
+	"strings"
 	"workspaced/pkg/driver"
+	"workspaced/pkg/driver/brightness"
 	"workspaced/pkg/exec"
 )
 
 func init() {
-	driver.Register[api.Driver](&Provider{})
+	driver.Register[brightness.Driver](&Provider{})
 }
 
 type Provider struct{}
@@ -23,11 +25,40 @@ func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	return nil
 }
 
-func (p *Provider) New(ctx context.Context) (api.Driver, error) {
+func (p *Provider) New(ctx context.Context) (brightness.Driver, error) {
 	return &Driver{}, nil
 }
 
 type Driver struct{}
+
+// Status implements [brightness.Driver].
+func (d *Driver) Status(ctx context.Context) (*brightness.Device, error) {
+	out, err := exec.RunCmd(ctx, "brightnessctl", "-m").Output()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get brightness status: %w", err)
+	}
+
+	lines := strings.SplitSeq(strings.TrimSpace(string(out)), "\n")
+	for line := range lines {
+		parts := strings.Split(line, ",")
+		if len(parts) < 5 {
+			continue
+		}
+		devname := parts[0]
+		level := parts[3]
+
+		levelVal := strings.TrimSuffix(level, "%")
+		l, err := strconv.Atoi(levelVal)
+		if err != nil {
+			continue
+		}
+		return &brightness.Device{
+			Name:       devname,
+			Brightness: float32(l) / 100,
+		}, nil
+	}
+	return nil, fmt.Errorf("failed to find brightness device")
+}
 
 func (d *Driver) SetBrightness(ctx context.Context, arg string) error {
 	if arg != "" {
@@ -37,3 +68,5 @@ func (d *Driver) SetBrightness(ctx context.Context, arg string) error {
 	}
 	return nil
 }
+
+func (d *Driver) DeviceStatus(ctx context.Context) Status

@@ -1,8 +1,6 @@
-package api
+package audio
 
-import (
-	"context"
-)
+import "context"
 
 type Driver interface {
 	SetVolume(ctx context.Context, arg string) error

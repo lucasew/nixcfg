@@ -3,13 +3,13 @@ package pulse
 import (
 	"context"
 	"fmt"
-	"workspaced/pkg/audio/api"
 	"workspaced/pkg/driver"
+	"workspaced/pkg/driver/audio"
 	"workspaced/pkg/exec"
 )
 
 func init() {
-	driver.Register[api.Driver](&Provider{})
+	driver.Register[audio.Driver](&Provider{})
 }
 
 type Provider struct{}
@@ -25,7 +25,7 @@ func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	return nil
 }
 
-func (p *Provider) New(ctx context.Context) (api.Driver, error) {
+func (p *Provider) New(ctx context.Context) (audio.Driver, error) {
 	return &Driver{}, nil
 }
 

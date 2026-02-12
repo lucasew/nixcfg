@@ -5,15 +5,15 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"workspaced/pkg/brightness/api"
 	"workspaced/pkg/driver"
+	"workspaced/pkg/driver/brightness"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
 	"workspaced/pkg/notification"
 )
 
 func SetBrightness(ctx context.Context, arg string) error {
-	d, err := driver.Get[api.Driver](ctx)
+	d, err := driver.Get[brightness.Driver](ctx)
 	if err != nil {
 		return err
 	}
@@ -24,32 +24,14 @@ func SetBrightness(ctx context.Context, arg string) error {
 }
 
 func ShowStatus(ctx context.Context) error {
-	out, err := exec.RunCmd(ctx, "brightnessctl", "-m").Output()
-	if err != nil {
-		return fmt.Errorf("failed to get brightness status: %w", err)
-	}
-
-	lines := strings.SplitSeq(strings.TrimSpace(string(out)), "\n")
-	for line := range lines {
-		parts := strings.Split(line, ",")
-		if len(parts) < 5 {
-			continue
-		}
-		devname := parts[0]
-		level := parts[3]
-
-		levelVal := strings.TrimSuffix(level, "%")
-		l, err := strconv.Atoi(levelVal)
-		if err != nil {
-			continue
-		}
-
+		d, err := driver.Get[brightness.Driver](ctx)
+		status, err := d.Status(ctx)
 		n := notification.Notification{
 			ID:          notification.StatusNotificationID,
 			Title:       "Brightness",
-			Message:     devname,
+			Message:     status.Name,
 			Icon:        "display-brightness",
-			Progress:    float64(l) / 100.0,
+			Progress:    float64(status.Brightness),
 			HasProgress: true,
 		}
 
