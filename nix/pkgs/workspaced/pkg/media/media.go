@@ -19,8 +19,8 @@ import (
 )
 
 func getArtCachePath(ctx context.Context, url string) (string, error) {
-	if strings.HasPrefix(url, "file://") {
-		return strings.TrimPrefix(url, "file://"), nil
+	if after, ok := strings.CutPrefix(url, "file://"); ok {
+		return after, nil
 	}
 	if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
 		return url, nil
