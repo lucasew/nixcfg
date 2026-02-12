@@ -198,7 +198,7 @@ __sd_new_user_help() {
 __sd() {
 	set -euo pipefail
 
-	local root=${SD_ROOT:-$HOME/sd}
+	local root=${SD_ROOT:-${NIXCFG_ROOT_PATH:-$HOME/sd}}
 
 	if [[ -e "$root" && ! -d "$root" ]]; then
 		echo "error: $root is not a directory" >&2

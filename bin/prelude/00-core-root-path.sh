@@ -7,8 +7,11 @@ if [ -z "${NIXCFG_ROOT_PATH:-}" ]; then
 		# Fallback to current directory or common locations if really lost
 		# But usually NIXCFG_ROOT_PATH is injected by workspaced generator
 		export NIXCFG_ROOT_PATH="$HOME/.dotfiles"
+		export SD_ROOT="$NIXCFG_ROOT_PATH"
 	else
 		export NIXCFG_ROOT_PATH="$(realpath "$_script_dir/../..")"
+		export SD_ROOT="$NIXCFG_ROOT_PATH"
 	fi
+	export DOTFILES="$NIXCFG_ROOT_PATH"
 	unset _script_dir
 fi
