@@ -1,7 +1,7 @@
 package screenshot
 
 import (
-	"workspaced/pkg/screenshot"
+	"workspaced/pkg/driver/screenshot"
 
 	"github.com/spf13/cobra"
 )
@@ -12,7 +12,7 @@ func init() {
 			Use:   "window",
 			Short: "Capture current window",
 			RunE: func(c *cobra.Command, args []string) error {
-				path, err := screenshot.Capture(c.Context(), screenshot.Window)
+				path, err := screenshot.Capture(c.Context(), screenshot.TargetWindow)
 				if err != nil {
 					return err
 				}

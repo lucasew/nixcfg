@@ -12,6 +12,8 @@ import (
 	_ "workspaced/pkg/driver/notification/termux"
 	_ "workspaced/pkg/driver/screen/sway"
 	_ "workspaced/pkg/driver/screen/x11"
+	_ "workspaced/pkg/driver/screenshot/grim"
+	_ "workspaced/pkg/driver/screenshot/maim"
 	_ "workspaced/pkg/driver/tray/dbus"
 	_ "workspaced/pkg/driver/wallpaper/feh"
 	_ "workspaced/pkg/driver/wallpaper/swaybg"
