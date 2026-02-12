@@ -10,9 +10,8 @@ import (
 	"time"
 
 	"workspaced/pkg/driver"
-	"workspaced/pkg/exec"
-	"workspaced/pkg/logging"
 	"workspaced/pkg/driver/media"
+	"workspaced/pkg/logging"
 	"workspaced/pkg/wm/api"
 )
 
@@ -136,15 +135,8 @@ func RotateWorkspaces(ctx context.Context) error {
 		}
 		time.Sleep(100 * time.Millisecond)
 
-		rpc := exec.GetRPC(ctx)
-		if rpc == "hyprctl" {
-			if err := exec.RunCmd(ctx, rpc, "dispatch", "moveworkspacetomonitor", ws, toScreen).Run(); err != nil {
-				logging.ReportError(ctx, err)
-			}
-		} else {
-			if err := exec.RunCmd(ctx, rpc, "move", "workspace", "to", "output", toScreen).Run(); err != nil {
-				logging.ReportError(ctx, err)
-			}
+		if err := d.MoveWorkspaceToOutput(ctx, ws, toScreen); err != nil {
+			logging.ReportError(ctx, err)
 		}
 		time.Sleep(100 * time.Millisecond)
 	}

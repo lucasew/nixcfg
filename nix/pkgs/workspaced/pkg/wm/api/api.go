@@ -47,4 +47,5 @@ type Driver interface {
 	GetFocusedWindowRect(ctx context.Context) (*Rect, error)
 	GetOutputs(ctx context.Context) ([]Output, error)
 	GetWorkspaces(ctx context.Context) ([]Workspace, error)
+	MoveWorkspaceToOutput(ctx context.Context, workspace string, output string) error
 }

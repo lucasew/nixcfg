@@ -17,9 +17,8 @@ type Provider struct{}
 func (p *Provider) Name() string { return "Wayland (swaybg)" }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
-	rpc := exec.GetRPC(ctx)
-	if rpc != "swaymsg" {
-		return fmt.Errorf("%w: current session is '%s', expected 'swaymsg'", driver.ErrIncompatible, rpc)
+	if exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
+		return fmt.Errorf("%w: WAYLAND_DISPLAY not set", driver.ErrIncompatible)
 	}
 	if _, err := exec.Which(ctx, "swaybg"); err != nil {
 		return fmt.Errorf("%w: swaybg not found", driver.ErrIncompatible)

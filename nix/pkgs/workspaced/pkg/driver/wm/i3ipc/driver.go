@@ -20,12 +20,15 @@ type SwayProvider struct{}
 
 func (p *SwayProvider) Name() string { return "Sway" }
 func (p *SwayProvider) CheckCompatibility(ctx context.Context) error {
-	rpc := exec.GetRPC(ctx)
-	if rpc != "swaymsg" {
-		return fmt.Errorf("%w: current session is '%s', expected 'swaymsg'", driver.ErrIncompatible, rpc)
+	if exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
+		return fmt.Errorf("%w: WAYLAND_DISPLAY not set", driver.ErrIncompatible)
+	}
+	if !exec.IsBinaryAvailable(ctx, "swaymsg") {
+		return fmt.Errorf("%w: swaymsg not found", driver.ErrIncompatible)
 	}
 	return nil
 }
+
 func (p *SwayProvider) New(ctx context.Context) (api.Driver, error) {
 	return &Driver{Binary: "swaymsg"}, nil
 }
@@ -34,18 +37,25 @@ type I3Provider struct{}
 
 func (p *I3Provider) Name() string { return "i3" }
 func (p *I3Provider) CheckCompatibility(ctx context.Context) error {
-	rpc := exec.GetRPC(ctx)
-	if rpc != "i3-msg" {
-		return fmt.Errorf("%w: current session is '%s', expected 'i3-msg'", driver.ErrIncompatible, rpc)
+	if exec.GetEnv(ctx, "DISPLAY") == "" {
+		return fmt.Errorf("%w: DISPLAY not set", driver.ErrIncompatible)
+	}
+	if !exec.IsBinaryAvailable(ctx, "i3-msg") {
+		return fmt.Errorf("%w: i3-msg not found", driver.ErrIncompatible)
 	}
 	return nil
 }
+
 func (p *I3Provider) New(ctx context.Context) (api.Driver, error) {
 	return &Driver{Binary: "i3-msg"}, nil
 }
 
 type Driver struct {
 	Binary string
+}
+
+func (d *Driver) MoveWorkspaceToOutput(ctx context.Context, workspace string, output string) error {
+	return exec.RunCmd(ctx, d.Binary, "workspace", workspace, "move", "workspace", "to", "output", output).Run()
 }
 
 func (d *Driver) SwitchToWorkspace(ctx context.Context, num int, move bool) error {

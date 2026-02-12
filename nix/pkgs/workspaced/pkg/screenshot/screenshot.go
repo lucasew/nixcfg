@@ -43,8 +43,7 @@ func Capture(ctx context.Context, target Target) (string, error) {
 	filename := fmt.Sprintf("Screenshot_%s.png", timestamp)
 	path := filepath.Join(dir, filename)
 
-	rpc := exec.GetRPC(ctx)
-	if rpc == "swaymsg" || rpc == "hyprctl" {
+	if exec.GetEnv(ctx, "WAYLAND_DISPLAY") != "" {
 		return captureWayland(ctx, path, target)
 	}
 	return captureX11(ctx, path, target)

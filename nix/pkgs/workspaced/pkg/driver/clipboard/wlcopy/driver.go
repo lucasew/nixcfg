@@ -22,13 +22,11 @@ type Provider struct{}
 func (p *Provider) Name() string { return "Wayland (wl-copy)" }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
-	// Logic from original GetDriver
-	rpc := exec.GetRPC(ctx)
-	if rpc != "swaymsg" && rpc != "hyprctl" {
-		return fmt.Errorf("not running inside sway or hyprland (rpc=%s)", rpc)
+	if exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
+		return fmt.Errorf("%w: WAYLAND_DISPLAY not set", driver.ErrIncompatible)
 	}
 	if !exec.IsBinaryAvailable(ctx, "wl-copy") {
-		return fmt.Errorf("wl-copy binary not found")
+		return fmt.Errorf("%w: wl-copy not found", driver.ErrIncompatible)
 	}
 	return nil
 }

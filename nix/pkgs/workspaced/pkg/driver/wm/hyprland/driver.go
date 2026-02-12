@@ -20,9 +20,11 @@ type Provider struct{}
 func (p *Provider) Name() string { return "Hyprland" }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
-	rpc := exec.GetRPC(ctx)
-	if rpc != "hyprctl" {
-		return fmt.Errorf("%w: current session is '%s', expected 'hyprctl'", driver.ErrIncompatible, rpc)
+	if exec.GetEnv(ctx, "HYPRLAND_INSTANCE_SIGNATURE") == "" {
+		return fmt.Errorf("%w: HYPRLAND_INSTANCE_SIGNATURE not set", driver.ErrIncompatible)
+	}
+	if !exec.IsBinaryAvailable(ctx, "hyprctl") {
+		return fmt.Errorf("%w: hyprctl not found", driver.ErrIncompatible)
 	}
 	return nil
 }
@@ -32,6 +34,10 @@ func (p *Provider) New(ctx context.Context) (api.Driver, error) {
 }
 
 type Driver struct{}
+
+func (d *Driver) MoveWorkspaceToOutput(ctx context.Context, workspace string, output string) error {
+	return exec.RunCmd(ctx, "hyprctl", "dispatch", "moveworkspacetomonitor", workspace, output).Run()
+}
 
 func (d *Driver) SwitchToWorkspace(ctx context.Context, num int, move bool) error {
 	cmd := "workspace"
