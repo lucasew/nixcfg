@@ -55,28 +55,46 @@ func GetCommand() *cobra.Command {
 			// Criar template engine compartilhada
 			engine := template.NewEngine(ctx)
 
-			// Configurar sources
-			sources := []source.Source{
-				// Provider dconf (priority baixa)
-				source.NewProviderSource(&apply.DconfProvider{}, 50),
-			}
+			// Diretório temporário para arquivos renderizados
+			tempDir := filepath.Join(home, ".config/workspaced/generated")
 
-			// DirectorySource para config/ (priority 100)
+			// Configurar pipeline de plugins
 			configDir := filepath.Join(dotfilesRoot, "config")
+			pipeline := source.NewPipeline()
+
+			// 1. Provider dconf (legacy)
+			pipeline.AddPlugin(source.NewProviderPlugin(&apply.DconfProvider{}, 50))
+
+			// 2. Scanner - descobre arquivos em config/
 			if _, err := os.Stat(configDir); err == nil {
-				dirSource, err := source.NewDirectorySource(ctx, source.DirectorySourceConfig{
+				scanner, err := source.NewScannerPlugin(source.ScannerConfig{
 					Name:       "config",
 					BaseDir:    configDir,
 					TargetBase: home,
 					Priority:   100,
-					Engine:     engine,
-					Data:       cfg,
 				})
 				if err != nil {
-					return fmt.Errorf("failed to create config source: %w", err)
+					return fmt.Errorf("failed to create scanner: %w", err)
 				}
-				sources = append(sources, dirSource)
+				pipeline.AddPlugin(scanner)
 			}
+
+			// 3. TemplateExpander - renderiza .tmpl (inclui multi-file)
+			templatePlugin, err := source.NewTemplateExpanderPlugin(engine, cfg, tempDir)
+			if err != nil {
+				return fmt.Errorf("failed to create template plugin: %w", err)
+			}
+			pipeline.AddPlugin(templatePlugin)
+
+			// 4. DotDProcessor - concatena .d.tmpl/
+			dotdPlugin, err := source.NewDotDProcessorPlugin(engine, cfg, tempDir)
+			if err != nil {
+				return fmt.Errorf("failed to create dotd plugin: %w", err)
+			}
+			pipeline.AddPlugin(dotdPlugin)
+
+			// 5. ConflictResolver - resolve conflitos por priority
+			pipeline.AddPlugin(source.NewConflictResolverPlugin(source.ResolveByPriority))
 
 			// StateStore
 			stateStore, err := deployer.NewFileStateStore("~/.config/workspaced/state.json")
@@ -112,12 +130,11 @@ func GetCommand() *cobra.Command {
 				},
 			}
 
-			// Criar manager
+			// Criar manager com pipeline
 			mgr, err := dotfiles.NewManager(dotfiles.Config{
-				Sources:          sources,
-				StateStore:       stateStore,
-				ConflictStrategy: source.ResolveByPriority,
-				Hooks:            hooks,
+				Pipeline:   pipeline,
+				StateStore: stateStore,
+				Hooks:      hooks,
 			})
 			if err != nil {
 				return fmt.Errorf("failed to create manager: %w", err)

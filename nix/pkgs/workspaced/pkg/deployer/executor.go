@@ -5,8 +5,23 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"workspaced/pkg/logging"
 )
+
+// prettyPath converte caminho absoluto para relativo ao $HOME
+func prettyPath(path string) string {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return path
+	}
+
+	if strings.HasPrefix(path, home+"/") {
+		return "~/" + strings.TrimPrefix(path, home+"/")
+	}
+
+	return path
+}
 
 // Executor executa ações de deployment
 type Executor struct{}
@@ -26,7 +41,7 @@ func (e *Executor) Execute(ctx context.Context, actions []Action, state *State) 
 			continue
 
 		case ActionDelete:
-			logger.Info("pruning orphaned file", "target", action.Target)
+			logger.Info("pruning orphaned file", "target", prettyPath(action.Target))
 			if _, err := os.Lstat(action.Target); err == nil {
 				if err := os.Remove(action.Target); err != nil {
 					return fmt.Errorf("failed to remove orphaned file %s: %w", action.Target, err)
@@ -36,9 +51,9 @@ func (e *Executor) Execute(ctx context.Context, actions []Action, state *State) 
 
 		case ActionCreate, ActionUpdate:
 			if action.Type == ActionCreate {
-				logger.Info("creating", "target", action.Target, "source", action.Desired.Source)
+				logger.Info("creating", "target", prettyPath(action.Target), "source", prettyPath(action.Desired.Source))
 			} else {
-				logger.Info("updating", "target", action.Target, "source", action.Desired.Source)
+				logger.Info("updating", "target", prettyPath(action.Target), "source", prettyPath(action.Desired.Source))
 			}
 
 			// Ensure parent directory exists

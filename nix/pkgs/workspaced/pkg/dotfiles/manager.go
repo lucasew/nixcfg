@@ -3,6 +3,7 @@ package dotfiles
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 	"workspaced/pkg/deployer"
 	"workspaced/pkg/logging"
 	"workspaced/pkg/source"
@@ -10,9 +11,8 @@ import (
 
 // Manager é a API principal para gerenciamento de dotfiles
 type Manager struct {
-	sources    []source.Source
+	pipeline   *source.Pipeline
 	stateStore deployer.StateStore
-	strategy   source.ConflictResolution
 	planner    *deployer.Planner
 	executor   *deployer.Executor
 	hooks      []Hook
@@ -20,14 +20,11 @@ type Manager struct {
 
 // Config configura o Manager
 type Config struct {
-	// Lista de sources (ordem importa para priority padrão)
-	Sources []source.Source
+	// Pipeline de plugins
+	Pipeline *source.Pipeline
 
 	// State store para persistência
 	StateStore deployer.StateStore
-
-	// Estratégia de resolução de conflitos
-	ConflictStrategy source.ConflictResolution
 
 	// Hooks opcionais
 	Hooks []Hook
@@ -35,8 +32,8 @@ type Config struct {
 
 // NewManager cria um novo manager
 func NewManager(cfg Config) (*Manager, error) {
-	if len(cfg.Sources) == 0 {
-		return nil, fmt.Errorf("at least one source is required")
+	if cfg.Pipeline == nil {
+		return nil, fmt.Errorf("pipeline is required")
 	}
 
 	if cfg.StateStore == nil {
@@ -44,9 +41,8 @@ func NewManager(cfg Config) (*Manager, error) {
 	}
 
 	return &Manager{
-		sources:    cfg.Sources,
+		pipeline:   cfg.Pipeline,
 		stateStore: cfg.StateStore,
-		strategy:   cfg.ConflictStrategy,
 		planner:    deployer.NewPlanner(),
 		executor:   deployer.NewExecutor(),
 		hooks:      cfg.Hooks,
@@ -61,13 +57,12 @@ type ApplyOptions struct {
 
 // ApplyResult contém resultado do Apply
 type ApplyResult struct {
-	FilesCreated  int
-	FilesUpdated  int
-	FilesDeleted  int
-	FilesNoOp     int
-	Conflicts     []source.Conflict
-	Actions       []deployer.Action
-	Error         error
+	FilesCreated int
+	FilesUpdated int
+	FilesDeleted int
+	FilesNoOp    int
+	Actions      []deployer.Action
+	Error        error
 }
 
 // Apply executa o ciclo completo de deployment
@@ -75,26 +70,23 @@ func (m *Manager) Apply(ctx context.Context, opts ApplyOptions) (*ApplyResult, e
 	logger := logging.GetLogger(ctx)
 	result := &ApplyResult{}
 
-	// 1. Merge sources e resolver conflitos
-	logger.Info("scanning sources", "count", len(m.sources))
-	merger := source.NewMerger(m.sources, m.strategy)
-	mergeResult, err := merger.Merge(ctx)
+	// 1. Executar pipeline
+	logger.Info("running pipeline", "plugins", len(m.pipeline.GetPlugins()))
+	files, err := m.pipeline.Run(ctx, []source.File{})
 	if err != nil {
 		result.Error = err
-		return result, fmt.Errorf("failed to merge sources: %w", err)
+		return result, fmt.Errorf("failed to run pipeline: %w", err)
 	}
 
-	result.Conflicts = mergeResult.Conflicts
-	if len(mergeResult.Conflicts) > 0 {
-		logger.Info("conflicts detected", "count", len(mergeResult.Conflicts), "resolved", mergeResult.Resolved, "skipped", mergeResult.Skipped)
-	}
+	logger.Info("pipeline completed", "files", len(files))
 
 	// 2. Converter source.File para deployer.DesiredState
-	desired := make([]deployer.DesiredState, len(mergeResult.Files))
-	for i, f := range mergeResult.Files {
+	// Calcula paths absolutos aqui (SourceBase+RelPath, TargetBase+RelPath)
+	desired := make([]deployer.DesiredState, len(files))
+	for i, f := range files {
 		desired[i] = deployer.DesiredState{
-			Target: f.TargetPath,
-			Source: f.SourcePath,
+			Source: filepath.Join(f.SourceBase, f.RelPath),
+			Target: filepath.Join(f.TargetBase, f.RelPath),
 			Mode:   f.Mode,
 		}
 	}
@@ -186,9 +178,9 @@ func (m *Manager) Apply(ctx context.Context, opts ApplyOptions) (*ApplyResult, e
 	return result, nil
 }
 
-// GetSources retorna lista de sources configuradas
-func (m *Manager) GetSources() []source.Source {
-	return m.sources
+// GetPipeline retorna pipeline configurado
+func (m *Manager) GetPipeline() *source.Pipeline {
+	return m.pipeline
 }
 
 // GetStateStore retorna state store configurado

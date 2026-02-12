@@ -48,8 +48,9 @@ func (t FileType) String() string {
 // File representa um arquivo descoberto por uma source
 type File struct {
 	SourceName string      // Nome da source de origem
-	SourcePath string      // Caminho absoluto no source
-	TargetPath string      // Caminho absoluto de destino no sistema
+	RelPath    string      // Caminho relativo (ex: ".bashrc" ou "i3/config")
+	SourceBase string      // Base do source (ex: "~/.dotfiles/config" ou temp)
+	TargetBase string      // Base do target (ex: "~")
 	Type       FileType    // Tipo de processamento
 	Content    []byte      // Conteúdo (já renderizado se template)
 	Mode       os.FileMode // Permissões (0 = symlink)
@@ -58,8 +59,8 @@ type File struct {
 
 // Conflict representa múltiplos files querendo o mesmo target
 type Conflict struct {
-	TargetPath string
-	Files      []File // Ordenados por priority (maior primeiro)
+	RelPath string // Caminho relativo em conflito
+	Files   []File // Ordenados por priority (maior primeiro)
 }
 
 // ConflictResolution define estratégia de resolução de conflitos
