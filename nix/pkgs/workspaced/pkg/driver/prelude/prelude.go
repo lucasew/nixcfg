@@ -7,6 +7,7 @@ import (
 	_ "workspaced/pkg/driver/clipboard/termux"
 	_ "workspaced/pkg/driver/clipboard/wlcopy"
 	_ "workspaced/pkg/driver/clipboard/xclip"
+	_ "workspaced/pkg/driver/media/dbus"
 	_ "workspaced/pkg/driver/notification/notify_send"
 	_ "workspaced/pkg/driver/notification/termux"
 	_ "workspaced/pkg/driver/screen/sway"
