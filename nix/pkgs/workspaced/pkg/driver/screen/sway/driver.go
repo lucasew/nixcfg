@@ -2,6 +2,7 @@ package sway
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"workspaced/pkg/api"
 	"workspaced/pkg/driver"
@@ -21,7 +22,7 @@ func (p *Provider) Name() string { return "Wayland (sway)" }
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	rpc := exec.GetRPC(ctx)
 	if rpc != "swaymsg" {
-		return driver.ErrIncompatible
+		return fmt.Errorf("%w: current session is '%s', expected 'swaymsg'", driver.ErrIncompatible, rpc)
 	}
 	return nil
 }

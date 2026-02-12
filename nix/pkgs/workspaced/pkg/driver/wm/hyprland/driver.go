@@ -22,7 +22,7 @@ func (p *Provider) Name() string { return "Hyprland" }
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	rpc := exec.GetRPC(ctx)
 	if rpc != "hyprctl" {
-		return driver.ErrIncompatible
+		return fmt.Errorf("%w: current session is '%s', expected 'hyprctl'", driver.ErrIncompatible, rpc)
 	}
 	return nil
 }

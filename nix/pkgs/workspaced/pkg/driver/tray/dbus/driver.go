@@ -23,7 +23,7 @@ func (p *Provider) Name() string { return "DBus" }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	if os.Getenv("DBUS_SESSION_BUS_ADDRESS") == "" {
-		return fmt.Errorf("DBUS_SESSION_BUS_ADDRESS not set")
+		return fmt.Errorf("%w: DBUS_SESSION_BUS_ADDRESS not set", driver.ErrIncompatible)
 	}
 	return nil
 }

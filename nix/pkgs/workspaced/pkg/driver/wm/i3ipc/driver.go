@@ -20,8 +20,9 @@ type SwayProvider struct{}
 
 func (p *SwayProvider) Name() string { return "Sway" }
 func (p *SwayProvider) CheckCompatibility(ctx context.Context) error {
-	if exec.GetRPC(ctx) != "swaymsg" {
-		return driver.ErrIncompatible
+	rpc := exec.GetRPC(ctx)
+	if rpc != "swaymsg" {
+		return fmt.Errorf("%w: current session is '%s', expected 'swaymsg'", driver.ErrIncompatible, rpc)
 	}
 	return nil
 }
@@ -33,8 +34,9 @@ type I3Provider struct{}
 
 func (p *I3Provider) Name() string { return "i3" }
 func (p *I3Provider) CheckCompatibility(ctx context.Context) error {
-	if exec.GetRPC(ctx) != "i3-msg" {
-		return driver.ErrIncompatible
+	rpc := exec.GetRPC(ctx)
+	if rpc != "i3-msg" {
+		return fmt.Errorf("%w: current session is '%s', expected 'i3-msg'", driver.ErrIncompatible, rpc)
 	}
 	return nil
 }

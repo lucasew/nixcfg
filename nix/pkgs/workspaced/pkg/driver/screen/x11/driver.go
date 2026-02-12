@@ -2,6 +2,7 @@ package x11
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"strings"
 	"workspaced/pkg/api"
@@ -32,7 +33,7 @@ func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	}
 
 	if display == "" {
-		return driver.ErrIncompatible
+		return fmt.Errorf("%w: DISPLAY not set", driver.ErrIncompatible)
 	}
 	return nil
 }
