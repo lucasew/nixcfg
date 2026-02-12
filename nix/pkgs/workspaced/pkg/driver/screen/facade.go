@@ -3,13 +3,13 @@ package screen
 import (
 	"context"
 	"workspaced/pkg/driver"
-	"workspaced/pkg/exec"
+	"workspaced/pkg/driver/power"
 	"workspaced/pkg/logging"
 )
 
 func Lock(ctx context.Context) error {
 	logging.GetLogger(ctx).Info("locking session")
-	return exec.RunCmd(ctx, "loginctl", "lock-session").Run()
+	return power.Lock(ctx)
 }
 
 func SetDPMS(ctx context.Context, on bool) error {

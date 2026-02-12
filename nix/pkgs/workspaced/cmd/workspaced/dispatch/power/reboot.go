@@ -1,7 +1,7 @@
-package screen
+package power
 
 import (
-	"workspaced/pkg/driver/screen"
+	"workspaced/pkg/driver/power"
 
 	"github.com/spf13/cobra"
 )
@@ -9,10 +9,10 @@ import (
 func init() {
 	Registry.Register(func(parent *cobra.Command) {
 		parent.AddCommand(&cobra.Command{
-			Use:   "lock",
-			Short: "Lock the screen and turn it off",
+			Use:   "reboot",
+			Short: "Reboot the system",
 			RunE: func(c *cobra.Command, args []string) error {
-				return screen.Lock(c.Context())
+				return power.Reboot(c.Context())
 			},
 		})
 	})

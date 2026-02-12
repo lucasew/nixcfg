@@ -9,11 +9,10 @@ import (
 func init() {
 	Registry.Register(func(parent *cobra.Command) {
 		parent.AddCommand(&cobra.Command{
-			Use:   "wake <host>",
-			Short: "Send Wake-on-LAN magic packet",
-			Args:  cobra.ExactArgs(1),
+			Use:   "shutdown",
+			Short: "Power off the system",
 			RunE: func(c *cobra.Command, args []string) error {
-				return power.Wake(c.Context(), args[0])
+				return power.Shutdown(c.Context())
 			},
 		})
 	})

@@ -13,6 +13,8 @@ import (
 	_ "workspaced/pkg/driver/menu/wofi"
 	_ "workspaced/pkg/driver/notification/notify_send"
 	_ "workspaced/pkg/driver/notification/termux"
+	_ "workspaced/pkg/driver/power/systemd"
+	_ "workspaced/pkg/driver/power/termux"
 	_ "workspaced/pkg/driver/screen/sway"
 	_ "workspaced/pkg/driver/screen/x11"
 	_ "workspaced/pkg/driver/screenshot/grim"
