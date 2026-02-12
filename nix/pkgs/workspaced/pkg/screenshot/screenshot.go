@@ -10,13 +10,13 @@ import (
 	"strings"
 	"time"
 
-	"workspaced/pkg/config"
 	dapi "workspaced/pkg/api"
 	"workspaced/pkg/clipboard"
-	"workspaced/pkg/notification"
-	"workspaced/pkg/wm"
+	"workspaced/pkg/config"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/notification"
+	"workspaced/pkg/wm"
 )
 
 type Target int
@@ -166,12 +166,12 @@ func copyFileToClipboard(ctx context.Context, path string) {
 }
 
 func notifyMissing(ctx context.Context, tool string) {
-	n := &notification.Notification{
+	n := notification.Notification{
 		Title:   "Screenshot Error",
 		Message: fmt.Sprintf("Missing tool: %s", tool),
 		Urgency: "critical",
 	}
-	if err := n.Notify(ctx); err != nil {
+	if err := notification.Notify(ctx, &n); err != nil {
 		logging.ReportError(ctx, err)
 	}
 }
@@ -189,12 +189,12 @@ func notifySaved(ctx context.Context, path string, target Target) {
 		strategy = "Selected area"
 	}
 
-	n := &notification.Notification{
+	n := notification.Notification{
 		Title:   fmt.Sprintf("Screenshot Saved (%s)", strategy),
 		Message: path,
 		Icon:    "camera-photo",
 	}
-	if err := n.Notify(ctx); err != nil {
+	if err := notification.Notify(ctx, &n); err != nil {
 		logging.ReportError(ctx, err)
 	}
 }

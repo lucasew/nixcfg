@@ -9,7 +9,7 @@ import (
 	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
-	napi "workspaced/pkg/notification/api"
+	"workspaced/pkg/notification"
 )
 
 func SetBrightness(ctx context.Context, arg string) error {
@@ -44,8 +44,8 @@ func ShowStatus(ctx context.Context) error {
 			continue
 		}
 
-		n := napi.Notification{
-			ID:          napi.StatusNotificationID,
+		n := notification.Notification{
+			ID:          notification.StatusNotificationID,
 			Title:       "Brightness",
 			Message:     devname,
 			Icon:        "display-brightness",
@@ -53,7 +53,9 @@ func ShowStatus(ctx context.Context) error {
 			HasProgress: true,
 		}
 
-		_ = n.Notify(ctx)
+		if err := notification.Notify(ctx, &n); err != nil {
+			logging.ReportError(ctx, fmt.Errorf("failed to send brightness notification: %w", err))
+		}
 		logging.GetLogger(ctx).Info("brightness updated", "device", devname, "level", level)
 	}
 	return nil

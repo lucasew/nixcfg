@@ -23,12 +23,16 @@ func init() {
 					percent := i * 10
 					n.Message = fmt.Sprintf("Passo %d de 10...", i)
 					n.Progress = float64(percent) / 100.0
-					_ = n.Notify(ctx)
+					if err := notification.Notify(ctx, n); err != nil {
+						fmt.Printf("Error sending notification: %v\n", err)
+					}
 					time.Sleep(time.Second)
 				}
 				n.Message = "Demo concluída!"
 				n.Progress = 1.0
-				_ = n.Notify(ctx)
+				if err := notification.Notify(ctx, n); err != nil {
+					fmt.Printf("Error sending final notification: %v\n", err)
+				}
 			},
 		})
 	})

@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
-	napi "workspaced/pkg/notification/api"
+	"workspaced/pkg/notification"
 )
 
 func init() {
-	driver.Register[napi.Driver](&Provider{})
+	driver.Register[notification.Driver](&Provider{})
 }
 
 type Provider struct{}
@@ -23,13 +23,13 @@ func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	return nil
 }
 
-func (p *Provider) New(ctx context.Context) (napi.Driver, error) {
+func (p *Provider) New(ctx context.Context) (notification.Driver, error) {
 	return &Driver{}, nil
 }
 
 type Driver struct{}
 
-func (d *Driver) Notify(ctx context.Context, n *napi.Notification) error {
+func (d *Driver) Notify(ctx context.Context, n *notification.Notification) error {
 	args := []string{
 		"--title", n.Title,
 		"--content", n.Message,

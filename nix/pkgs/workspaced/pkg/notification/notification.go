@@ -1,15 +1,35 @@
 package notification
 
 import (
-	"workspaced/pkg/notification/api"
+	"context"
+	"workspaced/pkg/driver"
 )
 
 // StatusNotificationID is the reserved ID for system status notifications (e.g. volume, brightness).
 // Reusing this ID allows updating an existing notification instead of creating a new one.
-const StatusNotificationID = api.StatusNotificationID
+const (
+	StatusNotificationID uint32 = 100
+)
 
 // Notification represents a system notification.
-type Notification = api.Notification
+type Notification struct {
+	ID          uint32
+	Title       string
+	Message     string
+	Urgency     string // low, normal, critical
+	Icon        string
+	Progress    float64 // 0.0-1.0
+	HasProgress bool
+}
 
-// Notifier is the interface for sending notifications.
-type Notifier = api.Driver
+type Driver interface {
+	Notify(ctx context.Context, n *Notification) error
+}
+
+func Notify(ctx context.Context, n *Notification) error {
+	d, err := driver.Get[Driver](ctx)
+	if err != nil {
+		return err
+	}
+	return d.Notify(ctx, n)
+}

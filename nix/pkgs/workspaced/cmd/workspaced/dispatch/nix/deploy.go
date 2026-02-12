@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	"workspaced/pkg/nix"
-	"workspaced/pkg/notification"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/nix"
+	"workspaced/pkg/notification"
 
 	"github.com/spf13/cobra"
 )
@@ -45,12 +45,14 @@ func init() {
 					}
 				}
 
-				n := &notification.Notification{
+				n := notification.Notification{
 					Title:   "NixOS Deploy",
 					Message: fmt.Sprintf("Deploy concluído para: %s", strings.Join(nodes, ", ")),
 					Icon:    "nix-snowflake",
 				}
-				_ = n.Notify(ctx)
+				if err := notification.Notify(ctx, &n); err != nil {
+					logging.GetLogger(ctx).Error("failed to send notification", "error", err)
+				}
 
 				return nil
 			},

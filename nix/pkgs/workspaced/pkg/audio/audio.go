@@ -10,7 +10,7 @@ import (
 	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
-	napi "workspaced/pkg/notification/api"
+	"workspaced/pkg/notification"
 )
 
 // SetVolume sets the volume of the default sink using the available driver.
@@ -66,13 +66,13 @@ func ShowStatus(ctx context.Context) error {
 
 	logging.GetLogger(ctx).Info("volume updated", "level", level, "sink", sinkName, "muted", isMuted)
 
-	n := napi.Notification{
-		ID:          napi.StatusNotificationID,
+	n := notification.Notification{
+		ID:          notification.StatusNotificationID,
 		Title:       "Volume",
 		Message:     sinkName,
 		Icon:        icon,
 		Progress:    float64(level) / 100.0,
 		HasProgress: true,
 	}
-	return n.Notify(ctx)
+	return notification.Notify(ctx, &n)
 }

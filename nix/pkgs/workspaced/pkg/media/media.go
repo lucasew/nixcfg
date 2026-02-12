@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 	"workspaced/pkg/api"
-	"workspaced/pkg/notification"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/notification"
 
 	"github.com/godbus/dbus/v5"
 )
@@ -245,7 +245,7 @@ func ShowStatus(ctx context.Context) error {
 		message = "Unknown Artist"
 	}
 
-	n := &notification.Notification{
+	n := notification.Notification{
 		ID:          notification.StatusNotificationID,
 		Title:       title,
 		Message:     message,
@@ -262,7 +262,7 @@ func ShowStatus(ctx context.Context) error {
 		"icon", iconPath,
 	)
 
-	return n.Notify(ctx)
+	return notification.Notify(ctx, &n)
 }
 
 func Watch(ctx context.Context) {
