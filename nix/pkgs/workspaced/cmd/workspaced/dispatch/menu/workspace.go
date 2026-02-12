@@ -3,8 +3,8 @@ package menu
 import (
 	"sort"
 	"strconv"
-	"strings"
-	"workspaced/pkg/exec"
+	"workspaced/pkg/driver"
+	"workspaced/pkg/driver/menu"
 	"workspaced/pkg/driver/wm"
 
 	"workspaced/pkg/config"
@@ -24,31 +24,38 @@ func init() {
 					return err
 				}
 
+				var items []menu.Item
 				var keys []string
 				for k := range cfg.Workspaces {
 					keys = append(keys, k)
 				}
 				sort.Strings(keys)
 
-				cmd := exec.RunCmd(c.Context(), "rofi", "-dmenu", "-show-icons")
-				cmd.Stdin = strings.NewReader(strings.Join(keys, "\n"))
+				for _, k := range keys {
+					items = append(items, menu.Item{
+						Label: k,
+						Value: strconv.Itoa(cfg.Workspaces[k]),
+					})
+				}
 
-				out, err := cmd.Output()
+				d, err := driver.Get[menu.Driver](c.Context())
 				if err != nil {
 					return err
 				}
 
-				selected := strings.TrimSpace(string(out))
-				if selected == "" {
+				selected, err := d.Choose(c.Context(), menu.Options{
+					Prompt: "Workspace",
+					Items:  items,
+				})
+				if err != nil {
+					return err
+				}
+
+				if selected == nil {
 					return nil
 				}
 
-				workspaceNum, ok := cfg.Workspaces[selected]
-				if !ok {
-					return nil
-				}
-
-				return wm.SwitchToWorkspace(c.Context(), strconv.Itoa(workspaceNum), move)
+				return wm.SwitchToWorkspace(c.Context(), selected.Value, move)
 			},
 		}
 		cmd.Flags().Bool("move", false, "Move container to workspace")

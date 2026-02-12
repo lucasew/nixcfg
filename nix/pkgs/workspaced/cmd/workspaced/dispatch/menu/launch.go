@@ -1,7 +1,8 @@
 package menu
 
 import (
-	"workspaced/pkg/exec"
+	"workspaced/pkg/driver"
+	"workspaced/pkg/driver/menu"
 
 	"github.com/spf13/cobra"
 )
@@ -12,7 +13,11 @@ func init() {
 			Use:   "launch",
 			Short: "Application launcher",
 			RunE: func(c *cobra.Command, args []string) error {
-				return exec.RunCmd(c.Context(), "rofi", "-show", "combi", "-combi-modi", "drun", "-show-icons").Run()
+				d, err := driver.Get[menu.Driver](c.Context())
+				if err != nil {
+					return err
+				}
+				return d.RunApp(c.Context())
 			},
 		})
 	})
