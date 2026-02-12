@@ -21,7 +21,11 @@ func init() {
 				if err != nil {
 					return err
 				}
-				return d.SetVolume(c.Context(), volume-0.05)
+				err = d.SetVolume(c.Context(), volume-0.05)
+				if err != nil {
+					return err
+				}
+				return audio.ShowStatus(c.Context())
 			},
 		})
 	})

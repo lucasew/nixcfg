@@ -3,6 +3,7 @@ package pulse
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"strconv"
 	"strings"
 	"workspaced/pkg/driver"
@@ -36,11 +37,26 @@ func (p *Provider) New(ctx context.Context) (audio.Driver, error) {
 type Driver struct{}
 
 func (d *Driver) SetVolume(ctx context.Context, level float64) error {
-
+	slog.Info("set_volume", "level", level)
 	if err := exec.RunCmd(ctx, "pactl", "set-sink-volume", sink, fmt.Sprintf("%d%%", int(level*100))).Run(); err != nil {
 		return fmt.Errorf("failed to set volume: %w", err)
 	}
 	return nil
+}
+
+func parseVolume(output string) (float64, error) {
+	volumeStr := strings.TrimSpace(string(output))
+	for item := range strings.SplitSeq(volumeStr, " ") {
+		if before, ok := strings.CutSuffix(item, "%"); ok {
+			volumeStr = before
+			volume, err := strconv.Atoi(volumeStr)
+			if err != nil {
+				return 0, err
+			}
+			return float64(volume) / 100, nil
+		}
+	}
+	return 0, nil
 }
 
 func (d *Driver) GetVolume(ctx context.Context) (float64, error) {
@@ -48,14 +64,7 @@ func (d *Driver) GetVolume(ctx context.Context) (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	volumeStr := strings.TrimSpace(string(volumeOut))
-	volumeStr = strings.TrimPrefix(volumeStr, "Volume: ")
-	volumeStr = strings.TrimSuffix(volumeStr, "%")
-	volume, err := strconv.Atoi(volumeStr)
-	if err != nil {
-		return 0, fmt.Errorf("failed to parse volume: %w", err)
-	}
-	return float64(volume) / 100, nil
+	return parseVolume(string(volumeOut))
 }
 
 func (d *Driver) GetMute(ctx context.Context) (bool, error) {

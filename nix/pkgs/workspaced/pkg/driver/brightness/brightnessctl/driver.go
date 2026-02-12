@@ -62,7 +62,7 @@ func (d *Driver) Status(ctx context.Context) (*brightness.Device, error) {
 
 func (d *Driver) SetBrightness(ctx context.Context, level float64) error {
 
-	if err := exec.RunCmd(ctx, "brightnessctl", "s", fmt.Sprintf("%f%", int(level*100))).Run(); err != nil {
+	if err := exec.RunCmd(ctx, "brightnessctl", "s", fmt.Sprintf("%d%%", int(level*100))).Run(); err != nil {
 		return fmt.Errorf("failed to set brightness: %w", err)
 	}
 

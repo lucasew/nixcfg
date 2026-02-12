@@ -22,7 +22,11 @@ func init() {
 				if err != nil {
 					return err
 				}
-				return d.SetBrightness(c.Context(), status.Brightness+0.05)
+				err = d.SetBrightness(c.Context(), status.Brightness+0.05)
+				if err != nil {
+					return err
+				}
+				return brightness.ShowStatus(c.Context())
 			},
 		})
 	})

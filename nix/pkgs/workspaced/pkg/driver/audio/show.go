@@ -44,7 +44,7 @@ func ShowStatus(ctx context.Context) error {
 		Title:       "Volume",
 		Message:     sinkName,
 		Icon:        icon,
-		Progress:    float64(level) / 100.0,
+		Progress:    level,
 		HasProgress: true,
 	}
 	return notification.Notify(ctx, &n)

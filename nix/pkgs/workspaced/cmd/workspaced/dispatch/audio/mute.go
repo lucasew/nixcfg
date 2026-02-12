@@ -17,7 +17,11 @@ func init() {
 				if err != nil {
 					return err
 				}
-				return d.ToggleMute(c.Context())
+				err = d.ToggleMute(c.Context())
+				if err != nil {
+					return err
+				}
+				return audio.ShowStatus(c.Context())
 			},
 		})
 	})
