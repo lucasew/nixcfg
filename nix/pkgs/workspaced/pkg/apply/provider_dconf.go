@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strings"
 	"workspaced/pkg/config"
+	"workspaced/pkg/deployer"
 )
 
 type DconfProvider struct{}
@@ -18,7 +19,7 @@ func (p *DconfProvider) Name() string {
 	return "dconf"
 }
 
-func (p *DconfProvider) GetDesiredState(ctx context.Context) ([]DesiredState, error) {
+func (p *DconfProvider) GetDesiredState(ctx context.Context) ([]deployer.DesiredState, error) {
 	cfg, err := config.Load()
 	if err != nil {
 		return nil, err
@@ -104,7 +105,7 @@ func (p *DconfProvider) GetDesiredState(ctx context.Context) ([]DesiredState, er
 		return nil, err
 	}
 
-	return []DesiredState{
+	return []deployer.DesiredState{
 		{
 			Target: markerFile,
 			Source: markerContent,

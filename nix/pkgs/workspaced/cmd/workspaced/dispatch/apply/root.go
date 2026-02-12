@@ -1,13 +1,20 @@
 package apply
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"path/filepath"
 	"workspaced/pkg/apply"
+	"workspaced/pkg/config"
+	"workspaced/pkg/deployer"
+	"workspaced/pkg/dotfiles"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
 	"workspaced/pkg/nix"
+	"workspaced/pkg/source"
+	"workspaced/pkg/template"
 
 	"github.com/spf13/cobra"
 )
@@ -28,74 +35,115 @@ func GetCommand() *cobra.Command {
 
 			dryRun, _ := cmd.Flags().GetBool("dry-run")
 
-			// 1. Load state
-			state, err := apply.LoadState()
+			// Carregar configuração
+			cfg, err := config.LoadConfig()
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to load config: %w", err)
 			}
 
-			// 2. Collect desired state
-			providers := []apply.Provider{
-				&apply.DconfProvider{},
-				&apply.SymlinkProvider{},
+			// Obter dotfiles root
+			dotfilesRoot, err := env.GetDotfilesRoot()
+			if err != nil {
+				return fmt.Errorf("failed to get dotfiles root: %w", err)
 			}
 
-			desired := []apply.DesiredState{}
-			for _, p := range providers {
-				d, err := p.GetDesiredState(ctx)
+			home, err := os.UserHomeDir()
+			if err != nil {
+				return fmt.Errorf("failed to get home directory: %w", err)
+			}
+
+			// Criar template engine compartilhada
+			engine := template.NewEngine(ctx)
+
+			// Configurar sources
+			sources := []source.Source{
+				// Provider dconf (priority baixa)
+				source.NewProviderSource(&apply.DconfProvider{}, 50),
+			}
+
+			// DirectorySource para config/ (priority 100)
+			configDir := filepath.Join(dotfilesRoot, "config")
+			if _, err := os.Stat(configDir); err == nil {
+				dirSource, err := source.NewDirectorySource(ctx, source.DirectorySourceConfig{
+					Name:       "config",
+					BaseDir:    configDir,
+					TargetBase: home,
+					Priority:   100,
+					Engine:     engine,
+					Data:       cfg,
+				})
 				if err != nil {
-					return fmt.Errorf("provider %s failed: %w", p.Name(), err)
+					return fmt.Errorf("failed to create config source: %w", err)
 				}
-				desired = append(desired, d...)
+				sources = append(sources, dirSource)
 			}
 
-			// 3. Plan
-			actions, err := apply.Plan(ctx, desired, state)
+			// StateStore
+			stateStore, err := deployer.NewFileStateStore("~/.config/workspaced/state.json")
+			if err != nil {
+				return fmt.Errorf("failed to create state store: %w", err)
+			}
+
+			// Hooks
+			hooks := []dotfiles.Hook{
+				// Hook para reload GTK theme
+				&dotfiles.FuncHook{
+					AfterFn: func(ctx context.Context, actions []deployer.Action, execErr error) error {
+						if execErr != nil {
+							return nil // Não executar se houve erro
+						}
+						if env.IsPhone() {
+							return nil // Não executar em phone
+						}
+
+						home, _ := os.UserHomeDir()
+						dummyTheme := home + "/.local/share/themes/dummy"
+						if _, err := os.Stat(dummyTheme); err == nil {
+							// Switch to dummy and back to force GTK reload
+							if err := exec.RunCmd(ctx, "dconf", "write", "/org/gnome/desktop/interface/gtk-theme", "'dummy'").Run(); err != nil {
+								logger.Warn("failed to switch to dummy theme", "error", err)
+							}
+							if err := exec.RunCmd(ctx, "dconf", "write", "/org/gnome/desktop/interface/gtk-theme", "'base16'").Run(); err != nil {
+								logger.Warn("failed to switch to base16 theme", "error", err)
+							}
+						}
+						return nil
+					},
+				},
+			}
+
+			// Criar manager
+			mgr, err := dotfiles.NewManager(dotfiles.Config{
+				Sources:          sources,
+				StateStore:       stateStore,
+				ConflictStrategy: source.ResolveByPriority,
+				Hooks:            hooks,
+			})
+			if err != nil {
+				return fmt.Errorf("failed to create manager: %w", err)
+			}
+
+			// Aplicar configurações
+			result, err := mgr.Apply(ctx, dotfiles.ApplyOptions{
+				DryRun: dryRun,
+			})
 			if err != nil {
 				return err
 			}
 
-			// 4. Show and execute
-			hasChanges := false
-			for _, a := range actions {
-				if a.Type != apply.ActionNoop {
-					hasChanges = true
-					cmd.Printf("[%s] %s\n", a.Type, a.Target)
-					if a.Type == apply.ActionUpdate || a.Type == apply.ActionCreate {
-						cmd.Printf("      -> %s\n", a.Desired.Source)
-					}
-				}
-			}
-
-			if !hasChanges {
-				logger.Info("no file changes needed")
-			} else if dryRun {
-				logger.Info("dry-run: skipping file execution")
-			} else {
-				if err := apply.Execute(ctx, actions, state); err != nil {
-					return err
-				}
-				if err := apply.SaveState(state); err != nil {
-					return err
-				}
-
-				// Reload GTK theme if not on Termux
-				if !env.IsPhone() {
-					home, _ := os.UserHomeDir()
-					dummyTheme := home + "/.local/share/themes/dummy"
-					if _, err := os.Stat(dummyTheme); err == nil {
-						// Switch to dummy and back to force GTK reload
-						if err := exec.RunCmd(ctx, "dconf", "write", "/org/gnome/desktop/interface/gtk-theme", "'dummy'").Run(); err != nil {
-							logger.Warn("failed to switch to dummy theme", "error", err)
-						}
-						if err := exec.RunCmd(ctx, "dconf", "write", "/org/gnome/desktop/interface/gtk-theme", "'base16'").Run(); err != nil {
-							logger.Warn("failed to switch to base16 theme", "error", err)
+			// Mostrar resultado
+			if result.FilesCreated > 0 || result.FilesUpdated > 0 || result.FilesDeleted > 0 {
+				for _, a := range result.Actions {
+					if a.Type != deployer.ActionNoop {
+						cmd.Printf("[%s] %s\n", a.Type, a.Target)
+						if a.Type == deployer.ActionUpdate || a.Type == deployer.ActionCreate {
+							cmd.Printf("      -> %s\n", a.Desired.Source)
 						}
 					}
 				}
 			}
 
-			// 5. System specific hooks
+			// NixOS rebuild (se aplicável)
 			if env.IsNixOS() {
 				logger.Info("running NixOS rebuild", "action", action)
 				if dryRun {
@@ -106,11 +154,11 @@ func GetCommand() *cobra.Command {
 						logger.Info("performing remote build for riverwood")
 						hostname := env.GetHostname()
 						ref := fmt.Sprintf(".#nixosConfigurations.%s.config.system.build.toplevel", hostname)
-						result, err := nix.RemoteBuild(ctx, ref, "whiterun", true)
+						nixResult, err := nix.RemoteBuild(ctx, ref, "whiterun", true)
 						if err != nil {
 							return fmt.Errorf("remote build failed: %w", err)
 						}
-						flake = result
+						flake = nixResult
 					}
 					if err := nix.Rebuild(ctx, action, flake); err != nil {
 						return err
