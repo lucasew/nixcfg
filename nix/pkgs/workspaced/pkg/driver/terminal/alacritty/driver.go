@@ -1,0 +1,44 @@
+package alacritty
+
+import (
+	"context"
+	"fmt"
+	"workspaced/pkg/driver"
+	"workspaced/pkg/driver/terminal"
+	"workspaced/pkg/exec"
+)
+
+func init() {
+	driver.Register[terminal.Driver](&Provider{})
+}
+
+type Provider struct{}
+
+func (p *Provider) Name() string { return "Alacritty" }
+
+func (p *Provider) CheckCompatibility(ctx context.Context) error {
+	if !exec.IsBinaryAvailable(ctx, "alacritty") {
+		return fmt.Errorf("%w: alacritty not found", driver.ErrIncompatible)
+	}
+	return nil
+}
+
+func (p *Provider) New(ctx context.Context) (terminal.Driver, error) {
+	return &Driver{}, nil
+}
+
+type Driver struct{}
+
+func (d *Driver) Open(ctx context.Context, opts terminal.Options) error {
+	args := []string{}
+	if opts.Title != "" {
+		args = append(args, "-T", opts.Title)
+	}
+	if opts.Command != "" {
+		args = append(args, "-e", opts.Command)
+		args = append(args, opts.Args...)
+	}
+
+	cmd := exec.RunCmd(ctx, "alacritty", args...)
+	return cmd.Start()
+}

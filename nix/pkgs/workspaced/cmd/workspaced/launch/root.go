@@ -1,10 +1,7 @@
 package launch
 
 import (
-	"fmt"
-	"os"
-	"syscall"
-	"workspaced/pkg/exec"
+	"workspaced/pkg/driver/terminal"
 
 	"github.com/spf13/cobra"
 )
@@ -19,28 +16,14 @@ func NewCommand() *cobra.Command {
 		Use:   "terminal",
 		Short: "Launch the preferred terminal",
 		RunE: func(c *cobra.Command, args []string) error {
-			ctx := c.Context()
-			terminals := []string{"kitty", "alacritty", "foot", "st", "xterm"}
-
-			for _, term := range terminals {
-				termPath, err := exec.Which(ctx, term)
-				if err != nil {
-					continue
-				}
-
-				// If we are in the daemon, we want to detach it
-				if os.Getenv("WORKSPACED_DAEMON") == "1" {
-					cmd := exec.RunCmd(ctx, termPath, args...)
-					cmd.Stdout = nil
-					cmd.Stderr = nil
-					return cmd.Start()
-				}
-
-				// If local, just exec
-				return syscall.Exec(termPath, append([]string{term}, args...), os.Environ())
+			opts := terminal.Options{
+				Title: "Terminal",
 			}
-
-			return fmt.Errorf("no terminal found")
+			if len(args) > 0 {
+				opts.Command = args[0]
+				opts.Args = args[1:]
+			}
+			return terminal.Open(c.Context(), opts)
 		},
 	})
 
