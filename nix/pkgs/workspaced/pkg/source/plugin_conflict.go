@@ -79,7 +79,7 @@ func (p *ConflictResolverPlugin) resolveConflict(relPath string, files []File) (
 		for _, f := range files {
 			msg += fmt.Sprintf("  - %s (priority %d, type %s)\n", f.SourceName, f.Priority, f.Type)
 		}
-		return nil, fmt.Errorf(msg)
+		return nil, fmt.Errorf("%s", msg)
 
 	case ResolveBySkip:
 		// Não aplica nenhum arquivo
