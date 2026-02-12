@@ -3,7 +3,7 @@ package demo
 import (
 	"fmt"
 	"time"
-	"workspaced/pkg/notification"
+	"workspaced/pkg/driver/notification"
 
 	"github.com/spf13/cobra"
 )

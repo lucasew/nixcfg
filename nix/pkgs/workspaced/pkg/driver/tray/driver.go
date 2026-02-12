@@ -3,7 +3,6 @@ package tray
 import (
 	"context"
 	"image"
-	"workspaced/pkg/driver"
 )
 
 // MenuItem represents an item in the tray menu.
@@ -26,9 +25,4 @@ type Driver interface {
 	Run(ctx context.Context) error
 	SetState(s State)
 	Close()
-}
-
-// GetDefault returns the appropriate tray driver for the current environment.
-func GetDefault() (Driver, error) {
-	return driver.Get[Driver](context.Background())
 }

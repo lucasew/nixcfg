@@ -4,7 +4,7 @@ import (
 	"context"
 	"workspaced/pkg/driver"
 
-	"workspaced/pkg/notification"
+	"workspaced/pkg/driver/notification"
 )
 
 func ShowStatus(ctx context.Context) error {

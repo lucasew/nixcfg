@@ -8,7 +8,7 @@ import (
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
 	"workspaced/pkg/nix"
-	"workspaced/pkg/notification"
+	"workspaced/pkg/driver/notification"
 
 	"github.com/spf13/cobra"
 )

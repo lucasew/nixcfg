@@ -9,7 +9,7 @@ import (
 	"workspaced/pkg/driver"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
-	"workspaced/pkg/screen"
+	"workspaced/pkg/driver/screen"
 	"workspaced/pkg/types"
 )
 

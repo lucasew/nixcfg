@@ -13,7 +13,7 @@ import (
 	"workspaced/pkg/exec"
 	"workspaced/pkg/git"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/notification"
+	"workspaced/pkg/driver/notification"
 	"workspaced/pkg/sudo"
 	"workspaced/pkg/types"
 )

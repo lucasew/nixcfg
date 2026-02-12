@@ -1,7 +1,7 @@
 package screen
 
 import (
-	"workspaced/pkg/screen"
+	"workspaced/pkg/driver/screen"
 
 	"github.com/spf13/cobra"
 )

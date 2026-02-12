@@ -2,7 +2,6 @@ package notification
 
 import (
 	"context"
-	"workspaced/pkg/driver"
 )
 
 // StatusNotificationID is the reserved ID for system status notifications (e.g. volume, brightness).
@@ -24,12 +23,4 @@ type Notification struct {
 
 type Driver interface {
 	Notify(ctx context.Context, n *Notification) error
-}
-
-func Notify(ctx context.Context, n *Notification) error {
-	d, err := driver.Get[Driver](ctx)
-	if err != nil {
-		return err
-	}
-	return d.Notify(ctx, n)
 }

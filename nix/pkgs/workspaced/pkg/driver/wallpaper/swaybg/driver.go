@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 	"workspaced/pkg/driver"
+	"workspaced/pkg/driver/wallpaper"
 	"workspaced/pkg/exec"
-	"workspaced/pkg/wallpaper/api"
 )
 
 func init() {
-	driver.Register[api.Driver](&Provider{})
+	driver.Register[wallpaper.Driver](&Provider{})
 }
 
 type Provider struct{}
@@ -26,7 +26,7 @@ func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	return nil
 }
 
-func (p *Provider) New(ctx context.Context) (api.Driver, error) {
+func (p *Provider) New(ctx context.Context) (wallpaper.Driver, error) {
 	return &Driver{}, nil
 }
 

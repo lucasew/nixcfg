@@ -14,7 +14,6 @@ import (
 	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
-	wapi "workspaced/pkg/wallpaper/api"
 )
 
 func SetStatic(ctx context.Context, path string) error {
@@ -41,7 +40,7 @@ func SetStatic(ctx context.Context, path string) error {
 	stopCmd := exec.RunCmd(ctx, "systemctl", "--user", "stop", "wallpaper-change.service")
 	_ = stopCmd.Run() // Ignore errors if service doesn't exist
 
-	d, err := driver.Get[wapi.Driver](ctx)
+	d, err := driver.Get[Driver](ctx)
 	if err != nil {
 		return err
 	}

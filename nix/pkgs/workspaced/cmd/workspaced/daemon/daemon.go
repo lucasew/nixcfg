@@ -20,10 +20,10 @@ import (
 	"workspaced/pkg/db"
 	"workspaced/pkg/driver/media"
 	_ "workspaced/pkg/driver/prelude"
+	"workspaced/pkg/driver/tray"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/icons"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/tray"
 	"workspaced/pkg/types"
 
 	"github.com/coreos/go-systemd/v22/activation"
@@ -120,7 +120,7 @@ func RunDaemon() error {
 
 	// Initialize tray
 	go func() {
-		t, err := tray.GetDefault()
+		t, err := tray.GetDefault(ctx)
 		if err != nil {
 			slog.Debug("no tray driver found, skipping", "error", err)
 			return

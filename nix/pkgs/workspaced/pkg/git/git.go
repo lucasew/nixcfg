@@ -8,7 +8,7 @@ import (
 	"workspaced/pkg/config"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/notification"
+	"workspaced/pkg/driver/notification"
 )
 
 func QuickSync(ctx context.Context) error {

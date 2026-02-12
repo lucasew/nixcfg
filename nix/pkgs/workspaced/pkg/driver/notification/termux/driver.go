@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
-	"workspaced/pkg/notification"
+	"workspaced/pkg/driver/notification"
 )
 
 func init() {

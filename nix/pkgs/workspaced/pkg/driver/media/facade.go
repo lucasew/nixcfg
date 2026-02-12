@@ -6,7 +6,7 @@ import (
 	"time"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/notification"
+	"workspaced/pkg/driver/notification"
 )
 
 func RunAction(ctx context.Context, action string) error {

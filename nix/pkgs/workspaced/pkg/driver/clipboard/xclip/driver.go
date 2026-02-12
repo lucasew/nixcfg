@@ -8,13 +8,13 @@ import (
 	"io"
 	"strings"
 	dapi "workspaced/pkg/api"
-	"workspaced/pkg/clipboard/api"
 	"workspaced/pkg/driver"
+	"workspaced/pkg/driver/clipboard"
 	"workspaced/pkg/exec"
 )
 
 func init() {
-	driver.Register[api.Driver](&Provider{})
+	driver.Register[clipboard.Driver](&Provider{})
 }
 
 type Provider struct{}
@@ -29,7 +29,7 @@ func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	return nil
 }
 
-func (p *Provider) New(ctx context.Context) (api.Driver, error) {
+func (p *Provider) New(ctx context.Context) (clipboard.Driver, error) {
 	return &Driver{}, nil
 }
 

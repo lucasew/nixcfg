@@ -10,7 +10,7 @@ import (
 	"github.com/godbus/dbus/v5"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/tray"
+	"workspaced/pkg/driver/tray"
 )
 
 func init() {

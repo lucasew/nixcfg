@@ -15,7 +15,7 @@ import (
 	"workspaced/pkg/exec"
 	"workspaced/pkg/icons"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/notification"
+	"workspaced/pkg/driver/notification"
 	"workspaced/pkg/sudo"
 	"workspaced/pkg/types"
 )
