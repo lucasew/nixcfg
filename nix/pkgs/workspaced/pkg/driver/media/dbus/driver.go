@@ -183,3 +183,34 @@ func (d *Driver) GetMetadata(ctx context.Context) (*media.Metadata, error) {
 
 	return res, nil
 }
+
+func (d *Driver) Watch(ctx context.Context, callback func(*media.Metadata)) error {
+	rule := "type='signal',interface='org.freedesktop.DBus.Properties',member='PropertiesChanged',path='/org/mpris/MediaPlayer2'"
+	if err := d.conn.BusObject().Call("org.freedesktop.DBus.AddMatch", 0, rule).Err; err != nil {
+		return err
+	}
+
+	c := make(chan *dbus.Signal, 10)
+	d.conn.Signal(c)
+
+	for {
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case signal := <-c:
+			if len(signal.Body) < 2 {
+				continue
+			}
+			if signal.Body[0].(string) != "org.mpris.MediaPlayer2.Player" {
+				continue
+			}
+			changed := signal.Body[1].(map[string]dbus.Variant)
+			if _, ok := changed["Metadata"]; ok {
+				meta, err := d.GetMetadata(ctx)
+				if err == nil {
+					callback(meta)
+				}
+			}
+		}
+	}
+}

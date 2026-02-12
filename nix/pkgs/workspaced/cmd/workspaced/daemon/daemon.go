@@ -18,11 +18,11 @@ import (
 	"io"
 	"workspaced/cmd/workspaced/dispatch"
 	"workspaced/pkg/db"
+	"workspaced/pkg/driver/media"
 	_ "workspaced/pkg/driver/prelude"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/icons"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/media"
 	"workspaced/pkg/tray"
 	"workspaced/pkg/types"
 

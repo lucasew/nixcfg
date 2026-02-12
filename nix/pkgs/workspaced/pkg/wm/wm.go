@@ -12,7 +12,7 @@ import (
 	"workspaced/pkg/driver"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/media"
+	"workspaced/pkg/driver/media"
 	"workspaced/pkg/wm/api"
 )
 
