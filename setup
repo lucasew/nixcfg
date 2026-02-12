@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 curl https://mise.run | sh
 
-. ./bin/source_me
+. $SCRIPT_DIR/bin/source_me
 
 mkdir -p ~/.local/share/workspaced/bin
 
 (
 	cd "nix/pkgs/workspaced" || exit
-	mise exec -- go build -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
+	$SCRIPT_DIR/bin/shim/mise exec -- $SCRIPT_DIR/bin/shim/workspaced
 ) || exit 1
 
-systemctl restart --user workspaced
 
 ~/.local/share/workspaced/bin/workspaced dispatch apply
