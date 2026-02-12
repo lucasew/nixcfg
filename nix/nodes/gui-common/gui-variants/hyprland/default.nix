@@ -106,10 +106,10 @@
         ''
           exec swayidle -w -d \
             idlehint 600 \
-            timeout 605 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on' \
-            lock 'swaylock -f ${lib.concatStringsSep " " swaylock-list-args}' \
-            unlock 'hyprctl dispatch dpms on' \
-            before-sleep 'playerctl pause'
+            timeout 605 'workspaced dispatch screen off' resume 'workspaced dispatch screen on' \
+            lock 'workspaced dispatch power lock' \
+            unlock 'workspaced dispatch screen on' \
+            before-sleep 'workspaced dispatch media stop'
         '';
     };
 

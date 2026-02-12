@@ -86,10 +86,10 @@ in
       script = ''
         PATH=$PATH:/run/current-system/sw/bin
         exec swayidle -w -d \
-          timeout 300 'loginctl lock-session' \
-          timeout 10 'pgrep swaylock && swaymsg "output * dpms off"' \
-          resume 'swaymsg "output * dpms on"' \
-          before-sleep 'loginctl lock-session'
+          timeout 300 'workspaced dispatch power lock' \
+          timeout 10 'pgrep swaylock && workspaced dispatch screen off' \
+          resume 'workspaced dispatch screen on' \
+          before-sleep 'workspaced dispatch power lock'
       '';
     };
 
