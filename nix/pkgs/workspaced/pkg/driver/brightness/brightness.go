@@ -1,13 +1,15 @@
 package brightness
 
-import "context"
+import (
+	"context"
+)
 
 type Device struct {
 	Name       string
-	Brightness float32
+	Brightness float64
 }
 
 type Driver interface {
-	SetBrightness(ctx context.Context, arg string) error
+	SetBrightness(ctx context.Context, brightness float64) error
 	Status(ctx context.Context) (*Device, error)
 }

@@ -1,7 +1,8 @@
 package brightness
 
 import (
-	"workspaced/pkg/brightness"
+	"workspaced/pkg/driver"
+	"workspaced/pkg/driver/brightness"
 
 	"github.com/spf13/cobra"
 )
@@ -12,7 +13,16 @@ func init() {
 			Use:   "down",
 			Short: "Decrease brightness",
 			RunE: func(c *cobra.Command, args []string) error {
-				return brightness.SetBrightness(c.Context(), "5%-")
+				d, err := driver.Get[brightness.Driver](c.Context())
+				if err != nil {
+					return err
+				}
+				status, err := d.Status(c.Context())
+				if err != nil {
+					return err
+				}
+				return d.SetBrightness(c.Context(), status.Brightness-0.05)
+
 			},
 		})
 	})

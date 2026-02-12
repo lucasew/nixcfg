@@ -1,7 +1,8 @@
 package audio
 
 import (
-	"workspaced/pkg/audio"
+	"workspaced/pkg/driver"
+	"workspaced/pkg/driver/audio"
 
 	"github.com/spf13/cobra"
 )
@@ -12,7 +13,15 @@ func init() {
 			Use:   "down",
 			Short: "Decrease volume",
 			RunE: func(c *cobra.Command, args []string) error {
-				return audio.SetVolume(c.Context(), "-5%")
+				d, err := driver.Get[audio.Driver](c.Context())
+				if err != nil {
+					return err
+				}
+				volume, err := d.GetVolume(c.Context())
+				if err != nil {
+					return err
+				}
+				return d.SetVolume(c.Context(), volume-0.05)
 			},
 		})
 	})

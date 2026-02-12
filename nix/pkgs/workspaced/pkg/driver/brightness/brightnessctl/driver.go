@@ -54,19 +54,17 @@ func (d *Driver) Status(ctx context.Context) (*brightness.Device, error) {
 		}
 		return &brightness.Device{
 			Name:       devname,
-			Brightness: float32(l) / 100,
+			Brightness: float64(l) / 100,
 		}, nil
 	}
 	return nil, fmt.Errorf("failed to find brightness device")
 }
 
-func (d *Driver) SetBrightness(ctx context.Context, arg string) error {
-	if arg != "" {
-		if err := exec.RunCmd(ctx, "brightnessctl", "s", arg).Run(); err != nil {
-			return fmt.Errorf("failed to set brightness: %w", err)
-		}
+func (d *Driver) SetBrightness(ctx context.Context, level float64) error {
+
+	if err := exec.RunCmd(ctx, "brightnessctl", "s", fmt.Sprintf("%f%", int(level*100))).Run(); err != nil {
+		return fmt.Errorf("failed to set brightness: %w", err)
 	}
+
 	return nil
 }
-
-func (d *Driver) DeviceStatus(ctx context.Context) Status

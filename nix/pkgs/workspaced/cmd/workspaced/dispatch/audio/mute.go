@@ -1,7 +1,8 @@
 package audio
 
 import (
-	"workspaced/pkg/audio"
+	"workspaced/pkg/driver"
+	"workspaced/pkg/driver/audio"
 
 	"github.com/spf13/cobra"
 )
@@ -12,7 +13,11 @@ func init() {
 			Use:   "mute",
 			Short: "Toggle mute",
 			RunE: func(c *cobra.Command, args []string) error {
-				return audio.SetVolume(c.Context(), "toggle")
+				d, err := driver.Get[audio.Driver](c.Context())
+				if err != nil {
+					return err
+				}
+				return d.ToggleMute(c.Context())
 			},
 		})
 	})
