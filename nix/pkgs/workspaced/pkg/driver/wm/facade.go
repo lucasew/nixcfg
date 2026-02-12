@@ -7,15 +7,17 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"time"
 
+	"sync"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/media"
 	"workspaced/pkg/logging"
 )
 
-// SwitchToWorkspace switches to the specified workspace.
-func SwitchToWorkspace(ctx context.Context, ws string, move bool) error {
+var wmMu sync.Mutex
+
+// switchToWorkspace é a implementação interna sem lock para evitar deadlock
+func switchToWorkspace(ctx context.Context, ws string, move bool) error {
 	d, err := driver.Get[Driver](ctx)
 	if err != nil {
 		return err
@@ -23,8 +25,17 @@ func SwitchToWorkspace(ctx context.Context, ws string, move bool) error {
 	return d.SwitchToWorkspace(ctx, ws, move)
 }
 
+// SwitchToWorkspace switches to the specified workspace.
+func SwitchToWorkspace(ctx context.Context, ws string, move bool) error {
+	wmMu.Lock()
+	defer wmMu.Unlock()
+	return switchToWorkspace(ctx, ws, move)
+}
+
 // ToggleScratchpad toggles the visibility of the scratchpad container.
 func ToggleScratchpad(ctx context.Context) error {
+	wmMu.Lock()
+	defer wmMu.Unlock()
 	d, err := driver.Get[Driver](ctx)
 	if err != nil {
 		return err
@@ -45,6 +56,8 @@ func ToggleScratchpadWithInfo(ctx context.Context) error {
 
 // NextWorkspace switches to (or moves the container to) the next available workspace.
 func NextWorkspace(ctx context.Context, move bool) error {
+	wmMu.Lock()
+	defer wmMu.Unlock()
 	runtimeDir := os.Getenv("XDG_RUNTIME_DIR")
 	if runtimeDir == "" {
 		runtimeDir = filepath.Join(os.TempDir(), fmt.Sprintf("workspaced-%d", os.Getuid()))
@@ -67,11 +80,14 @@ func NextWorkspace(ctx context.Context, move bool) error {
 		logging.ReportError(ctx, err)
 	}
 
-	return SwitchToWorkspace(ctx, nextWS, move)
+	return switchToWorkspace(ctx, nextWS, move)
 }
 
 // RotateWorkspaces rotates the visible workspaces across all connected outputs.
 func RotateWorkspaces(ctx context.Context) error {
+	wmMu.Lock()
+	defer wmMu.Unlock()
+
 	d, err := driver.Get[Driver](ctx)
 	if err != nil {
 		return err
@@ -105,14 +121,14 @@ func RotateWorkspaces(ctx context.Context) error {
 		}
 	}
 
-	if len(screens) == 0 {
-		return fmt.Errorf("no screens found")
+	if len(screens) <= 1 {
+		return nil // Nothing to rotate
 	}
 
 	oldScreens := make([]string, len(screens))
 	copy(oldScreens, screens)
 
-	// Rotate screens
+	// Rotate screens list (A, B) -> (B, A)
 	last := screens[len(screens)-1]
 	screens = append([]string{last}, screens[:len(screens)-1]...)
 
@@ -120,26 +136,15 @@ func RotateWorkspaces(ctx context.Context) error {
 		toScreen := screens[i]
 		ws := workspaceScreens[fromScreen]
 
-		if err := d.SwitchToWorkspace(ctx, ws, false); err != nil {
-			logging.ReportError(ctx, err)
-		}
-		time.Sleep(100 * time.Millisecond)
-
+		// Move o workspace para o novo monitor.
 		if err := d.MoveWorkspaceToOutput(ctx, ws, toScreen); err != nil {
 			logging.ReportError(ctx, err)
 		}
-		time.Sleep(100 * time.Millisecond)
 	}
 
-	for _, ws := range workspaceScreens {
-		if err := d.SwitchToWorkspace(ctx, ws, false); err != nil {
-			logging.ReportError(ctx, err)
-		}
-		time.Sleep(100 * time.Millisecond)
-	}
-
+	// Restaura o foco original
 	if focusedWorkspace != "" {
-		if err := d.SwitchToWorkspace(ctx, focusedWorkspace, false); err != nil {
+		if err := switchToWorkspace(ctx, focusedWorkspace, false); err != nil {
 			logging.ReportError(ctx, err)
 		}
 	}

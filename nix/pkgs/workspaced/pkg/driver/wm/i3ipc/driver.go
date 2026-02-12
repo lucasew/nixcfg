@@ -6,8 +6,8 @@ import (
 	"fmt"
 	dapi "workspaced/pkg/api"
 	"workspaced/pkg/driver"
-	"workspaced/pkg/exec"
 	api "workspaced/pkg/driver/wm"
+	"workspaced/pkg/exec"
 )
 
 func init() {
@@ -54,7 +54,7 @@ type Driver struct {
 }
 
 func (d *Driver) MoveWorkspaceToOutput(ctx context.Context, workspace string, output string) error {
-	return exec.RunCmd(ctx, d.Binary, "workspace", workspace, "move", "workspace", "to", "output", output).Run()
+	return exec.RunCmd(ctx, d.Binary, fmt.Sprintf("[workspace=\"%s\"] move workspace to output %s", workspace, output)).Run()
 }
 
 func (d *Driver) SwitchToWorkspace(ctx context.Context, ws string, move bool) error {
