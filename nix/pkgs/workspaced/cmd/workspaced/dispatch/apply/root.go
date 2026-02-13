@@ -68,15 +68,21 @@ func GetCommand() *cobra.Command {
 			// 2. Scanner - descobre arquivos em config/
 			if _, err := os.Stat(configDir); err == nil {
 				scanner, err := source.NewScannerPlugin(source.ScannerConfig{
-					Name:       "config",
+					Name:       "legacy-config",
 					BaseDir:    configDir,
 					TargetBase: home,
-					Priority:   100,
+					Priority:   50, // Legacy has lower priority than modules
 				})
 				if err != nil {
 					return fmt.Errorf("failed to create scanner: %w", err)
 				}
 				pipeline.AddPlugin(scanner)
+			}
+
+			// 2.5 Modules Scanner
+			modulesDir := filepath.Join(dotfilesRoot, "modules")
+			if _, err := os.Stat(modulesDir); err == nil {
+				pipeline.AddPlugin(source.NewModuleScannerPlugin(modulesDir, cfg, 100))
 			}
 
 			// 3. TemplateExpander - renderiza .tmpl (inclui multi-file)
@@ -93,8 +99,8 @@ func GetCommand() *cobra.Command {
 			}
 			pipeline.AddPlugin(dotdPlugin)
 
-			// 5. ConflictResolver - resolve conflitos por priority
-			pipeline.AddPlugin(source.NewConflictResolverPlugin(source.ResolveByPriority))
+			// 5. StrictConflictResolver - garante unicidade total
+			pipeline.AddPlugin(source.NewStrictConflictResolverPlugin())
 
 			// StateStore
 			stateStore, err := deployer.NewFileStateStore("~/.config/workspaced/state.json")

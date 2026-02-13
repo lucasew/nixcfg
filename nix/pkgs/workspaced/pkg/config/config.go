@@ -31,6 +31,7 @@ type GlobalConfig struct {
 	LazyTools  map[string]LazyToolConfig `toml:"lazy_tools"`
 	Palette    PaletteConfig             `toml:"palette"`
 	Fonts      FontsConfig               `toml:"fonts"`
+	Modules    map[string]any            `toml:"modules"`
 }
 
 type DesktopConfig struct {
@@ -354,6 +355,14 @@ func (g GlobalConfig) Merge(other GlobalConfig) GlobalConfig {
 		result.LazyTools = newLazyTools
 	}
 
+	if result.Modules == nil {
+		result.Modules = make(map[string]any)
+	} else {
+		newModules := make(map[string]any, len(result.Modules))
+		maps.Copy(newModules, result.Modules)
+		result.Modules = newModules
+	}
+
 	// Merge Workspaces map (additive, override on conflict)
 	maps.Copy(result.Workspaces, other.Workspaces)
 
@@ -365,6 +374,9 @@ func (g GlobalConfig) Merge(other GlobalConfig) GlobalConfig {
 
 	// Merge LazyTools map
 	maps.Copy(result.LazyTools, other.LazyTools)
+
+	// Merge Modules map
+	maps.Copy(result.Modules, other.Modules)
 
 	// Merge nested configs using their Merge methods
 	result.Desktop.Wallpaper = result.Desktop.Wallpaper.Merge(other.Desktop.Wallpaper)
@@ -456,6 +468,7 @@ func LoadConfig() (*GlobalConfig, error) {
 		},
 		Webapps:   make(map[string]WebappConfig),
 		LazyTools: make(map[string]LazyToolConfig),
+		Modules:   make(map[string]any),
 	}
 
 	// 2. Load and merge base config from $DOTFILES/settings.toml
@@ -493,11 +506,11 @@ func (c *Config) UnmarshalKey(key string, val interface{}) error {
 
 	for _, part := range parts {
 		if m, ok := current.(map[string]interface{}); ok {
-			val, ok := m[part]
+			v, ok := m[part]
 			if !ok {
 				return fmt.Errorf("key not found: %s", key)
 			}
-			current = val
+			current = v
 		} else {
 			return fmt.Errorf("key not found: %s", key)
 		}
@@ -513,4 +526,73 @@ func (c *Config) UnmarshalKey(key string, val interface{}) error {
 		return err
 	}
 	return json.Unmarshal(data, val)
+}
+
+func MergeStrict(dst, src map[string]any) error {
+	for k, v := range src {
+		if v == nil {
+			continue
+		}
+		if existing, ok := dst[k]; ok && existing != nil {
+			// Check for lists
+			if reflect.TypeOf(v).Kind() == reflect.Slice || reflect.TypeOf(v).Kind() == reflect.Array {
+				return fmt.Errorf("lists are forbidden in strict config (key: %s)", k)
+			}
+
+			// If both are maps, recurse
+			if vMap, ok := v.(map[string]any); ok {
+				if existingMap, ok := existing.(map[string]any); ok {
+					if err := MergeStrict(existingMap, vMap); err != nil {
+						return err
+					}
+					continue
+				}
+			}
+
+			// If atomic and different, error (no substitution)
+			if !reflect.DeepEqual(existing, v) {
+				return fmt.Errorf("substitution forbidden: key %q already has value %v, cannot overwrite with %v", k, existing, v)
+			}
+		} else {
+			// New key
+			if reflect.TypeOf(v).Kind() == reflect.Slice || reflect.TypeOf(v).Kind() == reflect.Array {
+				return fmt.Errorf("lists are forbidden in strict config (key: %s)", k)
+			}
+			dst[k] = v
+		}
+	}
+	return nil
+}
+
+func LoadFiles(paths []string) (*GlobalConfig, error) {
+	config := &GlobalConfig{
+		Workspaces: make(map[string]int),
+		Hosts:      make(map[string]HostConfig),
+		Webapps:    make(map[string]WebappConfig),
+		LazyTools:  make(map[string]LazyToolConfig),
+		Modules:    make(map[string]any),
+	}
+
+	mergedRaw := make(map[string]any)
+
+	for _, path := range paths {
+		var currentRaw map[string]any
+		if _, err := toml.DecodeFile(path, &currentRaw); err != nil {
+			return nil, fmt.Errorf("failed to decode %s: %w", path, err)
+		}
+		if err := MergeStrict(mergedRaw, currentRaw); err != nil {
+			return nil, fmt.Errorf("strict merge failed for %s: %w", path, err)
+		}
+	}
+
+	// Use JSON trick to unmarshal the merged map into the struct
+	data, err := json.Marshal(mergedRaw)
+	if err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal(data, config); err != nil {
+		return nil, err
+	}
+
+	return config, nil
 }

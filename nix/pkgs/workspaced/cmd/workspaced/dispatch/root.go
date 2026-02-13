@@ -30,6 +30,7 @@ import (
 	"workspaced/cmd/workspaced/dispatch/shell"
 	"workspaced/cmd/workspaced/dispatch/sudo"
 	"workspaced/cmd/workspaced/dispatch/sync"
+	"workspaced/cmd/workspaced/dispatch/template"
 	"workspaced/cmd/workspaced/dispatch/wallpaper"
 	"workspaced/cmd/workspaced/dispatch/webapp"
 	"workspaced/cmd/workspaced/dispatch/workspace"
@@ -135,6 +136,7 @@ func NewCommand() *cobra.Command {
 	cmd.AddCommand(shell.GetCommand())
 	cmd.AddCommand(sudo.GetCommand())
 	cmd.AddCommand(sync.GetCommand())
+	cmd.AddCommand(template.GetCommand())
 	cmd.AddCommand(wallpaper.GetCommand())
 	cmd.AddCommand(webapp.GetCommand())
 	cmd.AddCommand(workspace.GetCommand())
