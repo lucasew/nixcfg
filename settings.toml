@@ -352,6 +352,9 @@ global = true
 version = "2.86.0"
 global = true
 
+[drivers."workspaced/pkg/driver/terminal.Driver"]
+terminal_kitty = 100
+
 [desktop]
 dark_mode = true
 

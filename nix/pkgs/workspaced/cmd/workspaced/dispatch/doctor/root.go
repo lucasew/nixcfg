@@ -25,7 +25,11 @@ var Command = &cobra.Command{
 				status := "❌ Unavailable"
 				msg := ""
 				if d.Available {
-					status = "✅ Available"
+					if d.Selected {
+						status = "🎯 Selected"
+					} else {
+						status = "✅ Available"
+					}
 					if d.Weight == 0 {
 						msg = "Warning: implicit selection (weight 0). Consider setting explicit weight."
 					}
