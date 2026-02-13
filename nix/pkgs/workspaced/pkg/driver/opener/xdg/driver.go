@@ -1,0 +1,37 @@
+package xdg
+
+import (
+	"context"
+	"fmt"
+	"workspaced/pkg/driver"
+	"workspaced/pkg/driver/opener"
+	"workspaced/pkg/exec"
+)
+
+func init() {
+	driver.Register[opener.Driver](&Provider{})
+}
+
+type Provider struct{}
+
+func (p *Provider) Name() string { return "xdg-open" }
+
+func (p *Provider) CheckCompatibility(ctx context.Context) error {
+	if exec.GetEnv(ctx, "DISPLAY") == "" && exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
+		return fmt.Errorf("%w: neither DISPLAY nor WAYLAND_DISPLAY set", driver.ErrIncompatible)
+	}
+	if !exec.IsBinaryAvailable(ctx, "xdg-open") {
+		return fmt.Errorf("%w: xdg-open not found", driver.ErrIncompatible)
+	}
+	return nil
+}
+
+func (p *Provider) New(ctx context.Context) (opener.Driver, error) {
+	return &Driver{}, nil
+}
+
+type Driver struct{}
+
+func (d *Driver) Open(ctx context.Context, target string) error {
+	return exec.RunCmd(ctx, "xdg-open", target).Start()
+}

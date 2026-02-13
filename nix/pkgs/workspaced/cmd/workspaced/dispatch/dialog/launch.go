@@ -1,8 +1,8 @@
-package menu
+package dialog
 
 import (
 	"workspaced/pkg/driver"
-	"workspaced/pkg/driver/menu"
+	"workspaced/pkg/driver/dialog"
 
 	"github.com/spf13/cobra"
 )
@@ -10,14 +10,14 @@ import (
 func init() {
 	Registry.Register(func(parent *cobra.Command) {
 		parent.AddCommand(&cobra.Command{
-			Use:   "window",
-			Short: "Window switcher",
+			Use:   "launch",
+			Short: "Application launcher",
 			RunE: func(c *cobra.Command, args []string) error {
-				d, err := driver.Get[menu.Driver](c.Context())
+				d, err := driver.Get[dialog.Driver](c.Context())
 				if err != nil {
 					return err
 				}
-				return d.SwitchWindow(c.Context())
+				return d.RunApp(c.Context())
 			},
 		})
 	})

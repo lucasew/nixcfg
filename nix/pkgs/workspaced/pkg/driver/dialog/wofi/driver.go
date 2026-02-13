@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"strings"
 	"workspaced/pkg/driver"
-	"workspaced/pkg/driver/menu"
+	"workspaced/pkg/driver/dialog"
 	"workspaced/pkg/exec"
 )
 
 func init() {
-	driver.Register[menu.Driver](&Provider{})
+	driver.Register[dialog.Chooser](&Provider{})
 }
 
 type Provider struct{}
@@ -27,13 +27,13 @@ func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	return nil
 }
 
-func (p *Provider) New(ctx context.Context) (menu.Driver, error) {
+func (p *Provider) New(ctx context.Context) (dialog.Chooser, error) {
 	return &Driver{}, nil
 }
 
 type Driver struct{}
 
-func (d *Driver) Choose(ctx context.Context, opts menu.Options) (*menu.Item, error) {
+func (d *Driver) Choose(ctx context.Context, opts dialog.ChooseOptions) (*dialog.Item, error) {
 	var input strings.Builder
 	for _, item := range opts.Items {
 		label := item.Label
@@ -69,7 +69,7 @@ func (d *Driver) Choose(ctx context.Context, opts menu.Options) (*menu.Item, err
 		}
 	}
 
-	return &menu.Item{Label: selected, Value: selected}, nil
+	return &dialog.Item{Label: selected, Value: selected}, nil
 }
 
 func (d *Driver) RunApp(ctx context.Context) error {

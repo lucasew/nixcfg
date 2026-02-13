@@ -14,14 +14,12 @@ import (
 	"workspaced/cmd/workspaced/dispatch/backup"
 	"workspaced/cmd/workspaced/dispatch/brightness"
 	"workspaced/cmd/workspaced/dispatch/config"
-	"workspaced/cmd/workspaced/dispatch/demo"
+	"workspaced/cmd/workspaced/dispatch/dialog"
 	"workspaced/cmd/workspaced/dispatch/doctor"
 	"workspaced/cmd/workspaced/dispatch/history"
-	"workspaced/cmd/workspaced/dispatch/media"
-
-	"workspaced/cmd/workspaced/dispatch/menu"
 	"workspaced/cmd/workspaced/dispatch/nix"
 	"workspaced/cmd/workspaced/dispatch/notification"
+	"workspaced/cmd/workspaced/dispatch/open"
 	"workspaced/cmd/workspaced/dispatch/palette"
 	"workspaced/cmd/workspaced/dispatch/plan"
 	"workspaced/cmd/workspaced/dispatch/power"
@@ -34,7 +32,6 @@ import (
 	"workspaced/cmd/workspaced/dispatch/template"
 	"workspaced/cmd/workspaced/dispatch/wallpaper"
 	"workspaced/cmd/workspaced/dispatch/workspace"
-	"workspaced/cmd/workspaced/is"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/types"
 
@@ -120,14 +117,13 @@ func NewCommand() *cobra.Command {
 	cmd.AddCommand(backup.GetCommand())
 	cmd.AddCommand(brightness.GetCommand())
 	cmd.AddCommand(config.GetCommand())
-	cmd.AddCommand(demo.GetCommand())
+	cmd.AddCommand(dialog.GetCommand())
 	cmd.AddCommand(doctor.Command)
 	cmd.AddCommand(history.GetCommand())
-	cmd.AddCommand(is.GetCommand())
-	cmd.AddCommand(media.GetCommand())
-	cmd.AddCommand(menu.GetCommand())
+
 	cmd.AddCommand(nix.GetCommand())
 	cmd.AddCommand(notification.GetCommand())
+	cmd.AddCommand(open.GetCommand())
 	cmd.AddCommand(palette.GetCommand())
 	cmd.AddCommand(plan.GetCommand())
 	cmd.AddCommand(power.GetCommand())

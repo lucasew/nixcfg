@@ -1,10 +1,10 @@
-package menu
+package dialog
 
 import (
 	"sort"
 	"strconv"
 	"workspaced/pkg/driver"
-	"workspaced/pkg/driver/menu"
+	"workspaced/pkg/driver/dialog"
 	"workspaced/pkg/driver/wm"
 
 	"workspaced/pkg/config"
@@ -24,7 +24,7 @@ func init() {
 					return err
 				}
 
-				var items []menu.Item
+				var items []dialog.Item
 				var keys []string
 				for k := range cfg.Workspaces {
 					keys = append(keys, k)
@@ -32,18 +32,18 @@ func init() {
 				sort.Strings(keys)
 
 				for _, k := range keys {
-					items = append(items, menu.Item{
+					items = append(items, dialog.Item{
 						Label: k,
 						Value: strconv.Itoa(cfg.Workspaces[k]),
 					})
 				}
 
-				d, err := driver.Get[menu.Driver](c.Context())
+				d, err := driver.Get[dialog.Driver](c.Context())
 				if err != nil {
 					return err
 				}
 
-				selected, err := d.Choose(c.Context(), menu.Options{
+				selected, err := d.Choose(c.Context(), dialog.Options{
 					Prompt: "Workspace",
 					Items:  items,
 				})

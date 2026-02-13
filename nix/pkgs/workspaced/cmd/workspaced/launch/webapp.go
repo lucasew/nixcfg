@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"workspaced/pkg/config"
+	"workspaced/pkg/driver"
+	"workspaced/pkg/driver/dialog"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
 
@@ -32,6 +34,17 @@ func newWebappCommand() *cobra.Command {
 			cfg, err := config.Load()
 			if err != nil {
 				return err
+			}
+
+			if urlFlag == "" {
+				d, err := driver.Get[dialog.Prompter](c.Context())
+				if err != nil {
+					return fmt.Errorf("--url is required and no prompter available: %w", err)
+				}
+				urlFlag, err = d.Prompt(c.Context(), "Enter URL")
+				if err != nil {
+					return err
+				}
 			}
 
 			if urlFlag == "" {

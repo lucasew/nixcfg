@@ -1,4 +1,4 @@
-package menu
+package dialog
 
 import (
 	"workspaced/pkg/registry"
@@ -10,8 +10,8 @@ var Registry registry.CommandRegistry
 
 func GetCommand() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "menu",
-		Short: "Interactive menus",
+		Use:   "dialog",
+		Short: "Interactive dialogs",
 	}
 	return Registry.GetCommand(cmd)
 }
