@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"workspaced/pkg/config"
 	"workspaced/pkg/logging"
+
+	"github.com/xeipuuv/gojsonschema"
 )
 
 type ModuleScannerPlugin struct {
@@ -36,6 +38,40 @@ var presetBases = map[string]string{
 	"bin":  "/usr/local/bin",
 }
 
+func (p *ModuleScannerPlugin) validateConfig(ctx context.Context, modName string, modPath string, modCfg map[string]any) error {
+	logger := logging.GetLogger(ctx)
+	schemaPath := filepath.Join(modPath, "schema.json")
+	if _, err := os.Stat(schemaPath); os.IsNotExist(err) {
+		return nil // No schema, skip validation
+	}
+
+	logger.Debug("validating module config", "module", modName, "schema", schemaPath)
+
+	absSchemaPath, err := filepath.Abs(schemaPath)
+	if err != nil {
+		return err
+	}
+
+	schemaLoader := gojsonschema.NewReferenceLoader("file://" + absSchemaPath)
+	documentLoader := gojsonschema.NewGoLoader(modCfg)
+
+	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
+	if err != nil {
+		return fmt.Errorf("failed to validate module %q: %w", modName, err)
+	}
+
+	if !result.Valid() {
+		var errs string
+		for _, desc := range result.Errors() {
+			errs += fmt.Sprintf("- %s\n", desc)
+		}
+		return fmt.Errorf("config validation failed for module %q:\n%s", modName, errs)
+	}
+
+	logger.Debug("module config valid", "module", modName)
+	return nil
+}
+
 func (p *ModuleScannerPlugin) Process(ctx context.Context, files []File) ([]File, error) {
 	logger := logging.GetLogger(ctx)
 
@@ -56,16 +92,22 @@ func (p *ModuleScannerPlugin) Process(ctx context.Context, files []File) ([]File
 		modName := entry.Name()
 		modPath := filepath.Join(p.baseDir, modName)
 
-		// Check if module is enabled
+		// Check if module configuration exists
 		modCfgRaw, ok := p.cfg.Modules[modName]
 		if !ok {
-			logger.Debug("module ignored (not in config)", "module", modName)
-			continue
+			modCfgRaw = make(map[string]any)
 		}
 
 		modCfg, ok := modCfgRaw.(map[string]any)
 		if !ok {
-			return nil, fmt.Errorf("invalid config for module %q: expected map", modName)
+			// Try to convert if it's not map[string]any (could be map[string]interface{})
+			// But in Go they are the same. Maybe it's a different type from TOML?
+			return nil, fmt.Errorf("invalid config for module %q: expected map, got %T", modName, modCfgRaw)
+		}
+
+		// Validate config if schema exists
+		if err := p.validateConfig(ctx, modName, modPath, modCfg); err != nil {
+			return nil, err
 		}
 
 		enabled, _ := modCfg["enable"].(bool)
@@ -84,8 +126,10 @@ func (p *ModuleScannerPlugin) Process(ctx context.Context, files []File) ([]File
 
 		for _, preset := range presets {
 			if !preset.IsDir() {
-				// Strict structure: no files in module root
-				return nil, fmt.Errorf("strict structure violation: file %q found in module %q root (expected preset directory)", preset.Name(), modName)
+				if preset.Name() == "schema.json" {
+					continue
+				}
+				return nil, fmt.Errorf("strict structure violation: file %q found in module %q root (expected preset directory or schema.json)", preset.Name(), modName)
 			}
 
 			presetName := preset.Name()
@@ -94,7 +138,6 @@ func (p *ModuleScannerPlugin) Process(ctx context.Context, files []File) ([]File
 				return nil, fmt.Errorf("unknown preset %q in module %q", presetName, modName)
 			}
 
-			// Expand targetBase
 			if targetBase == "~" {
 				home, _ := os.UserHomeDir()
 				targetBase = home

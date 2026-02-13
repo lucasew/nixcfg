@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "enable": {
+      "type": "boolean"
+    },
+    "apps": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "profile": {
+            "type": "string"
+          },
+          "desktop_name": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          }
+        },
+        "required": ["url"]
+      }
+    }
+  },
+  "required": ["enable"]
+}
