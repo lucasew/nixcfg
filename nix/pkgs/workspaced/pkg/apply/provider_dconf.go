@@ -10,7 +10,7 @@ import (
 	"sort"
 	"strings"
 	"workspaced/pkg/config"
-	"workspaced/pkg/deployer"
+	"workspaced/pkg/source"
 )
 
 type DconfProvider struct{}
@@ -19,7 +19,7 @@ func (p *DconfProvider) Name() string {
 	return "dconf"
 }
 
-func (p *DconfProvider) GetDesiredState(ctx context.Context) ([]deployer.DesiredState, error) {
+func (p *DconfProvider) GetDesiredState(ctx context.Context) ([]source.DesiredState, error) {
 	cfg, err := config.Load()
 	if err != nil {
 		return nil, err
@@ -79,37 +79,33 @@ func (p *DconfProvider) GetDesiredState(ctx context.Context) ([]deployer.Desired
 		sb.WriteString("\n")
 	}
 
-	tmpDir := filepath.Join(home, ".config", "workspaced", "generated")
-	if err := os.MkdirAll(tmpDir, 0755); err != nil {
-		return nil, err
-	}
-
 	dconfContent := sb.String()
-	dconfFile := filepath.Join(tmpDir, "dconf.ini")
-	if err := os.WriteFile(dconfFile, []byte(dconfContent), 0644); err != nil {
-		return nil, err
-	}
 
-	// Apply dconf settings via dconf load
-	if err := applyDconf(dconfFile); err != nil {
-		fmt.Fprintf(os.Stderr, "warning: failed to apply dconf: %v\n", err)
+	// Create a temp file for dconf load (execution is side-effect here, keeping for compatibility)
+	tmpIni := filepath.Join(os.TempDir(), "workspaced-dconf.ini")
+	if err := os.WriteFile(tmpIni, []byte(dconfContent), 0600); err == nil {
+		defer os.Remove(tmpIni)
+		if err := applyDconf(tmpIni); err != nil {
+			fmt.Fprintf(os.Stderr, "warning: failed to apply dconf: %v\n", err)
+		}
 	}
 
 	// Use content hash as marker to track changes
 	hash := fmt.Sprintf("%x", sha256.Sum256([]byte(dconfContent)))
-	markerFile := filepath.Join(tmpDir, "dconf.marker")
-	markerContent := filepath.Join(tmpDir, fmt.Sprintf("dconf-%s.hash", hash))
+	markerFile := filepath.Join(home, ".config", "workspaced", "dconf.marker")
 
-	// Create the hash file so the engine can find it
-	if err := os.WriteFile(markerContent, []byte(hash), 0644); err != nil {
-		return nil, err
-	}
-
-	return []deployer.DesiredState{
+	return []source.DesiredState{
 		{
-			Target: markerFile,
-			Source: markerContent,
-			Mode:   0644,
+			File: &source.BufferFile{
+				BasicFile: source.BasicFile{
+					RelPathStr:    "dconf.marker",
+					TargetBaseDir: filepath.Join(home, ".config", "workspaced"),
+					FileMode:      0644,
+					Info:          "provider:dconf (marker)",
+					FileType:      source.TypeStatic,
+				},
+				Content: []byte(hash),
+			},
 		},
 	}, nil
 }

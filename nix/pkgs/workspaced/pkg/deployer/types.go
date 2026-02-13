@@ -1,8 +1,8 @@
 package deployer
 
 import (
-	"context"
-	"os"
+	"path/filepath"
+	"workspaced/pkg/source"
 )
 
 // ActionType representa tipo de ação no deployment
@@ -29,16 +29,17 @@ func (a ActionType) String() string {
 	return "UNKNOWN"
 }
 
-// DesiredState representa estado desejado de um arquivo
-type DesiredState struct {
-	Target string      // Absolute path on the system
-	Source string      // Absolute path to the source file
-	Mode   os.FileMode // Type/Mode of the target. 0 means symlink.
+// DesiredState alias para source.DesiredState
+type DesiredState = source.DesiredState
+
+// Helper para pegar o target path de um DesiredState
+func GetTarget(d DesiredState) string {
+	return filepath.Join(d.File.TargetBase(), d.File.RelPath())
 }
 
 // ManagedInfo contém informações sobre arquivo gerenciado
 type ManagedInfo struct {
-	Source string `json:"source"`
+	SourceInfo string `json:"source_info"`
 }
 
 // State representa estado atual do sistema
@@ -54,8 +55,5 @@ type Action struct {
 	Current ManagedInfo
 }
 
-// Provider gera estados desejados (interface legacy, mantida para compatibilidade)
-type Provider interface {
-	Name() string
-	GetDesiredState(ctx context.Context) ([]DesiredState, error)
-}
+// Provider alias para source.Provider
+type Provider = source.Provider

@@ -86,14 +86,15 @@ func (p *ScannerPlugin) Process(ctx context.Context, files []File) ([]File, erro
 			return err
 		}
 
-		discovered = append(discovered, File{
-			SourceName: p.name,
-			RelPath:    rel,
-			SourceBase: p.baseDir,
-			TargetBase: p.targetBase,
-			Type:       TypeStatic, // Será determinado por outros plugins
-			Mode:       0,          // 0 = symlink por padrão
-			Priority:   p.priority,
+		discovered = append(discovered, &StaticFile{
+			BasicFile: BasicFile{
+				RelPathStr:    rel,
+				TargetBaseDir: p.targetBase,
+				FileMode:      info.Mode(),
+				Info:          fmt.Sprintf("source:%s (%s)", p.name, rel),
+				FileType:      TypeStatic,
+			},
+			AbsPath: path,
 		})
 
 		return nil

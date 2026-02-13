@@ -1,7 +1,9 @@
 package source
 
 import (
+	"bytes"
 	"context"
+	"io"
 	"os"
 )
 
@@ -22,10 +24,10 @@ type FileType int
 
 const (
 	TypeSymlink   FileType = iota // Criar symlink direto
-	TypeStatic                     // Copiar arquivo estático (sem template)
-	TypeTemplate                   // Renderizar template simples
-	TypeMultiFile                  // Template que gera múltiplos arquivos
-	TypeDotD                       // Diretório .d.tmpl (concatenação)
+	TypeStatic                    // Copiar arquivo estático (sem template)
+	TypeTemplate                  // Renderizar template simples
+	TypeMultiFile                 // Template que gera múltiplos arquivos
+	TypeDotD                      // Diretório .d.tmpl (concatenação)
 )
 
 func (t FileType) String() string {
@@ -45,16 +47,49 @@ func (t FileType) String() string {
 	}
 }
 
-// File representa um arquivo descoberto por uma source
-type File struct {
-	SourceName string      // Nome da source de origem
-	RelPath    string      // Caminho relativo (ex: ".bashrc" ou "i3/config")
-	SourceBase string      // Base do source (ex: "~/.dotfiles/config" ou temp)
-	TargetBase string      // Base do target (ex: "~")
-	Type       FileType    // Tipo de processamento
-	Content    []byte      // Conteúdo (já renderizado se template)
-	Mode       os.FileMode // Permissões (0 = symlink)
-	Priority   int         // Priority da source (para resolver conflitos)
+// File representa um arquivo descoberto ou gerado no pipeline
+type File interface {
+	RelPath() string
+	TargetBase() string
+	Mode() os.FileMode
+	Reader() (io.ReadCloser, error)
+	SourceInfo() string
+	Type() FileType
+}
+
+// BasicFile implementa os campos comuns de File
+type BasicFile struct {
+	RelPathStr    string
+	TargetBaseDir string
+	FileMode      os.FileMode
+	Info          string
+	FileType      FileType
+}
+
+func (f *BasicFile) RelPath() string    { return f.RelPathStr }
+func (f *BasicFile) TargetBase() string { return f.TargetBaseDir }
+func (f *BasicFile) Mode() os.FileMode  { return f.FileMode }
+func (f *BasicFile) SourceInfo() string { return f.Info }
+func (f *BasicFile) Type() FileType     { return f.FileType }
+
+// StaticFile representa um arquivo real no disco
+type StaticFile struct {
+	BasicFile
+	AbsPath string
+}
+
+func (f *StaticFile) Reader() (io.ReadCloser, error) {
+	return os.Open(f.AbsPath)
+}
+
+// BufferFile representa um arquivo com conteúdo em memória
+type BufferFile struct {
+	BasicFile
+	Content []byte
+}
+
+func (f *BufferFile) Reader() (io.ReadCloser, error) {
+	return io.NopCloser(bytes.NewReader(f.Content)), nil
 }
 
 // Conflict representa múltiplos files querendo o mesmo target
@@ -88,4 +123,15 @@ func (r ConflictResolution) String() string {
 	default:
 		return "unknown"
 	}
+}
+
+// DesiredState representa estado desejado de um arquivo
+type DesiredState struct {
+	File File
+}
+
+// Provider gera estados desejados (interface legacy, mantida para compatibilidade)
+type Provider interface {
+	Name() string
+	GetDesiredState(ctx context.Context) ([]DesiredState, error)
 }

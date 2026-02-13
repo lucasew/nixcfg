@@ -112,8 +112,6 @@ func (p *ModuleScannerPlugin) Process(ctx context.Context, files []File) ([]File
 
 		modCfg, ok := modCfgRaw.(map[string]any)
 		if !ok {
-			// Try to convert if it's not map[string]any (could be map[string]interface{})
-			// But in Go they are the same. Maybe it's a different type from TOML?
 			return nil, fmt.Errorf("invalid config for module %q: expected map, got %T", modName, modCfgRaw)
 		}
 
@@ -166,13 +164,15 @@ func (p *ModuleScannerPlugin) Process(ctx context.Context, files []File) ([]File
 				}
 
 				rel, _ := filepath.Rel(presetPath, path)
-				discovered = append(discovered, File{
-					SourceName: modName,
-					RelPath:    rel,
-					SourceBase: presetPath,
-					TargetBase: targetBase,
-					Type:       TypeStatic,
-					Priority:   p.priority,
+				discovered = append(discovered, &StaticFile{
+					BasicFile: BasicFile{
+						RelPathStr:    rel,
+						TargetBaseDir: targetBase,
+						FileMode:      info.Mode(),
+						Info:          fmt.Sprintf("module:%s (%s/%s)", modName, presetName, rel),
+						FileType:      TypeStatic,
+					},
+					AbsPath: path,
 				})
 				return nil
 			})

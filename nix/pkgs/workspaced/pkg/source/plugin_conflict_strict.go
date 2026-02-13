@@ -25,11 +25,11 @@ func (p *StrictConflictResolverPlugin) Process(ctx context.Context, files []File
 	ownedPaths := make(map[string]File) // FinalPath -> File info
 
 	for _, f := range files {
-		finalPath := filepath.Join(f.TargetBase, f.RelPath)
+		finalPath := filepath.Join(f.TargetBase(), f.RelPath())
 
 		if existing, ok := ownedPaths[finalPath]; ok {
-			return nil, fmt.Errorf("strict conflict detected for path %q: provided by source %q and %q (zero-substitution policy)",
-				finalPath, existing.SourceName, f.SourceName)
+			return nil, fmt.Errorf("strict conflict detected for path %q: provided by %q and %q (zero-substitution policy)",
+				finalPath, existing.SourceInfo(), f.SourceInfo())
 		}
 
 		ownedPaths[finalPath] = f
