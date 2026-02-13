@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/source"
 )
 
 // Planner compara estado atual vs desejado e gera ações
@@ -48,34 +49,58 @@ func (p *Planner) Plan(ctx context.Context, desired []DesiredState, currentState
 		needsUpdate := false
 		reason := ""
 
-		if info.Mode().Perm() != d.File.Mode().Perm() {
-			needsUpdate = true
-			reason = "permissions mismatch"
-		} else {
-			// Compare content via hash
-			reader, err := d.File.Reader()
-			if err != nil {
-				return nil, fmt.Errorf("failed to get reader for %s: %w", d.File.SourceInfo(), err)
-			}
-			desiredHash, err := calculateHash(reader)
-			reader.Close()
-			if err != nil {
-				return nil, err
-			}
+		// Check if type matches (File vs Symlink)
+		desiredIsSymlink := d.File.Type() == source.TypeSymlink
+		actualIsSymlink := info.Mode()&os.ModeSymlink != 0
 
-			targetFile, err := os.Open(target)
+		if desiredIsSymlink != actualIsSymlink {
+			needsUpdate = true
+			reason = "type mismatch (file vs symlink)"
+		} else if desiredIsSymlink {
+			// Compare symlink targets
+			desiredTarget, err := d.File.LinkTarget()
+			if err != nil {
+				return nil, fmt.Errorf("failed to get desired link target for %s: %w", d.File.SourceInfo(), err)
+			}
+			actualTarget, err := os.Readlink(target)
 			if err != nil {
 				needsUpdate = true
-				reason = "cannot open target file"
+				reason = "failed to read actual symlink"
+			} else if desiredTarget != actualTarget {
+				needsUpdate = true
+				reason = fmt.Sprintf("link target mismatch: %s != %s", desiredTarget, actualTarget)
+			}
+		} else {
+			// Regular file comparison
+			if info.Mode().Perm() != d.File.Mode().Perm() {
+				needsUpdate = true
+				reason = "permissions mismatch"
 			} else {
-				actualHash, err := calculateHash(targetFile)
-				targetFile.Close()
+				// Compare content via hash
+				reader, err := d.File.Reader()
+				if err != nil {
+					return nil, fmt.Errorf("failed to get reader for %s: %w", d.File.SourceInfo(), err)
+				}
+				desiredHash, err := calculateHash(reader)
+				reader.Close()
 				if err != nil {
 					return nil, err
 				}
-				if desiredHash != actualHash {
+
+				targetFile, err := os.Open(target)
+				if err != nil {
 					needsUpdate = true
-					reason = "content mismatch"
+					reason = "cannot open target file"
+				} else {
+					actualHash, err := calculateHash(targetFile)
+					targetFile.Close()
+					if err != nil {
+						return nil, err
+					}
+					if desiredHash != actualHash {
+						needsUpdate = true
+						reason = "content mismatch"
+					}
 				}
 			}
 		}

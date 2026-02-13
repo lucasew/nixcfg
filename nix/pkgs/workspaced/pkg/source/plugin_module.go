@@ -164,13 +164,18 @@ func (p *ModuleScannerPlugin) Process(ctx context.Context, files []File) ([]File
 				}
 
 				rel, _ := filepath.Rel(presetPath, path)
+				fileType := TypeStatic
+				if info.Mode()&os.ModeSymlink != 0 {
+					fileType = TypeSymlink
+				}
+
 				discovered = append(discovered, &StaticFile{
 					BasicFile: BasicFile{
 						RelPathStr:    rel,
 						TargetBaseDir: targetBase,
 						FileMode:      info.Mode(),
 						Info:          fmt.Sprintf("module:%s (%s/%s)", modName, presetName, rel),
-						FileType:      TypeStatic,
+						FileType:      fileType,
 					},
 					AbsPath: path,
 				})

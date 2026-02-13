@@ -86,13 +86,18 @@ func (p *ScannerPlugin) Process(ctx context.Context, files []File) ([]File, erro
 			return err
 		}
 
+		fileType := TypeStatic
+		if info.Mode()&os.ModeSymlink != 0 {
+			fileType = TypeSymlink
+		}
+
 		discovered = append(discovered, &StaticFile{
 			BasicFile: BasicFile{
 				RelPathStr:    rel,
 				TargetBaseDir: p.targetBase,
 				FileMode:      info.Mode(),
 				Info:          fmt.Sprintf("source:%s (%s)", p.name, rel),
-				FileType:      TypeStatic,
+				FileType:      fileType,
 			},
 			AbsPath: path,
 		})

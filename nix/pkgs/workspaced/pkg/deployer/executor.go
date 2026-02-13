@@ -63,30 +63,27 @@ func (e *Executor) Execute(ctx context.Context, actions []Action, state *State) 
 				return fmt.Errorf("failed to create parent directory for %s: %w", action.Target, err)
 			}
 
+			// Always remove existing target to ensure clean state (especially if it's a symlink or dir)
+			if _, err := os.Lstat(action.Target); err == nil {
+				if err := os.RemoveAll(action.Target); err != nil {
+					return fmt.Errorf("failed to remove existing target %s: %w", action.Target, err)
+				}
+			}
+
 			// Handle symlinks
 			if action.Desired.File.Type() == source.TypeSymlink {
-				if sf, ok := action.Desired.File.(*source.StaticFile); ok {
-					if _, err := os.Lstat(action.Target); err == nil {
-						os.Remove(action.Target)
-					}
-					if err := os.Symlink(sf.AbsPath, action.Target); err != nil {
-						return fmt.Errorf("failed to create symlink %s -> %s: %w", action.Target, sf.AbsPath, err)
-					}
-					state.Files[action.Target] = ManagedInfo{SourceInfo: action.Desired.File.SourceInfo()}
-					continue
+				linkTarget, err := action.Desired.File.LinkTarget()
+				if err != nil {
+					return fmt.Errorf("failed to get link target for %s: %w", action.Desired.File.SourceInfo(), err)
 				}
+				if err := os.Symlink(linkTarget, action.Target); err != nil {
+					return fmt.Errorf("failed to create symlink %s -> %s: %w", action.Target, linkTarget, err)
+				}
+				state.Files[action.Target] = ManagedInfo{SourceInfo: action.Desired.File.SourceInfo()}
+				continue
 			}
 
 			// For regular files or templates
-			// Always remove existing target to ensure clean state if it's a symlink
-			if info, err := os.Lstat(action.Target); err == nil {
-				if info.Mode()&os.ModeSymlink != 0 || !info.Mode().IsRegular() {
-					if err := os.Remove(action.Target); err != nil {
-						return fmt.Errorf("failed to remove existing non-regular target %s: %w", action.Target, err)
-					}
-				}
-			}
-
 			// Open target for writing
 			f, err := os.OpenFile(action.Target, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, action.Desired.File.Mode())
 			if err != nil {
