@@ -24,10 +24,7 @@ func (p *baseProvider) ID() string         { return "terminal" }
 func (p *baseProvider) DefaultWeight() int { return 0 }
 
 func (p *baseProvider) CheckCompatibility(ctx context.Context) error {
-	// Se tiver display gráfico, não usar Terminal por padrão (dar preferência ao rofi/wofi/zenity)
-	if os.Getenv("DISPLAY") != "" || os.Getenv("WAYLAND_DISPLAY") != "" {
-		return fmt.Errorf("%w: graphical display available, skipping Terminal", driver.ErrIncompatible)
-	}
+	// Sempre compatível, mas com peso 0 para ser fallback
 	return nil
 }
 
