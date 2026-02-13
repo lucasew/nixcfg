@@ -52,7 +52,19 @@ func (p *ModuleScannerPlugin) validateConfig(ctx context.Context, modName string
 		return err
 	}
 
-	schemaLoader := gojsonschema.NewReferenceLoader("file://" + absSchemaPath)
+	// Wrapper schema that adds 'enable' property and requires it
+	wrapperSchema := map[string]any{
+		"type": "object",
+		"properties": map[string]any{
+			"enable": map[string]any{"type": "boolean"},
+		},
+		"required": []string{"enable"},
+		"allOf": []map[string]any{
+			{"$ref": "file://" + absSchemaPath},
+		},
+	}
+
+	schemaLoader := gojsonschema.NewGoLoader(wrapperSchema)
 	documentLoader := gojsonschema.NewGoLoader(modCfg)
 
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)

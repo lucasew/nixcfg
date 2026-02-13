@@ -2,9 +2,6 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "enable": {
-      "type": "boolean"
-    },
     "apps": {
       "type": "object",
       "additionalProperties": {
@@ -26,6 +23,5 @@
         "required": ["url"]
       }
     }
-  },
-  "required": ["enable"]
+  }
 }
