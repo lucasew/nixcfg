@@ -33,7 +33,7 @@ func main() {
 	// Top-level aliases for daily ergonomic
 	stateCmd := state.NewCommand()
 	for _, c := range stateCmd.Commands() {
-		if c.Name() == "apply" || c.Name() == "plan" || c.Name() == "sync" {
+		if c.Name() == "apply" || c.Name() == "plan" || c.Name() == "sync" || c.Name() == "doctor" {
 			cmd.AddCommand(c)
 		}
 	}
