@@ -437,11 +437,16 @@ func Load() (*Config, error) {
 			defaultsPath := filepath.Join(modPath, "defaults.toml")
 			if _, err := os.Stat(defaultsPath); err == nil {
 				var currentDefaults map[string]any
-				if _, err := toml.DecodeFile(defaultsPath, &currentDefaults); err != nil {
-					return nil, fmt.Errorf("failed to decode %s: %w", defaultsPath, err)
-				}
-				if err := MergeStrict(defaultsRaw, currentDefaults, false); err != nil {
-					return nil, fmt.Errorf("conflict in defaults between modules: %w", err)
+				if _, err := toml.DecodeFile(defaultsPath, &currentDefaults); err == nil {
+					// Wrap in modules.<name> namespace for isolation
+					wrappedDefaults := map[string]any{
+						"modules": map[string]any{
+							name: currentDefaults,
+						},
+					}
+					if err := MergeStrict(defaultsRaw, wrappedDefaults, false); err != nil {
+						return nil, fmt.Errorf("conflict in defaults between modules: %w", err)
+					}
 				}
 			}
 		}
@@ -470,6 +475,12 @@ func Load() (*Config, error) {
 	data, _ := json.Marshal(rawMerged)
 	if err := json.Unmarshal(data, finalGCfg); err != nil {
 		return nil, fmt.Errorf("failed to finalize config: %w", err)
+	}
+
+	// Backward compatibility: Sync modules.base16 colors back to .Palette if present
+	if modBase16, ok := finalGCfg.Modules["base16"].(map[string]any); ok {
+		data, _ := json.Marshal(modBase16)
+		json.Unmarshal(data, &finalGCfg.Palette)
 	}
 
 	finalGCfg.Desktop.Wallpaper.Dir = env.ExpandPath(finalGCfg.Desktop.Wallpaper.Dir)

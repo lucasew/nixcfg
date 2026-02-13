@@ -1,0 +1,28 @@
+# shellcheck shell=bash
+# Apply terminal colors (generated from palette)
+function apply_colors {
+	if [[ $- == *i* ]]; then
+		printf '\033]4;0;#{{ .Modules.base16.base00 }}\033\\'
+		printf '\033]4;1;#{{ .Modules.base16.base08 }}\033\\'
+		printf '\033]4;2;#{{ .Modules.base16.base0B }}\033\\'
+		printf '\033]4;3;#{{ .Modules.base16.base0A }}\033\\'
+		printf '\033]4;4;#{{ .Modules.base16.base0D }}\033\\'
+		printf '\033]4;5;#{{ .Modules.base16.base0E }}\033\\'
+		printf '\033]4;6;#{{ .Modules.base16.base0C }}\033\\'
+		printf '\033]4;7;#{{ .Modules.base16.base05 }}\033\\'
+		printf '\033]4;8;#{{ .Modules.base16.base03 }}\033\\'
+		printf '\033]4;9;#{{ .Modules.base16.base08 }}\033\\'
+		printf '\033]4;10;#{{ .Modules.base16.base0B }}\033\\'
+		printf '\033]4;11;#{{ .Modules.base16.base0A }}\033\\'
+		printf '\033]4;12;#{{ .Modules.base16.base0D }}\033\\'
+		printf '\033]4;13;#{{ .Modules.base16.base0E }}\033\\'
+		printf '\033]4;14;#{{ .Modules.base16.base0C }}\033\\'
+		printf '\033]4;15;#{{ .Modules.base16.base07 }}\033\\'
+		printf '\033]10;#{{ .Modules.base16.base05 }}\033\\'  # foreground
+		printf '\033]11;#{{ .Modules.base16.base00 }}\033\\'  # background
+		printf '\033]12;#{{ .Modules.base16.base05 }}\033\\'  # cursor
+	fi
+}
+
+# Apply colors on shell startup
+apply_colors

@@ -1,4 +1,4 @@
-theme = "base16_transparent"
+theme = "base16"
 [editor.cursor-shape]
 insert = "bar"
 

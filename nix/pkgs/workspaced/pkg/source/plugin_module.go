@@ -138,10 +138,11 @@ func (p *ModuleScannerPlugin) Process(ctx context.Context, files []File) ([]File
 
 		for _, preset := range presets {
 			if !preset.IsDir() {
-				if preset.Name() == "schema.json" {
+				name := preset.Name()
+				if name == "schema.json" || name == "module.toml" || name == "defaults.toml" {
 					continue
 				}
-				return nil, fmt.Errorf("strict structure violation: file %q found in module %q root (expected preset directory or schema.json)", preset.Name(), modName)
+				return nil, fmt.Errorf("strict structure violation: file %q found in module %q root (expected preset directory or module meta files)", name, modName)
 			}
 
 			presetName := preset.Name()

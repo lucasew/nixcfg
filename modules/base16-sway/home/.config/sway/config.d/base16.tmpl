@@ -1,0 +1,26 @@
+# Base16 Sway colors
+set $base00 #{{ .Modules.base16.base00 }}
+set $base01 #{{ .Modules.base16.base01 }}
+set $base02 #{{ .Modules.base16.base02 }}
+set $base03 #{{ .Modules.base16.base03 }}
+set $base04 #{{ .Modules.base16.base04 }}
+set $base05 #{{ .Modules.base16.base05 }}
+set $base06 #{{ .Modules.base16.base06 }}
+set $base07 #{{ .Modules.base16.base07 }}
+set $base08 #{{ .Modules.base16.base08 }}
+set $base09 #{{ .Modules.base16.base09 }}
+set $base0A #{{ .Modules.base16.base0A }}
+set $base0B #{{ .Modules.base16.base0B }}
+set $base0C #{{ .Modules.base16.base0C }}
+set $base0D #{{ .Modules.base16.base0D }}
+set $base0E #{{ .Modules.base16.base0E }}
+set $base0F #{{ .Modules.base16.base0F }}
+
+# Basic classes
+# class                 border  backgr. text    indicator child_border
+client.focused          $base0D $base0D $base00 $base0D $base0D
+client.focused_inactive $base01 $base01 $base05 $base03 $base01
+client.unfocused        $base01 $base00 $base05 $base01 $base01
+client.urgent           $base08 $base08 $base00 $base08 $base08
+client.placeholder      $base00 $base00 $base05 $base00 $base00
+client.background       $base07
