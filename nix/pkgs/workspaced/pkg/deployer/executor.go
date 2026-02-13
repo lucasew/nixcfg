@@ -3,10 +3,12 @@ package deployer
 import (
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
 	"workspaced/pkg/logging"
+	"workspaced/pkg/source"
 )
 
 // prettyPath converte caminho absoluto para relativo ao $HOME
@@ -51,9 +53,9 @@ func (e *Executor) Execute(ctx context.Context, actions []Action, state *State) 
 
 		case ActionCreate, ActionUpdate:
 			if action.Type == ActionCreate {
-				logger.Info("creating", "target", prettyPath(action.Target), "source", prettyPath(action.Desired.Source))
+				logger.Info("creating", "target", prettyPath(action.Target), "source", action.Desired.File.SourceInfo())
 			} else {
-				logger.Info("updating", "target", prettyPath(action.Target), "source", prettyPath(action.Desired.Source))
+				logger.Info("updating", "target", prettyPath(action.Target), "source", action.Desired.File.SourceInfo())
 			}
 
 			// Ensure parent directory exists
@@ -61,57 +63,52 @@ func (e *Executor) Execute(ctx context.Context, actions []Action, state *State) 
 				return fmt.Errorf("failed to create parent directory for %s: %w", action.Target, err)
 			}
 
-			// Always remove existing target to ensure clean state
-			if info, err := os.Lstat(action.Target); err == nil {
-				if action.Desired.Mode == 0 {
-					// We want a symlink - always remove whatever exists
-					logger.Debug("removing existing target for symlink", "target", action.Target, "type", info.Mode().Type())
-					if err := os.Remove(action.Target); err != nil {
-						return fmt.Errorf("failed to remove existing target %s: %w", action.Target, err)
+			// Handle symlinks
+			if action.Desired.File.Type() == source.TypeSymlink {
+				if sf, ok := action.Desired.File.(*source.StaticFile); ok {
+					if _, err := os.Lstat(action.Target); err == nil {
+						os.Remove(action.Target)
 					}
-				} else {
-					// We want a regular file
-					if info.Mode().IsRegular() {
-						// Existing file is regular - will overwrite
-						logger.Debug("overwriting existing regular file", "target", action.Target)
-					} else if info.Mode()&os.ModeSymlink != 0 {
-						// Existing is symlink, remove it
-						logger.Debug("removing existing symlink to replace with file", "target", action.Target)
-						if err := os.Remove(action.Target); err != nil {
-							return fmt.Errorf("failed to remove existing symlink %s: %w", action.Target, err)
-						}
-					} else {
-						// Something else (directory, device, etc) - back it up
-						bakPath := action.Target + ".bak.workspaced"
-						logger.Warn("backing up non-regular file", "target", action.Target, "backup", bakPath, "type", info.Mode().Type())
-						if err := os.Rename(action.Target, bakPath); err != nil {
-							return fmt.Errorf("failed to backup %s: %w", action.Target, err)
-						}
+					if err := os.Symlink(sf.AbsPath, action.Target); err != nil {
+						return fmt.Errorf("failed to create symlink %s -> %s: %w", action.Target, sf.AbsPath, err)
+					}
+					state.Files[action.Target] = ManagedInfo{SourceInfo: action.Desired.File.SourceInfo()}
+					continue
+				}
+			}
+
+			// For regular files or templates
+			// Always remove existing target to ensure clean state if it's a symlink
+			if info, err := os.Lstat(action.Target); err == nil {
+				if info.Mode()&os.ModeSymlink != 0 || !info.Mode().IsRegular() {
+					if err := os.Remove(action.Target); err != nil {
+						return fmt.Errorf("failed to remove existing non-regular target %s: %w", action.Target, err)
 					}
 				}
 			}
 
-			// Create the desired state
-			if action.Desired.Mode == 0 {
-				// Create symlink
-				if err := os.Symlink(action.Desired.Source, action.Target); err != nil {
-					return fmt.Errorf("failed to create symlink %s -> %s: %w", action.Target, action.Desired.Source, err)
-				}
-				logger.Debug("symlink created", "target", action.Target, "source", action.Desired.Source)
-			} else {
-				// Create/overwrite regular file
-				data, err := os.ReadFile(action.Desired.Source)
-				if err != nil {
-					return fmt.Errorf("failed to read source file %s: %w", action.Desired.Source, err)
-				}
-				if err := os.WriteFile(action.Target, data, action.Desired.Mode); err != nil {
-					return fmt.Errorf("failed to write target file %s: %w", action.Target, err)
-				}
-				logger.Debug("file written", "target", action.Target, "size", len(data), "mode", action.Desired.Mode)
+			// Open target for writing
+			f, err := os.OpenFile(action.Target, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, action.Desired.File.Mode())
+			if err != nil {
+				return fmt.Errorf("failed to open target file %s: %w", action.Target, err)
+			}
+
+			reader, err := action.Desired.File.Reader()
+			if err != nil {
+				f.Close()
+				return fmt.Errorf("failed to get reader for %s: %w", action.Desired.File.SourceInfo(), err)
+			}
+
+			_, err = io.Copy(f, reader)
+			reader.Close()
+			f.Close()
+
+			if err != nil {
+				return fmt.Errorf("failed to write content to %s: %w", action.Target, err)
 			}
 
 			// Track in state
-			state.Files[action.Target] = ManagedInfo{Source: action.Desired.Source}
+			state.Files[action.Target] = ManagedInfo{SourceInfo: action.Desired.File.SourceInfo()}
 		}
 	}
 

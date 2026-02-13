@@ -55,9 +55,6 @@ func GetCommand() *cobra.Command {
 			// Criar template engine compartilhada
 			engine := template.NewEngine(ctx)
 
-			// Diretório temporário para arquivos renderizados
-			tempDir := filepath.Join(home, ".config/workspaced/generated")
-
 			// Configurar pipeline de plugins
 			configDir := filepath.Join(dotfilesRoot, "config")
 			pipeline := source.NewPipeline()
@@ -86,18 +83,10 @@ func GetCommand() *cobra.Command {
 			}
 
 			// 3. TemplateExpander - renderiza .tmpl (inclui multi-file)
-			templatePlugin, err := source.NewTemplateExpanderPlugin(engine, cfg, tempDir)
-			if err != nil {
-				return fmt.Errorf("failed to create template plugin: %w", err)
-			}
-			pipeline.AddPlugin(templatePlugin)
+			pipeline.AddPlugin(source.NewTemplateExpanderPlugin(engine, cfg))
 
 			// 4. DotDProcessor - concatena .d.tmpl/
-			dotdPlugin, err := source.NewDotDProcessorPlugin(engine, cfg, tempDir)
-			if err != nil {
-				return fmt.Errorf("failed to create dotd plugin: %w", err)
-			}
-			pipeline.AddPlugin(dotdPlugin)
+			pipeline.AddPlugin(source.NewDotDProcessorPlugin(engine, cfg))
 
 			// 5. StrictConflictResolver - garante unicidade total
 			pipeline.AddPlugin(source.NewStrictConflictResolverPlugin())
@@ -160,7 +149,7 @@ func GetCommand() *cobra.Command {
 					if a.Type != deployer.ActionNoop {
 						cmd.Printf("[%s] %s\n", a.Type, a.Target)
 						if a.Type == deployer.ActionUpdate || a.Type == deployer.ActionCreate {
-							cmd.Printf("      -> %s\n", a.Desired.Source)
+							cmd.Printf("      -> %s\n", a.Desired.File.SourceInfo())
 						}
 					}
 				}

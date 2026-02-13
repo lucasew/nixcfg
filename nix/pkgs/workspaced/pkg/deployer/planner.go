@@ -2,7 +2,9 @@ package deployer
 
 import (
 	"context"
+	"crypto/sha256"
 	"fmt"
+	"io"
 	"os"
 	"workspaced/pkg/logging"
 )
@@ -15,6 +17,14 @@ func NewPlanner() *Planner {
 	return &Planner{}
 }
 
+func calculateHash(r io.Reader) (string, error) {
+	h := sha256.New()
+	if _, err := io.Copy(h, r); err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%x", h.Sum(nil)), nil
+}
+
 // Plan compara desired state com current state e retorna ações necessárias
 func (p *Planner) Plan(ctx context.Context, desired []DesiredState, currentState *State) ([]Action, error) {
 	logger := logging.GetLogger(ctx)
@@ -22,14 +32,15 @@ func (p *Planner) Plan(ctx context.Context, desired []DesiredState, currentState
 	desiredMap := make(map[string]DesiredState)
 
 	for _, d := range desired {
-		desiredMap[d.Target] = d
-		current, managed := currentState.Files[d.Target]
+		target := d.Target()
+		desiredMap[target] = d
+		current, managed := currentState.Files[target]
 
-		info, err := os.Lstat(d.Target)
+		info, err := os.Lstat(target)
 		exists := err == nil
 
 		if !exists {
-			actions = append(actions, Action{Type: ActionCreate, Target: d.Target, Desired: d})
+			actions = append(actions, Action{Type: ActionCreate, Target: target, Desired: d})
 			continue
 		}
 
@@ -37,58 +48,46 @@ func (p *Planner) Plan(ctx context.Context, desired []DesiredState, currentState
 		needsUpdate := false
 		reason := ""
 
-		if d.Mode == 0 { // Symlink desired
-			if info.Mode()&os.ModeSymlink == 0 {
-				needsUpdate = true
-				reason = "target is not a symlink"
-			} else {
-				actualSource, err := os.Readlink(d.Target)
-				if err != nil {
-					needsUpdate = true
-					reason = "cannot read symlink target"
-				} else if actualSource != d.Source {
-					needsUpdate = true
-					reason = fmt.Sprintf("symlink points to wrong target (current: %s, desired: %s)", actualSource, d.Source)
-				}
+		if info.Mode().Perm() != d.File.Mode().Perm() {
+			needsUpdate = true
+			reason = "permissions mismatch"
+		} else {
+			// Compare content via hash
+			reader, err := d.File.Reader()
+			if err != nil {
+				return nil, fmt.Errorf("failed to get reader for %s: %w", d.File.SourceInfo(), err)
 			}
-		} else { // Regular file desired
-			if !info.Mode().IsRegular() {
+			desiredHash, err := calculateHash(reader)
+			reader.Close()
+			if err != nil {
+				return nil, err
+			}
+
+			targetFile, err := os.Open(target)
+			if err != nil {
 				needsUpdate = true
-				reason = "target is not a regular file"
+				reason = "cannot open target file"
 			} else {
-				// Always validate content and permissions
-				if info.Mode().Perm() != d.Mode.Perm() {
+				actualHash, err := calculateHash(targetFile)
+				targetFile.Close()
+				if err != nil {
+					return nil, err
+				}
+				if desiredHash != actualHash {
 					needsUpdate = true
-					reason = fmt.Sprintf("permissions mismatch (current: %o, desired: %o)", info.Mode().Perm(), d.Mode.Perm())
-				} else {
-					// Validate content
-					srcData, err := os.ReadFile(d.Source)
-					if err != nil {
-						needsUpdate = true
-						reason = "cannot read source file"
-					} else {
-						dstData, err := os.ReadFile(d.Target)
-						if err != nil {
-							needsUpdate = true
-							reason = "cannot read target file"
-						} else if string(srcData) != string(dstData) {
-							needsUpdate = true
-							reason = "content mismatch"
-						}
-					}
+					reason = "content mismatch"
 				}
 			}
 		}
 
-		// Always update if validation failed, regardless of state tracking
 		if needsUpdate {
-			logger.Debug("validation failed", "target", d.Target, "reason", reason)
-			actions = append(actions, Action{Type: ActionUpdate, Target: d.Target, Desired: d, Current: current})
-		} else if !managed || current.Source != d.Source {
-			// Not tracked in state or source changed - update to track it
-			actions = append(actions, Action{Type: ActionUpdate, Target: d.Target, Desired: d, Current: current})
+			logger.Debug("validation failed", "target", target, "reason", reason)
+			actions = append(actions, Action{Type: ActionUpdate, Target: target, Desired: d, Current: current})
+		} else if !managed || current.SourceInfo != d.File.SourceInfo() {
+			// Not tracked or source changed
+			actions = append(actions, Action{Type: ActionUpdate, Target: target, Desired: d, Current: current})
 		} else {
-			actions = append(actions, Action{Type: ActionNoop, Target: d.Target, Desired: d, Current: current})
+			actions = append(actions, Action{Type: ActionNoop, Target: target, Desired: d, Current: current})
 		}
 	}
 

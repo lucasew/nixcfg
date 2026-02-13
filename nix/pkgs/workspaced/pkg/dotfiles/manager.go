@@ -3,7 +3,6 @@ package dotfiles
 import (
 	"context"
 	"fmt"
-	"path/filepath"
 	"workspaced/pkg/deployer"
 	"workspaced/pkg/logging"
 	"workspaced/pkg/source"
@@ -81,13 +80,10 @@ func (m *Manager) Apply(ctx context.Context, opts ApplyOptions) (*ApplyResult, e
 	logger.Info("pipeline completed", "files", len(files))
 
 	// 2. Converter source.File para deployer.DesiredState
-	// Calcula paths absolutos aqui (SourceBase+RelPath, TargetBase+RelPath)
 	desired := make([]deployer.DesiredState, len(files))
 	for i, f := range files {
 		desired[i] = deployer.DesiredState{
-			Source: filepath.Join(f.SourceBase, f.RelPath),
-			Target: filepath.Join(f.TargetBase, f.RelPath),
-			Mode:   f.Mode,
+			File: f,
 		}
 	}
 

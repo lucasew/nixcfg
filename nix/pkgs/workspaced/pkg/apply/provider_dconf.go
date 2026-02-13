@@ -92,7 +92,6 @@ func (p *DconfProvider) GetDesiredState(ctx context.Context) ([]source.DesiredSt
 
 	// Use content hash as marker to track changes
 	hash := fmt.Sprintf("%x", sha256.Sum256([]byte(dconfContent)))
-	markerFile := filepath.Join(home, ".config", "workspaced", "dconf.marker")
 
 	return []source.DesiredState{
 		{

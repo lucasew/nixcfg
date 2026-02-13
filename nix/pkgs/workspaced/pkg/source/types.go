@@ -3,8 +3,10 @@ package source
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 )
 
 // Source representa uma origem de arquivos/templates
@@ -55,6 +57,8 @@ type File interface {
 	Reader() (io.ReadCloser, error)
 	SourceInfo() string
 	Type() FileType
+	// LinkTarget retorna o destino do link se Type() == TypeSymlink
+	LinkTarget() (string, error)
 }
 
 // BasicFile implementa os campos comuns de File
@@ -71,6 +75,9 @@ func (f *BasicFile) TargetBase() string { return f.TargetBaseDir }
 func (f *BasicFile) Mode() os.FileMode  { return f.FileMode }
 func (f *BasicFile) SourceInfo() string { return f.Info }
 func (f *BasicFile) Type() FileType     { return f.FileType }
+func (f *BasicFile) LinkTarget() (string, error) {
+	return "", fmt.Errorf("not a symlink")
+}
 
 // StaticFile representa um arquivo real no disco
 type StaticFile struct {
@@ -80,6 +87,13 @@ type StaticFile struct {
 
 func (f *StaticFile) Reader() (io.ReadCloser, error) {
 	return os.Open(f.AbsPath)
+}
+
+func (f *StaticFile) LinkTarget() (string, error) {
+	if f.FileType != TypeSymlink {
+		return "", fmt.Errorf("not a symlink")
+	}
+	return os.Readlink(f.AbsPath)
 }
 
 // BufferFile representa um arquivo com conteúdo em memória
@@ -92,42 +106,13 @@ func (f *BufferFile) Reader() (io.ReadCloser, error) {
 	return io.NopCloser(bytes.NewReader(f.Content)), nil
 }
 
-// Conflict representa múltiplos files querendo o mesmo target
-type Conflict struct {
-	RelPath string // Caminho relativo em conflito
-	Files   []File // Ordenados por priority (maior primeiro)
-}
-
-// ConflictResolution define estratégia de resolução de conflitos
-type ConflictResolution int
-
-const (
-	// ResolveByPriority usa arquivo da source com maior priority
-	ResolveByPriority ConflictResolution = iota
-
-	// ResolveByError retorna erro parando o processo
-	ResolveByError
-
-	// ResolveBySkip ignora todos os arquivos em conflito
-	ResolveBySkip
-)
-
-func (r ConflictResolution) String() string {
-	switch r {
-	case ResolveByPriority:
-		return "priority"
-	case ResolveByError:
-		return "error"
-	case ResolveBySkip:
-		return "skip"
-	default:
-		return "unknown"
-	}
-}
-
 // DesiredState representa estado desejado de um arquivo
 type DesiredState struct {
 	File File
+}
+
+func (d DesiredState) Target() string {
+	return filepath.Join(d.File.TargetBase(), d.File.RelPath())
 }
 
 // Provider gera estados desejados (interface legacy, mantida para compatibilidade)

@@ -2,7 +2,6 @@ package template
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"workspaced/pkg/config"
 	"workspaced/pkg/deployer"
@@ -35,12 +34,6 @@ func getMaterializeCommand() *cobra.Command {
 
 			// 2. Setup pipeline
 			engine := template.NewEngine(ctx)
-			tempDir, err := os.MkdirTemp("", "workspaced-materialize-*")
-			if err != nil {
-				return err
-			}
-			defer os.RemoveAll(tempDir)
-
 			pipeline := source.NewPipeline()
 
 			// Add scanners for each source
@@ -62,11 +55,8 @@ func getMaterializeCommand() *cobra.Command {
 			}
 
 			// Add processors
-			templatePlugin, _ := source.NewTemplateExpanderPlugin(engine, cfg, filepath.Join(tempDir, "templates"))
-			pipeline.AddPlugin(templatePlugin)
-
-			dotdPlugin, _ := source.NewDotDProcessorPlugin(engine, cfg, filepath.Join(tempDir, "dotd"))
-			pipeline.AddPlugin(dotdPlugin)
+			pipeline.AddPlugin(source.NewTemplateExpanderPlugin(engine, cfg))
+			pipeline.AddPlugin(source.NewDotDProcessorPlugin(engine, cfg))
 
 			// Add strict conflict resolver
 			pipeline.AddPlugin(source.NewStrictConflictResolverPlugin())
@@ -83,10 +73,9 @@ func getMaterializeCommand() *cobra.Command {
 			for _, f := range files {
 				actions = append(actions, deployer.Action{
 					Type:   deployer.ActionCreate,
-					Target: filepath.Join(f.TargetBase, f.RelPath),
+					Target: filepath.Join(f.TargetBase(), f.RelPath()),
 					Desired: deployer.DesiredState{
-						Source: filepath.Join(f.SourceBase, f.RelPath),
-						Mode:   f.Mode,
+						File: f,
 					},
 				})
 			}
