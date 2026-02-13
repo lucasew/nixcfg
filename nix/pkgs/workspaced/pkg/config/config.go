@@ -27,8 +27,6 @@ type GlobalConfig struct {
 	QuickSync  QuickSyncConfig           `toml:"quicksync" json:"quicksync"`
 	Browser    BrowserConfig             `toml:"browser" json:"browser"`
 	LazyTools  map[string]LazyToolConfig `toml:"lazy_tools" json:"lazy_tools"`
-	Palette    PaletteConfig             `toml:"palette" json:"palette"`
-	Fonts      FontsConfig               `toml:"fonts" json:"fonts"`
 	Modules    map[string]any            `toml:"modules" json:"modules"`
 	Drivers    map[string]map[string]int `toml:"drivers" json:"drivers"`
 }
@@ -105,12 +103,6 @@ type PaletteConfig struct {
 	Base17 string `toml:"base17,omitempty" json:"base17,omitempty"`
 }
 
-type FontsConfig struct {
-	Serif     string `toml:"serif" json:"serif"`
-	SansSerif string `toml:"sans_serif" json:"sans_serif"`
-	Monospace string `toml:"monospace" json:"monospace"`
-	Emoji     string `toml:"emoji" json:"emoji"`
-}
 
 func (c *Config) Module(name string, target interface{}) error {
 	return c.UnmarshalKey("modules."+name, target)
@@ -246,7 +238,7 @@ func Load() (*Config, error) {
 	for _, path := range userConfigs {
 		if _, err := os.Stat(path); err == nil {
 			var currentRaw map[string]any
-			if _, err := toml.DecodeFile(path, &currentRaw); err != nil {
+			if _, err := toml.DecodeFile(path, &currentRaw); err == nil {
 				if err := MergeStrict(rawMerged, currentRaw, true); err != nil {
 					return nil, err
 				}
@@ -256,14 +248,6 @@ func Load() (*Config, error) {
 	finalGCfg := &GlobalConfig{}
 	data, _ := json.Marshal(rawMerged)
 	json.Unmarshal(data, finalGCfg)
-	if modBase16, ok := finalGCfg.Modules["base16"].(map[string]any); ok {
-		data, _ := json.Marshal(modBase16)
-		json.Unmarshal(data, &finalGCfg.Palette)
-	}
-	if modFonts, ok := finalGCfg.Modules["fontconfig"].(map[string]any); ok {
-		data, _ := json.Marshal(modFonts)
-		json.Unmarshal(data, &finalGCfg.Fonts)
-	}
 	finalGCfg.Desktop.Wallpaper.Dir = env.ExpandPath(finalGCfg.Desktop.Wallpaper.Dir)
 	finalGCfg.Desktop.Wallpaper.Default = env.ExpandPath(finalGCfg.Desktop.Wallpaper.Default)
 	finalGCfg.Screenshot.Dir = env.ExpandPath(finalGCfg.Screenshot.Dir)

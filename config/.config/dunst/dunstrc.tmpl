@@ -43,16 +43,16 @@ context="ctrl+shift+period"
 history="ctrl+grave"
 
 [urgency_critical]
-background="#{{ .Palette.Base08 }}"
-foreground="#{{ .Palette.Base06 }}"
+background="#{{ (index (index .Modules "base16") "base08") }}"
+foreground="#{{ (index (index .Modules "base16") "base06") }}"
 timeout=10
 
 [urgency_low]
-background="#{{ .Palette.Base01 }}"
-foreground="#{{ .Palette.Base03 }}"
+background="#{{ (index (index .Modules "base16") "base01") }}"
+foreground="#{{ (index (index .Modules "base16") "base03") }}"
 timeout=5
 
 [urgency_normal]
-background="#{{ .Palette.Base02 }}"
-foreground="#{{ .Palette.Base05 }}"
+background="#{{ (index (index .Modules "base16") "base02") }}"
+foreground="#{{ (index (index .Modules "base16") "base05") }}"
 timeout=10

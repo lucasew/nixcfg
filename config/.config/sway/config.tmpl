@@ -17,27 +17,27 @@ bar {
   position top
 
   colors {
-    # background #00{{ .Palette.Base00 }}
+    # background #00{{ (index (index .Modules "base16") "base00") }}
     background #00000000
-    statusline #{{ .Palette.Base05 }}
-    separator #{{ .Palette.Base00 }}
+    statusline #{{ (index (index .Modules "base16") "base05") }}
+    separator #{{ (index (index .Modules "base16") "base00") }}
 
     # name             border                 background             text
-    focused_workspace  #{{ .Palette.Base01 }} #{{ .Palette.Base02 }} #{{ .Palette.Base05 }}
-    active_workspace   #{{ .Palette.Base01 }} #{{ .Palette.Base03 }} #{{ .Palette.Base05 }}
-    inactive_workspace #{{ .Palette.Base01 }} #{{ .Palette.Base01 }} #{{ .Palette.Base05 }}
-    urgent_workspace   #{{ .Palette.Base08 }} #{{ .Palette.Base08 }} #{{ .Palette.Base00 }}
-    binding_mode       #{{ .Palette.Base00 }} #{{ .Palette.Base00 }} #{{ .Palette.Base05 }}
+    focused_workspace  #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base02") }} #{{ (index (index .Modules "base16") "base05") }}
+    active_workspace   #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base03") }} #{{ (index (index .Modules "base16") "base05") }}
+    inactive_workspace #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base05") }}
+    urgent_workspace   #{{ (index (index .Modules "base16") "base08") }} #{{ (index (index .Modules "base16") "base08") }} #{{ (index (index .Modules "base16") "base00") }}
+    binding_mode       #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base05") }}
   }
 }
 
 # Property Name         Border                 Background             Text                   Indicator              Child
-client.focused          #{{ .Palette.Base01 }} #{{ .Palette.Base00 }} #{{ .Palette.Base05 }} #{{ .Palette.Base0D }} #{{ .Palette.Base0C }}
-client.focused_inactive #{{ .Palette.Base01 }} #{{ .Palette.Base01 }} #{{ .Palette.Base05 }} #{{ .Palette.Base03 }} #{{ .Palette.Base01 }}
-client.unfocused        #{{ .Palette.Base01 }} #{{ .Palette.Base02 }} #{{ .Palette.Base05 }} #{{ .Palette.Base01 }} #{{ .Palette.Base01 }}
-client.urgent           #{{ .Palette.Base08 }} #{{ .Palette.Base08 }} #{{ .Palette.Base00 }} #{{ .Palette.Base08 }} #{{ .Palette.Base08 }}
-client.placeholder      #{{ .Palette.Base00 }} #{{ .Palette.Base00 }} #{{ .Palette.Base05 }} #{{ .Palette.Base00 }} #{{ .Palette.Base00 }}
-client.background       #{{ .Palette.Base07 }} #{{ .Palette.Base00 }} #{{ .Palette.Base05 }}
+client.focused          #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base05") }} #{{ (index (index .Modules "base16") "base0D") }} #{{ (index (index .Modules "base16") "base0C") }}
+client.focused_inactive #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base05") }} #{{ (index (index .Modules "base16") "base03") }} #{{ (index (index .Modules "base16") "base01") }}
+client.unfocused        #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base02") }} #{{ (index (index .Modules "base16") "base05") }} #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base01") }}
+client.urgent           #{{ (index (index .Modules "base16") "base08") }} #{{ (index (index .Modules "base16") "base08") }} #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base08") }} #{{ (index (index .Modules "base16") "base08") }}
+client.placeholder      #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base05") }} #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base00") }}
+client.background       #{{ (index (index .Modules "base16") "base07") }} #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base05") }}
 
 # Workspace bindings
 bindsym $mod+0 workspace number 10

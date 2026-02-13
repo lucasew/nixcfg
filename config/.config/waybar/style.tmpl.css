@@ -1,19 +1,19 @@
-@define-color base00 #{{ .Palette.Base00 }};
-@define-color base01 #{{ .Palette.Base01 }};
-@define-color base02 #{{ .Palette.Base02 }};
-@define-color base03 #{{ .Palette.Base03 }};
-@define-color base04 #{{ .Palette.Base04 }};
-@define-color base05 #{{ .Palette.Base05 }};
-@define-color base06 #{{ .Palette.Base06 }};
-@define-color base07 #{{ .Palette.Base07 }};
-@define-color base08 #{{ .Palette.Base08 }};
-@define-color base09 #{{ .Palette.Base09 }};
-@define-color base0A #{{ .Palette.Base0A }};
-@define-color base0B #{{ .Palette.Base0B }};
-@define-color base0C #{{ .Palette.Base0C }};
-@define-color base0D #{{ .Palette.Base0D }};
-@define-color base0E #{{ .Palette.Base0E }};
-@define-color base0F #{{ .Palette.Base0F }};
+@define-color base00 #{{ (index (index .Modules "base16") "base00") }};
+@define-color base01 #{{ (index (index .Modules "base16") "base01") }};
+@define-color base02 #{{ (index (index .Modules "base16") "base02") }};
+@define-color base03 #{{ (index (index .Modules "base16") "base03") }};
+@define-color base04 #{{ (index (index .Modules "base16") "base04") }};
+@define-color base05 #{{ (index (index .Modules "base16") "base05") }};
+@define-color base06 #{{ (index (index .Modules "base16") "base06") }};
+@define-color base07 #{{ (index (index .Modules "base16") "base07") }};
+@define-color base08 #{{ (index (index .Modules "base16") "base08") }};
+@define-color base09 #{{ (index (index .Modules "base16") "base09") }};
+@define-color base0A #{{ (index (index .Modules "base16") "base0A") }};
+@define-color base0B #{{ (index (index .Modules "base16") "base0B") }};
+@define-color base0C #{{ (index (index .Modules "base16") "base0C") }};
+@define-color base0D #{{ (index (index .Modules "base16") "base0D") }};
+@define-color base0E #{{ (index (index .Modules "base16") "base0E") }};
+@define-color base0F #{{ (index (index .Modules "base16") "base0F") }};
 
 * {
     font-family: "{{ .Modules.fontconfig.sans_serif }}", "{{ .Modules.fontconfig.emoji }}";

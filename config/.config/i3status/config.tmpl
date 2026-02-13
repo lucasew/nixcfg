@@ -2,9 +2,9 @@
 
 general {
   colors = true
-  color_bad = "#{{ .Palette.Base08 }}"
-  color_degraded = "#{{ .Palette.Base08 }}"
-  color_good = "#{{ .Palette.Base0B }}"
+  color_bad = "#{{ (index (index .Modules "base16") "base08") }}"
+  color_degraded = "#{{ (index (index .Modules "base16") "base08") }}"
+  color_good = "#{{ (index (index .Modules "base16") "base0B") }}"
 
   interval = 2
 }

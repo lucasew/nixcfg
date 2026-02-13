@@ -1,99 +1,99 @@
 /* Base16 Default Dark Theme for Obsidian */
 /* Color Palette:
- * color0: #{{ .Palette.Base00 }} - Background
- * color1: #{{ .Palette.Base08 }} - Red
- * color2: #{{ .Palette.Base0B }} - Green
- * color3: #{{ .Palette.Base0A }} - Yellow
- * color4: #{{ .Palette.Base0D }} - Blue
- * color5: #{{ .Palette.Base0E }} - Magenta
- * color6: #{{ .Palette.Base0C }} - Cyan
- * color7: #{{ .Palette.Base05 }} - Foreground
+ * color0: #{{ (index (index .Modules "base16") "base00") }} - Background
+ * color1: #{{ (index (index .Modules "base16") "base08") }} - Red
+ * color2: #{{ (index (index .Modules "base16") "base0B") }} - Green
+ * color3: #{{ (index (index .Modules "base16") "base0A") }} - Yellow
+ * color4: #{{ (index (index .Modules "base16") "base0D") }} - Blue
+ * color5: #{{ (index (index .Modules "base16") "base0E") }} - Magenta
+ * color6: #{{ (index (index .Modules "base16") "base0C") }} - Cyan
+ * color7: #{{ (index (index .Modules "base16") "base05") }} - Foreground
  */
 
 .theme-dark {
   /* Base colors */
-  --background-primary: #{{ .Palette.Base00 }};
-  --background-primary-alt: #{{ .Palette.Base00 }};
-  --background-secondary: #{{ .Palette.Base00 }};
-  --background-secondary-alt: #{{ .Palette.Base00 }};
-  --background-modifier-border: #{{ .Palette.Base02 }};
-  --background-modifier-form-field: #{{ .Palette.Base00 }};
-  --background-modifier-form-field-highlighted: #{{ .Palette.Base00 }};
+  --background-primary: #{{ (index (index .Modules "base16") "base00") }};
+  --background-primary-alt: #{{ (index (index .Modules "base16") "base00") }};
+  --background-secondary: #{{ (index (index .Modules "base16") "base00") }};
+  --background-secondary-alt: #{{ (index (index .Modules "base16") "base00") }};
+  --background-modifier-border: #{{ (index (index .Modules "base16") "base02") }};
+  --background-modifier-form-field: #{{ (index (index .Modules "base16") "base00") }};
+  --background-modifier-form-field-highlighted: #{{ (index (index .Modules "base16") "base00") }};
   --background-modifier-box-shadow: none;
-  --background-modifier-success: #{{ .Palette.Base0B }};
-  --background-modifier-error: #{{ .Palette.Base08 }};
+  --background-modifier-success: #{{ (index (index .Modules "base16") "base0B") }};
+  --background-modifier-error: #{{ (index (index .Modules "base16") "base08") }};
   --background-modifier-error-rgb: 171, 70, 66;
-  --background-modifier-error-hover: #{{ .Palette.Base08 }};
+  --background-modifier-error-hover: #{{ (index (index .Modules "base16") "base08") }};
   --background-modifier-cover: rgba(24, 24, 24, 0.8);
 
   /* Text colors */
-  --text-normal: #{{ .Palette.Base05 }};
-  --text-muted: #{{ .Palette.Base04 }};
-  --text-faint: #{{ .Palette.Base03 }};
-  --text-error: #{{ .Palette.Base08 }};
-  --text-accent: #{{ .Palette.Base0D }};
-  --text-accent-hover: #{{ .Palette.Base0C }};
-  --text-on-accent: #{{ .Palette.Base00 }};
+  --text-normal: #{{ (index (index .Modules "base16") "base05") }};
+  --text-muted: #{{ (index (index .Modules "base16") "base04") }};
+  --text-faint: #{{ (index (index .Modules "base16") "base03") }};
+  --text-error: #{{ (index (index .Modules "base16") "base08") }};
+  --text-accent: #{{ (index (index .Modules "base16") "base0D") }};
+  --text-accent-hover: #{{ (index (index .Modules "base16") "base0C") }};
+  --text-on-accent: #{{ (index (index .Modules "base16") "base00") }};
   --text-selection: rgba(124, 175, 194, 0.3);
 
   /* Interactive elements */
-  --interactive-normal: #{{ .Palette.Base01 }};
-  --interactive-hover: #{{ .Palette.Base02 }};
-  --interactive-accent: #{{ .Palette.Base0D }};
-  --interactive-accent-hover: #{{ .Palette.Base0C }};
+  --interactive-normal: #{{ (index (index .Modules "base16") "base01") }};
+  --interactive-hover: #{{ (index (index .Modules "base16") "base02") }};
+  --interactive-accent: #{{ (index (index .Modules "base16") "base0D") }};
+  --interactive-accent-hover: #{{ (index (index .Modules "base16") "base0C") }};
   --interactive-accent-rgb: 124, 175, 194;
-  --interactive-success: #{{ .Palette.Base0B }};
+  --interactive-success: #{{ (index (index .Modules "base16") "base0B") }};
 
   /* Scrollbar */
-  --scrollbar-bg: #{{ .Palette.Base00 }};
-  --scrollbar-thumb-bg: #{{ .Palette.Base02 }};
-  --scrollbar-active-thumb-bg: #{{ .Palette.Base03 }};
+  --scrollbar-bg: #{{ (index (index .Modules "base16") "base00") }};
+  --scrollbar-thumb-bg: #{{ (index (index .Modules "base16") "base02") }};
+  --scrollbar-active-thumb-bg: #{{ (index (index .Modules "base16") "base03") }};
 
   /* Syntax highlighting */
-  --code-normal: #{{ .Palette.Base05 }};
-  --code-background: #{{ .Palette.Base01 }};
-  --code-comment: #{{ .Palette.Base03 }};
-  --code-function: #{{ .Palette.Base0D }};
-  --code-keyword: #{{ .Palette.Base0E }};
-  --code-string: #{{ .Palette.Base0B }};
-  --code-tag: #{{ .Palette.Base08 }};
-  --code-important: #{{ .Palette.Base0A }};
-  --code-operator: #{{ .Palette.Base0C }};
-  --code-property: #{{ .Palette.Base0A }};
-  --code-punctuation: #{{ .Palette.Base05 }};
-  --code-value: #{{ .Palette.Base0A }};
+  --code-normal: #{{ (index (index .Modules "base16") "base05") }};
+  --code-background: #{{ (index (index .Modules "base16") "base01") }};
+  --code-comment: #{{ (index (index .Modules "base16") "base03") }};
+  --code-function: #{{ (index (index .Modules "base16") "base0D") }};
+  --code-keyword: #{{ (index (index .Modules "base16") "base0E") }};
+  --code-string: #{{ (index (index .Modules "base16") "base0B") }};
+  --code-tag: #{{ (index (index .Modules "base16") "base08") }};
+  --code-important: #{{ (index (index .Modules "base16") "base0A") }};
+  --code-operator: #{{ (index (index .Modules "base16") "base0C") }};
+  --code-property: #{{ (index (index .Modules "base16") "base0A") }};
+  --code-punctuation: #{{ (index (index .Modules "base16") "base05") }};
+  --code-value: #{{ (index (index .Modules "base16") "base0A") }};
 
   /* Headings */
-  --heading-color: #{{ .Palette.Base05 }};
-  --inline-title-color: #{{ .Palette.Base05 }};
+  --heading-color: #{{ (index (index .Modules "base16") "base05") }};
+  --inline-title-color: #{{ (index (index .Modules "base16") "base05") }};
 
   /* Links */
-  --link-internal-color: #{{ .Palette.Base0D }};
-  --link-internal-hover: #{{ .Palette.Base0C }};
-  --link-external-color: #{{ .Palette.Base0E }};
-  --link-color: #{{ .Palette.Base0D }};
-  --link-color-hover: #{{ .Palette.Base0C }};
-  --link-unresolved-color: #{{ .Palette.Base04 }};
+  --link-internal-color: #{{ (index (index .Modules "base16") "base0D") }};
+  --link-internal-hover: #{{ (index (index .Modules "base16") "base0C") }};
+  --link-external-color: #{{ (index (index .Modules "base16") "base0E") }};
+  --link-color: #{{ (index (index .Modules "base16") "base0D") }};
+  --link-color-hover: #{{ (index (index .Modules "base16") "base0C") }};
+  --link-unresolved-color: #{{ (index (index .Modules "base16") "base04") }};
 
   /* Text formatting */
-  --bold-color: #{{ .Palette.Base08 }};
-  --italic-color: #{{ .Palette.Base0B }};
-  --inline-code-color: #{{ .Palette.Base09 }};
+  --bold-color: #{{ (index (index .Modules "base16") "base08") }};
+  --italic-color: #{{ (index (index .Modules "base16") "base0B") }};
+  --inline-code-color: #{{ (index (index .Modules "base16") "base09") }};
 
   /* Tags */
-  --tag-color: #{{ .Palette.Base0D }};
+  --tag-color: #{{ (index (index .Modules "base16") "base0D") }};
   --tag-background: rgba(124, 175, 194, 0.05);
 
   /* Graphs */
-  --graph-line: #{{ .Palette.Base02 }};
-  --graph-node: #{{ .Palette.Base0D }};
-  --graph-node-unresolved: #{{ .Palette.Base03 }};
-  --graph-node-tag: #{{ .Palette.Base0B }};
-  --graph-node-attachment: #{{ .Palette.Base0A }};
+  --graph-line: #{{ (index (index .Modules "base16") "base02") }};
+  --graph-node: #{{ (index (index .Modules "base16") "base0D") }};
+  --graph-node-unresolved: #{{ (index (index .Modules "base16") "base03") }};
+  --graph-node-tag: #{{ (index (index .Modules "base16") "base0B") }};
+  --graph-node-attachment: #{{ (index (index .Modules "base16") "base0A") }};
 
   /* Borders */
-  --divider-color: #{{ .Palette.Base02 }};
-  --divider-color-hover: #{{ .Palette.Base03 }};
+  --divider-color: #{{ (index (index .Modules "base16") "base02") }};
+  --divider-color-hover: #{{ (index (index .Modules "base16") "base03") }};
 
   /* Tables */
   --table-header-background: transparent;
@@ -102,65 +102,65 @@
   --table-row-alt-background: transparent;
 
   /* Checkboxes */
-  --checkbox-color: #{{ .Palette.Base0D }};
-  --checkbox-color-hover: #{{ .Palette.Base0C }};
-  --checkbox-border-color: #{{ .Palette.Base03 }};
+  --checkbox-color: #{{ (index (index .Modules "base16") "base0D") }};
+  --checkbox-color-hover: #{{ (index (index .Modules "base16") "base0C") }};
+  --checkbox-border-color: #{{ (index (index .Modules "base16") "base03") }};
 
   /* Toggles */
-  --toggle-thumb-color: #{{ .Palette.Base05 }};
-  --toggle-border-color: #{{ .Palette.Base02 }};
+  --toggle-thumb-color: #{{ (index (index .Modules "base16") "base05") }};
+  --toggle-border-color: #{{ (index (index .Modules "base16") "base02") }};
 
   /* Vim mode cursor */
-  --vim-cursor: #{{ .Palette.Base0D }};
+  --vim-cursor: #{{ (index (index .Modules "base16") "base0D") }};
 
   /* Prompts */
-  --prompt-border-color: #{{ .Palette.Base02 }};
+  --prompt-border-color: #{{ (index (index .Modules "base16") "base02") }};
 
   /* File colors */
-  --color-red: #{{ .Palette.Base08 }};
-  --color-orange: #{{ .Palette.Base09 }};
-  --color-yellow: #{{ .Palette.Base0A }};
-  --color-green: #{{ .Palette.Base0B }};
-  --color-cyan: #{{ .Palette.Base0C }};
-  --color-blue: #{{ .Palette.Base0D }};
-  --color-purple: #{{ .Palette.Base0E }};
-  --color-pink: #{{ .Palette.Base0E }};
+  --color-red: #{{ (index (index .Modules "base16") "base08") }};
+  --color-orange: #{{ (index (index .Modules "base16") "base09") }};
+  --color-yellow: #{{ (index (index .Modules "base16") "base0A") }};
+  --color-green: #{{ (index (index .Modules "base16") "base0B") }};
+  --color-cyan: #{{ (index (index .Modules "base16") "base0C") }};
+  --color-blue: #{{ (index (index .Modules "base16") "base0D") }};
+  --color-purple: #{{ (index (index .Modules "base16") "base0E") }};
+  --color-pink: #{{ (index (index .Modules "base16") "base0E") }};
 
   /* Ribbons */
-  --ribbon-background: #{{ .Palette.Base01 }};
-  --ribbon-background-collapsed: #{{ .Palette.Base00 }};
+  --ribbon-background: #{{ (index (index .Modules "base16") "base01") }};
+  --ribbon-background-collapsed: #{{ (index (index .Modules "base16") "base00") }};
 
   /* Titlebar */
-  --titlebar-background: #{{ .Palette.Base00 }};
+  --titlebar-background: #{{ (index (index .Modules "base16") "base00") }};
   --titlebar-background-focused: var(--titlebar-background);
 
   /* Tabs */
-  --tab-text-color: #{{ .Palette.Base04 }};
-  --tab-text-color-focused: #{{ .Palette.Base05 }};
-  --tab-text-color-active: #{{ .Palette.Base05 }};
-  --tab-background-active: #{{ .Palette.Base01 }};
+  --tab-text-color: #{{ (index (index .Modules "base16") "base04") }};
+  --tab-text-color-focused: #{{ (index (index .Modules "base16") "base05") }};
+  --tab-text-color-active: #{{ (index (index .Modules "base16") "base05") }};
+  --tab-background-active: #{{ (index (index .Modules "base16") "base01") }};
 
   /* Status bar */
-  --status-bar-background: #{{ .Palette.Base00 }};
-  --status-bar-border-color: #{{ .Palette.Base02 }};
+  --status-bar-background: #{{ (index (index .Modules "base16") "base00") }};
+  --status-bar-border-color: #{{ (index (index .Modules "base16") "base02") }};
 
   /* Search */
-  --search-clear-button-color: #{{ .Palette.Base04 }};
+  --search-clear-button-color: #{{ (index (index .Modules "base16") "base04") }};
 
   /* Misc */
   --list-indent: 1.6em;
 }
 
 .is-mobile.theme-dark {
-  --background-primary: #{{ .Palette.Base00 }} !important;
-  --background-secondary: #{{ .Palette.Base00 }} !important;
+  --background-primary: #{{ (index (index .Modules "base16") "base00") }} !important;
+  --background-secondary: #{{ (index (index .Modules "base16") "base00") }} !important;
 }
 
 /* Clean code blocks */
 .theme-dark .markdown-preview-view pre,
 .theme-dark .markdown-rendered pre {
   background-color: #1a1a1a;
-  border: 1px solid #{{ .Palette.Base01 }};
+  border: 1px solid #{{ (index (index .Modules "base16") "base01") }};
   border-radius: 2px;
   padding: 12px;
 }
@@ -293,7 +293,7 @@
 
 /* Blockquotes */
 .theme-dark .markdown-preview-view blockquote {
-  border-left: 3px solid #{{ .Palette.Base03 }};
+  border-left: 3px solid #{{ (index (index .Modules "base16") "base03") }};
   background: transparent;
   padding-left: 16px;
   margin: 12px 0;
@@ -356,7 +356,7 @@
 
 /* Horizontal rules */
 .theme-dark hr {
-  border-color: #{{ .Palette.Base02 }};
+  border-color: #{{ (index (index .Modules "base16") "base02") }};
 }
 
 /* Selection */
@@ -371,17 +371,17 @@
 }
 
 .theme-dark ::-webkit-scrollbar-track {
-  background: #{{ .Palette.Base00 }};
+  background: #{{ (index (index .Modules "base16") "base00") }};
 }
 
 .theme-dark ::-webkit-scrollbar-thumb {
-  background: #{{ .Palette.Base02 }};
+  background: #{{ (index (index .Modules "base16") "base02") }};
   border-radius: 5px;
   transition: background 0.1s ease;
 }
 
 .theme-dark ::-webkit-scrollbar-thumb:hover {
-  background: #{{ .Palette.Base03 }};
+  background: #{{ (index (index .Modules "base16") "base03") }};
 }
 
 /* Ribbon menu */
@@ -393,7 +393,7 @@
 .theme-dark .callout {
   background: transparent;
   border: none;
-  border-left: 2px solid var(--callout-color, #{{ .Palette.Base02 }});
+  border-left: 2px solid var(--callout-color, #{{ (index (index .Modules "base16") "base02") }});
   border-radius: 0;
   box-shadow: none;
   padding: 4px 12px;
@@ -1823,8 +1823,8 @@ body:not(.normal-header-bar) #cMenuToolbarModalBar.top {
 .theme-dark .markdown-preview-view th,
 .theme-dark .markdown-rendered th {
   background: transparent;
-  border: 1px solid #{{ .Palette.Base02 }};
-  border-bottom: 2px solid #{{ .Palette.Base03 }};
+  border: 1px solid #{{ (index (index .Modules "base16") "base02") }};
+  border-bottom: 2px solid #{{ (index (index .Modules "base16") "base03") }};
   padding: 6px 12px;
   text-align: left;
   font-weight: 700;
@@ -1865,7 +1865,7 @@ body:not(.normal-header-bar) #cMenuToolbarModalBar.top {
 /* Display math (block formulas) */
 .theme-dark .math.math-block {
   border: none;
-  border-left: 2px solid #{{ .Palette.Base02 }};
+  border-left: 2px solid #{{ (index (index .Modules "base16") "base02") }};
   background: transparent;
   padding: 12px 0;
   margin: 16px 0;

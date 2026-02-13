@@ -14,9 +14,9 @@ set -g status-right "⏰ %x %k:%M 👤 #(whoami)@#(hostname) 🔋 #(cat /sys/cla
 set -g set-titles on
 
 # Base16 colors
-set -g pane-border-style fg=#{{ .Palette.Base01 }}
-set -g pane-active-border-style fg=#{{ .Palette.Base03 }}
-set -g status-style bg=#{{ .Palette.Base00 }},fg=#{{ .Palette.Base05 }}
+set -g pane-border-style fg=#{{ (index (index .Modules "base16") "base01") }}
+set -g pane-active-border-style fg=#{{ (index (index .Modules "base16") "base03") }}
+set -g status-style bg=#{{ (index (index .Modules "base16") "base00") }},fg=#{{ (index (index .Modules "base16") "base05") }}
 
 # Terminal
 set -g default-terminal "tmux-256color"
