@@ -1,0 +1,10 @@
+{{- range $name, $app := .Modules.webapp.apps }}
+<<<WORKSPACED_FILE:webapp-{{ $name }}.desktop:0644>>>
+[Desktop Entry]
+Type=Application
+Name={{ or $app.desktop_name $name }}
+Exec=workspaced dispatch webapp launch {{ $name }}
+Icon={{ or $app.icon (favicon $app.url) }}
+Categories=Network;WebBrowser;
+<<<WORKSPACED_ENDFILE>>>
+{{- end }}

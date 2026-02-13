@@ -42,7 +42,32 @@ func init() {
 						wa = w
 						found = true
 						url = wa.URL
-					} else {
+					} else if modWebapp, ok := cfg.Modules["webapp"].(map[string]any); ok {
+						if apps, ok := modWebapp["apps"].(map[string]any); ok {
+							if appRaw, ok := apps[target].(map[string]any); ok {
+								// Extract fields from map
+								if u, ok := appRaw["url"].(string); ok {
+									url = u
+									wa.URL = u
+								}
+								if p, ok := appRaw["profile"].(string); ok {
+									wa.Profile = p
+								}
+								if d, ok := appRaw["desktop_name"].(string); ok {
+									wa.DesktopName = d
+								}
+								if i, ok := appRaw["icon"].(string); ok {
+									wa.Icon = i
+								}
+								if f, ok := appRaw["extra_flags"].([]string); ok {
+									wa.ExtraFlags = f
+								}
+								found = true
+							}
+						}
+					}
+
+					if !found {
 						url = target
 					}
 				}

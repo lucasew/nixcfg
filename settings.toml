@@ -92,127 +92,125 @@ port = 22
 default = "zen"
 webapp = "brave"
 
-[webapp.castable-iframe]
+[modules.webapp]
+enable = true
+
+[modules.webapp.apps.castable-iframe]
 url = "https://castable-iframe.vercel.app/"
 profile = "castable-iframe"
 
-[webapp.gemini]
+[modules.webapp.apps.gemini]
 url = "https://gemini.google.com"
 
-[webapp.teste]
+[modules.webapp.apps.teste]
 url = "https://google.com"
 
-
-[webapp.element]
+[modules.webapp.apps.element]
 url = "https://app.element.io"
 profile = "element"
 desktop_name = "Element Matrix"
 
-[webapp.reemo]
+[modules.webapp.apps.reemo]
 url = "https://reemo.io"
 desktop_name = "Remote control"
 
-[webapp.clickup]
+[modules.webapp.apps.clickup]
 url = "https://clickup.com"
 desktop_name = "ClickUp"
 
-[webapp.facebook]
+[modules.webapp.apps.facebook]
 url = "https://facebook.com"
 profile = "facebook"
 desktop_name = "Facebook"
 
-[webapp.pocketcasts]
+[modules.webapp.apps.pocketcasts]
 url = "https://pocketcasts.com"
 desktop_name = "PocketCasts"
 icon = "sound"
 
-[webapp.twitter]
+[modules.webapp.apps.twitter]
 url = "https://twitter.com"
 profile = "twitter"
 desktop_name = "Twitter"
 
-[webapp.discord-pessoal]
+[modules.webapp.apps.discord-pessoal]
 url = "https://discord.com/channels/me"
 profile = "discord-pessoal"
 desktop_name = "Discord (pessoal)"
 
-
-[webapp.discord-profissional]
+[modules.webapp.apps.discord-profissional]
 url = "https://discord.com/channels/me"
 profile = "discord-profissional"
 desktop_name = "Discord (profissional)"
 
-[webapp.youtube-tv]
+[modules.webapp.apps.youtube-tv]
 url = "https://youtube.com/tv"
 profile = "youtube-tv"
 desktop_name = "YouTube (UI para TV)"
 
-[webapp.whatsapp]
+[modules.webapp.apps.whatsapp]
 url = "web.whatsapp.com"
 profile = "zap"
 desktop_name = "WhatsApp"
 
-[webapp.notion]
+[modules.webapp.apps.notion]
 url = "notion.so"
 profile = "notion"
 desktop_name = "Notion"
 
-[webapp.duolingo]
+[modules.webapp.apps.duolingo]
 url = "duolingo.com"
 desktop_name = "Duolingo"
 
-[webapp.youtube-music]
+[modules.webapp.apps.youtube-music]
 url = "music.youtube.com"
 profile = "youtubemusic"
 desktop_name = "Youtube Music"
 
-[webapp.planttext]
+[modules.webapp.apps.planttext]
 url = "https://www.planttext.com/"
 desktop_name = "PlantText"
 
-[webapp.rainmode]
+[modules.webapp.apps.rainmode]
 url = "https://youtu.be/mPZkdNFkNps"
 desktop_name = "Tocar som de chuva"
 icon = "weather-showers"
 
-[webapp.gmail]
+[modules.webapp.apps.gmail]
 url = "gmail.com"
 desktop_name = "GMail"
 
-[webapp.keymash]
+[modules.webapp.apps.keymash]
 url = "https://keyma.sh/learn"
 desktop_name = "keyma.sh: Keyboard typing train"
 
-[webapp.calendar]
+[modules.webapp.apps.calendar]
 url = "https://calendar.google.com/calendar/u/0/r/customday"
 desktop_name = "Calendário"
 icon = "x-office-calendar"
 
-[webapp.twitch-dashboard]
+[modules.webapp.apps.twitch-dashboard]
 url = "https://dashboard.twitch.tv/stream-manager"
 
-# [webapp.trello-facul]
-# url = "https://trello.com/b/ov0pbUtC/facul"
-
-[webapp.trello-pessoal]
+[modules.webapp.apps.trello-pessoal]
 url = "https://trello.com/b/bjoRKSM2/pessoal"
 
-[webapp.trello-side-projects]
+[modules.webapp.apps.trello-side-projects]
 url = "https://trello.com/b/36ncJYYV/side-projects"
 
-[webapp.trello-dashboard]
+[modules.webapp.apps.trello-dashboard]
 url = "trello.com"
 
-[webapp.geforce-now]
+[modules.webapp.apps.geforce-now]
 url = "play.geforcenow.com"
 
-[webapp.deezer]
+[modules.webapp.apps.deezer]
 url = "deezer.com"
 
-[webapp.jules]
+[modules.webapp.apps.jules]
 url = "jules.google.com"
 
-[webapp.claude-code-web]
+[modules.webapp.apps.claude-code-web]
 url = "claude.ai/code"
 
 [lazy_tools."github:zed-industries/zed"]

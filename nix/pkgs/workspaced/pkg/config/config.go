@@ -316,7 +316,7 @@ func (b BrowserConfig) Merge(other BrowserConfig) BrowserConfig {
 
 // Merge returns a new GlobalConfig with values from other overriding non-empty values.
 // For maps (Workspaces, Hosts, Webapps), keys are merged additively.
-func (g GlobalConfig) Merge(other GlobalConfig) GlobalConfig {
+func (g GlobalConfig) Merge(other GlobalConfig) (GlobalConfig, error) {
 	result := g
 
 	// Deep copy maps to avoid aliasing
@@ -375,8 +375,10 @@ func (g GlobalConfig) Merge(other GlobalConfig) GlobalConfig {
 	// Merge LazyTools map
 	maps.Copy(result.LazyTools, other.LazyTools)
 
-	// Merge Modules map
-	maps.Copy(result.Modules, other.Modules)
+	// Merge Modules map strictly
+	if err := MergeStrict(result.Modules, other.Modules); err != nil {
+		return result, err
+	}
 
 	// Merge nested configs using their Merge methods
 	result.Desktop.Wallpaper = result.Desktop.Wallpaper.Merge(other.Desktop.Wallpaper)
@@ -387,7 +389,7 @@ func (g GlobalConfig) Merge(other GlobalConfig) GlobalConfig {
 	result.Palette = result.Palette.Merge(other.Palette)
 	result.Fonts = result.Fonts.Merge(other.Fonts)
 
-	return result
+	return result, nil
 }
 
 func Load() (*Config, error) {
@@ -477,7 +479,11 @@ func LoadConfig() (*GlobalConfig, error) {
 		if _, err := os.Stat(dotfilesSettingsPath); err == nil {
 			var dotfilesConfig GlobalConfig
 			if _, err := toml.DecodeFile(dotfilesSettingsPath, &dotfilesConfig); err == nil {
-				config = config.Merge(dotfilesConfig)
+				var err error
+				config, err = config.Merge(dotfilesConfig)
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 	}
@@ -487,7 +493,11 @@ func LoadConfig() (*GlobalConfig, error) {
 	if _, err := os.Stat(userSettingsPath); err == nil {
 		var userConfig GlobalConfig
 		if _, err := toml.DecodeFile(userSettingsPath, &userConfig); err == nil {
-			config = config.Merge(userConfig)
+			var err error
+			config, err = config.Merge(userConfig)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
