@@ -20,14 +20,14 @@ func GetDumpCommand() *cobra.Command {
 
 Outputs the result as TOML format.`,
 		RunE: func(c *cobra.Command, args []string) error {
-			cfg, err := config.LoadConfig()
+			cfg, err := config.Load()
 			if err != nil {
 				return fmt.Errorf("failed to load config: %w", err)
 			}
 
 			// Encode to TOML format
 			encoder := toml.NewEncoder(c.OutOrStdout())
-			if err := encoder.Encode(cfg); err != nil {
+			if err := encoder.Encode(cfg.GlobalConfig); err != nil {
 				return fmt.Errorf("failed to encode TOML: %w", err)
 			}
 

@@ -20,62 +20,62 @@ type Config struct {
 
 // GlobalConfig represents the schema of the settings.toml file.
 type GlobalConfig struct {
-	Workspaces map[string]int            `toml:"workspaces"`
-	Desktop    DesktopConfig             `toml:"desktop"`
-	Screenshot ScreenshotConfig          `toml:"screenshot"`
-	Hosts      map[string]HostConfig     `toml:"hosts"`
-	Backup     BackupConfig              `toml:"backup"`
-	QuickSync  QuickSyncConfig           `toml:"quicksync"`
-	Browser    BrowserConfig             `toml:"browser"`
-	LazyTools  map[string]LazyToolConfig `toml:"lazy_tools"`
-	Palette    PaletteConfig             `toml:"palette"`
-	Fonts      FontsConfig               `toml:"fonts"`
-	Modules    map[string]any            `toml:"modules"`
+	Workspaces map[string]int            `toml:"workspaces" json:"workspaces"`
+	Desktop    DesktopConfig             `toml:"desktop" json:"desktop"`
+	Screenshot ScreenshotConfig          `toml:"screenshot" json:"screenshot"`
+	Hosts      map[string]HostConfig     `toml:"hosts" json:"hosts"`
+	Backup     BackupConfig              `toml:"backup" json:"backup"`
+	QuickSync  QuickSyncConfig           `toml:"quicksync" json:"quicksync"`
+	Browser    BrowserConfig             `toml:"browser" json:"browser"`
+	LazyTools  map[string]LazyToolConfig `toml:"lazy_tools" json:"lazy_tools"`
+	Palette    PaletteConfig             `toml:"palette" json:"palette"`
+	Fonts      FontsConfig               `toml:"fonts" json:"fonts"`
+	Modules    map[string]any            `toml:"modules" json:"modules"`
 }
 
 type DesktopConfig struct {
-	DarkMode  bool            `toml:"dark_mode"`
-	Wallpaper WallpaperConfig `toml:"wallpaper"`
+	DarkMode  bool            `toml:"dark_mode" json:"dark_mode"`
+	Wallpaper WallpaperConfig `toml:"wallpaper" json:"wallpaper"`
 }
 
 type LazyToolConfig struct {
-	Version string   `toml:"version"`
-	Pkg     string   `toml:"pkg"`    // Optional: mise ref (e.g. github:owner/repo)
-	Global  bool     `toml:"global"` // Whether to put in global PATH
-	Alias   string   `toml:"alias"`  // Binary name if Bins is empty
-	Bins    []string `toml:"bins"`   // List of binaries
+	Version string   `toml:"version" json:"version"`
+	Pkg     string   `toml:"pkg" json:"pkg"`
+	Global  bool     `toml:"global" json:"global"`
+	Alias   string   `toml:"alias" json:"alias"`
+	Bins    []string `toml:"bins" json:"bins"`
 }
 
 type HostConfig struct {
-	MAC         string `toml:"mac"`
-	TailscaleIP string `toml:"tailscale_ip"`
-	ZerotierIP  string `toml:"zerotier_ip"`
-	Port        int    `toml:"port"`
-	User        string `toml:"user"`
+	MAC         string `toml:"mac" json:"mac"`
+	TailscaleIP string `toml:"tailscale_ip" json:"tailscale_ip"`
+	ZerotierIP  string `toml:"zerotier_ip" json:"zerotier_ip"`
+	Port        int    `toml:"port" json:"port"`
+	User        string `toml:"user" json:"user"`
 }
 
 type BrowserConfig struct {
-	Default string `toml:"default"`
-	Engine  string `toml:"webapp"`
+	Default string `toml:"default" json:"default"`
+	Engine  string `toml:"webapp" json:"webapp"`
 }
 
 type WallpaperConfig struct {
-	Dir     string `toml:"dir"`
-	Default string `toml:"default"`
+	Dir     string `toml:"dir" json:"dir"`
+	Default string `toml:"default" json:"default"`
 }
 
 type ScreenshotConfig struct {
-	Dir string `toml:"dir"`
+	Dir string `toml:"dir" json:"dir"`
 }
 
 type BackupConfig struct {
-	RsyncnetUser string `toml:"rsyncnet_user"`
-	RemotePath   string `toml:"remote_path"`
+	RsyncnetUser string `toml:"rsyncnet_user" json:"rsyncnet_user"`
+	RemotePath   string `toml:"remote_path" json:"remote_path"`
 }
 
 type QuickSyncConfig struct {
-	RepoDir    string `toml:"repo_dir"`
-	RemotePath string `toml:"remote_path"`
+	RepoDir    string `toml:"repo_dir" json:"repo_dir"`
+	RemotePath string `toml:"remote_path" json:"remote_path"`
 }
 
 type PaletteConfig struct {
@@ -95,7 +95,6 @@ type PaletteConfig struct {
 	Base0D string `toml:"base0D" json:"base0D"`
 	Base0E string `toml:"base0E" json:"base0E"`
 	Base0F string `toml:"base0F" json:"base0F"`
-	// Base24 extended colors
 	Base10 string `toml:"base10,omitempty" json:"base10,omitempty"`
 	Base11 string `toml:"base11,omitempty" json:"base11,omitempty"`
 	Base12 string `toml:"base12,omitempty" json:"base12,omitempty"`
@@ -107,10 +106,10 @@ type PaletteConfig struct {
 }
 
 type FontsConfig struct {
-	Serif     string `toml:"serif"`
-	SansSerif string `toml:"sans_serif"`
-	Monospace string `toml:"monospace"`
-	Emoji     string `toml:"emoji"`
+	Serif     string `toml:"serif" json:"serif"`
+	SansSerif string `toml:"sans_serif" json:"sans_serif"`
+	Monospace string `toml:"monospace" json:"monospace"`
+	Emoji     string `toml:"emoji" json:"emoji"`
 }
 
 func (c *Config) Module(name string, target interface{}) error {
@@ -137,7 +136,6 @@ func (f FontsConfig) Merge(other FontsConfig) FontsConfig {
 func (p PaletteConfig) Get(key string) string {
 	v := reflect.ValueOf(p)
 	t := v.Type()
-
 	for i := 0; i < t.NumField(); i++ {
 		field := t.Field(i)
 		if tag := field.Tag.Get("toml"); tag == key {
@@ -222,7 +220,6 @@ func (p PaletteConfig) Merge(other PaletteConfig) PaletteConfig {
 		result.Base17 = other.Base17
 	}
 
-	// Auto-fill base24 extended colors by repeating accent colors if empty
 	if result.Base10 == "" && result.Base08 != "" {
 		result.Base10 = result.Base08
 	}
@@ -359,7 +356,7 @@ func Load() (*Config, error) {
 	home, _ := os.UserHomeDir()
 	dotfiles, _ := env.GetDotfilesRoot()
 
-	gCfg, err := LoadConfig()
+	gCfg, err := LoadConfigBase()
 	if err != nil {
 		return nil, err
 	}
@@ -373,17 +370,46 @@ func Load() (*Config, error) {
 
 	rawMerged := structToMap(gCfg)
 
-	modulesDir := filepath.Join(dotfiles, "modules")
-	if entries, err := os.ReadDir(modulesDir); err == nil {
-		enabledModules := make(map[string]bool)
-		for name, cfg := range gCfg.Modules {
-			if m, ok := cfg.(map[string]any); ok {
-				if enabled, ok := m["enable"].(bool); ok && enabled {
-					enabledModules[name] = true
+	userConfigs := []string{}
+	if dotfiles != "" {
+		userConfigs = append(userConfigs, filepath.Join(dotfiles, "settings.toml"))
+	}
+	userConfigs = append(userConfigs, filepath.Join(home, "settings.toml"))
+
+	enabledModules := make(map[string]bool)
+	for _, path := range userConfigs {
+		if _, err := os.Stat(path); err == nil {
+			var currentRaw map[string]any
+			if _, err := toml.DecodeFile(path, &currentRaw); err == nil {
+				if modsRaw, ok := currentRaw["modules"]; ok {
+					modsVal := reflect.ValueOf(modsRaw)
+					if modsVal.Kind() == reflect.Map {
+						for _, modKey := range modsVal.MapKeys() {
+							modName := modKey.String()
+							mVal := modsVal.MapIndex(modKey)
+							if mVal.Kind() == reflect.Interface {
+								mVal = mVal.Elem()
+							}
+							if mVal.Kind() == reflect.Map {
+								eVal := mVal.MapIndex(reflect.ValueOf("enable"))
+								if eVal.IsValid() {
+									if eVal.Kind() == reflect.Interface {
+										eVal = eVal.Elem()
+									}
+									if eVal.Kind() == reflect.Bool && eVal.Bool() {
+										enabledModules[modName] = true
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}
+	}
 
+	modulesDir := filepath.Join(dotfiles, "modules")
+	if entries, err := os.ReadDir(modulesDir); err == nil {
 		moduleMeta := make(map[string]ModuleMetadata)
 		defaultsRaw := make(map[string]any)
 
@@ -411,10 +437,11 @@ func Load() (*Config, error) {
 			defaultsPath := filepath.Join(modPath, "defaults.toml")
 			if _, err := os.Stat(defaultsPath); err == nil {
 				var currentDefaults map[string]any
-				if _, err := toml.DecodeFile(defaultsPath, &currentDefaults); err == nil {
-					if err := MergeStrict(defaultsRaw, currentDefaults, false); err != nil {
-						return nil, fmt.Errorf("conflict in defaults between modules: %w", err)
-					}
+				if _, err := toml.DecodeFile(defaultsPath, &currentDefaults); err != nil {
+					return nil, fmt.Errorf("failed to decode %s: %w", defaultsPath, err)
+				}
+				if err := MergeStrict(defaultsRaw, currentDefaults, false); err != nil {
+					return nil, fmt.Errorf("conflict in defaults between modules: %w", err)
 				}
 			}
 		}
@@ -427,12 +454,6 @@ func Load() (*Config, error) {
 			return nil, err
 		}
 	}
-
-	userConfigs := []string{}
-	if dotfiles != "" {
-		userConfigs = append(userConfigs, filepath.Join(dotfiles, "settings.toml"))
-	}
-	userConfigs = append(userConfigs, filepath.Join(home, "settings.toml"))
 
 	for _, path := range userConfigs {
 		if _, err := os.Stat(path); err == nil {
@@ -447,7 +468,14 @@ func Load() (*Config, error) {
 
 	finalGCfg := &GlobalConfig{}
 	data, _ := json.Marshal(rawMerged)
-	json.Unmarshal(data, finalGCfg)
+	if err := json.Unmarshal(data, finalGCfg); err != nil {
+		return nil, fmt.Errorf("failed to finalize config: %w", err)
+	}
+
+	finalGCfg.Desktop.Wallpaper.Dir = env.ExpandPath(finalGCfg.Desktop.Wallpaper.Dir)
+	finalGCfg.Desktop.Wallpaper.Default = env.ExpandPath(finalGCfg.Desktop.Wallpaper.Default)
+	finalGCfg.Screenshot.Dir = env.ExpandPath(finalGCfg.Screenshot.Dir)
+	finalGCfg.QuickSync.RepoDir = env.ExpandPath(finalGCfg.QuickSync.RepoDir)
 
 	return &Config{
 		GlobalConfig: finalGCfg,
@@ -456,6 +484,14 @@ func Load() (*Config, error) {
 }
 
 func LoadConfig() (*GlobalConfig, error) {
+	cfg, err := Load()
+	if err != nil {
+		return nil, err
+	}
+	return cfg.GlobalConfig, nil
+}
+
+func LoadConfigBase() (*GlobalConfig, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return nil, err
@@ -486,14 +522,14 @@ func (c *Config) UnmarshalKey(key string, val interface{}) error {
 	parts := strings.Split(key, ".")
 	var current interface{} = c.raw
 	for _, part := range parts {
-		if m, ok := current.(map[string]interface{}); ok {
-			v, ok := m[part]
+		if mRaw, ok := current.(map[string]any); ok {
+			v, ok := mRaw[part]
 			if !ok {
 				return fmt.Errorf("key %q not found in config", key)
 			}
 			current = v
-		} else if m, ok := current.(map[string]any); ok {
-			v, ok := m[part]
+		} else if mRaw, ok := current.(map[string]interface{}); ok {
+			v, ok := mRaw[part]
 			if !ok {
 				return fmt.Errorf("key %q not found in config", key)
 			}
@@ -579,14 +615,26 @@ func MergeStrict(dst, src map[string]any, allowSubstitution bool) error {
 			if reflect.TypeOf(v).Kind() == reflect.Slice || reflect.TypeOf(v).Kind() == reflect.Array {
 				return fmt.Errorf("lists are forbidden in strict config (key: %s)", k)
 			}
-			if vMap, ok := v.(map[string]any); ok {
-				if existingMap, ok := existing.(map[string]any); ok {
-					if err := MergeStrict(existingMap, vMap, allowSubstitution); err != nil {
-						return err
-					}
-					continue
+
+			vVal := reflect.ValueOf(v)
+			eVal := reflect.ValueOf(existing)
+
+			if vVal.Kind() == reflect.Map && eVal.Kind() == reflect.Map {
+				vMap := make(map[string]any)
+				for _, key := range vVal.MapKeys() {
+					vMap[key.String()] = vVal.MapIndex(key).Interface()
 				}
+				eMap := make(map[string]any)
+				for _, key := range eVal.MapKeys() {
+					eMap[key.String()] = eVal.MapIndex(key).Interface()
+				}
+				if err := MergeStrict(eMap, vMap, allowSubstitution); err != nil {
+					return err
+				}
+				dst[k] = eMap
+				continue
 			}
+
 			if !reflect.DeepEqual(existing, v) {
 				if allowSubstitution {
 					dst[k] = v
