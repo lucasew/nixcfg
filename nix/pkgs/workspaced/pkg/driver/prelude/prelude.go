@@ -11,6 +11,7 @@ import (
 	_ "workspaced/pkg/driver/menu/fzf"
 	_ "workspaced/pkg/driver/menu/rofi"
 	_ "workspaced/pkg/driver/menu/wofi"
+	_ "workspaced/pkg/driver/notification/dbus"
 	_ "workspaced/pkg/driver/notification/notify_send"
 	_ "workspaced/pkg/driver/notification/termux"
 	_ "workspaced/pkg/driver/power/systemd"
