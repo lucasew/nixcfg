@@ -7,7 +7,9 @@ import (
 // StatusNotificationID is the reserved ID for system status notifications (e.g. volume, brightness).
 // Reusing this ID allows updating an existing notification instead of creating a new one.
 const (
-	StatusNotificationID uint32 = 100
+	StatusNotificationID   uint32 = 100
+	NixBuildNotificationID uint32 = 101
+	BackupNotificationID   uint32 = 102
 )
 
 // Notification represents a system notification.

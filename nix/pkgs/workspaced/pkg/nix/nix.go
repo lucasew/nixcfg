@@ -11,11 +11,11 @@ import (
 	"strings"
 	"sync"
 	"workspaced/pkg/api"
+	"workspaced/pkg/driver/notification"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/icons"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/driver/notification"
 	"workspaced/pkg/sudo"
 	"workspaced/pkg/types"
 )
@@ -97,7 +97,9 @@ func RemoteBuild(ctx context.Context, ref string, target string, copyBack bool) 
 	}
 
 	n := &notification.Notification{
-		Title: "Nix Remote Build",
+		ID:          notification.NixBuildNotificationID,
+		Title:       "Nix Remote Build",
+		HasProgress: true,
 	}
 	if icon, err := icons.GetIconPath(ctx, "https://nixos.org"); err == nil {
 		n.Icon = icon

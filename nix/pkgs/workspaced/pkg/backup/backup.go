@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 	"workspaced/pkg/config"
+	"workspaced/pkg/driver/notification"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/git"
 	"workspaced/pkg/logging"
-	"workspaced/pkg/driver/notification"
 	"workspaced/pkg/sudo"
 	"workspaced/pkg/types"
 )
@@ -28,8 +28,10 @@ func RunFullBackup(ctx context.Context) error {
 	logger.Info("starting full backup")
 
 	n := &notification.Notification{
-		Title: "Backup em curso",
-		Icon:  "drive-harddisk",
+		ID:          notification.BackupNotificationID,
+		Title:       "Backup em curso",
+		Icon:        "drive-harddisk",
+		HasProgress: true,
 	}
 
 	totalSteps := 2 // Git sync + Final report
