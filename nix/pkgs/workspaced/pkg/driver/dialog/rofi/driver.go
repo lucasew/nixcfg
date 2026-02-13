@@ -10,14 +10,23 @@ import (
 )
 
 func init() {
-	driver.Register[dialog.Chooser](&Provider{})
+	driver.Register[dialog.Chooser](&ChooserProvider{})
+	driver.Register[dialog.Driver](&FullDriverProvider{})
 }
 
-type Provider struct{}
+type ChooserProvider struct{}
 
-func (p *Provider) Name() string { return "Rofi" }
+func (p *ChooserProvider) Name() string                                    { return "Rofi" }
+func (p *ChooserProvider) CheckCompatibility(ctx context.Context) error    { return checkRofi(ctx) }
+func (p *ChooserProvider) New(ctx context.Context) (dialog.Chooser, error) { return &Driver{}, nil }
 
-func (p *Provider) CheckCompatibility(ctx context.Context) error {
+type FullDriverProvider struct{}
+
+func (p *FullDriverProvider) Name() string                                   { return "Rofi" }
+func (p *FullDriverProvider) CheckCompatibility(ctx context.Context) error   { return checkRofi(ctx) }
+func (p *FullDriverProvider) New(ctx context.Context) (dialog.Driver, error) { return &Driver{}, nil }
+
+func checkRofi(ctx context.Context) error {
 	if exec.GetEnv(ctx, "DISPLAY") == "" && exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
 		return fmt.Errorf("%w: neither DISPLAY nor WAYLAND_DISPLAY set", driver.ErrIncompatible)
 	}
@@ -25,10 +34,6 @@ func (p *Provider) CheckCompatibility(ctx context.Context) error {
 		return fmt.Errorf("%w: rofi not found", driver.ErrIncompatible)
 	}
 	return nil
-}
-
-func (p *Provider) New(ctx context.Context) (dialog.Chooser, error) {
-	return &Driver{}, nil
 }
 
 type Driver struct{}
