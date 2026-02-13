@@ -16,7 +16,7 @@
 @define-color base0F #{{ .Palette.Base0F }};
 
 * {
-    font-family: "{{ .Fonts.SansSerif }}", "{{ .Fonts.Emoji }}";
+    font-family: "{{ .Modules.fontconfig.sans_serif }}", "{{ .Modules.fontconfig.emoji }}";
     font-weight: 300;
     font-size: 13px;
     min-height: 26px;

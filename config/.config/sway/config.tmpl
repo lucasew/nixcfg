@@ -11,7 +11,7 @@ input type:keyboard {
 bar {
   # swaybar_command waybar
   status_command i3pystatus -c $(sdw d root)/bin/_shortcuts/i3pystatus/main.py
-  font pango: {{ .Fonts.Monospace }} 10, {{ .Fonts.Emoji }} 10
+  font pango: {{ .Modules.fontconfig.monospace }} 10, {{ .Modules.fontconfig.emoji }} 10
   hidden_state hide
   mode invisible
   position top

@@ -29,7 +29,6 @@ type GlobalConfig struct {
 	Browser    BrowserConfig             `toml:"browser" json:"browser"`
 	LazyTools  map[string]LazyToolConfig `toml:"lazy_tools" json:"lazy_tools"`
 	Palette    PaletteConfig             `toml:"palette" json:"palette"`
-	Fonts      FontsConfig               `toml:"fonts" json:"fonts"`
 	Modules    map[string]any            `toml:"modules" json:"modules"`
 }
 
@@ -95,6 +94,7 @@ type PaletteConfig struct {
 	Base0D string `toml:"base0D" json:"base0D"`
 	Base0E string `toml:"base0E" json:"base0E"`
 	Base0F string `toml:"base0F" json:"base0F"`
+	// Base24 extended colors
 	Base10 string `toml:"base10,omitempty" json:"base10,omitempty"`
 	Base11 string `toml:"base11,omitempty" json:"base11,omitempty"`
 	Base12 string `toml:"base12,omitempty" json:"base12,omitempty"`
@@ -105,32 +105,8 @@ type PaletteConfig struct {
 	Base17 string `toml:"base17,omitempty" json:"base17,omitempty"`
 }
 
-type FontsConfig struct {
-	Serif     string `toml:"serif" json:"serif"`
-	SansSerif string `toml:"sans_serif" json:"sans_serif"`
-	Monospace string `toml:"monospace" json:"monospace"`
-	Emoji     string `toml:"emoji" json:"emoji"`
-}
-
 func (c *Config) Module(name string, target interface{}) error {
 	return c.UnmarshalKey("modules."+name, target)
-}
-
-func (f FontsConfig) Merge(other FontsConfig) FontsConfig {
-	result := f
-	if other.Serif != "" {
-		result.Serif = other.Serif
-	}
-	if other.SansSerif != "" {
-		result.SansSerif = other.SansSerif
-	}
-	if other.Monospace != "" {
-		result.Monospace = other.Monospace
-	}
-	if other.Emoji != "" {
-		result.Emoji = other.Emoji
-	}
-	return result
 }
 
 func (p PaletteConfig) Get(key string) string {
@@ -347,7 +323,6 @@ func (g GlobalConfig) Merge(other GlobalConfig) (GlobalConfig, error) {
 	result.QuickSync = result.QuickSync.Merge(other.QuickSync)
 	result.Browser = result.Browser.Merge(other.Browser)
 	result.Palette = result.Palette.Merge(other.Palette)
-	result.Fonts = result.Fonts.Merge(other.Fonts)
 
 	return result, nil
 }
@@ -437,7 +412,7 @@ func Load() (*Config, error) {
 			defaultsPath := filepath.Join(modPath, "defaults.toml")
 			if _, err := os.Stat(defaultsPath); err == nil {
 				var currentDefaults map[string]any
-				if _, err := toml.DecodeFile(defaultsPath, &currentDefaults); err == nil {
+				if _, err := toml.DecodeFile(defaultsPath, &currentDefaults); err != nil {
 					// Wrap in modules.<name> namespace for isolation
 					wrappedDefaults := map[string]any{
 						"modules": map[string]any{
@@ -463,7 +438,7 @@ func Load() (*Config, error) {
 	for _, path := range userConfigs {
 		if _, err := os.Stat(path); err == nil {
 			var currentRaw map[string]any
-			if _, err := toml.DecodeFile(path, &currentRaw); err == nil {
+			if _, err := toml.DecodeFile(path, &currentRaw); err != nil {
 				if err := MergeStrict(rawMerged, currentRaw, true); err != nil {
 					return nil, err
 				}

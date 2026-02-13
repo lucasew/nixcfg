@@ -55,7 +55,8 @@ waypipe = 9999
 [editor]
 default = "hx"
 
-[fonts]
+[modules.fontconfig]
+enable = true
 serif = "Fira Code"
 sans_serif = "Fira Code"
 monospace = "Fira Code"
