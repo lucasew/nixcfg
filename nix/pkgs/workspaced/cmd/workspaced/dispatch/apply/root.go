@@ -164,6 +164,7 @@ func GetCommand() *cobra.Command {
 						}
 					}
 				}
+				cmd.Printf("\nSummary: %d created, %d updated, %d deleted\n", result.FilesCreated, result.FilesUpdated, result.FilesDeleted)
 			}
 
 			// NixOS rebuild (se aplicável)
