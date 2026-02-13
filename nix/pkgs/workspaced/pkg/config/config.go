@@ -113,6 +113,10 @@ type FontsConfig struct {
 	Emoji     string `toml:"emoji"`
 }
 
+func (c *Config) Module(name string, target interface{}) error {
+	return c.UnmarshalKey("modules."+name, target)
+}
+
 func (f FontsConfig) Merge(other FontsConfig) FontsConfig {
 	result := f
 	if other.Serif != "" {
@@ -143,7 +147,6 @@ func (p PaletteConfig) Get(key string) string {
 	return ""
 }
 
-// Merge returns a new PaletteConfig with values from other overriding non-empty values
 func (p PaletteConfig) Merge(other PaletteConfig) PaletteConfig {
 	result := p
 	if other.Base00 != "" {
@@ -248,7 +251,6 @@ func (p PaletteConfig) Merge(other PaletteConfig) PaletteConfig {
 	return result
 }
 
-// Merge returns a new WallpaperConfig with values from other overriding non-empty values
 func (w WallpaperConfig) Merge(other WallpaperConfig) WallpaperConfig {
 	result := w
 	if other.Dir != "" {
@@ -260,7 +262,6 @@ func (w WallpaperConfig) Merge(other WallpaperConfig) WallpaperConfig {
 	return result
 }
 
-// Merge returns a new ScreenshotConfig with values from other overriding non-empty values
 func (s ScreenshotConfig) Merge(other ScreenshotConfig) ScreenshotConfig {
 	result := s
 	if other.Dir != "" {
@@ -269,7 +270,6 @@ func (s ScreenshotConfig) Merge(other ScreenshotConfig) ScreenshotConfig {
 	return result
 }
 
-// Merge returns a new BackupConfig with values from other overriding non-empty values
 func (b BackupConfig) Merge(other BackupConfig) BackupConfig {
 	result := b
 	if other.RsyncnetUser != "" {
@@ -281,7 +281,6 @@ func (b BackupConfig) Merge(other BackupConfig) BackupConfig {
 	return result
 }
 
-// Merge returns a new QuickSyncConfig with values from other overriding non-empty values
 func (q QuickSyncConfig) Merge(other QuickSyncConfig) QuickSyncConfig {
 	result := q
 	if other.RepoDir != "" {
@@ -293,7 +292,6 @@ func (q QuickSyncConfig) Merge(other QuickSyncConfig) QuickSyncConfig {
 	return result
 }
 
-// Merge returns a new BrowserConfig with values from other overriding non-empty values
 func (b BrowserConfig) Merge(other BrowserConfig) BrowserConfig {
 	result := b
 	if other.Default != "" {
@@ -305,29 +303,26 @@ func (b BrowserConfig) Merge(other BrowserConfig) BrowserConfig {
 	return result
 }
 
-// Merge returns a new GlobalConfig with values from other overriding non-empty values.
-// For maps (Workspaces, Hosts), keys are merged additively.
 func (g GlobalConfig) Merge(other GlobalConfig) (GlobalConfig, error) {
 	result := g
 
-	// Deep copy maps to avoid aliasing
 	if result.Workspaces == nil {
 		result.Workspaces = make(map[string]int)
 	} else {
-		// Copy the map
 		newWorkspaces := make(map[string]int, len(result.Workspaces))
 		maps.Copy(newWorkspaces, result.Workspaces)
 		result.Workspaces = newWorkspaces
 	}
+	maps.Copy(result.Workspaces, other.Workspaces)
 
 	if result.Hosts == nil {
 		result.Hosts = make(map[string]HostConfig)
 	} else {
-		// Copy the map
 		newHosts := make(map[string]HostConfig, len(result.Hosts))
 		maps.Copy(newHosts, result.Hosts)
 		result.Hosts = newHosts
 	}
+	maps.Copy(result.Hosts, other.Hosts)
 
 	if result.LazyTools == nil {
 		result.LazyTools = make(map[string]LazyToolConfig)
@@ -336,6 +331,7 @@ func (g GlobalConfig) Merge(other GlobalConfig) (GlobalConfig, error) {
 		maps.Copy(newLazyTools, result.LazyTools)
 		result.LazyTools = newLazyTools
 	}
+	maps.Copy(result.LazyTools, other.LazyTools)
 
 	if result.Modules == nil {
 		result.Modules = make(map[string]any)
@@ -344,22 +340,10 @@ func (g GlobalConfig) Merge(other GlobalConfig) (GlobalConfig, error) {
 		maps.Copy(newModules, result.Modules)
 		result.Modules = newModules
 	}
-
-	// Merge Workspaces map (additive, override on conflict)
-	maps.Copy(result.Workspaces, other.Workspaces)
-
-	// Merge Hosts map (additive, override on conflict)
-	maps.Copy(result.Hosts, other.Hosts)
-
-	// Merge LazyTools map
-	maps.Copy(result.LazyTools, other.LazyTools)
-
-	// Merge Modules map strictly
-	if err := MergeStrict(result.Modules, other.Modules); err != nil {
+	if err := MergeStrict(result.Modules, other.Modules, true); err != nil {
 		return result, err
 	}
 
-	// Merge nested configs using their Merge methods
 	result.Desktop.Wallpaper = result.Desktop.Wallpaper.Merge(other.Desktop.Wallpaper)
 	result.Screenshot = result.Screenshot.Merge(other.Screenshot)
 	result.Backup = result.Backup.Merge(other.Backup)
@@ -372,127 +356,135 @@ func (g GlobalConfig) Merge(other GlobalConfig) (GlobalConfig, error) {
 }
 
 func Load() (*Config, error) {
-	commonCfg, err := LoadConfig()
-	if err != nil {
-		return nil, err
-	}
-
-	raw := make(map[string]interface{})
 	home, _ := os.UserHomeDir()
 	dotfiles, _ := env.GetDotfilesRoot()
 
-	// 1. Merge dotfiles settings
-	if dotfiles != "" {
-		dotfilesSettingsPath := filepath.Join(dotfiles, "settings.toml")
-		var tmp map[string]interface{}
-		if _, err := toml.DecodeFile(dotfilesSettingsPath, &tmp); err == nil {
-			for k, v := range tmp {
-				raw[k] = v
-			}
-		}
-	}
-
-	// 2. Merge user settings
-	userSettingsPath := filepath.Join(home, "settings.toml")
-	var tmp map[string]interface{}
-	if _, err := toml.DecodeFile(userSettingsPath, &tmp); err == nil {
-		for k, v := range tmp {
-			raw[k] = v
-		}
-	}
-
-	return &Config{
-		GlobalConfig: commonCfg,
-		raw:          raw,
-	}, nil
-}
-
-// LoadConfig reads the global configuration using a layered approach:
-// 1. Start with hardcoded defaults
-// 2. Merge with $DOTFILES/settings.toml (if exists)
-// 3. Merge with ~/settings.toml (if exists)
-// It also expands environment variables and tilde (~) in paths.
-func LoadConfig() (*GlobalConfig, error) {
-	home, err := os.UserHomeDir()
+	gCfg, err := LoadConfig()
 	if err != nil {
 		return nil, err
 	}
 
-	dotfiles, _ := env.GetDotfilesRoot()
-
-	// 1. Start with hardcoded defaults
-	config := GlobalConfig{
-		Workspaces: map[string]int{
-			"www":  1,
-			"meet": 2,
-		},
-		Desktop: DesktopConfig{
-			Wallpaper: WallpaperConfig{
-				Dir: filepath.Join(dotfiles, "assets/wallpapers"),
-			},
-		},
-		Screenshot: ScreenshotConfig{
-			Dir: filepath.Join(home, "Pictures/Screenshots"),
-		},
-		Backup: BackupConfig{
-			RsyncnetUser: "de3163@de3163.rsync.net",
-			RemotePath:   "backup/lucasew",
-		},
-		QuickSync: QuickSyncConfig{
-			RepoDir:    filepath.Join(home, ".personal"),
-			RemotePath: "/data2/home/de3163/git-personal",
-		},
-		Hosts: make(map[string]HostConfig),
-		Browser: BrowserConfig{
-			Default: "zen",
-			Engine:  "brave",
-		},
-		LazyTools: make(map[string]LazyToolConfig),
-		Modules:   make(map[string]any),
+	structToMap := func(s interface{}) map[string]any {
+		data, _ := json.Marshal(s)
+		var res map[string]any
+		json.Unmarshal(data, &res)
+		return res
 	}
 
-	// 2. Load and merge base config from $DOTFILES/settings.toml
+	rawMerged := structToMap(gCfg)
+
+	modulesDir := filepath.Join(dotfiles, "modules")
+	if entries, err := os.ReadDir(modulesDir); err == nil {
+		enabledModules := make(map[string]bool)
+		for name, cfg := range gCfg.Modules {
+			if m, ok := cfg.(map[string]any); ok {
+				if enabled, ok := m["enable"].(bool); ok && enabled {
+					enabledModules[name] = true
+				}
+			}
+		}
+
+		moduleMeta := make(map[string]ModuleMetadata)
+		defaultsRaw := make(map[string]any)
+
+		for _, entry := range entries {
+			if !entry.IsDir() {
+				continue
+			}
+			name := entry.Name()
+			if !enabledModules[name] {
+				continue
+			}
+
+			modPath := filepath.Join(modulesDir, name)
+			metaPath := filepath.Join(modPath, "module.toml")
+			if _, err := os.Stat(metaPath); err == nil {
+				var meta struct {
+					Module ModuleMetadata `toml:"module"`
+				}
+				if _, err := toml.DecodeFile(metaPath, &meta); err != nil {
+					return nil, fmt.Errorf("failed to decode %s: %w", metaPath, err)
+				}
+				moduleMeta[name] = meta.Module
+			}
+
+			defaultsPath := filepath.Join(modPath, "defaults.toml")
+			if _, err := os.Stat(defaultsPath); err == nil {
+				var currentDefaults map[string]any
+				if _, err := toml.DecodeFile(defaultsPath, &currentDefaults); err == nil {
+					if err := MergeStrict(defaultsRaw, currentDefaults, false); err != nil {
+						return nil, fmt.Errorf("conflict in defaults between modules: %w", err)
+					}
+				}
+			}
+		}
+
+		if err := validateDependencies(enabledModules, moduleMeta); err != nil {
+			return nil, err
+		}
+
+		if err := MergeStrict(rawMerged, defaultsRaw, true); err != nil {
+			return nil, err
+		}
+	}
+
+	userConfigs := []string{}
 	if dotfiles != "" {
-		dotfilesSettingsPath := filepath.Join(dotfiles, "settings.toml")
-		if _, err := os.Stat(dotfilesSettingsPath); err == nil {
-			var dotfilesConfig GlobalConfig
-			if _, err := toml.DecodeFile(dotfilesSettingsPath, &dotfilesConfig); err == nil {
-				var err error
-				config, err = config.Merge(dotfilesConfig)
-				if err != nil {
+		userConfigs = append(userConfigs, filepath.Join(dotfiles, "settings.toml"))
+	}
+	userConfigs = append(userConfigs, filepath.Join(home, "settings.toml"))
+
+	for _, path := range userConfigs {
+		if _, err := os.Stat(path); err == nil {
+			var currentRaw map[string]any
+			if _, err := toml.DecodeFile(path, &currentRaw); err == nil {
+				if err := MergeStrict(rawMerged, currentRaw, true); err != nil {
 					return nil, err
 				}
 			}
 		}
 	}
 
-	// 3. Load and merge user config from ~/settings.toml
-	userSettingsPath := filepath.Join(home, "settings.toml")
-	if _, err := os.Stat(userSettingsPath); err == nil {
-		var userConfig GlobalConfig
-		if _, err := toml.DecodeFile(userSettingsPath, &userConfig); err == nil {
-			var err error
-			config, err = config.Merge(userConfig)
-			if err != nil {
-				return nil, err
-			}
-		}
-	}
+	finalGCfg := &GlobalConfig{}
+	data, _ := json.Marshal(rawMerged)
+	json.Unmarshal(data, finalGCfg)
 
-	// 4. Expand paths
-	config.Desktop.Wallpaper.Dir = env.ExpandPath(config.Desktop.Wallpaper.Dir)
-	config.Desktop.Wallpaper.Default = env.ExpandPath(config.Desktop.Wallpaper.Default)
-	config.Screenshot.Dir = env.ExpandPath(config.Screenshot.Dir)
-	config.QuickSync.RepoDir = env.ExpandPath(config.QuickSync.RepoDir)
+	return &Config{
+		GlobalConfig: finalGCfg,
+		raw:          rawMerged,
+	}, nil
+}
+
+func LoadConfig() (*GlobalConfig, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return nil, err
+	}
+	dotfiles, _ := env.GetDotfilesRoot()
+
+	config := GlobalConfig{
+		Workspaces: map[string]int{"www": 1, "meet": 2},
+		Desktop: DesktopConfig{
+			Wallpaper: WallpaperConfig{Dir: filepath.Join(dotfiles, "assets/wallpapers")},
+		},
+		Screenshot: ScreenshotConfig{Dir: filepath.Join(home, "Pictures/Screenshots")},
+		Backup:     BackupConfig{RsyncnetUser: "de3163@de3163.rsync.net", RemotePath: "backup/lucasew"},
+		QuickSync: QuickSyncConfig{
+			RepoDir:    filepath.Join(home, ".personal"),
+			RemotePath: "/data2/home/de3163/git-personal",
+		},
+		Hosts:     make(map[string]HostConfig),
+		Browser:   BrowserConfig{Default: "zen", Engine: "brave"},
+		LazyTools: make(map[string]LazyToolConfig),
+		Modules:   make(map[string]any),
+	}
 
 	return &config, nil
 }
 
-// UnmarshalKey extracts a sub-config by key path (e.g. "modules.webapp") into a target struct.
 func (c *Config) UnmarshalKey(key string, val interface{}) error {
 	parts := strings.Split(key, ".")
 	var current interface{} = c.raw
-
 	for _, part := range parts {
 		if m, ok := current.(map[string]interface{}); ok {
 			v, ok := m[part]
@@ -500,7 +492,7 @@ func (c *Config) UnmarshalKey(key string, val interface{}) error {
 				return fmt.Errorf("key %q not found in config", key)
 			}
 			current = v
-		} else if m, ok := current.(map[string]any); ok { // Handle both map types
+		} else if m, ok := current.(map[string]any); ok {
 			v, ok := m[part]
 			if !ok {
 				return fmt.Errorf("key %q not found in config", key)
@@ -510,12 +502,9 @@ func (c *Config) UnmarshalKey(key string, val interface{}) error {
 			return fmt.Errorf("key %q not found or not a map", key)
 		}
 	}
-
 	if current == nil {
 		return fmt.Errorf("value for key %q is nil", key)
 	}
-
-	// Use json as a trick to unmarshal into the target type
 	data, err := json.Marshal(current)
 	if err != nil {
 		return err
@@ -523,38 +512,89 @@ func (c *Config) UnmarshalKey(key string, val interface{}) error {
 	return json.Unmarshal(data, val)
 }
 
-// Module extracts configuration for a specific module into a target struct.
-func (c *Config) Module(name string, target interface{}) error {
-	return c.UnmarshalKey("modules."+name, target)
+type ModuleMetadata struct {
+	Requires   []string `toml:"requires"`
+	Recommends []string `toml:"recommends"`
 }
 
-func MergeStrict(dst, src map[string]any) error {
+func validateDependencies(enabled map[string]bool, meta map[string]ModuleMetadata) error {
+	for name := range enabled {
+		m, ok := meta[name]
+		if !ok {
+			continue
+		}
+		for _, req := range m.Requires {
+			if !enabled[req] {
+				return fmt.Errorf("module %q requires %q, but it is not enabled", name, req)
+			}
+		}
+		for _, rec := range m.Recommends {
+			if !enabled[rec] {
+				fmt.Printf("Warning: module %q recommends %q, but it is not enabled\n", name, rec)
+			}
+		}
+	}
+	deps := make(map[string][]string)
+	for name, m := range meta {
+		deps[name] = m.Requires
+	}
+	return detectCycles(deps)
+}
+
+func detectCycles(deps map[string][]string) error {
+	visited := make(map[string]bool)
+	recStack := make(map[string]bool)
+	var check func(node string) error
+	check = func(node string) error {
+		visited[node] = true
+		recStack[node] = true
+		for _, neighbor := range deps[node] {
+			if !visited[neighbor] {
+				if err := check(neighbor); err != nil {
+					return err
+				}
+			} else if recStack[neighbor] {
+				return fmt.Errorf("circular dependency detected involving module %q", neighbor)
+			}
+		}
+		recStack[node] = false
+		return nil
+	}
+	for node := range deps {
+		if !visited[node] {
+			if err := check(node); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func MergeStrict(dst, src map[string]any, allowSubstitution bool) error {
 	for k, v := range src {
 		if v == nil {
 			continue
 		}
 		if existing, ok := dst[k]; ok && existing != nil {
-			// Check for lists
 			if reflect.TypeOf(v).Kind() == reflect.Slice || reflect.TypeOf(v).Kind() == reflect.Array {
 				return fmt.Errorf("lists are forbidden in strict config (key: %s)", k)
 			}
-
-			// If both are maps, recurse
 			if vMap, ok := v.(map[string]any); ok {
 				if existingMap, ok := existing.(map[string]any); ok {
-					if err := MergeStrict(existingMap, vMap); err != nil {
+					if err := MergeStrict(existingMap, vMap, allowSubstitution); err != nil {
 						return err
 					}
 					continue
 				}
 			}
-
-			// If atomic and different, error (no substitution)
 			if !reflect.DeepEqual(existing, v) {
-				return fmt.Errorf("substitution forbidden: key %q already has value %v, cannot overwrite with %v", k, existing, v)
+				if allowSubstitution {
+					dst[k] = v
+				} else {
+					return fmt.Errorf("substitution forbidden: key %q already has value %v, cannot overwrite with %v", k, existing, v)
+				}
 			}
 		} else {
-			// New key
 			if reflect.TypeOf(v).Kind() == reflect.Slice || reflect.TypeOf(v).Kind() == reflect.Array {
 				return fmt.Errorf("lists are forbidden in strict config (key: %s)", k)
 			}
@@ -571,20 +611,16 @@ func LoadFiles(paths []string) (*GlobalConfig, error) {
 		LazyTools:  make(map[string]LazyToolConfig),
 		Modules:    make(map[string]any),
 	}
-
 	mergedRaw := make(map[string]any)
-
 	for _, path := range paths {
 		var currentRaw map[string]any
 		if _, err := toml.DecodeFile(path, &currentRaw); err != nil {
 			return nil, fmt.Errorf("failed to decode %s: %w", path, err)
 		}
-		if err := MergeStrict(mergedRaw, currentRaw); err != nil {
+		if err := MergeStrict(mergedRaw, currentRaw, true); err != nil {
 			return nil, fmt.Errorf("strict merge failed for %s: %w", path, err)
 		}
 	}
-
-	// Use JSON trick to unmarshal the merged map into the struct
 	data, err := json.Marshal(mergedRaw)
 	if err != nil {
 		return nil, err
@@ -592,6 +628,5 @@ func LoadFiles(paths []string) (*GlobalConfig, error) {
 	if err := json.Unmarshal(data, config); err != nil {
 		return nil, err
 	}
-
 	return config, nil
 }
