@@ -1,8 +1,10 @@
 package doctor
 
 import (
+	"errors"
 	"fmt"
 	"os"
+	"strings"
 	"text/tabwriter"
 	"workspaced/pkg/driver"
 
