@@ -27,7 +27,6 @@ type GlobalConfig struct {
 	Backup     BackupConfig              `toml:"backup"`
 	QuickSync  QuickSyncConfig           `toml:"quicksync"`
 	Browser    BrowserConfig             `toml:"browser"`
-	Webapps    map[string]WebappConfig   `toml:"webapp"`
 	LazyTools  map[string]LazyToolConfig `toml:"lazy_tools"`
 	Palette    PaletteConfig             `toml:"palette"`
 	Fonts      FontsConfig               `toml:"fonts"`
@@ -315,7 +314,7 @@ func (b BrowserConfig) Merge(other BrowserConfig) BrowserConfig {
 }
 
 // Merge returns a new GlobalConfig with values from other overriding non-empty values.
-// For maps (Workspaces, Hosts, Webapps), keys are merged additively.
+// For maps (Workspaces, Hosts), keys are merged additively.
 func (g GlobalConfig) Merge(other GlobalConfig) (GlobalConfig, error) {
 	result := g
 
@@ -336,15 +335,6 @@ func (g GlobalConfig) Merge(other GlobalConfig) (GlobalConfig, error) {
 		newHosts := make(map[string]HostConfig, len(result.Hosts))
 		maps.Copy(newHosts, result.Hosts)
 		result.Hosts = newHosts
-	}
-
-	if result.Webapps == nil {
-		result.Webapps = make(map[string]WebappConfig)
-	} else {
-		// Copy the map
-		newWebapps := make(map[string]WebappConfig, len(result.Webapps))
-		maps.Copy(newWebapps, result.Webapps)
-		result.Webapps = newWebapps
 	}
 
 	if result.LazyTools == nil {
@@ -368,9 +358,6 @@ func (g GlobalConfig) Merge(other GlobalConfig) (GlobalConfig, error) {
 
 	// Merge Hosts map (additive, override on conflict)
 	maps.Copy(result.Hosts, other.Hosts)
-
-	// Merge Webapps map (additive, override on conflict)
-	maps.Copy(result.Webapps, other.Webapps)
 
 	// Merge LazyTools map
 	maps.Copy(result.LazyTools, other.LazyTools)
@@ -468,7 +455,6 @@ func LoadConfig() (*GlobalConfig, error) {
 			Default: "zen",
 			Engine:  "brave",
 		},
-		Webapps:   make(map[string]WebappConfig),
 		LazyTools: make(map[string]LazyToolConfig),
 		Modules:   make(map[string]any),
 	}
@@ -510,6 +496,7 @@ func LoadConfig() (*GlobalConfig, error) {
 	return &config, nil
 }
 
+// UnmarshalKey extracts a sub-config by key path (e.g. "modules.webapp") into a target struct.
 func (c *Config) UnmarshalKey(key string, val interface{}) error {
 	parts := strings.Split(key, ".")
 	var current interface{} = c.raw
@@ -518,16 +505,22 @@ func (c *Config) UnmarshalKey(key string, val interface{}) error {
 		if m, ok := current.(map[string]interface{}); ok {
 			v, ok := m[part]
 			if !ok {
-				return fmt.Errorf("key not found: %s", key)
+				return fmt.Errorf("key %q not found in config", key)
+			}
+			current = v
+		} else if m, ok := current.(map[string]any); ok { // Handle both map types
+			v, ok := m[part]
+			if !ok {
+				return fmt.Errorf("key %q not found in config", key)
 			}
 			current = v
 		} else {
-			return fmt.Errorf("key not found: %s", key)
+			return fmt.Errorf("key %q not found or not a map", key)
 		}
 	}
 
 	if current == nil {
-		return fmt.Errorf("key not found: %s", key)
+		return fmt.Errorf("value for key %q is nil", key)
 	}
 
 	// Use json as a trick to unmarshal into the target type
@@ -536,6 +529,11 @@ func (c *Config) UnmarshalKey(key string, val interface{}) error {
 		return err
 	}
 	return json.Unmarshal(data, val)
+}
+
+// Module extracts configuration for a specific module into a target struct.
+func (c *Config) Module(name string, target interface{}) error {
+	return c.UnmarshalKey("modules."+name, target)
 }
 
 func MergeStrict(dst, src map[string]any) error {
@@ -578,7 +576,6 @@ func LoadFiles(paths []string) (*GlobalConfig, error) {
 	config := &GlobalConfig{
 		Workspaces: make(map[string]int),
 		Hosts:      make(map[string]HostConfig),
-		Webapps:    make(map[string]WebappConfig),
 		LazyTools:  make(map[string]LazyToolConfig),
 		Modules:    make(map[string]any),
 	}

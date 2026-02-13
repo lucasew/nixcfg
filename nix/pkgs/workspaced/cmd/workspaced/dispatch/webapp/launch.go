@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
 
@@ -20,7 +19,7 @@ func init() {
 			Use:   "launch [name|url]",
 			Short: "Launch a webapp",
 			RunE: func(c *cobra.Command, args []string) error {
-				cfg, err := config.LoadConfig()
+				cfg, err := config.Load()
 				if err != nil {
 					return err
 				}
@@ -35,36 +34,20 @@ func init() {
 					if err != nil {
 						return nil // User cancelled
 					}
-					url = strings.TrimSpace(string(out))
+					url = string(out)
 				} else {
 					target := args[0]
-					if w, ok := cfg.Webapps[target]; ok {
-						wa = w
+					var modCfg struct {
+						Apps map[string]config.WebappConfig `json:"apps"`
+					}
+					if err := cfg.Module("webapp", &modCfg); err != nil {
+						return fmt.Errorf("webapp module error: %w", err)
+					}
+
+					if app, ok := modCfg.Apps[target]; ok {
+						wa = app
+						url = app.URL
 						found = true
-						url = wa.URL
-					} else if modWebapp, ok := cfg.Modules["webapp"].(map[string]any); ok {
-						if apps, ok := modWebapp["apps"].(map[string]any); ok {
-							if appRaw, ok := apps[target].(map[string]any); ok {
-								// Extract fields from map
-								if u, ok := appRaw["url"].(string); ok {
-									url = u
-									wa.URL = u
-								}
-								if p, ok := appRaw["profile"].(string); ok {
-									wa.Profile = p
-								}
-								if d, ok := appRaw["desktop_name"].(string); ok {
-									wa.DesktopName = d
-								}
-								if i, ok := appRaw["icon"].(string); ok {
-									wa.Icon = i
-								}
-								if f, ok := appRaw["extra_flags"].([]string); ok {
-									wa.ExtraFlags = f
-								}
-								found = true
-							}
-						}
 					}
 
 					if !found {
