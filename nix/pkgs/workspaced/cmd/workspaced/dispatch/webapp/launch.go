@@ -25,7 +25,7 @@ func init() {
 				}
 
 				var url string
-				var wa config.WebappConfig
+				var wa WebappConfig
 				var found bool
 
 				if len(args) == 0 {
@@ -38,7 +38,7 @@ func init() {
 				} else {
 					target := args[0]
 					var modCfg struct {
-						Apps map[string]config.WebappConfig `json:"apps"`
+						Apps map[string]WebappConfig `json:"apps"`
 					}
 					if err := cfg.Module("webapp", &modCfg); err != nil {
 						return fmt.Errorf("webapp module error: %w", err)
@@ -65,7 +65,7 @@ func init() {
 	})
 }
 
-func launchWebapp(ctx context.Context, url string, wa config.WebappConfig, engine string, isConfigured bool) error {
+func launchWebapp(ctx context.Context, url string, wa WebappConfig, engine string, isConfigured bool) error {
 	normalizedURL := env.NormalizeURL(url)
 	args := []string{"--app=" + normalizedURL}
 

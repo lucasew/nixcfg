@@ -22,7 +22,7 @@ func init() {
 				}
 
 				var modCfg struct {
-					Apps map[string]config.WebappConfig `json:"apps"`
+					Apps map[string]WebappConfig `json:"apps"`
 				}
 				if err := cfg.Module("webapp", &modCfg); err != nil {
 					return fmt.Errorf("webapp module error: %w", err)
