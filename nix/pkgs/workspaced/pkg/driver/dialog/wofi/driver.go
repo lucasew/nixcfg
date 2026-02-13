@@ -16,13 +16,17 @@ func init() {
 
 type ChooserProvider struct{}
 
+func (p *ChooserProvider) ID() string                                      { return "wofi" }
 func (p *ChooserProvider) Name() string                                    { return "Wofi" }
+func (p *ChooserProvider) DefaultWeight() int                              { return driver.DefaultWeight }
 func (p *ChooserProvider) CheckCompatibility(ctx context.Context) error    { return checkWofi(ctx) }
 func (p *ChooserProvider) New(ctx context.Context) (dialog.Chooser, error) { return &Driver{}, nil }
 
 type FullDriverProvider struct{}
 
+func (p *FullDriverProvider) ID() string                                     { return "wofi" }
 func (p *FullDriverProvider) Name() string                                   { return "Wofi" }
+func (p *FullDriverProvider) DefaultWeight() int                             { return driver.DefaultWeight }
 func (p *FullDriverProvider) CheckCompatibility(ctx context.Context) error   { return checkWofi(ctx) }
 func (p *FullDriverProvider) New(ctx context.Context) (dialog.Driver, error) { return &Driver{}, nil }
 

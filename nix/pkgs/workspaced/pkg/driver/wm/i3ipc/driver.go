@@ -17,7 +17,9 @@ func init() {
 
 type SwayProvider struct{}
 
-func (p *SwayProvider) Name() string { return "Sway" }
+func (p *SwayProvider) ID() string         { return "screen_wayland_sway" }
+func (p *SwayProvider) Name() string       { return "Sway" }
+func (p *SwayProvider) DefaultWeight() int { return driver.DefaultWeight }
 func (p *SwayProvider) CheckCompatibility(ctx context.Context) error {
 	if exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
 		return fmt.Errorf("%w: WAYLAND_DISPLAY not set", driver.ErrIncompatible)
@@ -34,7 +36,9 @@ func (p *SwayProvider) New(ctx context.Context) (api.Driver, error) {
 
 type I3Provider struct{}
 
-func (p *I3Provider) Name() string { return "i3" }
+func (p *I3Provider) ID() string         { return "screen_x11_i3" }
+func (p *I3Provider) Name() string       { return "i3" }
+func (p *I3Provider) DefaultWeight() int { return driver.DefaultWeight }
 func (p *I3Provider) CheckCompatibility(ctx context.Context) error {
 	if exec.GetEnv(ctx, "DISPLAY") == "" {
 		return fmt.Errorf("%w: DISPLAY not set", driver.ErrIncompatible)

@@ -19,14 +19,14 @@ func init() {
 
 type Provider struct{}
 
+func (p *Provider) ID() string   { return "audio_pulse" }
 func (p *Provider) Name() string { return "PulseAudio (pactl)" }
+func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	if !exec.IsBinaryAvailable(ctx, "pactl") {
 		return fmt.Errorf("%w: pactl not found", driver.ErrIncompatible)
 	}
-	// Check if PulseAudio server is reachable?
-	// For now, binary existence is a good enough proxy for "can try"
 	return nil
 }
 

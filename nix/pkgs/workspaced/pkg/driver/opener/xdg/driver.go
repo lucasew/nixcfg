@@ -14,7 +14,9 @@ func init() {
 
 type Provider struct{}
 
+func (p *Provider) ID() string   { return "opener_xdg" }
 func (p *Provider) Name() string { return "xdg-open" }
+func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	if exec.GetEnv(ctx, "DISPLAY") == "" && exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {

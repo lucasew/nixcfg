@@ -16,6 +16,10 @@ func init() {
 
 type Provider struct{}
 
+func (p *Provider) ID() string         { return "battery_linux" }
+func (p *Provider) Name() string       { return "linux" }
+func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
+
 // CheckCompatibility implements [driver.DriverProvider].
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	matches, _ := filepath.Glob("/sys/class/power_supply/BAT*/status")
@@ -23,11 +27,6 @@ func (p *Provider) CheckCompatibility(ctx context.Context) error {
 		return fmt.Errorf("%w: /sys/class/power_supply/BAT*/status", driver.ErrIncompatible)
 	}
 	return nil
-}
-
-// Name implements [driver.DriverProvider].
-func (p *Provider) Name() string {
-	return "linux"
 }
 
 // New implements [driver.DriverProvider].

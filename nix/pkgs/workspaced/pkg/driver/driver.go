@@ -17,22 +17,48 @@ var (
 )
 
 type DriverProvider[T any] interface {
-	Name() string
+	ID() string   // Unique slug for the driver (e.g. "wayland_swaybg")
+	Name() string // Human readable name
+	DefaultWeight() int
 	CheckCompatibility(ctx context.Context) error
 	New(ctx context.Context) (T, error)
 }
 
 type doctorEntry struct {
+	InterfaceType reflect.Type
 	InterfaceName string
+	DriverID      string
 	DriverName    string
 	Check         func(context.Context) error
+	DefaultWeight func() int
 }
 
-var (
-	mu         sync.RWMutex
-	Drivers    = map[reflect.Type]map[string]any{}
-	doctorList = []doctorEntry{}
+const (
+	DefaultWeight = 50
 )
+
+var (
+	mu            sync.RWMutex
+	Drivers       = map[reflect.Type]map[string]any{}
+	driverWeights = map[string]map[string]int{}
+	doctorList    = []doctorEntry{}
+)
+
+// SetWeights configures driver priorities. Weights must be between 0 and 100.
+func SetWeights(w map[string]map[string]int) error {
+	mu.Lock()
+	defer mu.Unlock()
+
+	for iface, drivers := range w {
+		for id, weight := range drivers {
+			if weight < 0 || weight > 100 {
+				return fmt.Errorf("invalid weight %d for driver %q in interface %q: must be between 0 and 100", weight, id, iface)
+			}
+		}
+	}
+	driverWeights = w
+	return nil
+}
 
 func Register[T any](provider DriverProvider[T]) {
 	mu.Lock()
@@ -42,46 +68,38 @@ func Register[T any](provider DriverProvider[T]) {
 	if t.Kind() != reflect.Interface {
 		panic(fmt.Errorf("driver %s is not an interface", t.String()))
 	}
-	name := provider.Name()
+	id := provider.ID()
+	if id == "" {
+		panic(fmt.Errorf("driver for %s registered with empty ID", t.String()))
+	}
+
 	if _, ok := Drivers[t]; !ok {
 		Drivers[t] = make(map[string]any)
 	}
-	if _, ok := Drivers[t][name]; ok {
-		panic(fmt.Errorf("driver %s registered for %s being registered twice", name, t.String()))
+	if _, ok := Drivers[t][id]; ok {
+		panic(fmt.Errorf("driver ID %q already registered for interface %s", id, t.String()))
 	}
-	Drivers[t][name] = provider
+	Drivers[t][id] = provider
 
 	doctorList = append(doctorList, doctorEntry{
-		InterfaceName: func() string {
-			if t.PkgPath() != "" {
-				return t.PkgPath() + "." + t.Name()
-			}
-			return t.String()
-		}(),
-		DriverName: provider.Name(),
-		Check:      provider.CheckCompatibility,
+		InterfaceType: t,
+		InterfaceName: getInterfaceName(t),
+		DriverID:      id,
+		DriverName:    provider.Name(),
+		Check:         provider.CheckCompatibility,
+		DefaultWeight: provider.DefaultWeight,
 	})
 }
 
-func GetByName[T any](name string) (DriverProvider[T], error) {
-	mu.RLock()
-	defer mu.RUnlock()
-
-	var t reflect.Type = reflect.TypeFor[T]()
-	if t.Kind() != reflect.Interface {
-		return nil, ErrNotInterface
+func getInterfaceName(t reflect.Type) string {
+	if t.PkgPath() != "" {
+		return t.PkgPath() + "." + t.Name()
 	}
-	if providers, ok := Drivers[t]; ok {
-		if provider, ok := providers[name]; ok {
-			return provider.(DriverProvider[T]), nil
-		}
-	}
-	return nil, ErrNotFound
+	return t.String()
 }
 
 func Get[T any](ctx context.Context) (T, error) {
 	mu.RLock()
-	providersCopy := make([]DriverProvider[T], 0)
 	var t reflect.Type = reflect.TypeFor[T]()
 	if t.Kind() != reflect.Interface {
 		mu.RUnlock()
@@ -89,31 +107,50 @@ func Get[T any](ctx context.Context) (T, error) {
 		return zero, ErrNotInterface
 	}
 
-	if providers, ok := Drivers[t]; ok {
-		for _, p := range providers {
-			providersCopy = append(providersCopy, p.(DriverProvider[T]))
+	ifaceName := getInterfaceName(t)
+	weights := driverWeights[ifaceName]
+
+	providers := make([]DriverProvider[T], 0)
+	if pMap, ok := Drivers[t]; ok {
+		for _, p := range pMap {
+			providers = append(providers, p.(DriverProvider[T]))
 		}
 	}
 	mu.RUnlock()
 
 	var zero T
-	if len(providersCopy) == 0 {
+	if len(providers) == 0 {
 		return zero, ErrNotFound
 	}
 
+	// Sort providers by weight then ID
+	sort.Slice(providers, func(i, j int) bool {
+		wi := providers[i].DefaultWeight()
+		if w, ok := weights[providers[i].ID()]; ok {
+			wi = w
+		}
+		wj := providers[j].DefaultWeight()
+		if w, ok := weights[providers[j].ID()]; ok {
+			wj = w
+		}
+
+		if wi != wj {
+			return wi > wj // Higher weight first
+		}
+		return providers[i].ID() < providers[j].ID() // Deterministic fallback
+	})
+
 	var report []string
 
-	for _, provider := range providersCopy {
-		// 1. Check Compatibility (Doctor)
+	for _, provider := range providers {
 		if err := provider.CheckCompatibility(ctx); err != nil {
-			report = append(report, fmt.Sprintf("❌ [SKIP] %s: %v", provider.Name(), err))
+			report = append(report, fmt.Sprintf("❌ [SKIP] %s (%s): %v", provider.ID(), provider.Name(), err))
 			continue
 		}
 
-		// 2. Instantiate
 		instance, err := provider.New(ctx)
 		if err != nil {
-			report = append(report, fmt.Sprintf("⚠️ [FAIL] %s: initialization failed: %v", provider.Name(), err))
+			report = append(report, fmt.Sprintf("⚠️ [FAIL] %s (%s): initialization failed: %v", provider.ID(), provider.Name(), err))
 			continue
 		}
 
@@ -124,8 +161,11 @@ func Get[T any](ctx context.Context) (T, error) {
 }
 
 type DriverStatus struct {
+	ID        string
 	Name      string
+	Weight    int
 	Available bool
+	Selected  bool
 	Error     error
 }
 
@@ -139,36 +179,61 @@ func Doctor(ctx context.Context) []InterfaceStatus {
 	mu.RLock()
 	defer mu.RUnlock()
 
-	// Group by Type Name
-	byType := make(map[string][]doctorEntry)
+	byType := make(map[reflect.Type][]doctorEntry)
 	for _, d := range doctorList {
-		byType[d.InterfaceName] = append(byType[d.InterfaceName], d)
+		byType[d.InterfaceType] = append(byType[d.InterfaceType], d)
 	}
 
-	// Sort types for output stability
-	var types []string
+	var types []reflect.Type
 	for t := range byType {
 		types = append(types, t)
 	}
-	sort.Strings(types)
+	sort.Slice(types, func(i, j int) bool {
+		return getInterfaceName(types[i]) < getInterfaceName(types[j])
+	})
 
 	var result []InterfaceStatus
 
-	for _, tName := range types {
-		drivers := byType[tName]
+	for _, t := range types {
+		entries := byType[t]
+		ifaceName := getInterfaceName(t)
+		weights := driverWeights[ifaceName]
 		ifaceStatus := InterfaceStatus{
-			Name: tName,
+			Name: ifaceName,
 		}
 
-		for _, d := range drivers {
+		for _, d := range entries {
 			err := d.Check(ctx)
+			weight := d.DefaultWeight()
+			if w, ok := weights[d.DriverID]; ok {
+				weight = w
+			}
 			status := DriverStatus{
+				ID:        d.DriverID,
 				Name:      d.DriverName,
+				Weight:    weight,
 				Available: err == nil,
 				Error:     err,
 			}
 			ifaceStatus.Drivers = append(ifaceStatus.Drivers, status)
 		}
+
+		// Sort drivers in doctor report
+		sort.Slice(ifaceStatus.Drivers, func(i, j int) bool {
+			if ifaceStatus.Drivers[i].Weight != ifaceStatus.Drivers[j].Weight {
+				return ifaceStatus.Drivers[i].Weight > ifaceStatus.Drivers[j].Weight
+			}
+			return ifaceStatus.Drivers[i].ID < ifaceStatus.Drivers[j].ID
+		})
+
+		// Mark selected candidate
+		for i := range ifaceStatus.Drivers {
+			if ifaceStatus.Drivers[i].Available {
+				ifaceStatus.Drivers[i].Selected = true
+				break
+			}
+		}
+
 		result = append(result, ifaceStatus)
 	}
 

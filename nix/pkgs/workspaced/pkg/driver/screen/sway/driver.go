@@ -6,9 +6,9 @@ import (
 	"strings"
 	"workspaced/pkg/api"
 	"workspaced/pkg/driver"
+	"workspaced/pkg/driver/screen"
 	"workspaced/pkg/env"
 	"workspaced/pkg/exec"
-	"workspaced/pkg/driver/screen"
 )
 
 func init() {
@@ -17,7 +17,9 @@ func init() {
 
 type Provider struct{}
 
+func (p *Provider) ID() string   { return "screen_sway" }
 func (p *Provider) Name() string { return "Wayland (sway)" }
+func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	if exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {

@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"strings"
+	"workspaced/pkg/driver"
 	"workspaced/pkg/env"
 
 	"github.com/BurntSushi/toml"
@@ -29,6 +30,7 @@ type GlobalConfig struct {
 	Palette    PaletteConfig             `toml:"palette" json:"palette"`
 	Fonts      FontsConfig               `toml:"fonts" json:"fonts"`
 	Modules    map[string]any            `toml:"modules" json:"modules"`
+	Drivers    map[string]map[string]int `toml:"drivers" json:"drivers"`
 }
 
 type DesktopConfig struct {
@@ -118,12 +120,20 @@ func (c *Config) UnmarshalKey(key string, val interface{}) error {
 	parts := strings.Split(key, ".")
 	var current interface{} = c.raw
 	for _, part := range parts {
-		if m, ok := current.(map[string]any); ok {
-			current = m[part]
-		} else if m, ok := current.(map[string]interface{}); ok {
-			current = m[part]
+		if mRaw, ok := current.(map[string]any); ok {
+			v, ok := mRaw[part]
+			if !ok {
+				return fmt.Errorf("key %q not found in config", key)
+			}
+			current = v
+		} else if mRaw, ok := current.(map[string]interface{}); ok {
+			v, ok := mRaw[part]
+			if !ok {
+				return fmt.Errorf("key %q not found in config", key)
+			}
+			current = v
 		} else {
-			return fmt.Errorf("key %q not found", key)
+			return fmt.Errorf("key %q not found or not a map", key)
 		}
 	}
 	if current == nil {
@@ -139,16 +149,9 @@ func (c *Config) UnmarshalKey(key string, val interface{}) error {
 func Load() (*Config, error) {
 	home, _ := os.UserHomeDir()
 	dotfiles, _ := env.GetDotfilesRoot()
-	gCfg := &GlobalConfig{
-		Workspaces: map[string]int{"www": 1, "meet": 2},
-		Desktop:    DesktopConfig{Wallpaper: WallpaperConfig{Dir: filepath.Join(dotfiles, "assets/wallpapers")}},
-		Screenshot: ScreenshotConfig{Dir: filepath.Join(home, "Pictures/Screenshots")},
-		Backup:     BackupConfig{RsyncnetUser: "de3163@de3163.rsync.net", RemotePath: "backup/lucasew"},
-		QuickSync:  QuickSyncConfig{RepoDir: filepath.Join(home, ".personal"), RemotePath: "/data2/home/de3163/git-personal"},
-		Hosts:      make(map[string]HostConfig),
-		Browser:    BrowserConfig{Default: "zen", Engine: "brave"},
-		LazyTools:  make(map[string]LazyToolConfig),
-		Modules:    make(map[string]any),
+	gCfg, err := LoadConfigBase()
+	if err != nil {
+		return nil, err
 	}
 	structToMap := func(s interface{}) map[string]any {
 		data, _ := json.Marshal(s)
@@ -210,17 +213,27 @@ func Load() (*Config, error) {
 				var meta struct {
 					Module ModuleMetadata `toml:"module"`
 				}
-				if _, err := toml.DecodeFile(metaPath, &meta); err == nil {
-					moduleMeta[name] = meta.Module
+				if _, err := toml.DecodeFile(metaPath, &meta); err != nil {
+					return nil, err
 				}
+				moduleMeta[name] = meta.Module
 			}
 			defaultsPath := filepath.Join(modPath, "defaults.toml")
 			if _, err := os.Stat(defaultsPath); err == nil {
 				var currentDefaults map[string]any
 				if _, err := toml.DecodeFile(defaultsPath, &currentDefaults); err == nil {
+					var driversDefaults map[string]any
+					if d, ok := currentDefaults["drivers"]; ok {
+						if dMap, ok := d.(map[string]any); ok {
+							driversDefaults = dMap
+							delete(currentDefaults, "drivers")
+						}
+					}
 					wrapped := map[string]any{"modules": map[string]any{name: currentDefaults}}
-					if err := MergeStrict(defaultsRaw, wrapped, false); err != nil {
-						return nil, err
+					MergeStrict(defaultsRaw, wrapped, false)
+					if driversDefaults != nil {
+						wrappedDrivers := map[string]any{"drivers": driversDefaults}
+						MergeStrict(defaultsRaw, wrappedDrivers, false)
 					}
 				}
 			}
@@ -233,7 +246,7 @@ func Load() (*Config, error) {
 	for _, path := range userConfigs {
 		if _, err := os.Stat(path); err == nil {
 			var currentRaw map[string]any
-			if _, err := toml.DecodeFile(path, &currentRaw); err == nil {
+			if _, err := toml.DecodeFile(path, &currentRaw); err != nil {
 				if err := MergeStrict(rawMerged, currentRaw, true); err != nil {
 					return nil, err
 				}
@@ -255,6 +268,9 @@ func Load() (*Config, error) {
 	finalGCfg.Desktop.Wallpaper.Default = env.ExpandPath(finalGCfg.Desktop.Wallpaper.Default)
 	finalGCfg.Screenshot.Dir = env.ExpandPath(finalGCfg.Screenshot.Dir)
 	finalGCfg.QuickSync.RepoDir = env.ExpandPath(finalGCfg.QuickSync.RepoDir)
+	if err := driver.SetWeights(finalGCfg.Drivers); err != nil {
+		return nil, err
+	}
 	return &Config{GlobalConfig: finalGCfg, raw: rawMerged}, nil
 }
 
@@ -279,6 +295,7 @@ func LoadConfigBase() (*GlobalConfig, error) {
 		Browser:    BrowserConfig{Default: "zen", Engine: "brave"},
 		LazyTools:  make(map[string]LazyToolConfig),
 		Modules:    make(map[string]any),
+		Drivers:    make(map[string]map[string]int),
 	}, nil
 }
 
@@ -389,6 +406,7 @@ func LoadFiles(paths []string) (*GlobalConfig, error) {
 		Hosts:      make(map[string]HostConfig),
 		LazyTools:  make(map[string]LazyToolConfig),
 		Modules:    make(map[string]any),
+		Drivers:    make(map[string]map[string]int),
 	}
 	mergedRaw := make(map[string]any)
 	for _, path := range paths {

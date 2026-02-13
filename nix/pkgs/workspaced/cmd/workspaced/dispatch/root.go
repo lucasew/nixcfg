@@ -31,6 +31,7 @@ import (
 	"workspaced/cmd/workspaced/dispatch/wallpaper"
 	"workspaced/cmd/workspaced/system/screenshot"
 	"workspaced/cmd/workspaced/system/workspace"
+	libconfig "workspaced/pkg/config"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/types"
 
@@ -49,6 +50,11 @@ func NewCommand() *cobra.Command {
 	}
 
 	cmd.PersistentPreRunE = func(c *cobra.Command, args []string) error {
+		// Load config to initialize driver weights and other global states
+		if _, err := libconfig.Load(); err != nil {
+			slog.Debug("failed to load config in dispatch", "error", err)
+		}
+
 		ctx := c.Context()
 		isDaemon := false
 

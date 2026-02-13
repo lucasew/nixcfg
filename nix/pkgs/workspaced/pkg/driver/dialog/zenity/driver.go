@@ -16,6 +16,9 @@ func init() {
 
 type baseProvider struct{}
 
+func (p *baseProvider) ID() string         { return "zenity" }
+func (p *baseProvider) DefaultWeight() int { return driver.DefaultWeight }
+
 func (p *baseProvider) CheckCompatibility(ctx context.Context) error {
 	if exec.GetEnv(ctx, "DISPLAY") == "" && exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
 		return fmt.Errorf("%w: neither DISPLAY nor WAYLAND_DISPLAY set", driver.ErrIncompatible)

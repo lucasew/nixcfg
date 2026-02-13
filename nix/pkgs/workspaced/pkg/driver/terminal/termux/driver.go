@@ -16,7 +16,9 @@ func init() {
 
 type Provider struct{}
 
-func (p *Provider) Name() string { return "Termux" }
+func (p *Provider) ID() string         { return "terminal_termux" }
+func (p *Provider) Name() string       { return "Termux" }
+func (p *Provider) DefaultWeight() int { return 0 }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	if os.Getenv("TERMUX_VERSION") == "" {
@@ -36,11 +38,6 @@ func (d *Driver) Open(ctx context.Context, opts terminal.Options) error {
 		// Just bring Termux to front/open new session if configured in app
 		return exec.RunCmd(ctx, "am", "start", "--user", "0", "-n", "com.termux/.app.TermuxActivity").Run()
 	}
-
-	// To run a command in a NEW session (tab):
-	// am startservice --user 0 -n com.termux/com.termux.app.TermuxService \
-	//    -a com.termux.service_execute \
-	//    -e com.termux.execute.command "comando args..."
 
 	fullCmd := opts.Command
 	// Resolve full path if it's just a binary name

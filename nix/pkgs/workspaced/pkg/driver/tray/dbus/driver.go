@@ -9,8 +9,8 @@ import (
 
 	"github.com/godbus/dbus/v5"
 	"workspaced/pkg/driver"
-	"workspaced/pkg/logging"
 	"workspaced/pkg/driver/tray"
+	"workspaced/pkg/logging"
 )
 
 func init() {
@@ -19,7 +19,9 @@ func init() {
 
 type Provider struct{}
 
+func (p *Provider) ID() string   { return "tray_dbus" }
 func (p *Provider) Name() string { return "DBus" }
+func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	if os.Getenv("DBUS_SESSION_BUS_ADDRESS") == "" {

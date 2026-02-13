@@ -16,7 +16,7 @@ var Command = &cobra.Command{
 		report := driver.Doctor(cmd.Context())
 
 		w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', 0)
-		fmt.Fprintln(w, "INTERFACE\tDRIVER\tSTATUS\tMESSAGE")
+		fmt.Fprintln(w, "INTERFACE\tID\tDRIVER\tWEIGHT\tSTATUS\tMESSAGE")
 
 		for _, iface := range report {
 			for _, d := range iface.Drivers {
@@ -24,11 +24,21 @@ var Command = &cobra.Command{
 				msg := ""
 				if d.Available {
 					status = "✅ Available"
+					if d.Weight == 0 {
+						msg = "Warning: implicit selection (weight 0). Consider setting explicit weight."
+					}
+				} else if d.Error != nil {
+					if errors.Is(d.Error, driver.ErrIncompatible) {
+						status = "❌ Incompatible"
+						// Strip the "driver is incompatible: " prefix if present
+						reason := d.Error.Error()
+						reason = strings.TrimPrefix(reason, driver.ErrIncompatible.Error()+": ")
+						msg = reason
+					} else {
+						msg = d.Error.Error()
+					}
 				}
-				if d.Error != nil {
-					msg = d.Error.Error()
-				}
-				fmt.Fprintf(w, "%s\t%s\t%s\t%s\n", iface.Name, d.Name, status, msg)
+				fmt.Fprintf(w, "%s\t%s\t%s\t%d\t%s\t%s\n", iface.Name, d.ID, d.Name, d.Weight, status, msg)
 			}
 		}
 		w.Flush()
