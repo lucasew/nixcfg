@@ -14,4 +14,4 @@ mkdir -p ~/.local/share/workspaced/bin
 ) || exit 1
 
 
-~/.local/share/workspaced/bin/workspaced dispatch apply
+~/.local/share/workspaced/bin/workspaced apply

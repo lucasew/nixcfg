@@ -40,18 +40,17 @@ When adding new config fields to `nix/pkgs/workspaced/pkg/config/config.go`:
 - Sintoma: código compila OK, TOML é lido, mas `{{ .Field }}` retorna string vazia
 - Sempre implementar Merge() para structs nested no GlobalConfig!
 
-## VSCode Theme Integration
-Templates do VSCode devem seguir a estrutura de extensão:
-- **Localização**:
-  - VSCode Flatpak: `config/.var/app/com.visualstudio.code/data/vscode/extensions/workspaced.base16-theme/`
-  - VSCode normal: `config/.vscode/extensions/workspaced.base16-theme/`
-- **Estrutura necessária**:
-  - `package.json` - manifesto da extensão (não precisa ser template)
-  - `themes/base16.json.tmpl` - template do tema com sintaxe Go template
-- **Conversão de templates tinted-theming**:
-  - Mustache `{{base00-hex}}` → Go template `{{ .Palette.Base00 }}`
-  - **IMPORTANTE**: JSON não suporta comentários - remover todos os `//`
-  - Criar template simples e válido, não converter diretamente o tinted-vscode
-- **package.json** deve apontar para `./themes/base16.json` (sem .tmpl)
-- Após `workspaced apply`, tema fica no diretório de extensões do VSCode
-- VSCode reconhece automaticamente extensões no startup
+## Workspaced CLI & Architecture
+- **Intention-based Structure**: Commands are grouped by user intent:
+  - `input`: User interaction (`text`, `confirm`, `choose`, `menu`).
+  - `open`: Resource launching (`webapp`, `terminal`, generic URLs/files).
+  - `system`: Hardware and session state (`audio`, `brightness`, `power`, `screen`).
+  - `state`: Dotfiles lifecycle (`apply`, `plan`, `sync`, `doctor`).
+- **Local-First**: CLI binary executes hardware/system logic locally whenever possible. Daemon handles shared state, tray, watchers, and cross-client coordination (OSD IDs).
+- **Module System**:
+  - Located in `modules/`. Atomic, parametric, and strictly unique (no claim collisions).
+  - Uses `module.toml` (deps), `defaults.toml` (base config), and `schema.json` (validation).
+  - **Zero-Intermediate**: Files are processed in-memory and streamed directly to targets.
+- **Lazy Processing**: `source.File` interface delays content reading/rendering until strictly needed.
+- **Strict Config**: No lists in module configs. Deep merge with zero substitution policy between different modules.
+- **Top-level Aliases**: `sync`, `apply`, `plan`, and `open` are mirrored at root for ergonomics.

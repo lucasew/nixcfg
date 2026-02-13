@@ -65,7 +65,7 @@ bindsym $mod+Up focus up
 bindsym $mod+Left focus left
 bindsym $mod+Right focus right
 bindsym $mod+a focus parent
-bindsym $mod+Return exec workspaced launch terminal
+bindsym $mod+Return exec workspaced open terminal
 
 # Move bindings
 bindsym $mod+Shift+Down move down
@@ -83,15 +83,15 @@ bindsym $mod+Shift+f floating toggle
 bindsym $mod+Shift+s sticky toggle
 
 # Scratchpad
-bindsym $mod+minus exec workspaced dispatch workspace scratchpad
-bindsym $mod+equal exec workspaced dispatch screen toggle
+bindsym $mod+minus exec workspaced system workspace scratchpad
+bindsym $mod+equal exec workspaced system screen toggle
 bindsym $mod+Shift+minus move scratchpad
 
 # Window control
 bindsym $mod+Shift+q kill
 bindsym $mod+Shift+r restart
-bindsym $mod+d exec workspaced dispatch menu launch
-bindsym $mod+Shift+d exec workspaced dispatch menu window
+bindsym $mod+d exec workspaced input launch
+bindsym $mod+Shift+d exec workspaced input window
 bindsym $mod+e layout toggle split
 
 bindsym $mod+f fullscreen toggle
@@ -110,36 +110,36 @@ bindsym $mod+Ctrl+Down=resize shrink height 1 px or 1 ppt
 bindsym $mod+Ctrl+Left=resize grow width 1 px or 1 ppt
 
 # Media keys
-bindsym XF86AudioRaiseVolume exec workspaced dispatch audio up
-bindsym XF86AudioLowerVolume exec workspaced dispatch audio down
-bindsym XF86AudioMute exec workspaced dispatch audio mute
+bindsym XF86AudioRaiseVolume exec workspaced system audio up
+bindsym XF86AudioLowerVolume exec workspaced system audio down
+bindsym XF86AudioMute exec workspaced system audio mute
 
-bindsym XF86AudioNext exec  workspaced dispatch media next
-bindsym XF86AudioPrev exec  workspaced dispatch media previous
-bindsym XF86AudioPlay exec  workspaced dispatch media play-pause
-bindsym XF86AudioPause exec workspaced dispatch media play-pause
+bindsym XF86AudioNext exec  workspaced media next
+bindsym XF86AudioPrev exec  workspaced media previous
+bindsym XF86AudioPlay exec  workspaced media play-pause
+bindsym XF86AudioPause exec workspaced media play-pause
 
-bindsym XF86MonBrightnessUp   exec workspaced dispatch brightness up
-bindsym XF86MonBrightnessDown exec workspaced dispatch brightness down
+bindsym XF86MonBrightnessUp   exec workspaced system brightness up
+bindsym XF86MonBrightnessDown exec workspaced system brightness down
 
 # Multi-monitor
 bindsym $mod+Shift+m move workspace to output left
 bindsym $mod+m focus output next
 
 # Workspaced shortcuts
-bindsym $mod+l exec workspaced dispatch power lock
-bindsym $mod+n exec workspaced dispatch workspace rotate
-bindsym $mod+z exec workspaced dispatch menu workspace
-bindsym $mod+Shift+z exec workspaced dispatch menu workspace --move
+bindsym $mod+l exec workspaced system power lock
+bindsym $mod+n exec workspaced system workspace rotate
+bindsym $mod+z exec workspaced input workspace
+bindsym $mod+Shift+z exec workspaced input workspace --move
 
-bindsym $mod+b exec workspaced dispatch workspace next
-bindsym $mod+Shift+b exec workspaced dispatch workspace next --move
+bindsym $mod+b exec workspaced system workspace next
+bindsym $mod+Shift+b exec workspaced system workspace next --move
 
 # Screenshots
-bindsym --release Print exec workspaced dispatch screenshot output
-bindsym $mod+Print exec workspaced dispatch screenshot select
-bindsym $mod+Shift+Print exec workspaced dispatch screenshot window
-bindsym $mod+Ctrl+Shift+Print exec workspaced dispatch screenshot all
+bindsym --release Print exec workspaced system screenshot output
+bindsym $mod+Print exec workspaced system screenshot select
+bindsym $mod+Shift+Print exec workspaced system screenshot window
+bindsym $mod+Ctrl+Shift+Print exec workspaced system screenshot all
 
 # Autostart
 exec --no-startup-id /run/current-system/sw/libexec/polkit-mate-authentication-agent-1

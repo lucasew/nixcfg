@@ -1,4 +1,4 @@
-package dialog
+package input
 
 import (
 	"workspaced/pkg/driver"
@@ -10,14 +10,14 @@ import (
 func init() {
 	Registry.Register(func(parent *cobra.Command) {
 		parent.AddCommand(&cobra.Command{
-			Use:   "window",
-			Short: "Window switcher",
+			Use:   "launch",
+			Short: "Application launcher",
 			RunE: func(c *cobra.Command, args []string) error {
 				d, err := driver.Get[dialog.Driver](c.Context())
 				if err != nil {
 					return err
 				}
-				return d.SwitchWindow(c.Context())
+				return d.RunApp(c.Context())
 			},
 		})
 	})

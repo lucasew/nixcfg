@@ -1,84 +1,83 @@
 package main
 
 import (
-	"errors"
-	"fmt"
 	"log/slog"
 	"os"
-	"strings"
-
 	"workspaced/cmd/workspaced/daemon"
 	"workspaced/cmd/workspaced/dispatch"
-	"workspaced/cmd/workspaced/dispatch/apply"
-	"workspaced/cmd/workspaced/dispatch/history"
-	"workspaced/cmd/workspaced/dispatch/plan"
-	"workspaced/cmd/workspaced/dispatch/sync"
-	"workspaced/cmd/workspaced/is"
-	"workspaced/cmd/workspaced/launch"
-	"workspaced/cmd/workspaced/svc"
-	dapi "workspaced/pkg/api"
-	"workspaced/pkg/shellgen"
+	"workspaced/cmd/workspaced/history"
+	"workspaced/cmd/workspaced/input"
+	"workspaced/cmd/workspaced/open"
+	"workspaced/cmd/workspaced/state"
+	"workspaced/cmd/workspaced/system"
+	"workspaced/pkg/driver/media"
+	"workspaced/pkg/version"
 
 	"github.com/spf13/cobra"
 )
 
-func NewRootCommand() *cobra.Command {
+func main() {
 	cmd := &cobra.Command{
-		Use:   "workspaced",
-		Short: "Workspace daemon and client",
-		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			// Ensure logs go to stderr so stdout stays clean for piping/capturing
-			slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, nil)))
-			if os.Getenv("WORKSPACED_DEBUG") != "" {
-				slog.SetLogLoggerLevel(slog.LevelDebug)
-			}
-
-			path := os.Getenv("PATH")
-			systemPath := "/run/current-system/sw/bin"
-			if !strings.Contains(path, systemPath) {
-				_ = os.Setenv("PATH", fmt.Sprintf("%s:%s", systemPath, path))
-			}
-		},
+		Use:     "workspaced",
+		Short:   "workspaced - declarative user environment manager",
+		Version: version.BuildID,
 	}
-	cmd.AddCommand(dispatch.NewCommand())
+
+	// Main Command Groups
+	cmd.AddCommand(input.NewCommand())
+	cmd.AddCommand(open.NewCommand())
+	cmd.AddCommand(system.NewCommand())
+	cmd.AddCommand(state.NewCommand())
+	cmd.AddCommand(history.NewCommand())
+
+	// Top-level aliases for daily ergonomic
+	stateCmd := state.NewCommand()
+	for _, c := range stateCmd.Commands() {
+		if c.Name() == "apply" || c.Name() == "plan" || c.Name() == "sync" {
+			cmd.AddCommand(c)
+		}
+	}
+	historyCmd := history.NewCommand()
+	for _, c := range historyCmd.Commands() {
+		if c.Name() == "search" {
+			cmd.AddCommand(c)
+		}
+	}
+
+	// Daemon and Internal
 	cmd.AddCommand(daemon.Command)
-	cmd.AddCommand(svc.NewCommand())
-	cmd.AddCommand(is.GetCommand())
-	cmd.AddCommand(launch.NewCommand())
+	cmd.AddCommand(dispatch.NewCommand()) // Keep hidden or for internal use
 
-	// Top-level aliases for common commands
-	cmd.AddCommand(apply.GetCommand())
-	cmd.AddCommand(plan.GetCommand())
-	cmd.AddCommand(sync.GetCommand())
-
-	// History search alias
-	searchCmd := history.GetCommand()
-	// Find the search subcommand and add it directly
-	for _, sub := range searchCmd.Commands() {
-		if sub.Name() == "search" {
-			cmd.AddCommand(sub)
-			break
-		}
+	// Media shortcuts (still very common)
+	mediaCmd := &cobra.Command{
+		Use:   "media",
+		Short: "Media player control",
 	}
+	mediaCmd.AddCommand(&cobra.Command{
+		Use:   "next",
+		Short: "Next track",
+		RunE: func(c *cobra.Command, args []string) error {
+			return media.RunAction(c.Context(), "next")
+		},
+	})
+	mediaCmd.AddCommand(&cobra.Command{
+		Use:   "previous",
+		Short: "Previous track",
+		RunE: func(c *cobra.Command, args []string) error {
+			return media.RunAction(c.Context(), "previous")
+		},
+	})
+	mediaCmd.AddCommand(&cobra.Command{
+		Use:   "play-pause",
+		Short: "Toggle play/pause",
+		RunE: func(c *cobra.Command, args []string) error {
+			return media.RunAction(c.Context(), "play-pause")
+		},
+	})
+	cmd.AddCommand(mediaCmd)
 
-	return cmd
-}
-
-func Execute() {
-	rootCmd := NewRootCommand()
-
-	// Set root command for shell generators (e.g., completion)
-	shellgen.SetRootCommand(rootCmd)
-
-	if err := rootCmd.Execute(); err != nil {
-		if errors.Is(err, dapi.ErrCanceled) {
-			os.Exit(0)
-		}
+	if err := cmd.Execute(); err != nil {
 		slog.Error("error", "err", err)
 		os.Exit(1)
 	}
-}
-
-func main() {
-	Execute()
 }

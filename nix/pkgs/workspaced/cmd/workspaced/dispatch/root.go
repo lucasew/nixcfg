@@ -14,7 +14,6 @@ import (
 	"workspaced/cmd/workspaced/dispatch/backup"
 	"workspaced/cmd/workspaced/dispatch/brightness"
 	"workspaced/cmd/workspaced/dispatch/config"
-	"workspaced/cmd/workspaced/dispatch/dialog"
 	"workspaced/cmd/workspaced/dispatch/doctor"
 	"workspaced/cmd/workspaced/dispatch/history"
 	"workspaced/cmd/workspaced/dispatch/nix"
@@ -24,14 +23,14 @@ import (
 	"workspaced/cmd/workspaced/dispatch/plan"
 	"workspaced/cmd/workspaced/dispatch/power"
 	"workspaced/cmd/workspaced/dispatch/screen"
-	"workspaced/cmd/workspaced/dispatch/screenshot"
 	"workspaced/cmd/workspaced/dispatch/setup"
 	"workspaced/cmd/workspaced/dispatch/shell"
 	"workspaced/cmd/workspaced/dispatch/sudo"
 	"workspaced/cmd/workspaced/dispatch/sync"
 	"workspaced/cmd/workspaced/dispatch/template"
 	"workspaced/cmd/workspaced/dispatch/wallpaper"
-	"workspaced/cmd/workspaced/dispatch/workspace"
+	"workspaced/cmd/workspaced/system/screenshot"
+	"workspaced/cmd/workspaced/system/workspace"
 	"workspaced/pkg/exec"
 	"workspaced/pkg/types"
 
@@ -117,7 +116,6 @@ func NewCommand() *cobra.Command {
 	cmd.AddCommand(backup.GetCommand())
 	cmd.AddCommand(brightness.GetCommand())
 	cmd.AddCommand(config.GetCommand())
-	cmd.AddCommand(dialog.GetCommand())
 	cmd.AddCommand(doctor.Command)
 	cmd.AddCommand(history.GetCommand())
 
@@ -193,6 +191,9 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 	for {
 		var packet types.StreamPacket
 		if err := conn.ReadJSON(&packet); err != nil {
+			if !websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway) {
+				slog.Debug("ws read error", "error", err)
+			}
 			return "", true, fmt.Errorf("failed to read response: %w", err)
 		}
 

@@ -3,7 +3,7 @@
 [Desktop Entry]
 Type=Application
 Name={{ or $app.desktop_name $name }}
-Exec=workspaced launch webapp --url "{{ $app.url }}"{{ if $app.profile }} --profile "{{ $app.profile }}"{{ end }}{{ range $app.extra_flags }} --extra-flag "{{ . }}"{{ end }}
+Exec=workspaced open webapp --url "{{ $app.url }}"{{ if $app.profile }} --profile "{{ $app.profile }}"{{ end }}{{ range $app.extra_flags }} --extra-flag "{{ . }}"{{ end }}
 Icon={{ or $app.icon (favicon $app.url) }}
 Categories=Network;WebBrowser;
 <<<WORKSPACED_ENDFILE>>>

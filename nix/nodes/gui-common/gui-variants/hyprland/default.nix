@@ -106,10 +106,10 @@
         ''
           exec swayidle -w -d \
             idlehint 600 \
-            timeout 605 'workspaced dispatch screen off' resume 'workspaced dispatch screen on' \
-            lock 'workspaced dispatch power lock' \
-            unlock 'workspaced dispatch screen on' \
-            before-sleep 'workspaced dispatch media stop'
+            timeout 605 'workspaced system screen off' resume 'workspaced system screen on' \
+            lock 'workspaced system power lock' \
+            unlock 'workspaced system screen on' \
+            before-sleep 'workspaced media stop'
         '';
     };
 

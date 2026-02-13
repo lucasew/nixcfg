@@ -68,7 +68,7 @@ bindsym $mod+Up focus up
 bindsym $mod+Left focus left
 bindsym $mod+Right focus right
 bindsym $mod+a focus parent
-bindsym $mod+Return exec workspaced launch terminal
+bindsym $mod+Return exec workspaced open terminal
 
 # Move bindings
 bindsym $mod+Shift+Down move down
@@ -86,15 +86,15 @@ bindsym $mod+Shift+f floating toggle
 bindsym $mod+Shift+s sticky toggle
 
 # Scratchpad
-bindsym $mod+minus exec workspaced dispatch workspace scratchpad
-bindsym --locked $mod+equal exec workspaced dispatch screen toggle
+bindsym $mod+minus exec workspaced system workspace scratchpad
+bindsym --locked $mod+equal exec workspaced system screen toggle
 bindsym $mod+Shift+minus move scratchpad
 
 # Window control
 bindsym $mod+Shift+q kill
 bindsym $mod+Shift+r restart
-bindsym $mod+d exec workspaced dispatch menu launch
-bindsym $mod+Shift+d exec workspaced dispatch menu window
+bindsym $mod+d exec workspaced input launch
+bindsym $mod+Shift+d exec workspaced input window
 bindsym $mod+e layout toggle split
 
 bindsym $mod+f fullscreen toggle
@@ -113,36 +113,36 @@ bindsym $mod+Ctrl+Down  resize shrink height 1 px or 1 ppt
 bindsym $mod+Ctrl+Left  resize grow width 1 px or 1 ppt
 
 # Media keys (locked = work even on lock screen)
-bindsym --locked XF86AudioRaiseVolume exec workspaced dispatch audio up
-bindsym --locked XF86AudioLowerVolume exec workspaced dispatch audio down
-bindsym --locked XF86AudioMute exec workspaced dispatch audio mute
+bindsym --locked XF86AudioRaiseVolume exec workspaced system audio up
+bindsym --locked XF86AudioLowerVolume exec workspaced system audio down
+bindsym --locked XF86AudioMute exec workspaced system audio mute
 
-bindsym --locked XF86AudioNext exec  workspaced dispatch media next
-bindsym --locked XF86AudioPrev exec  workspaced dispatch media previous
-bindsym --locked XF86AudioPlay exec  workspaced dispatch media play-pause
-bindsym --locked XF86AudioPause exec workspaced dispatch media play-pause
+bindsym --locked XF86AudioNext exec  workspaced media next
+bindsym --locked XF86AudioPrev exec  workspaced media previous
+bindsym --locked XF86AudioPlay exec  workspaced media play-pause
+bindsym --locked XF86AudioPause exec workspaced media play-pause
 
-bindsym --locked XF86MonBrightnessUp   exec workspaced dispatch brightness up
-bindsym --locked XF86MonBrightnessDown exec workspaced dispatch brightness down
+bindsym --locked XF86MonBrightnessUp   exec workspaced system brightness up
+bindsym --locked XF86MonBrightnessDown exec workspaced system brightness down
 
 # Multi-monitor
 bindsym $mod+Shift+m move workspace to output left
 bindsym $mod+m focus output right
 
 # Workspaced shortcuts
-bindsym --locked $mod+l exec workspaced dispatch power lock
-bindsym $mod+n exec workspaced dispatch workspace rotate
-bindsym $mod+z exec workspaced dispatch menu workspace
-bindsym $mod+Shift+z exec workspaced dispatch menu workspace --move
+bindsym --locked $mod+l exec workspaced system power lock
+bindsym $mod+n exec workspaced system workspace rotate
+bindsym $mod+z exec workspaced input workspace
+bindsym $mod+Shift+z exec workspaced input workspace --move
 
-bindsym $mod+b exec workspaced dispatch workspace next
-bindsym $mod+Shift+b exec workspaced dispatch workspace next --move
+bindsym $mod+b exec workspaced system workspace next
+bindsym $mod+Shift+b exec workspaced system workspace next --move
 
 # Screenshots
-bindsym --release Print exec workspaced dispatch screenshot output
-bindsym $mod+Print exec workspaced dispatch screenshot select
-bindsym $mod+Shift+Print exec workspaced dispatch screenshot window
-bindsym $mod+Ctrl+Shift+Print exec workspaced dispatch screenshot all
+bindsym --release Print exec workspaced system screenshot output
+bindsym $mod+Print exec workspaced system screenshot select
+bindsym $mod+Shift+Print exec workspaced system screenshot window
+bindsym $mod+Ctrl+Shift+Print exec workspaced system screenshot all
 
 # Appearance
 default_border pixel 2
@@ -162,4 +162,4 @@ bar {
 exec_always systemctl restart --user xss-lock nm-applet.service blueberry-tray.service kdeconnect.service kdeconnect-indicator.service dunst.service swayidle.service
 exec_always systemctl --user restart xdg-desktop-portal
 exec_always env WORKSPACED_REFRESH=1 workspaced
-exec_always workspaced dispatch screen reset
+exec_always workspaced system screen reset
