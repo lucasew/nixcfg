@@ -27,5 +27,7 @@ func NewCommand() *cobra.Command {
 		},
 	})
 
+	cmd.AddCommand(newWebappCommand())
+
 	return cmd
 }
