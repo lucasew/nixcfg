@@ -5,6 +5,6 @@
 if command -v workspaced >/dev/null 2>&1; then
 	# Start daemon if not already running
 	(workspaced daemon --try &) &>/dev/null
-
+	. <(workspaced completion bash)
 	# Colors are auto-applied from 40-ui-colors.sh.tmpl
 fi
