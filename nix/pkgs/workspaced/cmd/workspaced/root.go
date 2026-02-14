@@ -11,6 +11,7 @@ import (
 	"workspaced/cmd/workspaced/state"
 	"workspaced/cmd/workspaced/system"
 	"workspaced/pkg/driver/media"
+	"workspaced/pkg/shellgen"
 	"workspaced/pkg/version"
 
 	"github.com/spf13/cobra"
@@ -75,6 +76,9 @@ func main() {
 		},
 	})
 	cmd.AddCommand(mediaCmd)
+
+	// Set root command for shell completion generation
+	shellgen.SetRootCommand(cmd)
 
 	if err := cmd.Execute(); err != nil {
 		slog.Error("error", "err", err)
