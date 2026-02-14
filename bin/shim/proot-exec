@@ -7,7 +7,7 @@ if [ -n "${TERMUX_VERSION:-}" ]; then
 	PREFIX=/data/data/com.termux/files
 
 	# Use proot with minimal required bindings
-	env -u LD_PRELOAD "$PREFIX/bin/proot" \
+	env -u LD_PRELOAD "$PREFIX/usr/bin/proot" \
 		--kill-on-exit \
 		-w "$(pwd)" \
 		-b /system:/system \
