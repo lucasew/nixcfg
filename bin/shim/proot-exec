@@ -17,7 +17,7 @@ if [ -n "${TERMUX_VERSION:-}" ]; then
 		-b "$PREFIX/usr/etc:/etc" \
 		-b "$PREFIX/usr/lib:/lib" \
 		-b "$PREFIX/home:/home" \
-		-r "$PREFIX/.." \
+		-r "$PREFIX" \
 		"$@"
 else
 	# Not on Termux, execute directly
