@@ -28,6 +28,7 @@ type DriverProvider[T any] interface {
 type doctorEntry struct {
 	InterfaceType reflect.Type
 	InterfaceName string
+	ProviderType  reflect.Type // Type of the provider struct
 	DriverID      string
 	DriverName    string
 	Check         func(context.Context) error
@@ -85,6 +86,7 @@ func Register[T any](provider DriverProvider[T]) {
 	doctorList = append(doctorList, doctorEntry{
 		InterfaceType: t,
 		InterfaceName: getInterfaceName(t),
+		ProviderType:  reflect.TypeOf(provider),
 		DriverID:      id,
 		DriverName:    provider.Name(),
 		Check:         provider.CheckCompatibility,
@@ -97,6 +99,24 @@ func getInterfaceName(t reflect.Type) string {
 		return t.PkgPath() + "." + t.Name()
 	}
 	return t.String()
+}
+
+// getFriendlyInterfaceName returns a user-friendly interface name for display
+func getFriendlyInterfaceName(t reflect.Type) string {
+	name := t.Name()
+	pkg := t.PkgPath()
+
+	// Extract parent package name from path (e.g., "driver" from "workspaced/pkg/driver")
+	parts := strings.Split(pkg, "/")
+	if len(parts) > 0 {
+		parentPkg := parts[len(parts)-1]
+		// If the type is in a subpackage like "dialog", include it
+		if parentPkg != "driver" && name != parentPkg {
+			return parentPkg + "." + strings.ToLower(name)
+		}
+	}
+
+	return strings.ToLower(name)
 }
 
 func Get[T any](ctx context.Context) (T, error) {
@@ -181,12 +201,13 @@ func Get[T any](ctx context.Context) (T, error) {
 }
 
 type DriverStatus struct {
-	ID        string
-	Name      string
-	Weight    int
-	Available bool
-	Selected  bool
-	Error     error
+	ID           string
+	Name         string
+	ProviderType reflect.Type
+	Weight       int
+	Available    bool
+	Selected     bool
+	Error        error
 }
 
 type InterfaceStatus struct {
@@ -229,11 +250,12 @@ func Doctor(ctx context.Context) []InterfaceStatus {
 				weight = w
 			}
 			status := DriverStatus{
-				ID:        d.DriverID,
-				Name:      d.DriverName,
-				Weight:    weight,
-				Available: err == nil,
-				Error:     err,
+				ID:           d.DriverID,
+				Name:         d.DriverName,
+				ProviderType: d.ProviderType,
+				Weight:       weight,
+				Available:    err == nil,
+				Error:        err,
 			}
 			ifaceStatus.Drivers = append(ifaceStatus.Drivers, status)
 		}
