@@ -37,17 +37,18 @@ if [[ -v WORKSPACED_REFRESH ]] || [[ ! -x "$HOME/.local/share/workspaced/bin/wor
 		mkdir -p ~/.local/share/workspaced/bin
 		BUILD_ID="$(date +%s)"
 
-		# Define build function to avoid argument escaping issues
-		build_workspaced() {
-			mise exec "go@$GO_VERSION" -C "$SOURCE_DIR" -- go build -v -ldflags "-X workspaced/pkg/version.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
-		}
-		export -f build_workspaced
-
-		# On Termux, run entire build in chroot without LD_PRELOAD to avoid namespace issues
+		# On Termux, use temp script to avoid termux-chroot argument escaping issues
 		if [ -n "${TERMUX_VERSION:-}" ]; then
-			termux-chroot bash -c build_workspaced || exit 1
+			SCRIPT="/tmp/workspaced-build-$$.sh"
+			cat > "$SCRIPT" <<-EOF
+			#!/bin/bash
+			mise exec "go@$GO_VERSION" -C "$SOURCE_DIR" -- go build -v -ldflags "-X workspaced/pkg/version.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
+			EOF
+			chmod +x "$SCRIPT"
+			termux-chroot "$SCRIPT" || exit 1
+			rm -f "$SCRIPT"
 		else
-			build_workspaced || exit 1
+			mise exec "go@$GO_VERSION" -C "$SOURCE_DIR" -- go build -v -ldflags "-X workspaced/pkg/version.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced || exit 1
 		fi
 
 		notify-send --hint=string:x-canonical-private-synchronous:workspaced-build "Workspaced" "Workspaced recompilado" || true
