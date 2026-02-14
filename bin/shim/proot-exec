@@ -4,7 +4,7 @@
 
 if [ -n "${TERMUX_VERSION:-}" ]; then
 	# On Termux, use proot directly to avoid termux-chroot's broken sh -c wrapper
-	PREFIX=/data/data/com.termux/files/usr
+	PREFIX=/data/data/com.termux/files
 
 	# Use proot with minimal required bindings
 	env -u LD_PRELOAD "$PREFIX/bin/proot" \
@@ -12,10 +12,10 @@ if [ -n "${TERMUX_VERSION:-}" ]; then
 		-w "$(pwd)" \
 		-b /system:/system \
 		-b /data:/data \
-		-b "$PREFIX:/usr" \
-		-b "$PREFIX/bin:/bin" \
-		-b "$PREFIX/etc:/etc" \
-		-b "$PREFIX/lib:/lib" \
+		-b "$PREFIX/usr:/usr" \
+		-b "$PREFIX/usr/bin:/bin" \
+		-b "$PREFIX/usr/etc:/etc" \
+		-b "$PREFIX/usr/lib:/lib" \
 		-b "$PREFIX/home:/home" \
 		-r "$PREFIX/.." \
 		"$@"
