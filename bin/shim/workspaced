@@ -38,9 +38,10 @@ if [[ -v WORKSPACED_REFRESH ]] || [[ ! -x "$HOME/.local/share/workspaced/bin/wor
 		BUILD_ID="$(date +%s)"
 
 		# Use proot-exec shim to handle Termux syscall restrictions
+		# Note: -buildvcs=false is needed because git is not accessible inside proot
 		"$DOTFILES_ROOT/bin/shim/proot-exec" \
 			mise exec "go@$GO_VERSION" -C "$SOURCE_DIR" -- \
-			go build -v -ldflags "-X workspaced/pkg/version.BuildID=$BUILD_ID" \
+			go build -v -buildvcs=false -ldflags "-X workspaced/pkg/version.BuildID=$BUILD_ID" \
 			-o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced || exit 1
 
 		notify-send --hint=string:x-canonical-private-synchronous:workspaced-build "Workspaced" "Workspaced recompilado" || true
