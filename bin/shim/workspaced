@@ -39,7 +39,7 @@ if [[ -v WORKSPACED_REFRESH ]] || [[ ! -x "$HOME/.local/share/workspaced/bin/wor
 
 		# On Termux, use temp script to avoid termux-chroot argument escaping issues
 		if [ -n "${TERMUX_VERSION:-}" ]; then
-			SCRIPT="/tmp/workspaced-build-$$.sh"
+			SCRIPT="$(mktemp)"
 			cat > "$SCRIPT" <<-EOF
 			#!/bin/bash
 			mise exec "go@$GO_VERSION" -C "$SOURCE_DIR" -- go build -v -ldflags "-X workspaced/pkg/version.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
