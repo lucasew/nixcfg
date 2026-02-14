@@ -22,7 +22,7 @@ export DOTFILES_ROOT="{{ dotfiles }}"
 
 . ~/.bashrc
 
-exec termux-chroot "$DOTFILES_ROOT/bin/_shortcuts/termux/{{ . }}"
+exec termux-chroot bash "$DOTFILES_ROOT/bin/_shortcuts/termux/{{ . }}"
 
 {{- endfile }}
 {{- end }}
