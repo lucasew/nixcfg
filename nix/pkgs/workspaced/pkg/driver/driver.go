@@ -110,6 +110,7 @@ func Get[T any](ctx context.Context) (T, error) {
 
 	ifaceName := getInterfaceName(t)
 	weights := driverWeights[ifaceName]
+	slog.Debug("loading driver weights", "interface", ifaceName, "weights", weights, "all_weights", driverWeights)
 
 	providers := make([]DriverProvider[T], 0)
 	if pMap, ok := Drivers[t]; ok {
@@ -122,6 +123,16 @@ func Get[T any](ctx context.Context) (T, error) {
 	var zero T
 	if len(providers) == 0 {
 		return zero, ErrNotFound
+	}
+
+	// Log all providers before sorting
+	slog.Debug("available providers", "interface", ifaceName, "count", len(providers))
+	for _, p := range providers {
+		w := p.DefaultWeight()
+		if cw, ok := weights[p.ID()]; ok {
+			w = cw
+		}
+		slog.Debug("provider registered", "interface", ifaceName, "id", p.ID(), "name", p.Name(), "weight", w)
 	}
 
 	// Sort providers by weight then ID

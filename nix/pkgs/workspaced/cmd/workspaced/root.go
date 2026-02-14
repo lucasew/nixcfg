@@ -10,6 +10,7 @@ import (
 	"workspaced/cmd/workspaced/open"
 	"workspaced/cmd/workspaced/state"
 	"workspaced/cmd/workspaced/system"
+	"workspaced/pkg/config"
 	"workspaced/pkg/driver/media"
 	"workspaced/pkg/shellgen"
 	"workspaced/pkg/version"
@@ -18,6 +19,11 @@ import (
 )
 
 func main() {
+	// Load config early to set driver weights
+	if _, err := config.Load(); err != nil {
+		slog.Debug("failed to load config", "error", err)
+	}
+
 	var verbose bool
 
 	cmd := &cobra.Command{
