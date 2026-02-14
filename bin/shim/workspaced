@@ -40,9 +40,9 @@ if [[ -v WORKSPACED_REFRESH ]] || [[ ! -x "$HOME/.local/share/workspaced/bin/wor
 
 		# On Termux, run entire build in chroot without LD_PRELOAD to avoid namespace issues
 		if [ -n "${TERMUX_VERSION:-}" ]; then
-			env -u LD_PRELOAD termux-chroot mise exec "go@$GO_VERSION" -- env CGO_ENABLED=0 go build -v -ldflags "-X workspaced/pkg/version.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced || exit 1
+			env -u LD_PRELOAD termux-chroot mise exec "go@$GO_VERSION" -- go build -v -ldflags "-X workspaced/pkg/version.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced || exit 1
 		else
-			mise exec "go@$GO_VERSION" -- env CGO_ENABLED=0 go build -v -ldflags "-X workspaced/pkg/version.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced || exit 1
+			mise exec "go@$GO_VERSION" -- go build -v -ldflags "-X workspaced/pkg/version.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced || exit 1
 		fi
 
 		notify-send --hint=string:x-canonical-private-synchronous:workspaced-build "Workspaced" "Workspaced recompilado" || true
