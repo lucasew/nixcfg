@@ -11,11 +11,11 @@
 # Auto-generated Termux shortcut wrapper: {{ . }}
 
 # Setup Termux execution environment
-# TERMUX_EXEC_PATH="/data/data/com.termux/files/usr/lib/libtermux-exec.so"
-# if [ -f "$TERMUX_EXEC_PATH" ] && [[ "$LD_PRELOAD" != *"$TERMUX_EXEC_PATH"* ]]; then
-# 	export LD_PRELOAD="$TERMUX_EXEC_PATH"
-# 	exec "$0" "$@"
-# fi
+TERMUX_EXEC_PATH="/data/data/com.termux/files/usr/lib/libtermux-exec.so"
+if [ -f "$TERMUX_EXEC_PATH" ] && [[ "$LD_PRELOAD" != *"$TERMUX_EXEC_PATH"* ]]; then
+	export LD_PRELOAD="$TERMUX_EXEC_PATH"
+	exec "$0" "$@"
+fi
 
 # Set dotfiles root
 export DOTFILES_ROOT="{{ dotfiles }}"
