@@ -18,15 +18,15 @@ const (
 func (a ActionType) String() string {
 	switch a {
 	case ActionCreate:
-		return "CREATE"
+		return "+"
 	case ActionUpdate:
-		return "UPDATE"
+		return "*"
 	case ActionDelete:
-		return "DELETE"
+		return "-"
 	case ActionNoop:
-		return "NOOP"
+		return " "
 	}
-	return "UNKNOWN"
+	return "?"
 }
 
 // DesiredState alias para source.DesiredState
