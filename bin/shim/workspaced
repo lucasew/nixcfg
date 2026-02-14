@@ -45,7 +45,8 @@ if [[ -v WORKSPACED_REFRESH ]] || [[ ! -x "$HOME/.local/share/workspaced/bin/wor
 			mise exec "go@$GO_VERSION" -C "$SOURCE_DIR" -- go build -v -ldflags "-X workspaced/pkg/version.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced
 			EOF
 			chmod +x "$SCRIPT"
-			termux-chroot "$SCRIPT" || exit 1
+			# Unset LD_PRELOAD to avoid namespace issues with termux-chroot
+			env -u LD_PRELOAD termux-chroot "$SCRIPT" || exit 1
 			rm -f "$SCRIPT"
 		else
 			mise exec "go@$GO_VERSION" -C "$SOURCE_DIR" -- go build -v -ldflags "-X workspaced/pkg/version.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced || exit 1
