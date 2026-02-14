@@ -9,6 +9,7 @@ if [ -n "${TERMUX_VERSION:-}" ]; then
 	# Use proot with minimal required bindings
 	env -u LD_PRELOAD "$PREFIX/bin/proot" \
 		--kill-on-exit \
+		-w "$(pwd)" \
 		-b /system:/system \
 		-b /data:/data \
 		-b "$PREFIX:/usr" \
