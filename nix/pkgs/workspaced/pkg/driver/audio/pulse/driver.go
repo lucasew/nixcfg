@@ -8,7 +8,7 @@ import (
 	"strings"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/audio"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
 )
 
 var sink = "@DEFAULT_SINK@"
@@ -24,7 +24,7 @@ func (p *Provider) Name() string { return "PulseAudio (pactl)" }
 func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
-	if !exec.IsBinaryAvailable(ctx, "pactl") {
+	if !execdriver.IsBinaryAvailable(ctx, "pactl") {
 		return fmt.Errorf("%w: pactl not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -38,7 +38,7 @@ type Driver struct{}
 
 func (d *Driver) SetVolume(ctx context.Context, level float64) error {
 	slog.Info("set_volume", "level", level)
-	if err := exec.RunCmd(ctx, "pactl", "set-sink-volume", sink, fmt.Sprintf("%d%%", int(level*100))).Run(); err != nil {
+	if err := execdriver.MustRun(ctx, "pactl", "set-sink-volume", sink, fmt.Sprintf("%d%%", int(level*100))).Run(); err != nil {
 		return fmt.Errorf("failed to set volume: %w", err)
 	}
 	return nil
@@ -60,7 +60,7 @@ func parseVolume(output string) (float64, error) {
 }
 
 func (d *Driver) GetVolume(ctx context.Context) (float64, error) {
-	volumeOut, err := exec.RunCmd(ctx, "pactl", "get-sink-volume", sink).Output()
+	volumeOut, err := execdriver.MustRun(ctx, "pactl", "get-sink-volume", sink).Output()
 	if err != nil {
 		return 0, err
 	}
@@ -68,7 +68,7 @@ func (d *Driver) GetVolume(ctx context.Context) (float64, error) {
 }
 
 func (d *Driver) GetMute(ctx context.Context) (bool, error) {
-	muteOut, err := exec.RunCmd(ctx, "pactl", "get-sink-mute", sink).Output()
+	muteOut, err := execdriver.MustRun(ctx, "pactl", "get-sink-mute", sink).Output()
 	if err != nil {
 		return false, err
 	}
@@ -76,7 +76,7 @@ func (d *Driver) GetMute(ctx context.Context) (bool, error) {
 }
 
 func (d *Driver) SinkName(ctx context.Context) (string, error) {
-	nameOut, err := exec.RunCmd(ctx, "pactl", "get-default-sink").Output()
+	nameOut, err := execdriver.MustRun(ctx, "pactl", "get-default-sink").Output()
 	if err != nil {
 		return "", err
 	}
@@ -89,7 +89,7 @@ func (d *Driver) ToggleMute(ctx context.Context) error {
 		return err
 	}
 	if mute {
-		return exec.RunCmd(ctx, "pactl", "set-sink-mute", sink, "no").Run()
+		return execdriver.MustRun(ctx, "pactl", "set-sink-mute", sink, "no").Run()
 	}
-	return exec.RunCmd(ctx, "pactl", "set-sink-mute", sink, "yes").Run()
+	return execdriver.MustRun(ctx, "pactl", "set-sink-mute", sink, "yes").Run()
 }

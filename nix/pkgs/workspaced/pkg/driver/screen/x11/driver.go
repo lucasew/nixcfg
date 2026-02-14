@@ -9,7 +9,7 @@ import (
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/screen"
 	"workspaced/pkg/env"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
 	"workspaced/pkg/types"
 )
 
@@ -51,11 +51,11 @@ func (d *Driver) SetDPMS(ctx context.Context, on bool) error {
 	if on {
 		xsetArg = "on"
 	}
-	return exec.RunCmd(ctx, "xset", "dpms", "force", xsetArg).Run()
+	return execdriver.MustRun(ctx, "xset", "dpms", "force", xsetArg).Run()
 }
 
 func (d *Driver) IsDPMSOn(ctx context.Context) (bool, error) {
-	out, err := exec.RunCmd(ctx, "xset", "q").Output()
+	out, err := execdriver.MustRun(ctx, "xset", "q").Output()
 	if err != nil {
 		return false, err
 	}
@@ -65,13 +65,13 @@ func (d *Driver) IsDPMSOn(ctx context.Context) (bool, error) {
 func (d *Driver) Reset(ctx context.Context) error {
 	if env.IsRiverwood() {
 		// Ensure eDP-1 is primary and on the left, HDMI-A-1 on the right
-		return exec.RunCmd(ctx, "xrandr",
+		return execdriver.MustRun(ctx, "xrandr",
 			"--output", "eDP-1", "--auto", "--primary", "--pos", "0x0",
 			"--output", "HDMI-A-1", "--auto", "--right-of", "eDP-1",
 		).Run()
 	}
 	if env.IsWhiterun() {
-		return exec.RunCmd(ctx, "xrandr", "--output", "HDMI-1", "--auto").Run()
+		return execdriver.MustRun(ctx, "xrandr", "--output", "HDMI-1", "--auto").Run()
 	}
 	return api.ErrNotImplemented
 }

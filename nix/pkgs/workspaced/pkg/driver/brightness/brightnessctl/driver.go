@@ -7,7 +7,7 @@ import (
 	"strings"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/brightness"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
 )
 
 func init() {
@@ -21,7 +21,7 @@ func (p *Provider) Name() string { return "brightnessctl" }
 func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
-	if !exec.IsBinaryAvailable(ctx, "brightnessctl") {
+	if !execdriver.IsBinaryAvailable(ctx, "brightnessctl") {
 		return fmt.Errorf("%w: brightnessctl not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -35,7 +35,7 @@ type Driver struct{}
 
 // Status implements [brightness.Driver].
 func (d *Driver) Status(ctx context.Context) (*brightness.Device, error) {
-	out, err := exec.RunCmd(ctx, "brightnessctl", "-m").Output()
+	out, err := execdriver.MustRun(ctx, "brightnessctl", "-m").Output()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get brightness status: %w", err)
 	}
@@ -64,7 +64,7 @@ func (d *Driver) Status(ctx context.Context) (*brightness.Device, error) {
 
 func (d *Driver) SetBrightness(ctx context.Context, level float64) error {
 
-	if err := exec.RunCmd(ctx, "brightnessctl", "s", fmt.Sprintf("%d%%", int(level*100))).Run(); err != nil {
+	if err := execdriver.MustRun(ctx, "brightnessctl", "s", fmt.Sprintf("%d%%", int(level*100))).Run(); err != nil {
 		return fmt.Errorf("failed to set brightness: %w", err)
 	}
 

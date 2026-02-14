@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/notification"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
 )
 
 func init() {
@@ -19,7 +19,7 @@ func (p *Provider) Name() string { return "notify-send" }
 func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
-	if !exec.IsBinaryAvailable(ctx, "notify-send") {
+	if !execdriver.IsBinaryAvailable(ctx, "notify-send") {
 		return fmt.Errorf("%w: notify-send not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -47,5 +47,5 @@ func (d *Driver) Notify(ctx context.Context, n *notification.Notification) error
 	}
 
 	args = append(args, n.Title, n.Message)
-	return exec.RunCmd(ctx, "notify-send", args...).Run()
+	return execdriver.MustRun(ctx, "notify-send", args...).Run()
 }

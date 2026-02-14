@@ -12,7 +12,7 @@ import (
 	"workspaced/pkg/api"
 	"workspaced/pkg/config"
 	"workspaced/pkg/driver"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
 	"workspaced/pkg/logging"
 )
 
@@ -37,7 +37,7 @@ func SetStatic(ctx context.Context, path string) error {
 	logger.Info("setting wallpaper", "path", path)
 
 	// Stop existing wallpaper-change service if it exists
-	stopCmd := exec.RunCmd(ctx, "systemctl", "--user", "stop", "wallpaper-change.service")
+	stopCmd := execdriver.MustRun(ctx, "systemctl", "--user", "stop", "wallpaper-change.service")
 	_ = stopCmd.Run() // Ignore errors if service doesn't exist
 
 	d, err := driver.Get[Driver](ctx)
@@ -50,8 +50,8 @@ func SetStatic(ctx context.Context, path string) error {
 func SetAnimated(ctx context.Context, path string) error {
 	// Simple wrapper for the video logic
 	// Since it uses xrandr and xwinwrap, it's mostly X11
-	// We'll just run it via exec.RunCmd
-	return exec.RunCmd(ctx, "sh", "-c", fmt.Sprintf("sd wall video %s", path)).Run()
+	// We'll just run it via execdriver.MustRun
+	return execdriver.MustRun(ctx, "sh", "-c", fmt.Sprintf("sd wall video %s", path)).Run()
 }
 
 type APODResponse struct {

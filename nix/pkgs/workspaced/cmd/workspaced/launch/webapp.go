@@ -9,7 +9,8 @@ import (
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/dialog"
 	"workspaced/pkg/env"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 
 	"github.com/spf13/cobra"
 )
@@ -84,7 +85,7 @@ func launchWebapp(ctx context.Context, url string, wa WebappConfig, engine strin
 
 	args = append(args, wa.ExtraFlags...)
 
-	cmd := exec.RunCmd(ctx, engine, args...)
-	exec.InheritContextWriters(ctx, cmd)
+	cmd := execdriver.MustRun(ctx, engine, args...)
+	executil.InheritContextWriters(ctx, cmd)
 	return cmd.Run()
 }

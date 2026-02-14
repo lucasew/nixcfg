@@ -11,6 +11,8 @@ import (
 	_ "workspaced/pkg/driver/dialog/terminal"
 	_ "workspaced/pkg/driver/dialog/wofi"
 	_ "workspaced/pkg/driver/dialog/zenity"
+	_ "workspaced/pkg/driver/exec/native"
+	_ "workspaced/pkg/driver/exec/termux"
 	_ "workspaced/pkg/driver/media/dbus"
 	_ "workspaced/pkg/driver/notification/dbus"
 	_ "workspaced/pkg/driver/notification/notify_send"

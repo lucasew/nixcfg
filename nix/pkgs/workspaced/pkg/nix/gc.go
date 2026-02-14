@@ -8,7 +8,8 @@ import (
 	"sort"
 	"strings"
 	"workspaced/pkg/sudo"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 	"workspaced/pkg/logging"
 	"workspaced/pkg/types"
 )
@@ -92,8 +93,8 @@ func CleanupProfiles(ctx context.Context) error {
 		})
 	} else {
 		// If running interactively, we can just run sudo directly
-		cmd := exec.RunCmd(ctx, "rm", filesToRemove...)
-		exec.InheritContextWriters(ctx, cmd)
+		cmd := execdriver.MustRun(ctx, "rm", filesToRemove...)
+		executil.InheritContextWriters(ctx, cmd)
 		return cmd.Run()
 	}
 }

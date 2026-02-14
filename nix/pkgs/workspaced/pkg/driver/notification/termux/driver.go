@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/notification"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
 )
 
 func init() {
@@ -19,7 +19,7 @@ func (p *Provider) Name() string { return "Termux" }
 func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
-	if !exec.IsBinaryAvailable(ctx, "termux-notification") {
+	if !execdriver.IsBinaryAvailable(ctx, "termux-notification") {
 		return fmt.Errorf("%w: termux-notification not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -39,5 +39,5 @@ func (d *Driver) Notify(ctx context.Context, n *notification.Notification) error
 	if n.ID != 0 {
 		args = append(args, "--id", fmt.Sprintf("%d", n.ID))
 	}
-	return exec.RunCmd(ctx, "termux-notification", args...).Run()
+	return execdriver.MustRun(ctx, "termux-notification", args...).Run()
 }

@@ -6,7 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 	"workspaced/pkg/nix"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 
 	"github.com/spf13/cobra"
 )
@@ -76,8 +77,8 @@ func init() {
 				}
 
 				// Run
-				ec := exec.RunCmd(ctx, binPath, runArgs...)
-				exec.InheritContextWriters(ctx, ec)
+				ec := execdriver.MustRun(ctx, binPath, runArgs...)
+				executil.InheritContextWriters(ctx, ec)
 				ec.Stdin = os.Stdin
 				return ec.Run()
 			},

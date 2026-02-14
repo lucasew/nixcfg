@@ -22,7 +22,7 @@ import (
 	"workspaced/pkg/driver/media"
 	_ "workspaced/pkg/driver/prelude"
 	"workspaced/pkg/driver/tray"
-	"workspaced/pkg/exec"
+	"workspaced/pkg/executil"
 	"workspaced/pkg/icons"
 	"workspaced/pkg/logging"
 	"workspaced/pkg/types"
@@ -39,7 +39,7 @@ var (
 
 func init() {
 	var err error
-	initialMtime, err = exec.GetBinaryMtime()
+	initialMtime, err = executil.GetBinaryMtime()
 	if err != nil {
 		slog.Warn("failed to get initial binary mtime", "error", err)
 	}
@@ -49,7 +49,7 @@ func HasBinaryChanged() bool {
 	if initialMtime.IsZero() {
 		return false
 	}
-	currentMtime, err := exec.GetBinaryMtime()
+	currentMtime, err := executil.GetBinaryMtime()
 	return err == nil && !currentMtime.Equal(initialMtime)
 }
 
@@ -325,7 +325,7 @@ func handleRequest(ctx context.Context, req types.Request, outCh chan types.Stre
 
 	// Check if binary changed - if so, signal restart needed
 	if req.BinaryHash != "" {
-		daemonHash, err := exec.GetBinaryHash()
+		daemonHash, err := executil.GetBinaryHash()
 		if err == nil && daemonHash != req.BinaryHash {
 			slog.Warn("binary hash mismatch, daemon will exec itself",
 				"daemon_hash", daemonHash[:16],

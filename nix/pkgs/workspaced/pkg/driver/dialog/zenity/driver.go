@@ -6,7 +6,8 @@ import (
 	"strings"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/dialog"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 )
 
 func init() {
@@ -20,10 +21,10 @@ func (p *baseProvider) ID() string         { return "zenity" }
 func (p *baseProvider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *baseProvider) CheckCompatibility(ctx context.Context) error {
-	if exec.GetEnv(ctx, "DISPLAY") == "" && exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
+	if executil.GetEnv(ctx, "DISPLAY") == "" && executil.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
 		return fmt.Errorf("%w: neither DISPLAY nor WAYLAND_DISPLAY set", driver.ErrIncompatible)
 	}
-	if !exec.IsBinaryAvailable(ctx, "zenity") {
+	if !execdriver.IsBinaryAvailable(ctx, "zenity") {
 		return fmt.Errorf("%w: zenity not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -42,7 +43,7 @@ func (p *ConfirmerProvider) New(ctx context.Context) (dialog.Confirmer, error) {
 type Driver struct{}
 
 func (d *Driver) Prompt(ctx context.Context, prompt string) (string, error) {
-	out, err := exec.RunCmd(ctx, "zenity", "--entry", "--text", prompt).Output()
+	out, err := execdriver.MustRun(ctx, "zenity", "--entry", "--text", prompt).Output()
 	if err != nil {
 		return "", err
 	}
@@ -50,7 +51,7 @@ func (d *Driver) Prompt(ctx context.Context, prompt string) (string, error) {
 }
 
 func (d *Driver) Confirm(ctx context.Context, message string) (bool, error) {
-	err := exec.RunCmd(ctx, "zenity", "--question", "--text", message).Run()
+	err := execdriver.MustRun(ctx, "zenity", "--question", "--text", message).Run()
 	if err != nil {
 		// Zenity returns non-zero if No is selected
 		return false, nil

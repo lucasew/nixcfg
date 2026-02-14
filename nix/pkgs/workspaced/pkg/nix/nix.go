@@ -13,7 +13,8 @@ import (
 	"workspaced/pkg/api"
 	"workspaced/pkg/driver/notification"
 	"workspaced/pkg/env"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 	"workspaced/pkg/icons"
 	"workspaced/pkg/logging"
 	"workspaced/pkg/sudo"
@@ -48,7 +49,7 @@ func ResolveFlakePath(ctx context.Context, repo string) (string, error) {
 	}
 
 	// Use nix flake archive to ensure the source is in the Nix store and get its path
-	out, err := exec.RunCmd(ctx, "nix", "flake", "archive", repo, "--json").Output()
+	out, err := execdriver.MustRun(ctx, "nix", "flake", "archive", repo, "--json").Output()
 	if err != nil {
 		return "", fmt.Errorf("failed to archive flake %s to store: %w", repo, err)
 	}
@@ -71,15 +72,15 @@ func CopyClosure(ctx context.Context, target string, path string, direction Dire
 		args = append(args, "--from", target, path)
 	}
 
-	cmd := exec.RunCmd(ctx, "nix-copy-closure", args...)
-	exec.InheritContextWriters(ctx, cmd)
+	cmd := execdriver.MustRun(ctx, "nix-copy-closure", args...)
+	executil.InheritContextWriters(ctx, cmd)
 	return cmd.Run()
 }
 
 func GetRemoteCacheDir(ctx context.Context, target string) (string, error) {
 	// Sentinel: Use XDG_RUNTIME_DIR (wiped on reboot) or fallback to user cache
 	script := `echo "${XDG_RUNTIME_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}}/rbuild-outputs"`
-	out, err := exec.RunCmd(ctx, "ssh", target, script).Output()
+	out, err := execdriver.MustRun(ctx, "ssh", target, script).Output()
 	if err != nil {
 		return "", err
 	}
@@ -151,14 +152,14 @@ func RemoteBuild(ctx context.Context, ref string, target string, copyBack bool) 
 		buildCmd, fmt.Sprintf("%q", safeRef), "--out-link", outLink, "--show-trace",
 	}
 
-	cmdBuild := exec.RunCmd(ctx, "ssh", remoteArgs...)
-	exec.InheritContextWriters(ctx, cmdBuild)
+	cmdBuild := execdriver.MustRun(ctx, "ssh", remoteArgs...)
+	executil.InheritContextWriters(ctx, cmdBuild)
 	if err := cmdBuild.Run(); err != nil {
 		return "", fmt.Errorf("%w: remote build failed: %w", api.ErrBuildFailed, err)
 	}
 
 	// Get result path
-	out, err := exec.RunCmd(ctx, "ssh", target, "realpath", outLink).Output()
+	out, err := execdriver.MustRun(ctx, "ssh", target, "realpath", outLink).Output()
 	if err != nil {
 		return "", fmt.Errorf("failed to resolve result path: %w", err)
 	}
@@ -201,7 +202,7 @@ func Build(ctx context.Context, ref string, useCache bool) (string, error) {
 
 	logger.Info("performing nix build", "ref", ref)
 	// We use the store path of the source to ensure deterministic build and avoid re-evaluation if not needed
-	cmd := exec.RunCmd(ctx, "nix", "build", fmt.Sprintf("%s#%s", sourcePath, item), "--no-link", "--print-out-paths")
+	cmd := execdriver.MustRun(ctx, "nix", "build", fmt.Sprintf("%s#%s", sourcePath, item), "--no-link", "--print-out-paths")
 	out, err := cmd.Output()
 	if err != nil {
 		return "", fmt.Errorf("%w: nix build failed: %w", api.ErrBuildFailed, err)
@@ -274,8 +275,8 @@ func Rebuild(ctx context.Context, action string, flake string) error {
 			Args:    args,
 		})
 	} else {
-		cmd := exec.RunCmd(ctx, cmdName, args...)
-		exec.InheritContextWriters(ctx, cmd)
+		cmd := execdriver.MustRun(ctx, cmdName, args...)
+		executil.InheritContextWriters(ctx, cmd)
 		return cmd.Run()
 	}
 }
@@ -310,13 +311,13 @@ func HomeManagerSwitch(ctx context.Context, action string, flake string) error {
 		return fmt.Errorf("activation script not found at %s: %w", activatePath, err)
 	}
 
-	cmd := exec.RunCmd(ctx, activatePath)
-	exec.InheritContextWriters(ctx, cmd)
+	cmd := execdriver.MustRun(ctx, activatePath)
+	executil.InheritContextWriters(ctx, cmd)
 	return cmd.Run()
 }
 
 func GetFlakeOutput(ctx context.Context, flake, output string) (string, error) {
-	cmd := exec.RunCmd(ctx, "nix", "build", fmt.Sprintf("%s#%s", flake, output), "--no-link", "--print-out-paths")
+	cmd := execdriver.MustRun(ctx, "nix", "build", fmt.Sprintf("%s#%s", flake, output), "--no-link", "--print-out-paths")
 	if stderr, ok := ctx.Value(types.StderrKey).(io.Writer); ok {
 		cmd.Stderr = stderr
 	}

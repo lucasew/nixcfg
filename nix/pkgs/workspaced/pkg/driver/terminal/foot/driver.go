@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/terminal"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 )
 
 func init() {
@@ -19,10 +20,10 @@ func (p *Provider) Name() string { return "Foot" }
 func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
-	if exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
+	if executil.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
 		return fmt.Errorf("%w: foot requires WAYLAND_DISPLAY", driver.ErrIncompatible)
 	}
-	if !exec.IsBinaryAvailable(ctx, "foot") {
+	if !execdriver.IsBinaryAvailable(ctx, "foot") {
 		return fmt.Errorf("%w: foot not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -44,6 +45,6 @@ func (d *Driver) Open(ctx context.Context, opts terminal.Options) error {
 		args = append(args, opts.Args...)
 	}
 
-	cmd := exec.RunCmd(ctx, "foot", args...)
+	cmd := execdriver.MustRun(ctx, "foot", args...)
 	return cmd.Start()
 }

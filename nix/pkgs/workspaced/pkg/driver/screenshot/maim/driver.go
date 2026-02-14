@@ -11,7 +11,8 @@ import (
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/screenshot"
 	api "workspaced/pkg/driver/wm"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 )
 
 func init() {
@@ -25,10 +26,10 @@ func (p *Provider) Name() string { return "Maim (X11)" }
 func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
-	if exec.GetEnv(ctx, "DISPLAY") == "" {
+	if executil.GetEnv(ctx, "DISPLAY") == "" {
 		return fmt.Errorf("%w: DISPLAY not set", driver.ErrIncompatible)
 	}
-	if !exec.IsBinaryAvailable(ctx, "maim") {
+	if !execdriver.IsBinaryAvailable(ctx, "maim") {
 		return fmt.Errorf("%w: maim not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -44,10 +45,10 @@ func (d *Driver) SelectArea(ctx context.Context) (*api.Rect, error) {
 	// maim uses slop for selection.
 	// maim -g $(slop) ... is common.
 	// We can run slop directly to get the geometry.
-	if !exec.IsBinaryAvailable(ctx, "slop") {
+	if !execdriver.IsBinaryAvailable(ctx, "slop") {
 		return nil, fmt.Errorf("slop not found for selection")
 	}
-	out, err := exec.RunCmd(ctx, "slop", "-f", "%x %y %w %h").Output()
+	out, err := execdriver.MustRun(ctx, "slop", "-f", "%x %y %w %h").Output()
 	if err != nil {
 		return nil, err // likely canceled
 	}
@@ -70,7 +71,7 @@ func (d *Driver) Capture(ctx context.Context, rect *api.Rect) (image.Image, erro
 		args = append(args, "-g", fmt.Sprintf("%dx%d+%d+%d", rect.Width, rect.Height, rect.X, rect.Y))
 	}
 
-	cmd := exec.RunCmd(ctx, "maim", args...)
+	cmd := execdriver.MustRun(ctx, "maim", args...)
 	out, err := cmd.Output()
 	if err != nil {
 		return nil, fmt.Errorf("maim failed: %w", err)

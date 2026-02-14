@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"strings"
 	"workspaced/pkg/env"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 	"workspaced/pkg/logging"
 	"workspaced/pkg/nix"
 	"workspaced/pkg/driver/notification"
@@ -83,10 +84,10 @@ func deployNode(ctx context.Context, flake, node, action string) error {
 	if action == "" {
 		action = "boot"
 		// Check if same nixpkgs is used
-		localUsedOut, err := exec.RunCmd(ctx, "realpath", fmt.Sprintf("%s/etc/.nixpkgs-used", toplevel)).Output()
+		localUsedOut, err := execdriver.MustRun(ctx, "realpath", fmt.Sprintf("%s/etc/.nixpkgs-used", toplevel)).Output()
 		if err == nil {
 			localUsed := strings.TrimSpace(string(localUsedOut))
-			remoteUsedOut, err := exec.RunCmd(ctx, "ssh", node, "realpath /etc/.nixpkgs-used").Output()
+			remoteUsedOut, err := execdriver.MustRun(ctx, "ssh", node, "realpath /etc/.nixpkgs-used").Output()
 			if err == nil {
 				remoteUsed := strings.TrimSpace(string(remoteUsedOut))
 				if localUsed == remoteUsed {
@@ -99,7 +100,7 @@ func deployNode(ctx context.Context, flake, node, action string) error {
 	// 3. Switch System Configuration
 	logger.Info("Switching system configuration on node", "action", action)
 	// Check if already running
-	currentSystemOut, err := exec.RunCmd(ctx, "ssh", node, "realpath /run/current-system").Output()
+	currentSystemOut, err := execdriver.MustRun(ctx, "ssh", node, "realpath /run/current-system").Output()
 	if err == nil {
 		currentSystem := strings.TrimSpace(string(currentSystemOut))
 		if currentSystem == toplevel {
@@ -109,8 +110,8 @@ func deployNode(ctx context.Context, flake, node, action string) error {
 	}
 
 	switchCmdArgs := []string{"ssh", "-t", node, "pkexec", fmt.Sprintf("%s/bin/switch-to-configuration", toplevel), action}
-	cmdSwitch := exec.RunCmd(ctx, switchCmdArgs[0], switchCmdArgs[1:]...)
-	exec.InheritContextWriters(ctx, cmdSwitch)
+	cmdSwitch := execdriver.MustRun(ctx, switchCmdArgs[0], switchCmdArgs[1:]...)
+	executil.InheritContextWriters(ctx, cmdSwitch)
 	if err := cmdSwitch.Run(); err != nil {
 		return fmt.Errorf("failed to switch configuration on %s: %w", node, err)
 	}

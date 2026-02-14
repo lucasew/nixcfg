@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"workspaced/pkg/env"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -25,7 +25,7 @@ func GetCommand() *cobra.Command {
 
 			// 1. Git pull
 			fmt.Println("==> Pulling dotfiles changes...")
-			pullCmd := exec.RunCmd(ctx, "git", "-C", root, "pull")
+			pullCmd := execdriver.MustRun(ctx, "git", "-C", root, "pull")
 			pullCmd.Stdout = os.Stdout
 			pullCmd.Stderr = os.Stderr
 			if err := pullCmd.Run(); err != nil {
@@ -45,12 +45,12 @@ func GetCommand() *cobra.Command {
 
 			// 3. Execute rebuild (and optionally apply)
 			fmt.Println(actionMsg)
-			bashPath, err := exec.Which(ctx, "bash")
+			bashPath, err := execdriver.Which(ctx, "bash")
 			if err != nil {
 				return fmt.Errorf("bash not found: %w", err)
 			}
 			shimPath := filepath.Join(root, "bin/shim/workspaced")
-			shimCmd := exec.RunCmd(ctx, bashPath, append([]string{shimPath}, shimArgs...)...)
+			shimCmd := execdriver.MustRun(ctx, bashPath, append([]string{shimPath}, shimArgs...)...)
 			shimCmd.Env = append(os.Environ(), "WORKSPACED_REFRESH=1")
 			shimCmd.Stdout = os.Stdout
 			shimCmd.Stderr = os.Stderr

@@ -9,8 +9,8 @@ import (
 	"workspaced/pkg/config"
 	"workspaced/pkg/deployer"
 	"workspaced/pkg/dotfiles"
+	execdriver "workspaced/pkg/driver/exec"
 	"workspaced/pkg/env"
-	"workspaced/pkg/exec"
 	"workspaced/pkg/logging"
 	"workspaced/pkg/nix"
 	"workspaced/pkg/source"
@@ -113,11 +113,15 @@ func GetCommand() *cobra.Command {
 						dummyTheme := home + "/.local/share/themes/dummy"
 						if _, err := os.Stat(dummyTheme); err == nil {
 							// Switch to dummy and back to force GTK reload
-							if err := exec.RunCmd(ctx, "dconf", "write", "/org/gnome/desktop/interface/gtk-theme", "'dummy'").Run(); err != nil {
-								logger.Warn("failed to switch to dummy theme", "error", err)
+							if cmd, err := execdriver.Run(ctx, "dconf", "write", "/org/gnome/desktop/interface/gtk-theme", "'dummy'"); err == nil {
+								if err := cmd.Run(); err != nil {
+									logger.Warn("failed to switch to dummy theme", "error", err)
+								}
 							}
-							if err := exec.RunCmd(ctx, "dconf", "write", "/org/gnome/desktop/interface/gtk-theme", "'base16'").Run(); err != nil {
-								logger.Warn("failed to switch to base16 theme", "error", err)
+							if cmd, err := execdriver.Run(ctx, "dconf", "write", "/org/gnome/desktop/interface/gtk-theme", "'base16'"); err == nil {
+								if err := cmd.Run(); err != nil {
+									logger.Warn("failed to switch to base16 theme", "error", err)
+								}
 							}
 						}
 						return nil

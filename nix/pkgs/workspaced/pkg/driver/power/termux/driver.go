@@ -7,7 +7,7 @@ import (
 	"workspaced/pkg/api"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/power"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
 )
 
 func init() {
@@ -51,10 +51,10 @@ func (d *Driver) Hibernate(ctx context.Context) error {
 
 func (d *Driver) Reboot(ctx context.Context) error {
 	// If rooted, might work.
-	return exec.RunCmd(ctx, "reboot").Run()
+	return execdriver.MustRun(ctx, "reboot").Run()
 }
 
 func (d *Driver) Shutdown(ctx context.Context) error {
 	// If rooted, might work.
-	return exec.RunCmd(ctx, "shutdown", "-h", "now").Run()
+	return execdriver.MustRun(ctx, "shutdown", "-h", "now").Run()
 }

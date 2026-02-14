@@ -11,7 +11,7 @@ import (
 	"workspaced/pkg/config"
 	"workspaced/pkg/driver/notification"
 	"workspaced/pkg/env"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
 	"workspaced/pkg/git"
 	"workspaced/pkg/logging"
 	"workspaced/pkg/sudo"
@@ -91,7 +91,7 @@ func Rsync(ctx context.Context, src, dst string, n *notification.Notification, e
 
 	logging.GetLogger(ctx).Info("rsync sync", "from", src, "to", remote)
 	args := append([]string{"-avP", src, remote}, extraArgs...)
-	cmd := exec.RunCmd(ctx, "rsync", args...)
+	cmd := execdriver.MustRun(ctx, "rsync", args...)
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
@@ -147,7 +147,7 @@ func runPhoneBackup(ctx context.Context, cfg *config.GlobalConfig, updateProgres
 
 	// package list
 	logger.Info("generating package list")
-	pkgList, _ := exec.RunCmd(ctx, "dpkg-query", "-f", "${binary:Package}\n", "-W").Output()
+	pkgList, _ := execdriver.MustRun(ctx, "dpkg-query", "-f", "${binary:Package}\n", "-W").Output()
 	_ = os.WriteFile(filepath.Join(cacheDir, "packages.txt"), pkgList, 0644)
 
 	// sync home files
@@ -155,13 +155,13 @@ func runPhoneBackup(ctx context.Context, cfg *config.GlobalConfig, updateProgres
 		src := filepath.Join(home, item)
 		if _, err := os.Stat(src); err == nil {
 			logger.Info("syncing home item", "item", item)
-			_ = exec.RunCmd(ctx, "rsync", "-avP", src, cacheDir).Run()
+			_ = execdriver.MustRun(ctx, "rsync", "-avP", src, cacheDir).Run()
 		}
 	}
 
 	tarPath := filepath.Join(home, ".cache/backup/termux.tar")
 	logger.Info("creating tarball", "path", tarPath)
-	_ = exec.RunCmd(ctx, "tar", "-cvf", tarPath, "-C", filepath.Dir(cacheDir), "termux").Run()
+	_ = execdriver.MustRun(ctx, "tar", "-cvf", tarPath, "-C", filepath.Dir(cacheDir), "termux").Run()
 
 	_, err := Rsync(ctx, tarPath, cfg.Backup.RemotePath, n)
 	return err
@@ -171,7 +171,7 @@ func getRemoteStatus(ctx context.Context, cfg *config.GlobalConfig) (string, err
 	user := cfg.Backup.RsyncnetUser
 
 	// Get quota (raw)
-	quotaOut, _ := exec.RunCmd(ctx, "ssh", user, "quota").Output()
+	quotaOut, _ := execdriver.MustRun(ctx, "ssh", user, "quota").Output()
 
 	// Filter out lines with asterisks from quota output
 	var quotaLines []string
@@ -183,7 +183,7 @@ func getRemoteStatus(ctx context.Context, cfg *config.GlobalConfig) (string, err
 	filteredQuota := strings.Join(quotaLines, "\n")
 
 	// Get snapshots (flattened)
-	snapOut, _ := exec.RunCmd(ctx, "ssh", user, "ls .zfs/snapshot").Output()
+	snapOut, _ := execdriver.MustRun(ctx, "ssh", user, "ls .zfs/snapshot").Output()
 	snapshots := strings.Join(strings.Fields(string(snapOut)), " ")
 
 	return filteredQuota + "\n" + snapshots, nil
@@ -209,9 +209,9 @@ func ReplicateZFS(ctx context.Context) error {
 		return nil
 	}
 
-	if err := exec.RunCmd(ctx, "syncoid", "-r", "zroot/vms", "storage/backup/vms").Run(); err != nil {
+	if err := execdriver.MustRun(ctx, "syncoid", "-r", "zroot/vms", "storage/backup/vms").Run(); err != nil {
 		return err
 	}
 	logger.Info("replicating ZFS games dataset")
-	return exec.RunCmd(ctx, "syncoid", "-r", "zroot/games", "storage/games").Run()
+	return execdriver.MustRun(ctx, "syncoid", "-r", "zroot/games", "storage/games").Run()
 }

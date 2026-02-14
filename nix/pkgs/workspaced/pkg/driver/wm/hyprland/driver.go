@@ -7,7 +7,8 @@ import (
 	dapi "workspaced/pkg/api"
 	"workspaced/pkg/driver"
 	api "workspaced/pkg/driver/wm"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 )
 
 func init() {
@@ -21,10 +22,10 @@ func (p *Provider) Name() string { return "Hyprland" }
 func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
-	if exec.GetEnv(ctx, "HYPRLAND_INSTANCE_SIGNATURE") == "" {
+	if executil.GetEnv(ctx, "HYPRLAND_INSTANCE_SIGNATURE") == "" {
 		return fmt.Errorf("%w: HYPRLAND_INSTANCE_SIGNATURE not set", driver.ErrIncompatible)
 	}
-	if !exec.IsBinaryAvailable(ctx, "hyprctl") {
+	if !execdriver.IsBinaryAvailable(ctx, "hyprctl") {
 		return fmt.Errorf("%w: hyprctl not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -37,7 +38,7 @@ func (p *Provider) New(ctx context.Context) (api.Driver, error) {
 type Driver struct{}
 
 func (d *Driver) MoveWorkspaceToOutput(ctx context.Context, workspace string, output string) error {
-	return exec.RunCmd(ctx, "hyprctl", "dispatch", "moveworkspacetomonitor", workspace, output).Run()
+	return execdriver.MustRun(ctx, "hyprctl", "dispatch", "moveworkspacetomonitor", workspace, output).Run()
 }
 
 func (d *Driver) SwitchToWorkspace(ctx context.Context, ws string, move bool) error {
@@ -45,15 +46,15 @@ func (d *Driver) SwitchToWorkspace(ctx context.Context, ws string, move bool) er
 	if move {
 		cmd = "movetoworkspace"
 	}
-	return exec.RunCmd(ctx, "hyprctl", "dispatch", cmd, ws).Run()
+	return execdriver.MustRun(ctx, "hyprctl", "dispatch", cmd, ws).Run()
 }
 
 func (d *Driver) ToggleScratchpad(ctx context.Context) error {
-	return exec.RunCmd(ctx, "hyprctl", "dispatch", "togglespecialworkspace").Run()
+	return execdriver.MustRun(ctx, "hyprctl", "dispatch", "togglespecialworkspace").Run()
 }
 
 func (d *Driver) GetOutputs(ctx context.Context) ([]api.Output, error) {
-	out, err := exec.RunCmd(ctx, "hyprctl", "monitors", "-j").Output()
+	out, err := execdriver.MustRun(ctx, "hyprctl", "monitors", "-j").Output()
 	if err != nil {
 		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
@@ -84,7 +85,7 @@ func (d *Driver) GetOutputs(ctx context.Context) ([]api.Output, error) {
 }
 
 func (d *Driver) GetWorkspaces(ctx context.Context) ([]api.Workspace, error) {
-	out, err := exec.RunCmd(ctx, "hyprctl", "workspaces", "-j").Output()
+	out, err := execdriver.MustRun(ctx, "hyprctl", "workspaces", "-j").Output()
 	if err != nil {
 		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
@@ -96,7 +97,7 @@ func (d *Driver) GetWorkspaces(ctx context.Context) ([]api.Workspace, error) {
 		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
 
-	activeWSOut, _ := exec.RunCmd(ctx, "hyprctl", "activeworkspace", "-j").Output()
+	activeWSOut, _ := execdriver.MustRun(ctx, "hyprctl", "activeworkspace", "-j").Output()
 	var activeWS struct {
 		Name string `json:"name"`
 	}
@@ -127,7 +128,7 @@ func (d *Driver) GetFocusedOutput(ctx context.Context) (string, *api.Rect, error
 }
 
 func (d *Driver) GetFocusedWindowRect(ctx context.Context) (*api.Rect, error) {
-	out, err := exec.RunCmd(ctx, "hyprctl", "activewindow", "-j").Output()
+	out, err := execdriver.MustRun(ctx, "hyprctl", "activewindow", "-j").Output()
 	if err != nil {
 		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}

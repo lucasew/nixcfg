@@ -6,7 +6,8 @@ import (
 	"strings"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/dialog"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 )
 
 func init() {
@@ -31,10 +32,10 @@ func (p *FullDriverProvider) CheckCompatibility(ctx context.Context) error   { r
 func (p *FullDriverProvider) New(ctx context.Context) (dialog.Driver, error) { return &Driver{}, nil }
 
 func checkWofi(ctx context.Context) error {
-	if exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
+	if executil.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
 		return fmt.Errorf("%w: WAYLAND_DISPLAY not set", driver.ErrIncompatible)
 	}
-	if !exec.IsBinaryAvailable(ctx, "wofi") {
+	if !execdriver.IsBinaryAvailable(ctx, "wofi") {
 		return fmt.Errorf("%w: wofi not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -55,7 +56,7 @@ func (d *Driver) Choose(ctx context.Context, opts dialog.ChooseOptions) (*dialog
 
 	args := []string{"--dmenu", "-p", opts.Prompt}
 
-	cmd := exec.RunCmd(ctx, "wofi", args...)
+	cmd := execdriver.MustRun(ctx, "wofi", args...)
 	cmd.Stdin = strings.NewReader(input.String())
 
 	out, err := cmd.Output()
@@ -82,9 +83,9 @@ func (d *Driver) Choose(ctx context.Context, opts dialog.ChooseOptions) (*dialog
 }
 
 func (d *Driver) RunApp(ctx context.Context) error {
-	return exec.RunCmd(ctx, "wofi", "--show", "drun").Run()
+	return execdriver.MustRun(ctx, "wofi", "--show", "drun").Run()
 }
 
 func (d *Driver) SwitchWindow(ctx context.Context) error {
-	return exec.RunCmd(ctx, "wofi", "--show", "drun").Run()
+	return execdriver.MustRun(ctx, "wofi", "--show", "drun").Run()
 }

@@ -7,7 +7,8 @@ import (
 	dapi "workspaced/pkg/api"
 	"workspaced/pkg/driver"
 	api "workspaced/pkg/driver/wm"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 )
 
 func init() {
@@ -21,10 +22,10 @@ func (p *SwayProvider) ID() string         { return "screen_wayland_sway" }
 func (p *SwayProvider) Name() string       { return "Sway" }
 func (p *SwayProvider) DefaultWeight() int { return driver.DefaultWeight }
 func (p *SwayProvider) CheckCompatibility(ctx context.Context) error {
-	if exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
+	if executil.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
 		return fmt.Errorf("%w: WAYLAND_DISPLAY not set", driver.ErrIncompatible)
 	}
-	if !exec.IsBinaryAvailable(ctx, "swaymsg") {
+	if !execdriver.IsBinaryAvailable(ctx, "swaymsg") {
 		return fmt.Errorf("%w: swaymsg not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -40,10 +41,10 @@ func (p *I3Provider) ID() string         { return "screen_x11_i3" }
 func (p *I3Provider) Name() string       { return "i3" }
 func (p *I3Provider) DefaultWeight() int { return driver.DefaultWeight }
 func (p *I3Provider) CheckCompatibility(ctx context.Context) error {
-	if exec.GetEnv(ctx, "DISPLAY") == "" {
+	if executil.GetEnv(ctx, "DISPLAY") == "" {
 		return fmt.Errorf("%w: DISPLAY not set", driver.ErrIncompatible)
 	}
-	if !exec.IsBinaryAvailable(ctx, "i3-msg") {
+	if !execdriver.IsBinaryAvailable(ctx, "i3-msg") {
 		return fmt.Errorf("%w: i3-msg not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -58,22 +59,22 @@ type Driver struct {
 }
 
 func (d *Driver) MoveWorkspaceToOutput(ctx context.Context, workspace string, output string) error {
-	return exec.RunCmd(ctx, d.Binary, fmt.Sprintf("[workspace=\"%s\"] move workspace to output %s", workspace, output)).Run()
+	return execdriver.MustRun(ctx, d.Binary, fmt.Sprintf("[workspace=\"%s\"] move workspace to output %s", workspace, output)).Run()
 }
 
 func (d *Driver) SwitchToWorkspace(ctx context.Context, ws string, move bool) error {
 	if move {
-		return exec.RunCmd(ctx, d.Binary, "move", "container", "to", "workspace", ws).Run()
+		return execdriver.MustRun(ctx, d.Binary, "move", "container", "to", "workspace", ws).Run()
 	}
-	return exec.RunCmd(ctx, d.Binary, "workspace", ws).Run()
+	return execdriver.MustRun(ctx, d.Binary, "workspace", ws).Run()
 }
 
 func (d *Driver) ToggleScratchpad(ctx context.Context) error {
-	return exec.RunCmd(ctx, d.Binary, "scratchpad", "show").Run()
+	return execdriver.MustRun(ctx, d.Binary, "scratchpad", "show").Run()
 }
 
 func (d *Driver) GetOutputs(ctx context.Context) ([]api.Output, error) {
-	out, err := exec.RunCmd(ctx, d.Binary, "-t", "get_outputs").Output()
+	out, err := execdriver.MustRun(ctx, d.Binary, "-t", "get_outputs").Output()
 	if err != nil {
 		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
@@ -85,7 +86,7 @@ func (d *Driver) GetOutputs(ctx context.Context) ([]api.Output, error) {
 }
 
 func (d *Driver) GetWorkspaces(ctx context.Context) ([]api.Workspace, error) {
-	out, err := exec.RunCmd(ctx, d.Binary, "-t", "get_workspaces").Output()
+	out, err := execdriver.MustRun(ctx, d.Binary, "-t", "get_workspaces").Output()
 	if err != nil {
 		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}
@@ -133,7 +134,7 @@ func (d *Driver) GetFocusedOutput(ctx context.Context) (string, *api.Rect, error
 }
 
 func (d *Driver) GetFocusedWindowRect(ctx context.Context) (*api.Rect, error) {
-	out, err := exec.RunCmd(ctx, d.Binary, "-t", "get_tree").Output()
+	out, err := execdriver.MustRun(ctx, d.Binary, "-t", "get_tree").Output()
 	if err != nil {
 		return nil, fmt.Errorf("%w: %w", dapi.ErrIPC, err)
 	}

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/terminal"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
 )
 
 func init() {
@@ -36,13 +36,13 @@ type Driver struct{}
 func (d *Driver) Open(ctx context.Context, opts terminal.Options) error {
 	if opts.Command == "" {
 		// Just bring Termux to front/open new session if configured in app
-		return exec.RunCmd(ctx, "am", "start", "--user", "0", "-n", "com.termux/.app.TermuxActivity").Run()
+		return execdriver.MustRun(ctx, "am", "start", "--user", "0", "-n", "com.termux/.app.TermuxActivity").Run()
 	}
 
 	fullCmd := opts.Command
 	// Resolve full path if it's just a binary name
 	if !strings.HasPrefix(fullCmd, "/") {
-		if path, err := exec.Which(ctx, fullCmd); err == nil {
+		if path, err := execdriver.Which(ctx, fullCmd); err == nil {
 			fullCmd = path
 		}
 	}
@@ -56,7 +56,7 @@ func (d *Driver) Open(ctx context.Context, opts terminal.Options) error {
 		fullCmd += " " + strings.Join(escapedArgs, " ")
 	}
 
-	return exec.RunCmd(ctx, "am", "startservice",
+	return execdriver.MustRun(ctx, "am", "startservice",
 		"--user", "0",
 		"-n", "com.termux/com.termux.app.TermuxService",
 		"-a", "com.termux.service_execute",

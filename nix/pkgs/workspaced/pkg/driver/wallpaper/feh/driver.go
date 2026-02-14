@@ -6,7 +6,7 @@ import (
 	"os"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/wallpaper"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
 )
 
 func init() {
@@ -23,7 +23,7 @@ func (p *Provider) CheckCompatibility(ctx context.Context) error {
 	if os.Getenv("DISPLAY") == "" {
 		return fmt.Errorf("%w: DISPLAY not set", driver.ErrIncompatible)
 	}
-	if _, err := exec.Which(ctx, "feh"); err != nil {
+	if _, err := execdriver.Which(ctx, "feh"); err != nil {
 		return fmt.Errorf("%w: feh not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -36,11 +36,11 @@ func (p *Provider) New(ctx context.Context) (wallpaper.Driver, error) {
 type Driver struct{}
 
 func (d *Driver) SetStatic(ctx context.Context, path string) error {
-	feh, err := exec.Which(ctx, "feh")
+	feh, err := execdriver.Which(ctx, "feh")
 	if err != nil {
 		return err
 	}
-	cmd := exec.RunCmd(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", feh, "--bg-fill", path)
+	cmd := execdriver.MustRun(ctx, "systemd-run", "--user", "-u", "wallpaper-change", "--collect", feh, "--bg-fill", path)
 	if err = cmd.Run(); err != nil {
 		return fmt.Errorf("can't run feh in systemd unit: %w", err)
 	}

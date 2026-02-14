@@ -10,7 +10,8 @@ import (
 	dapi "workspaced/pkg/api"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/clipboard"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 )
 
 func init() {
@@ -24,10 +25,10 @@ func (p *Provider) Name() string { return "Wayland (wl-copy)" }
 func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
-	if exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
+	if executil.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
 		return fmt.Errorf("%w: WAYLAND_DISPLAY not set", driver.ErrIncompatible)
 	}
-	if !exec.IsBinaryAvailable(ctx, "wl-copy") {
+	if !execdriver.IsBinaryAvailable(ctx, "wl-copy") {
 		return fmt.Errorf("%w: wl-copy not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -40,7 +41,7 @@ func (p *Provider) New(ctx context.Context) (clipboard.Driver, error) {
 type Driver struct{}
 
 func (d *Driver) WriteImage(ctx context.Context, img image.Image) error {
-	if !exec.IsBinaryAvailable(ctx, "wl-copy") {
+	if !execdriver.IsBinaryAvailable(ctx, "wl-copy") {
 		return fmt.Errorf("%w: wl-copy", dapi.ErrBinaryNotFound)
 	}
 	pr, pw := io.Pipe()
@@ -49,16 +50,16 @@ func (d *Driver) WriteImage(ctx context.Context, img image.Image) error {
 		_ = pw.Close()
 	}()
 
-	cmd := exec.RunCmd(ctx, "wl-copy", "-t", "image/png")
+	cmd := execdriver.MustRun(ctx, "wl-copy", "-t", "image/png")
 	cmd.Stdin = pr
 	return cmd.Run()
 }
 
 func (d *Driver) WriteText(ctx context.Context, text string) error {
-	if !exec.IsBinaryAvailable(ctx, "wl-copy") {
+	if !execdriver.IsBinaryAvailable(ctx, "wl-copy") {
 		return fmt.Errorf("%w: wl-copy", dapi.ErrBinaryNotFound)
 	}
-	cmd := exec.RunCmd(ctx, "wl-copy")
+	cmd := execdriver.MustRun(ctx, "wl-copy")
 	cmd.Stdin = strings.NewReader(text)
 	return cmd.Run()
 }

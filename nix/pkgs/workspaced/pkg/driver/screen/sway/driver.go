@@ -8,7 +8,8 @@ import (
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/screen"
 	"workspaced/pkg/env"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 )
 
 func init() {
@@ -22,10 +23,10 @@ func (p *Provider) Name() string { return "Wayland (sway)" }
 func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
-	if exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
+	if executil.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
 		return fmt.Errorf("%w: WAYLAND_DISPLAY not set", driver.ErrIncompatible)
 	}
-	if !exec.IsBinaryAvailable(ctx, "swaymsg") {
+	if !execdriver.IsBinaryAvailable(ctx, "swaymsg") {
 		return fmt.Errorf("%w: swaymsg not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -42,11 +43,11 @@ func (d *Driver) SetDPMS(ctx context.Context, on bool) error {
 	if on {
 		state = "on"
 	}
-	return exec.RunCmd(ctx, "swaymsg", "output * dpms "+state).Run()
+	return execdriver.MustRun(ctx, "swaymsg", "output * dpms "+state).Run()
 }
 
 func (d *Driver) IsDPMSOn(ctx context.Context) (bool, error) {
-	out, err := exec.RunCmd(ctx, "swaymsg", "-t", "get_outputs").Output()
+	out, err := execdriver.MustRun(ctx, "swaymsg", "-t", "get_outputs").Output()
 	if err != nil {
 		return false, err
 	}
@@ -56,13 +57,13 @@ func (d *Driver) IsDPMSOn(ctx context.Context) (bool, error) {
 func (d *Driver) Reset(ctx context.Context) error {
 	if env.IsRiverwood() {
 		// eDP-1 (notebook) on the LEFT (0,0), HDMI-A-1 on the RIGHT
-		if err := exec.RunCmd(ctx, "swaymsg", "output", "eDP-1", "mode", "1366x768", "pos", "0", "0").Run(); err != nil {
+		if err := execdriver.MustRun(ctx, "swaymsg", "output", "eDP-1", "mode", "1366x768", "pos", "0", "0").Run(); err != nil {
 			return err
 		}
-		return exec.RunCmd(ctx, "swaymsg", "output", "HDMI-A-1", "mode", "1366x768", "pos", "1366", "0").Run()
+		return execdriver.MustRun(ctx, "swaymsg", "output", "HDMI-A-1", "mode", "1366x768", "pos", "1366", "0").Run()
 	}
 	if env.IsWhiterun() {
-		return exec.RunCmd(ctx, "swaymsg", "output", "HDMI-A-1", "mode", "1368x768").Run()
+		return execdriver.MustRun(ctx, "swaymsg", "output", "HDMI-A-1", "mode", "1368x768").Run()
 	}
 	return api.ErrNotImplemented
 }

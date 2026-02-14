@@ -11,7 +11,8 @@ import (
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/screenshot"
 	api "workspaced/pkg/driver/wm"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 )
 
 func init() {
@@ -25,10 +26,10 @@ func (p *Provider) Name() string { return "Grim (Wayland)" }
 func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
-	if exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
+	if executil.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
 		return fmt.Errorf("%w: WAYLAND_DISPLAY not set", driver.ErrIncompatible)
 	}
-	if !exec.IsBinaryAvailable(ctx, "grim") {
+	if !execdriver.IsBinaryAvailable(ctx, "grim") {
 		return fmt.Errorf("%w: grim not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -41,10 +42,10 @@ func (p *Provider) New(ctx context.Context) (screenshot.Driver, error) {
 type Driver struct{}
 
 func (d *Driver) SelectArea(ctx context.Context) (*api.Rect, error) {
-	if !exec.IsBinaryAvailable(ctx, "slurp") {
+	if !execdriver.IsBinaryAvailable(ctx, "slurp") {
 		return nil, fmt.Errorf("slurp not found for selection")
 	}
-	out, err := exec.RunCmd(ctx, "slurp").Output()
+	out, err := execdriver.MustRun(ctx, "slurp").Output()
 	if err != nil {
 		return nil, err // likely canceled
 	}
@@ -74,7 +75,7 @@ func (d *Driver) Capture(ctx context.Context, rect *api.Rect) (image.Image, erro
 
 	args = append(args, "-") // Output to stdout
 
-	cmd := exec.RunCmd(ctx, "grim", args...)
+	cmd := execdriver.MustRun(ctx, "grim", args...)
 	out, err := cmd.Output()
 	if err != nil {
 		return nil, fmt.Errorf("grim failed: %w", err)

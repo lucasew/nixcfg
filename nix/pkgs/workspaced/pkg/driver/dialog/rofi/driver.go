@@ -6,7 +6,8 @@ import (
 	"strings"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/dialog"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 )
 
 func init() {
@@ -31,10 +32,10 @@ func (p *FullDriverProvider) CheckCompatibility(ctx context.Context) error   { r
 func (p *FullDriverProvider) New(ctx context.Context) (dialog.Driver, error) { return &Driver{}, nil }
 
 func checkRofi(ctx context.Context) error {
-	if exec.GetEnv(ctx, "DISPLAY") == "" && exec.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
+	if executil.GetEnv(ctx, "DISPLAY") == "" && executil.GetEnv(ctx, "WAYLAND_DISPLAY") == "" {
 		return fmt.Errorf("%w: neither DISPLAY nor WAYLAND_DISPLAY set", driver.ErrIncompatible)
 	}
-	if !exec.IsBinaryAvailable(ctx, "rofi") {
+	if !execdriver.IsBinaryAvailable(ctx, "rofi") {
 		return fmt.Errorf("%w: rofi not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -60,7 +61,7 @@ func (d *Driver) Choose(ctx context.Context, opts dialog.ChooseOptions) (*dialog
 	args := []string{"-dmenu", "-p", opts.Prompt}
 	args = append(args, "-show-icons")
 
-	cmd := exec.RunCmd(ctx, "rofi", args...)
+	cmd := execdriver.MustRun(ctx, "rofi", args...)
 	cmd.Stdin = strings.NewReader(input.String())
 
 	out, err := cmd.Output()
@@ -87,9 +88,9 @@ func (d *Driver) Choose(ctx context.Context, opts dialog.ChooseOptions) (*dialog
 }
 
 func (d *Driver) RunApp(ctx context.Context) error {
-	return exec.RunCmd(ctx, "rofi", "-show", "combi", "-combi-modi", "drun", "-show-icons").Run()
+	return execdriver.MustRun(ctx, "rofi", "-show", "combi", "-combi-modi", "drun", "-show-icons").Run()
 }
 
 func (d *Driver) SwitchWindow(ctx context.Context) error {
-	return exec.RunCmd(ctx, "rofi", "-show", "combi", "-combi-modi", "window", "-show-icons").Run()
+	return execdriver.MustRun(ctx, "rofi", "-show", "combi", "-combi-modi", "window", "-show-icons").Run()
 }

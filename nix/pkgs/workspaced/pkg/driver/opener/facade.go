@@ -7,7 +7,8 @@ import (
 	"workspaced/pkg/config"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/env"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
+	"workspaced/pkg/executil"
 )
 
 // WebappConfig is used for passing parameters to OpenWebapp
@@ -49,7 +50,7 @@ func OpenWebapp(ctx context.Context, wa WebappConfig) error {
 
 	args = append(args, wa.ExtraFlags...)
 
-	cmd := exec.RunCmd(ctx, engine, args...)
-	exec.InheritContextWriters(ctx, cmd)
+	cmd := execdriver.MustRun(ctx, engine, args...)
+	executil.InheritContextWriters(ctx, cmd)
 	return cmd.Run()
 }

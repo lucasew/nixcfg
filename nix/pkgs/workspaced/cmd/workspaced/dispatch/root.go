@@ -31,7 +31,7 @@ import (
 	"workspaced/cmd/workspaced/system/screenshot"
 	"workspaced/cmd/workspaced/system/workspace"
 	libconfig "workspaced/pkg/config"
-	"workspaced/pkg/exec"
+	"workspaced/pkg/executil"
 	"workspaced/pkg/types"
 
 	_ "workspaced/pkg/driver/prelude"
@@ -172,7 +172,7 @@ func TryRemoteRaw(cmdName string, args []string) (string, bool, error) {
 	defer func() { _ = conn.Close() }()
 
 	// Get client binary hash
-	clientHash, _ := exec.GetBinaryHash()
+	clientHash, _ := executil.GetBinaryHash()
 
 	req := types.Request{
 		Command:    cmdName,

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"workspaced/pkg/driver"
 	"workspaced/pkg/driver/terminal"
-	"workspaced/pkg/exec"
+	execdriver "workspaced/pkg/driver/exec"
 )
 
 func init() {
@@ -19,7 +19,7 @@ func (p *Provider) Name() string { return "Kitty" }
 func (p *Provider) DefaultWeight() int { return driver.DefaultWeight }
 
 func (p *Provider) CheckCompatibility(ctx context.Context) error {
-	if !exec.IsBinaryAvailable(ctx, "kitty") {
+	if !execdriver.IsBinaryAvailable(ctx, "kitty") {
 		return fmt.Errorf("%w: kitty not found", driver.ErrIncompatible)
 	}
 	return nil
@@ -41,6 +41,6 @@ func (d *Driver) Open(ctx context.Context, opts terminal.Options) error {
 		args = append(args, opts.Args...)
 	}
 
-	cmd := exec.RunCmd(ctx, "kitty", args...)
+	cmd := execdriver.MustRun(ctx, "kitty", args...)
 	return cmd.Start()
 }
