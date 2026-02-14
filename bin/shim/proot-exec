@@ -9,6 +9,7 @@ if [ -n "${TERMUX_VERSION:-}" ]; then
 	# Use proot with bindings similar to termux-chroot but without sh -c wrapper
 	env -u LD_PRELOAD "$PREFIX/bin/proot" \
 		--kill-on-exit \
+		--cwd=. \
 		-b /system:/system \
 		-b /data:/data \
 		-b /dev:/dev \
