@@ -39,7 +39,7 @@ if [[ -v WORKSPACED_REFRESH ]] || [[ ! -x "$HOME/.local/share/workspaced/bin/wor
 
 		# On Termux, run entire build in chroot without LD_PRELOAD to avoid namespace issues
 		if [ -n "${TERMUX_VERSION:-}" ]; then
-			termux-chroot mise exec -C $SOURCE_DIR "go@$GO_VERSION" -- go build -v -ldflags "-X workspaced/pkg/version.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced || exit 1
+			termux-chroot mise exec "go@$GO_VERSION" -C $SOURCE_DIR -- go build -v -ldflags "-X workspaced/pkg/version.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced || exit 1
 		else
 			mise exec "go@$GO_VERSION" -C $SOURCE_DIR -- go build -v -ldflags "-X workspaced/pkg/version.BuildID=$BUILD_ID" -o ~/.local/share/workspaced/bin/workspaced ./cmd/workspaced || exit 1
 		fi
