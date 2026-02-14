@@ -16,6 +16,7 @@ if [ -n "${TERMUX_VERSION:-}" ]; then
 		-b "$PREFIX/bin:/bin" \
 		-b "$PREFIX/etc:/etc" \
 		-b "$PREFIX/lib:/lib" \
+		-b "$PREFIX/home:/home" \
 		-r "$PREFIX/.." \
 		"$@"
 else
