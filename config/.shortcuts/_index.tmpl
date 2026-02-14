@@ -23,7 +23,7 @@ export DOTFILES_ROOT="{{ dotfiles }}"
 # Load environment
 [ -f "$DOTFILES_ROOT/bin/source_me" ] && source "$DOTFILES_ROOT/bin/source_me"
 
-# Execute actual script
-exec bash "$DOTFILES_ROOT/bin/_shortcuts/termux/{{ . }}" "$@"
+exec sd _shortcuts termux "{{ . }}" "$@"
+
 {{- endfile }}
 {{- end }}
