@@ -16,6 +16,7 @@ if [ -n "${TERMUX_VERSION:-}" ]; then
 		-b /proc:/proc \
 		-b "$PREFIX:/usr" \
 		-b "$PREFIX/bin:/bin" \
+		-b "$PREFIX/bin:/usr/bin" \
 		-b "$PREFIX/etc:/etc" \
 		-b "$PREFIX/lib:/lib" \
 		-b "$PREFIX/share:/share" \
