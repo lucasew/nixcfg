@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"reflect"
 	"sort"
 	"strings"
@@ -143,17 +144,25 @@ func Get[T any](ctx context.Context) (T, error) {
 	var report []string
 
 	for _, provider := range providers {
+		weight := provider.DefaultWeight()
+		if w, ok := weights[provider.ID()]; ok {
+			weight = w
+		}
+
 		if err := provider.CheckCompatibility(ctx); err != nil {
-			report = append(report, fmt.Sprintf("❌ [SKIP] %s (%s): %v", provider.ID(), provider.Name(), err))
+			report = append(report, fmt.Sprintf("❌ [SKIP] %s (%s) weight=%d: %v", provider.ID(), provider.Name(), weight, err))
+			slog.Debug("driver skipped", "interface", ifaceName, "id", provider.ID(), "name", provider.Name(), "weight", weight, "error", err)
 			continue
 		}
 
 		instance, err := provider.New(ctx)
 		if err != nil {
-			report = append(report, fmt.Sprintf("⚠️ [FAIL] %s (%s): initialization failed: %v", provider.ID(), provider.Name(), err))
+			report = append(report, fmt.Sprintf("⚠️ [FAIL] %s (%s) weight=%d: initialization failed: %v", provider.ID(), provider.Name(), weight, err))
+			slog.Debug("driver init failed", "interface", ifaceName, "id", provider.ID(), "name", provider.Name(), "weight", weight, "error", err)
 			continue
 		}
 
+		slog.Debug("driver selected", "interface", ifaceName, "id", provider.ID(), "name", provider.Name(), "weight", weight)
 		return instance, nil
 	}
 

@@ -18,11 +18,21 @@ import (
 )
 
 func main() {
+	var verbose bool
+
 	cmd := &cobra.Command{
 		Use:     "workspaced",
 		Short:   "workspaced - declarative user environment manager",
 		Version: version.BuildID,
+		PersistentPreRun: func(c *cobra.Command, args []string) {
+			if verbose {
+				slog.SetLogLoggerLevel(slog.LevelDebug)
+			}
+		},
 	}
+
+	// Global flags
+	cmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable debug logging")
 
 	// Main Command Groups
 	cmd.AddCommand(input.NewCommand())
