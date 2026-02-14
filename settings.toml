@@ -352,6 +352,11 @@ global = true
 version = "2.86.0"
 global = true
 
+[lazy_tools."ast-grep"]
+version = "0.40.5"
+global = true
+bins = ["ast-grep", "sg"]
+
 [drivers."workspaced/pkg/driver/terminal.Driver"]
 terminal_kitty = 100
 
@@ -379,4 +384,3 @@ enabled = false
 
 [desktop.raw.dconf."org/gnome/desktop/periphereals/touchpad"]
 tap-to-click = true
-
