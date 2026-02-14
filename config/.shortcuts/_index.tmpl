@@ -20,7 +20,7 @@ fi
 # Set dotfiles root
 export DOTFILES_ROOT="{{ dotfiles }}"
 
-. ~/.bashrc
+source  /data/data/com.termux/files/home/.bashrc
 
 exec termux-chroot bash "$DOTFILES_ROOT/bin/_shortcuts/termux/{{ . }}"
 
