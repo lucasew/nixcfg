@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-VERSION=0.0.8
+VERSION=$(curl -s https://api.github.com/repos/lucasew/workspaced/releases/latest | grep -oP '"tag_name":\s*"\K[^"]+')
 
 case "$(uname -s)" in
     Linux*)     GOOS=linux ;;
@@ -20,7 +20,7 @@ esac
 TMP=$(mktemp -d)
 URL="https://github.com/lucasew/workspaced/releases/download/$VERSION/workspaced-$GOOS-$GOARCH"
 
-wget -O "$TMP/workspaced" "$URL"
+curl -L -o "$TMP/workspaced" "$URL"
 
 chmod +x $TMP/workspaced
 
