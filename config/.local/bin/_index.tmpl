@@ -1,3 +1,12 @@
+{{- /* Shims for mise and workspaced */ -}}
+{{- file "mise" "0755" }}
+{{ shim (printf "%s/bin/mise" (userDataDir)) }}
+{{- endfile }}
+
+{{- file "workspaced" "0755" }}
+{{ shim (printf "%s/bin/workspaced" (userDataDir)) }}
+{{- endfile }}
+
 {{- /* Script x: adds lazy shims to PATH */ -}}
 {{- file "x" "0755" }}
 #!/usr/bin/env bash
@@ -5,33 +14,24 @@ export PATH="{{ userDataDir }}/shim/lazy:$PATH"
 exec "$@"
 {{- endfile }}
 
-{{- /* Global shims for tools marked as global */ -}}
+{{- /* Global shims for tools - skip mise and workspaced (handled above) */ -}}
 {{- range $name, $tool := .LazyTools }}
-{{- if $tool.Global }}
-{{- $bins := $tool.Bins }}
-{{- if eq (len $bins) 0 }}
-  {{- $binName := $tool.Alias }}
-  {{- if not $binName }}
-    {{- $parts := split $name ":" }}
-    {{- $binName = last $parts }}
-    {{- $parts = split $binName "/" }}
-    {{- $binName = last $parts }}
-  {{- end }}
-  {{- $bins = list $binName }}
-{{- end }}
-{{- range $bins }}
-{{- file . "0755" }}
-#!/usr/bin/env bash
-# If already inside mise, find the real binary instead of looping
-if [ -n "$__MISE_WATCH" ] || [ -n "$MISE_ORIGINAL_CWD" ]; then
-  # Inside mise exec, call binary directly from install dir
-  MISE_BIN=$(command -v -a {{ . }} | grep -v "$(dirname "$0")" | head -1)
-  if [ -n "$MISE_BIN" ]; then
-    exec "$MISE_BIN" "$@"
-  fi
-fi
-exec x {{ . }} "$@"
-{{- endfile }}
-{{- end }}
-{{- end }}
+    {{- if $tool.Global }}
+        {{- $bins := $tool.Bins }}
+        {{- if eq (len $bins) 0 }}
+            {{- $binName := $tool.Alias }}
+            {{- if not $binName }}
+                {{- $parts := split $name ":" }}
+                {{- $binName = last $parts }}
+                {{- $parts = split $binName "/" }}
+                {{- $binName = last $parts }}
+            {{- end }}
+            {{- $bins = list $binName }}
+        {{- end }}
+        {{- range $bins }}
+            {{- file . "0755" }}
+                {{ shim "x" . }}
+            {{- endfile }}
+        {{- end }}
+    {{- end }}
 {{- end }}
