@@ -22,6 +22,14 @@ exec "$@"
 {{- range $bins }}
 {{- file . "0755" }}
 #!/usr/bin/env bash
+# If already inside mise, find the real binary instead of looping
+if [ -n "$__MISE_WATCH" ] || [ -n "$MISE_ORIGINAL_CWD" ]; then
+  # Inside mise exec, call binary directly from install dir
+  MISE_BIN=$(command -v -a {{ . }} | grep -v "$(dirname "$0")" | head -1)
+  if [ -n "$MISE_BIN" ]; then
+    exec "$MISE_BIN" "$@"
+  fi
+fi
 exec x {{ . }} "$@"
 {{- endfile }}
 {{- end }}
