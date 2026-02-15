@@ -1,10 +1,4 @@
-{{- file "mise" "0755" }}
-{{ shim "workspaced" "open" "mise" }}
-{{- endfile }}
 
-{{- file "workspaced" "0755" }}
-{{ shim (printf "%s/bin/workspaced" (userDataDir)) }}
-{{- endfile }}
 
 {{- /* Script x: adds lazy shims to PATH */ -}}
 {{- file "x" "0755" }}
