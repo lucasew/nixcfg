@@ -2,16 +2,31 @@
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-curl https://mise.run | sh
+VERSION=0.0.8
 
-. $SCRIPT_DIR/bin/source_me
+case "$(uname -s)" in
+    Linux*)     GOOS=linux ;;
+    Darwin*)    GOOS=darwin ;;
+    FreeBSD*)   GOOS=freebsd ;;
+    *)          GOOS=linux ;;
+esac
 
-mkdir -p ~/.local/share/workspaced/bin
+case "$(uname -m)" in
+    x86_64*)    GOARCH=amd64 ;;
+    arm64*)     GOARCH=arm64 ;;
+    *)          GOARCH=amd64 ;;
+esac
 
-(
-	cd "nix/pkgs/workspaced" || exit
-	$SCRIPT_DIR/bin/shim/mise exec -- $SCRIPT_DIR/bin/shim/workspaced
-) || exit 1
+TMP=$(mktemp -d)
+URL="https://github.com/lucasew/workspaced/releases/download/$VERSION/workspaced-$GOOS-$GOARCH"
+
+wget -O "$TMP/workspaced" "$URL"
+
+chmod +x $TMP/workspaced
+
+echo $URL
 
 
-~/.local/share/workspaced/bin/workspaced apply
+$TMP/workspaced self-install -f
+
+$TMP/workspaced apply
