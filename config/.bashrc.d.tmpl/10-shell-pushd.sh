@@ -11,9 +11,6 @@ function _conditional_pushd {
 	return 1
 }
 
-function dotfiles {
-	_conditional_pushd "$(sd d root)"
-}
 
 function nixpkgs {
 	_conditional_pushd nixpkgs ~/nixpkgs ~/WORKSPACE/OPENSOURCE-contrib/nixpkgs
