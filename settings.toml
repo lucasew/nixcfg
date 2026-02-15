@@ -127,6 +127,15 @@ enable = true
 [modules.base16-gtk]
 enable = true
 
+[modules.base16-rofi]
+enable = true
+
+[modules.base16-dunst]
+enable = true
+
+[modules.base16-tmux]
+enable = true
+
 [modules.script-directory]
 enable = true
 

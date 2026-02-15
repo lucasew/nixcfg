@@ -25,7 +25,6 @@ in
     ./nix-ld.nix
     ./nix-index-database.nix
     ./sops.nix
-    ./tmux
     ./tuning.nix
     ./unstore.nix
     ./workusers.nix

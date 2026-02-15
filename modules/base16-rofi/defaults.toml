@@ -1,0 +1,6 @@
+# Base16 Rofi Theme Module
+# Generates rofi theme based on base16 color palette
+
+[drivers."workspaced/pkg/driver/notification.Driver"]
+notification_dbus = 100
+notification_notify_send = 10
