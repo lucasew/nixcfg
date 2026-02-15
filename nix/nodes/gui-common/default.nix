@@ -31,7 +31,6 @@ in
   };
 
   environment.systemPackages = with pkgs; [
-    workspaced
     parallel
     paper-icon-theme
     p7zip

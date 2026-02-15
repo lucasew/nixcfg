@@ -53,7 +53,6 @@ in
   buildFHSUserEnv = prev.buildFHSEnv;
 
   personal-utils = cp ./pkgs/personal-utils.nix;
-  workspaced = cp ./pkgs/workspaced/default.nix;
   fhsctl = cp ./pkgs/fhsctl.nix;
   pkg = cp ./pkgs/pkg.nix;
   text2image = cp ./pkgs/text2image.nix;
