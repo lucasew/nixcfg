@@ -1,0 +1,6 @@
+# Base16 GTK Theme Module
+# Generates GTK 2/3/4 themes based on base16 color palette
+
+[drivers."workspaced/pkg/driver/notification.Driver"]
+notification_dbus = 100
+notification_notify_send = 10

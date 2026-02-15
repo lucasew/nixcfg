@@ -124,6 +124,9 @@ enable = true
 [modules.base16-sway]
 enable = true
 
+[modules.base16-gtk]
+enable = true
+
 [modules.script-directory]
 enable = true
 
