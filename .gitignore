@@ -6,3 +6,4 @@ out.nar
 *.fd
 __pycache__
 nix/pkgs/workspaced/workspaced_test
+workspaced
