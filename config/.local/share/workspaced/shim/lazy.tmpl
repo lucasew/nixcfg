@@ -13,8 +13,7 @@
 {{- end }}
 {{- range $bins }}
 {{- file . "0755" }}
-#!/usr/bin/env bash
-exec mise exec {{ $pkg }}@{{ $tool.Version }} -- {{ . }} "$@"
+{{ shim "mise" "exec" (printf "%s@%s" $pkg $tool.Version) "--" . }}
 {{- endfile }}
 {{- end }}
 {{- end }}
