@@ -8,9 +8,7 @@
 
 {{- /* Script x: adds lazy shims to PATH */ -}}
 {{- file "x" "0755" }}
-#!/usr/bin/env bash
-export PATH="{{ userDataDir }}/shim/lazy:$PATH"
-exec "$@"
+{{ shim "workspaced" "open" "exec" "-p" (printf "%s/shim/lazy" (userDataDir)) }}
 {{- endfile }}
 
 {{- /* Global shims for tools - skip mise and workspaced (handled above) */ -}}
