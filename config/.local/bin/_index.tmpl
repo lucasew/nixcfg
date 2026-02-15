@@ -1,6 +1,5 @@
-{{- /* Shims for mise and workspaced */ -}}
 {{- file "mise" "0755" }}
-{{ shim (printf "%s/bin/mise" (userDataDir)) }}
+{{ shim "workspaced" "open" "exec" (printf "%s/bin/mise" (userDataDir)) }}
 {{- endfile }}
 
 {{- file "workspaced" "0755" }}
