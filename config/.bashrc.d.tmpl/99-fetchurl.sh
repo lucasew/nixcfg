@@ -1,1 +1,1 @@
-export FETCHURL_SERVER=http://whiterun:38080
+export FETCHURL_SERVER='"http://whiterun:38080"'
