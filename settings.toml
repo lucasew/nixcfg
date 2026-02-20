@@ -136,6 +136,9 @@ enable = true
 [modules.base16-tmux]
 enable = true
 
+[modules.base16-opencode]
+enable = true
+
 [modules.script-directory]
 enable = true
 
