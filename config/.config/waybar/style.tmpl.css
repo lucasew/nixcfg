@@ -30,7 +30,7 @@ window {
     min-height: 32px;
 }
 #tray, #mode, #battery, #cpu, #memory, #network, #pulseaudio, #idle_inhibitor, #backlight, #custom-storage, #custom-updates, #custom-weather, #custom-mail, #clock, #temperature, #window {
-    background-color: @base00;
+    background-color: transparent;
     margin: 0;
     padding: 0;
     margin-left: 1rem;
@@ -49,17 +49,41 @@ window {
 
 
 #workspaces button {
-  padding: 0;
+  padding: 0 8px;
   margin: 0;
   color: @base04;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  text-shadow: none;
 }
 
-#workspaces button.focused, button.active {
+#workspaces button label {
+    background: none;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+#workspaces button:hover {
+    background: @base02;
+    color: @base05;
+}
+
+#workspaces button.visible {
+    background: @base02;
+    color: @base00;
+}
+
+#workspaces button.focused, 
+#workspaces button.active {
     font-weight: bolder;
     color: @base00;
-    background-color: @base04;
+    background: @base04;
 }
 
 #workspaces button.urgent {
-    background-color: @base08;
+    background: @base08;
+    color: @base00;
 }
