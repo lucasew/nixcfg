@@ -21,4 +21,4 @@
 - **NixOS Apply**: `sudo nixos-rebuild switch --flake .`
 - **Deploy**: `sd nix rrun .#deploy`
 - **Build**: `nix build .#nixosConfigurations.MACHINE.config.system.build.toplevel`
-- **Workspaced**: `workspaced apply` / `workspaced plan` / `workspaced doctor`
+- **Workspaced**: `workspaced home apply` / `workspaced home plan` / `workspaced driver doctor`

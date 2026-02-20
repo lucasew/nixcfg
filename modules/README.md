@@ -129,8 +129,8 @@ When converting a legacy config to a module:
 2. ✅ Move template from `config/` to `modules/{name}/home/`
 3. ✅ Remove old template from `config/`
 4. ✅ Add `[modules.{name}]` to `settings.toml`
-5. ✅ Test with `workspaced plan`
-6. ✅ Apply with `workspaced apply`
+5. ✅ Test with `workspaced home plan`
+6. ✅ Apply with `workspaced home apply`
 
 ## Existing Base16 Modules
 
