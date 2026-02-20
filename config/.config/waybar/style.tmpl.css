@@ -1,35 +1,37 @@
-@define-color base00 #{{ (index (index .Modules "base16") "base00") }};
-@define-color base01 #{{ (index (index .Modules "base16") "base01") }};
-@define-color base02 #{{ (index (index .Modules "base16") "base02") }};
-@define-color base03 #{{ (index (index .Modules "base16") "base03") }};
-@define-color base04 #{{ (index (index .Modules "base16") "base04") }};
-@define-color base05 #{{ (index (index .Modules "base16") "base05") }};
-@define-color base06 #{{ (index (index .Modules "base16") "base06") }};
-@define-color base07 #{{ (index (index .Modules "base16") "base07") }};
-@define-color base08 #{{ (index (index .Modules "base16") "base08") }};
-@define-color base09 #{{ (index (index .Modules "base16") "base09") }};
-@define-color base0A #{{ (index (index .Modules "base16") "base0A") }};
-@define-color base0B #{{ (index (index .Modules "base16") "base0B") }};
-@define-color base0C #{{ (index (index .Modules "base16") "base0C") }};
-@define-color base0D #{{ (index (index .Modules "base16") "base0D") }};
-@define-color base0E #{{ (index (index .Modules "base16") "base0E") }};
-@define-color base0F #{{ (index (index .Modules "base16") "base0F") }};
+@define-color base00 #{{ .Modules.base16.base00 }};
+@define-color base01 #{{ .Modules.base16.base01 }};
+@define-color base02 #{{ .Modules.base16.base02 }};
+@define-color base03 #{{ .Modules.base16.base03 }};
+@define-color base04 #{{ .Modules.base16.base04 }};
+@define-color base05 #{{ .Modules.base16.base05 }};
+@define-color base06 #{{ .Modules.base16.base06 }};
+@define-color base07 #{{ .Modules.base16.base07 }};
+@define-color base08 #{{ .Modules.base16.base08 }};
+@define-color base09 #{{ .Modules.base16.base09 }};
+@define-color base0A #{{ .Modules.base16.base0A }};
+@define-color base0B #{{ .Modules.base16.base0B }};
+@define-color base0C #{{ .Modules.base16.base0C }};
+@define-color base0D #{{ .Modules.base16.base0D }};
+@define-color base0E #{{ .Modules.base16.base0E }};
+@define-color base0F #{{ .Modules.base16.base0F }};
 
 * {
     font-family: "{{ .Modules.fontconfig.sans_serif }}", "{{ .Modules.fontconfig.emoji }}";
     font-weight: 300;
     font-size: 13px;
     min-height: 26px;
+    background-color: @base00;
+    color: @base05;
 }
+
 
 window {
     transition: none;
     box-shadow: none;
-    background-color: @base00;
-    color: @base04;
     min-height: 32px;
 }
-#tray, #mode, #battery, #cpu, #memory, #network, #pulseaudio, #idle_inhibitor, #backlight, #custom-storage, #custom-updates, #custom-weather, #custom-mail, #clock, #temperature, #window {
+
+#tray, #mode, #battery, #cpu, #memory, #network, #pulseaudio, #idle_inhibitor, #backlight, #custom-storage, #custom-updates, #custom-weather, #custom-mail, #clock, #temperature {
     background-color: transparent;
     margin: 0;
     padding: 0;
@@ -51,8 +53,6 @@ window {
 #workspaces button {
   padding: 0 8px;
   margin: 0;
-  color: @base04;
-  background: transparent;
   border: none;
   border-radius: 0;
   box-shadow: none;
@@ -76,7 +76,7 @@ window {
     color: @base00;
 }
 
-#workspaces button.focused, 
+#workspaces button.focused,
 #workspaces button.active {
     font-weight: bolder;
     color: @base00;
@@ -86,4 +86,8 @@ window {
 #workspaces button.urgent {
     background: @base08;
     color: @base00;
+}
+
+window#waybar {
+    background-color: #ff0000; /* Example: a dark gray hex color */
 }
