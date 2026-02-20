@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-exec workspaced dispatch backup sync
+exec workspaced utils backup sync

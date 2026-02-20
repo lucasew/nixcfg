@@ -5,5 +5,5 @@ out.nar
 .direnv
 *.fd
 __pycache__
-nix/pkgs/workspaced/workspaced_test
+workspaced/workspaced_test
 workspaced

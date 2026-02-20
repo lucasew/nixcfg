@@ -21,7 +21,7 @@ run = "command -v nix >/dev/null && nix --accept-flake-config --extra-experiment
 
 [tasks."test:go"]
 description = "Test Go code"
-dir = "nix/pkgs/workspaced"
+dir = "workspaced"
 run = "mise exec -- go test -p 2 ./..."
 
 [tasks.codegen]
@@ -30,7 +30,7 @@ depends = ["codegen:*"]
 
 [tasks."codegen:go"]
 description = "Tidy Go modules"
-dir = "nix/pkgs/workspaced"
+dir = "workspaced"
 run = "mise exec -- go mod tidy"
 
 [tasks.install]
@@ -39,7 +39,7 @@ depends = ["install:*"]
 
 [tasks."install:go"]
 description = "Install Go dependencies"
-dir = "nix/pkgs/workspaced"
+dir = "workspaced"
 run = "mise exec -- go mod download"
 
 [tasks."install:nix"]

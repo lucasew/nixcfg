@@ -86,10 +86,10 @@ in
       script = ''
         PATH=$PATH:/run/current-system/sw/bin
         exec swayidle -w -d \
-          timeout 300 'workspaced system power lock' \
-          timeout 10 'pgrep swaylock && workspaced system screen off' \
-          resume 'workspaced system screen on' \
-          before-sleep 'workspaced system power lock'
+          timeout 300 'workspaced driver power lock' \
+          timeout 10 'pgrep swaylock && workspaced driver screen off' \
+          resume 'workspaced driver screen on' \
+          before-sleep 'workspaced driver power lock'
       '';
     };
 

@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 ## Mandates
-- **Do NOT unify `mise.toml` files.** Keep them localized in `/`, `nix/pkgs/workspaced/`, and `infra/` to maintain context-specific tool versions and tasks.
+- **Do NOT unify `mise.toml` files.** Keep them localized in `/`, `workspaced/`, and `infra/` to maintain context-specific tool versions and tasks.
 - **Script usage**: Use `sdw` over `sd` to ensure the latest version from the dotfiles directory is used.
 
 ## Architecture
@@ -10,7 +10,7 @@
 - **Scripts**: Categorized in `bin/`. Env init: `source bin/source_me`.
 - **Secrets**: `sops-nix` managed in `nix/nodes/common/sops.nix`.
 - **Global Settings**: `flake.nix` contains `global` attr (user, email, IPs, DE).
-- **Workspaced**: User configs/dotfiles manager. See `nix/pkgs/workspaced/CLAUDE.md` for development docs.
+- **Workspaced**: User configs/dotfiles manager. See `workspaced/AGENTS.md` for development docs.
 
 ## Machine Context
 - **riverwood**: Laptop, Intel CPU/GPU, ext4, Sway/i3.

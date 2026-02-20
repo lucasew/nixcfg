@@ -106,10 +106,10 @@
         ''
           exec swayidle -w -d \
             idlehint 600 \
-            timeout 605 'workspaced system screen off' resume 'workspaced system screen on' \
-            lock 'workspaced system power lock' \
-            unlock 'workspaced system screen on' \
-            before-sleep 'workspaced media stop'
+            timeout 605 'workspaced driver screen off' resume 'workspaced driver screen on' \
+            lock 'workspaced driver power lock' \
+            unlock 'workspaced driver screen on' \
+            before-sleep 'workspaced driver media stop'
         '';
     };
 

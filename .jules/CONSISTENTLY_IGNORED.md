@@ -43,14 +43,3 @@ This file lists patterns of changes that have been consistently rejected by huma
 **- Files Affected:** `.github/workflows/*.yml`
 
 ---
-
-## IGNORE: Specific Sentinel Security Fixes
-
-**- Pattern:** Applying specific security fixes proposed by Sentinel, including:
-    1. Adding variable quoting to `bin/misc/clean-garbage-gcroots`.
-    2. Adding slug validation (`validateSlug`) to `pkg/sudo/sudo.go`.
-    3. Replacing shell execution with direct command execution in `pkg/wallpaper/wallpaper.go`.
-**- Justification:** These specific security hardenings have been consistently rejected, likely due to breaking existing functionality or user preference for simplicity.
-**- Files Affected:** `bin/misc/clean-garbage-gcroots`, `nix/pkgs/workspaced/pkg/sudo/sudo.go`, `nix/pkgs/workspaced/pkg/driver/wallpaper/wallpaper.go`
-
----
