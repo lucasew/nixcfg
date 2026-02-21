@@ -385,6 +385,10 @@ picture-options = "zoom"
 primary-color = "#ffffff"
 secondary-color = "#000000"
 
+[desktop.raw.dconf."org/gnome/desktop/interface"]
+gtk-theme = "adw-gtk3-dark"
+icon-theme = "Adwaita"
+
 [desktop.raw.dconf."org/gnome/desktop/input-sources"]
 current = "uint32 0"
 xkb-options = ["terminate:ctrl_alt_bksp"]
