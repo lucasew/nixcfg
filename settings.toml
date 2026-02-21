@@ -130,7 +130,7 @@ enable = true
 [modules.icons]
 enable = true
 from = "core:base16-icons-linux"
-input_dir = "/tmp/papirus-icon-theme-20250501/Papirus"
+input_dir = "papirus:Papirus"
 
 [modules.base16-rofi]
 enable = true

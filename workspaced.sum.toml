@@ -1,0 +1,5 @@
+[sources.papirus]
+provider = "github"
+repo = "PapirusDevelopmentTeam/papirus-icon-theme"
+url = "https://codeload.github.com/PapirusDevelopmentTeam/papirus-icon-theme/tar.gz/702499f331aa9c38309e1af99de4021013916297"
+hash = "65224305098d14f359c18c341bc09f7401cceee1cc6652f71a34991ea30cb17f"
