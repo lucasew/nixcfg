@@ -5,6 +5,10 @@
 if command -v workspaced >/dev/null 2>&1; then
 	# Start daemon if not already running
 	(workspaced daemon --try &) &>/dev/null
-	. <(workspaced completion bash)
+	__ws_completion="$(workspaced completion bash)" || __ws_completion=""
+	if [[ -n "$__ws_completion" ]]; then
+		eval "$__ws_completion"
+	fi
+	unset __ws_completion
 	# Colors are auto-applied from 40-ui-colors.sh.tmpl
 fi
