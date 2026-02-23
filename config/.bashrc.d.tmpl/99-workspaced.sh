@@ -10,5 +10,5 @@ if command -v workspaced >/dev/null 2>&1; then
 		eval "$__ws_completion"
 	fi
 	unset __ws_completion
-	# Colors are auto-applied from 40-ui-colors.sh.tmpl
+	# Colors are auto-applied from 00-ui-colors.sh.tmpl
 fi
