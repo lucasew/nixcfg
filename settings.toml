@@ -147,6 +147,9 @@ enable = true
 [modules.script-directory]
 enable = true
 
+[modules.mise]
+enable = true
+
 [modules.webapp.apps.castable-iframe]
 url = "https://castable-iframe.vercel.app/"
 profile = "castable-iframe"
