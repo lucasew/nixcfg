@@ -2,12 +2,14 @@
 
 {{- /* Script x: adds lazy shims to PATH */ -}}
 {{- file "x" "0755" }}
-{{ shim "workspaced" "open" "exec" "-p" (printf "%s/shim/lazy" (userDataDir)) }}
+#!/usr/bin/env bash
+exec "{{ home }}/.local/bin/workspaced" open exec -p "{{ userDataDir }}/shim/lazy" "$@"
 {{- endfile }}
 
 {{- /* Global shims for tools - skip mise and workspaced (handled above) */ -}}
 {{- range $name, $tool := .LazyTools }}
     {{- if $tool.Global }}
+        {{- $pkg := $tool.Pkg }}{{ if not $pkg }}{{ $pkg = $name }}{{ end }}
         {{- $bins := $tool.Bins }}
         {{- if eq (len $bins) 0 }}
             {{- $binName := $tool.Alias }}
@@ -21,7 +23,8 @@
         {{- end }}
         {{- range $bins }}
             {{- file . "0755" }}
-                {{ shim "x" . }}
+#!/usr/bin/env bash
+exec "{{ home }}/.local/bin/mise" exec "{{ printf "%s@%s" $pkg $tool.Version }}" -- "{{ home }}/.local/bin/x" "{{ . }}" "$@"
             {{- endfile }}
         {{- end }}
     {{- end }}
