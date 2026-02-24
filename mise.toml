@@ -1,55 +1,15 @@
 # Warning: Do not unify this file with others. Keep tool definitions localized.
-[tools]
-node = "25.4.0"
-trunk = "1.3.4"
-
 [tasks.lint]
 description = "Run all linters"
-run = "trunk check"
+run = "workspaced codebase lint"
 
 [tasks.fmt]
 description = "Format all files"
-run = "trunk fmt"
-
-[tasks.test]
-description = "Run tests"
-depends = ["test:*"]
-
-[tasks."test:nix"]
-description = "Test Nix configuration"
-run = "command -v nix >/dev/null && nix --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' flake check || echo 'Nix not found, skipping'"
-
-[tasks."test:go"]
-description = "Test Go code"
-dir = "workspaced"
-run = "mise exec -- go test -p 2 ./..."
-
-[tasks.codegen]
-description = "Generate code"
-depends = ["codegen:*"]
-
-[tasks."codegen:go"]
-description = "Tidy Go modules"
-dir = "workspaced"
-run = "mise exec -- go mod tidy"
-
-[tasks.install]
-description = "Install dependencies"
-depends = ["install:*"]
-
-[tasks."install:go"]
-description = "Install Go dependencies"
-dir = "workspaced"
-run = "mise exec -- go mod download"
-
-[tasks."install:nix"]
-description = "Install Nix dependencies"
-run = "echo 'Managed by Nix'"
-
-[tasks."install:tools"]
-description = "Install Mise tools"
-run = "mise install"
+run = "workspaced codebase format"
 
 [tasks.ci]
 description = "Run CI pipeline locally"
-depends = ["lint", "test"]
+depends = ["lint"]
+
+[tools]
+"github:lucasew/workspaced" = "0.1.3"
