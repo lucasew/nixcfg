@@ -279,22 +279,27 @@ global = true
 
 [lazy_tools."bun"]
 version = "1.3.8"
+bins = ["bun"]
 
 [lazy_tools."docker-compose"]
 version = "5.0.1"
 global = true
+bins = ["docker-compose"]
 
 [lazy_tools."fd"]
 version = "10.3.0"
 global = true
+bins = ["fd"]
 
 [lazy_tools."opencode"]
 version = "1.1.40"
 global = true
+bins = ["opencode"]
 
 [lazy_tools."rclone"]
 version = "1.72.1"
 global = true
+bins = ["rclone"]
 
 [lazy_tools."ripgrep"]
 version = "15.1.0"
@@ -308,29 +313,37 @@ bins = ["fzf", "fzf-tmux"]
 
 [lazy_tools."ruff"]
 version = "0.14.14"
+bins = ["ruff"]
 
 [lazy_tools."shfmt"]
 version = "3.12.0"
+bins = ["shfmt"]
 
 [lazy_tools."shellcheck"]
 version = "0.11.0"
+bins = ["shellcheck"]
 
 [lazy_tools."sops"]
 version = "3.11.0"
+bins = ["sops"]
 
 [lazy_tools."uv"]
 version = "0.9.28"
 global = true
+bins = ["uv", "uvx"]
 
 [lazy_tools."yt-dlp"]
 version = "2025.10.22"
 global = true
+bins = ["yt-dlp"]
 
 [lazy_tools."terraform"]
 version = "1.9.0"
+bins = ["terraform"]
 
 [lazy_tools."tflint"]
 version = "0.60.0"
+bins = ["tflint"]
 
 [lazy_tools."go"]
 version = "1.24.12"
@@ -338,6 +351,7 @@ bins = ["go", "gofmt"]
 
 [lazy_tools."golangci-lint"]
 version = "1.61.0"
+bins = ["golangci-lint"]
 
 [lazy_tools."github:docker/docker-language-server"]
 version = "0.20.1"
@@ -356,10 +370,12 @@ bins = ["hx"]
 [lazy_tools."github:valentjn/ltex-ls"]
 version = "16.0.0"
 global = true
+bins = ["ltex-ls"]
 
 [lazy_tools."npm:bash-language-server"]
 version = "5.6.0"
 global = true
+bins = ["bash-language-server"]
 
 [lazy_tools."npm:vscode-langservers-extracted"]
 version = "4.10.0"
@@ -372,10 +388,12 @@ bins = ["clang", "clang-cpp"]
 [lazy_tools."jless"]
 version = "0.9.0"
 global = true
+bins = ["jless"]
 
 [lazy_tools."gh"]
 version = "2.86.0"
 global = true
+bins = ["gh"]
 
 [lazy_tools."ast-grep"]
 version = "0.40.5"
