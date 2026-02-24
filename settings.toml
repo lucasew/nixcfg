@@ -379,6 +379,11 @@ version = "0.40.5"
 global = true
 bins = ["ast-grep", "sg"]
 
+[lazy_tools."github:boyter/scc"]
+version = "3.6.0"
+global = true
+bins = ["scc"]
+
 [drivers."workspaced/pkg/driver/terminal.Driver"]
 terminal_kitty = 100
 
