@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+set -e
+
+# --- Configurações e Defaults ---
+PREFIX="[EXP]"
+FOLDER="experiment-$(date +%s)"
+
+usage() {
+    echo "Uso: $0 <caminho_playground> <url_repo_engolido> [--prefix=VAL] [--folder=VAL]"
+    exit 1
+}
+
+# --- Check de Dependência ---
+if ! command -v uv &> /dev/null; then
+    echo "Erro: 'uv' não encontrado. Instale-o primeiro: curl -LsSf https://astral.sh/uv/install.sh | sh"
+    exit 1
+fi
+
+# --- Parsing de Argumentos ---
+if [ "$#" -lt 2 ]; then usage; fi
+
+PLAYGROUND_PATH=$(realpath "$1")
+TARGET_REPO_URL=$2
+shift 2
+
+for i in "$@"; do
+    case $i in
+        --prefix=*) PREFIX="${i#*=}"; shift ;;
+        --folder=*) FOLDER="${i#*=}"; shift ;;
+        *) echo "Opção desconhecida: $i"; usage ;;
+    esac
+done
+
+# --- Setup com mktemp ---
+RUN_DIR=$(mktemp -d -t assimilate-XXXXXX)
+TEMP_REPO="$RUN_DIR/repo-alvo"
+WORKTREE_PATH="$RUN_DIR/worktree"
+
+# Removemos o trap de RM aqui para você poder inspecionar a worktree se quiser
+# Mas vamos limpar o repo clonado que não serve pra mais nada depois do merge
+trap 'rm -rf "$TEMP_REPO"' EXIT
+
+echo "### 1. Clonando o 'Engolido' em $TEMP_REPO..."
+git clone "$TARGET_REPO_URL" "$TEMP_REPO"
+cd "$TEMP_REPO"
+
+echo "### 2. Recreando histórico via 'uv run git-filter-repo'..."
+# O uv run baixa o script e roda num ambiente isolado com as dependências necessárias
+uv run https://raw.githubusercontent.com/newren/git-filter-repo/main/git-filter-repo \
+    --to-subdirectory-filter "$FOLDER" \
+    --message-callback "return b'$PREFIX ' + message"
+
+echo "### 3. Preparando Worktree no Playground..."
+cd "$PLAYGROUND_PATH"
+BRANCH_NAME="assimilate/$FOLDER"
+git worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH"
+
+echo "### 4. Fusão Final..."
+cd "$WORKTREE_PATH"
+git remote add source-temp "$TEMP_REPO"
+git fetch source-temp
+
+SOURCE_BRANCH=$(git -C "$TEMP_REPO" symbolic-ref --short HEAD)
+
+git merge "source-temp/$SOURCE_BRANCH" \
+    --allow-unrelated-histories \
+    -m "$PREFIX: Assimilando $TARGET_REPO_URL em $FOLDER"
+
+git remote remove source-temp
+
+echo "--------------------------------------------------"
+echo "CONCLUÍDO COM SUCESSO"
+echo "Worktree ativa em: $WORKTREE_PATH"
+echo "Próximos passos:"
+echo "1. cd $WORKTREE_PATH"
+echo "2. Confira o 'git log'"
+echo "3. git push origin $BRANCH_NAME"
+echo "4. cd $PLAYGROUND_PATH && git worktree remove $WORKTREE_PATH"
+echo "--------------------------------------------------"
