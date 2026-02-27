@@ -127,11 +127,6 @@ enable = true
 [modules.base16-gtk]
 enable = true
 
-[modules.icons]
-enable = true
-from = "core:base16-icons-linux"
-input_dir = "papirus:Papirus"
-
 [modules.base16-rofi]
 enable = true
 
@@ -418,7 +413,6 @@ secondary-color = "#000000"
 
 [desktop.raw.dconf."org/gnome/desktop/interface"]
 gtk-theme = "adw-gtk3-dark"
-icon-theme = "workspaced-base16"
 
 [desktop.raw.dconf."org/gnome/desktop/input-sources"]
 current = "uint32 0"
