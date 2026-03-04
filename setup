@@ -1,32 +1,14 @@
 #!/usr/bin/env bash
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+cd "$SCRIPT_DIR"
 
-VERSION=$(curl -s https://api.github.com/repos/lucasew/workspaced/releases/latest | grep -oP '"tag_name":\s*"\K[^"]+')
+export DOWNLOAD_DIR="$(mktemp -d)"
 
-case "$(uname -s)" in
-    Linux*)     GOOS=linux ;;
-    Darwin*)    GOOS=darwin ;;
-    FreeBSD*)   GOOS=freebsd ;;
-    *)          GOOS=linux ;;
-esac
+curl -s https://raw.githubusercontent.com/lucasew/workspaced/refs/heads/master/setup > "$DOWNLOAD_DIR/setup"
+chmod +x "$DOWNLOAD_DIR/setup"
 
-case "$(uname -m)" in
-    x86_64*)    GOARCH=amd64 ;;
-    arm64*)     GOARCH=arm64 ;;
-    *)          GOARCH=amd64 ;;
-esac
-
-TMP=$(mktemp -d)
-URL="https://github.com/lucasew/workspaced/releases/download/$VERSION/workspaced-$GOOS-$GOARCH"
-
-curl -L -o "$TMP/workspaced" "$URL"
-
-chmod +x $TMP/workspaced
-
-echo $URL
+"$DOWNLOAD_DIR/setup" self-install -f
+"$DOWNLOAD_DIR/setup" home apply
 
 
-$TMP/workspaced self-install -f
-
-$TMP/workspaced home apply
