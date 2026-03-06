@@ -24,8 +24,6 @@ in
     ../../workspaced.nix
   ];
   config = lib.mkIf config.programs.sway.enable {
-    systemd.user.services.xss-lock.restartIfChanged = true;
-
     programs.ssh.startAgent = true;
 
     security.soteria.enable = true;
