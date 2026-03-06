@@ -51,7 +51,7 @@ jobs:
       - run: |
           { while true; do df -h; uptime; sleep 60; done } &
           nix build .#release --keep-going --accept-flake-config
-      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
           name: build-logs
           path: /nix/var/log/nix/drvs
