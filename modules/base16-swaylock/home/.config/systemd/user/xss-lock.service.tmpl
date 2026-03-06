@@ -5,7 +5,7 @@ After=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/run/current-system/sw/bin/xss-lock --transfer-sleep-lock -- /home/lucasew/.local/bin/lock-screen
+ExecStart=/run/current-system/sw/bin/xss-lock --session ${XDG_SESSION_ID} --transfer-sleep-lock -- /home/lucasew/.local/bin/lock-screen
 Restart=always
 RestartSec=1
 
