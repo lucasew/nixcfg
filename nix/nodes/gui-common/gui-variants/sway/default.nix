@@ -13,52 +13,11 @@ let
     type = "Application";
     exec = "sdw utils i3wm lock-screen";
   };
-  locker-params = let
-    dict-args =
-      with pkgs.custom.colors.colors; {
-
-        color = base00; # background
-
-        text-color = base05;
-        text-clear-color = base05;
-        text-caps-lock-color = base05;
-        text-ver-color = base05;
-        text-wrong-color = base05;
-        layout-text-color = base05;
-
-        ring-color = base01;
-        ring-clear-color = base0D;
-        ring-caps-lock-color = base0C;
-        ring-ver-color = base0A;
-        ring-wrong-color = base08;
-
-        key-hl-color = base06;
-        bs-hl-color = base08;
-
-        inside-color = "00000000";
-        inside-clear-color = "00000000";
-        inside-caps-lock-color = "00000000";
-        inside-ver-color = "00000000";
-        inside-wrong-color = "00000000";
-        line-color = "00000000";
-        line-clear-color = "00000000";
-        line-caps-lock-color = "00000000";
-        line-ver-color = "00000000";
-        line-wrong-color = "00000000";
-        layout-bg-color = "00000000";
-        layout-border-color = "00000000";
-      };
-
-    swaylock-list-args = lib.pipe dict-args [
-      (builtins.mapAttrs (k: v: ["--${k}" "${v}"]))
-      (builtins.attrValues)
-      (lib.flatten)
-    ];
-  in swaylock-list-args;
 in
 
 {
   imports = [
+    ./lockscreen.nix
     ../optional/flatpak.nix
     ../optional/kdeconnect-indicator.nix
     ../optional/dunst.nix
@@ -70,13 +29,6 @@ in
     programs.ssh.startAgent = true;
 
     security.soteria.enable = true;
-
-    programs.xss-lock = {
-      enable = true;
-      lockerCommand = lib.mkDefault ''
-        ${lib.getExe pkgs.swaylock} ${lib.escapeShellArgs locker-params}
-      '';
-    };
 
     # Swayidle for power management
     systemd.user.services.swayidle = {

@@ -1,0 +1,32 @@
+<<<WORKSPACED_FILE:.local/bin/lock-screen:0755>>>
+#!/usr/bin/env bash
+set -euo pipefail
+
+exec swaylock \
+  --color "{{ .Modules.base16.base00 }}" \
+  --text-color "{{ .Modules.base16.base05 }}" \
+  --text-clear-color "{{ .Modules.base16.base05 }}" \
+  --text-caps-lock-color "{{ .Modules.base16.base05 }}" \
+  --text-ver-color "{{ .Modules.base16.base05 }}" \
+  --text-wrong-color "{{ .Modules.base16.base05 }}" \
+  --layout-text-color "{{ .Modules.base16.base05 }}" \
+  --ring-color "{{ .Modules.base16.base01 }}" \
+  --ring-clear-color "{{ .Modules.base16.base0D }}" \
+  --ring-caps-lock-color "{{ .Modules.base16.base0C }}" \
+  --ring-ver-color "{{ .Modules.base16.base0A }}" \
+  --ring-wrong-color "{{ .Modules.base16.base08 }}" \
+  --key-hl-color "{{ .Modules.base16.base06 }}" \
+  --bs-hl-color "{{ .Modules.base16.base08 }}" \
+  --inside-color "00000000" \
+  --inside-clear-color "00000000" \
+  --inside-caps-lock-color "00000000" \
+  --inside-ver-color "00000000" \
+  --inside-wrong-color "00000000" \
+  --line-color "00000000" \
+  --line-clear-color "00000000" \
+  --line-caps-lock-color "00000000" \
+  --line-ver-color "00000000" \
+  --line-wrong-color "00000000" \
+  --layout-bg-color "00000000" \
+  --layout-border-color "00000000"
+<<<WORKSPACED_ENDFILE>>>

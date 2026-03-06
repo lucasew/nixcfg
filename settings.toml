@@ -139,6 +139,9 @@ enable = true
 [modules.base16-opencode]
 enable = true
 
+[modules.base16-swaylock]
+enable = true
+
 [modules.script-directory]
 enable = true
 
