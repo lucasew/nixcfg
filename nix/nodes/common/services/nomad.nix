@@ -19,9 +19,15 @@
         client = {
           enabled = true;
           network_interface = "tailscale0";
-          host_volume."consul-data" = {
-            path      = "/var/lib/nomad/consul";
-            read_only = false;
+          host_volume = {
+            "consul-data" = {
+              path      = "/var/lib/nomad/consul";
+              read_only = false;
+            };
+            "ollama-data" = {
+              path      = "/media/storage/OLLAMA";
+              read_only = false;
+            };
           };
           alloc_mounts_dir = "/var/lib/private/nomad/alloc_mounts";
           server_join = {
