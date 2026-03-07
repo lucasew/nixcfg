@@ -5,7 +5,6 @@
     services.nomad = {
       extraSettingsPlugins = [
         pkgs.nomad-driver-podman
-        pkgs.nomad-driver-nvidia
       ];
       dropPrivileges = false;
       settings = {
@@ -35,13 +34,6 @@
           {
             nomad-driver-podman = {
               config = {
-              };
-            };
-          }
-          {
-            nomad-device-nvidia = {
-              config = {
-                enabled = true;
               };
             };
           }
