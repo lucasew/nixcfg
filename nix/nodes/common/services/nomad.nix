@@ -32,6 +32,10 @@
               path = "/media/storage/SIDEPROJECTS/OUTLIER_DESKTOP";
               read_only = false;
             };
+            "csi-mounts" = {
+              path = "/var/lib/nomad/volumes";
+              read_only = false;
+            };
           };
           alloc_mounts_dir = "/var/lib/private/nomad/alloc_mounts";
           server_join = {
