@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/vscode/devcontainers/universal:linux@sha256:87508bfb3a85b7c13e45739b8fc2ea98a832f28500031d77e400eda8ccedd474
+FROM mcr.microsoft.com/vscode/devcontainers/universal:linux@sha256:5035562d736642e6d0382d4ef599d84d43f428609ae17fbe2e841b30451de0f7
 
 USER root
 
