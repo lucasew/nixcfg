@@ -49,3 +49,11 @@ This file lists patterns of changes that have been consistently rejected by huma
 **- Pattern:** Automated PRs bumping dependencies such as versions in `mise.toml` or modules in `go.mod`.
 **- Justification:** Automated dependency bumps are consistently autoclosed/rejected. Dependency updates should be handled manually or are not desired via automated PRs in this repository.
 **- Files Affected:** `mise.toml`, `nix/pkgs/workspaced/mise.toml`, `nix/pkgs/workspaced/go.mod`, `nix/pkgs/workspaced/go.sum`
+
+---
+
+## IGNORE: Massive Automated Formatting
+
+**- Pattern:** Submitting PRs that perform massive, unrequested codebase-wide formatting (e.g., reformatting Nix files, `mise.toml`, shell scripts) alongside unrelated functional changes.
+**- Justification:** Trojan Horse PRs hiding large formatting diffs obscure the actual changes and are consistently rejected. Formatting should only be done on touched lines.
+**- Files Affected:** `flake.nix`, `nix/**/*.nix`, `mise.toml`, `bin/hooks/reload-gtk-theme`
