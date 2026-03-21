@@ -9,8 +9,36 @@ run = "workspaced codebase format"
 
 [tasks.ci]
 description = "Run CI pipeline locally"
-depends = ["lint"]
+depends = ["lint", "test"]
 
 [tools]
 "github:lucasew/workspaced" = "0.2.1"
 sops = "3.11.0"
+
+[tasks.test]
+description = "Run all tests"
+depends = ["test:*"]
+
+[tasks.codegen]
+description = "Update generated code"
+depends = ["codegen:*"]
+
+[tasks.install]
+description = "Install dependencies"
+depends = ["install:*"]
+
+[tasks."test:fallback"]
+description = "Stub test task"
+run = "echo 'No tests configured yet'"
+
+[tasks."codegen:fallback"]
+description = "Stub codegen task"
+run = "echo 'No codegen configured yet'"
+
+[tasks."install:mise"]
+description = "Install mise tools"
+run = "mise install"
+
+[tasks."install:nix"]
+description = "Install Nix dependencies"
+run = "nix flake lock"
