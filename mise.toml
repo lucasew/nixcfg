@@ -9,7 +9,35 @@ run = "workspaced codebase format"
 
 [tasks.ci]
 description = "Run CI pipeline locally"
-depends = ["lint"]
+depends = ["lint", "test"]
+
+[tasks.install]
+description = "Install dependencies"
+depends = ["install:*"]
+
+[tasks."install:fallback"]
+description = "Fallback install task"
+run = "true"
+
+[tasks."install:tools"]
+description = "Install tools recursively"
+run = "[ -d nix/pkgs/workspaced ] && mise install -C nix/pkgs/workspaced || true; [ -d infra ] && mise install -C infra || true"
+
+[tasks.test]
+description = "Run tests"
+depends = ["test:*"]
+
+[tasks."test:fallback"]
+description = "Fallback test task"
+run = "true"
+
+[tasks.codegen]
+description = "Run codegen"
+depends = ["codegen:*"]
+
+[tasks."codegen:fallback"]
+description = "Fallback codegen task"
+run = "true"
 
 [tools]
 "github:lucasew/workspaced" = "0.2.1"
