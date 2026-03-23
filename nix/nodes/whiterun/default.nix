@@ -25,8 +25,6 @@ in
     ./zfs.nix
     # ./container-inet-rdp.nix
     ./container-nat.nix
-    ./rtorrent.nix
-    ./transmission.nix
   ];
 
 
@@ -96,11 +94,6 @@ in
   programs.sway.enable = true;
 
   services.hardware.openrgb.enable = true;
-
-  services.transmission.enable = true;
-
-  # services.rtorrent.enable = true;
-  # services.rtorrent.enableSandboxSample = true;
 
   programs.gamemode.enable = true;
 

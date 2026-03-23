@@ -30,7 +30,6 @@ in
           "docker"
           "video"
           "render"
-          "transmission"
           "ssh"
         ];
         initialPassword = "changeme";
