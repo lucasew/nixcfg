@@ -6,7 +6,6 @@
     ./telegram_sendmail.nix
     ./nomad.nix
     ./netusage
-    ./restic-server.nix
     ./python-microservices
     ./ts-proxy.nix
     ./ngircd.nix
