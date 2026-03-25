@@ -12,5 +12,5 @@ description = "Run CI pipeline locally"
 depends = ["lint"]
 
 [tools]
-"github:lucasew/workspaced" = "0.2.1"
+# "github:lucasew/workspaced" = "0.2.1"
 sops = "3.11.0"

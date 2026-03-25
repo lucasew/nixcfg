@@ -76,16 +76,29 @@ workspaced: {
 		webapp:  "brave"
 	}
 
-	inputs: self: {
-		from: "self"
+	inputs: {
+		self: {
+			from: "self"
+		}
+		papirus: {
+			from: "github:PapirusDevelopmentTeam/papirus-icon-theme"
+			version: "HEAD"
+		}
 	}
 
 	modules: {
-		fontconfig: {
-			input: "self"
-			path:  "modules/fontconfig"
+		icons: {
+			input: "core:base16-icons-linux"
+			enable: !workspaced.runtime.is_phone
 			config: {
-				enable:      true
+				input_dir: "papirus:Papirus"
+			}
+		}
+
+		fontconfig: {
+			input: "self:modules/fontconfig"
+			enable:      true
+			config: {
 				serif:       "Fira Code"
 				sans_serif:  "Fira Code"
 				monospace:   "Fira Code"
@@ -93,10 +106,9 @@ workspaced: {
 			}
 		}
 		webapp: {
-			input: "self"
-			path:  "modules/webapp"
+			input: "self:modules/webapp"
+			enable: true
 			config: {
-				enable: true
 				apps: {
 					"castable-iframe": {
 						url:     "https://castable-iframe.vercel.app/"
@@ -197,10 +209,9 @@ workspaced: {
 			}
 		}
 		base16: {
-			input: "self"
-			path:  "modules/base16"
+			input: "self:modules/base16"
+			enable: true
 			config: {
-				enable: true
 				base00: "282c34"
 				base01: "353b45"
 				base02: "3e4451"
@@ -219,17 +230,17 @@ workspaced: {
 				base0F: "be5046"
 			}
 		}
-		"base16-shell":   {input: "self", path: "modules/base16-shell", config: enable: true}
-		"base16-helix":   {input: "self", path: "modules/base16-helix", config: enable: true}
-		"base16-vscode":  {input: "self", path: "modules/base16-vscode", config: enable: true}
-		"base16-sway":    {input: "self", path: "modules/base16-sway", config: enable: true}
-		"base16-gtk":     {input: "self", path: "modules/base16-gtk", config: enable: true}
-		"base16-rofi":    {input: "self", path: "modules/base16-rofi", config: enable: true}
-		"base16-dunst":   {input: "self", path: "modules/base16-dunst", config: enable: true}
-		"base16-tmux":    {input: "self", path: "modules/base16-tmux", config: enable: true}
-		"base16-opencode": {input: "self", path: "modules/base16-opencode", config: enable: true}
-		"base16-swaylock": {input: "self", path: "modules/base16-swaylock", config: enable: true}
-		"script-directory": {input: "self", path: "modules/script-directory", config: enable: true}
-		mise: {input: "self", path: "modules/mise", config: enable: true}
+		"base16-shell":   {input: "self:modules/base16-shell", enable: true}
+		"base16-helix":   {input: "self:modules/base16-helix", enable: true}
+		"base16-vscode":  {input: "self:modules/base16-vscode", enable: true}
+		"base16-sway":    {input: "self:modules/base16-sway", enable: true}
+		"base16-gtk":     {input: "self:modules/base16-gtk", enable: true}
+		"base16-rofi":    {input: "self:modules/base16-rofi", enable: true}
+		"base16-dunst":   {input: "self:modules/base16-dunst", enable: true}
+		"base16-tmux":    {input: "self:modules/base16-tmux", enable: true}
+		"base16-opencode": {input: "self:modules/base16-opencode", enable: true}
+		"base16-swaylock": {input: "self:modules/base16-swaylock", enable: true}
+		"script-directory": {input: "self:modules/script-directory", enable: true}
+		mise: {input: "self:modules/mise", enable: true}
 	}
 }
