@@ -19,7 +19,7 @@ _workspaced="{{ home }}/.local/bin/workspaced"
 _tool_name="{{ $name }}"
 _bin_name="{{ . }}"
 
-exec "$_workspaced" open lazy --bin "$_bin_name" "$_tool_name" -- "$@"
+exec "$_workspaced" open lazy --home --bin "$_bin_name" "$_tool_name" -- "$@"
 {{- endfile }}
 {{- end }}
 {{- end }}
