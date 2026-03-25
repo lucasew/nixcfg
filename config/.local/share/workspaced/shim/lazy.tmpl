@@ -1,6 +1,4 @@
 {{- range $name, $tool := .LazyTools }}
-{{- $pkg := $tool.Pkg }}{{ if not $pkg }}{{ $pkg = $name }}{{ end }}
-{{- $spec := printf "%s@%s" $pkg $tool.Version }}
 {{- $bins := $tool.Bins }}
 {{- if eq (len $bins) 0 }}
   {{- $binName := $tool.Alias }}
@@ -17,17 +15,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-_mise="{{ home }}/.local/bin/mise"
-_spec="{{ $spec }}"
+_workspaced="{{ home }}/.local/bin/workspaced"
+_tool_name="{{ $name }}"
 _bin_name="{{ . }}"
-_bin_path="$("$_mise" which "$_bin_name" --tool "$_spec" 2>/dev/null || true)"
 
-if [ -z "$_bin_path" ]; then
-  "$_mise" install "$_spec"
-  _bin_path="$("$_mise" which "$_bin_name" --tool "$_spec")"
-fi
-
-exec "$_mise" exec "$_spec" -- "$_bin_path" "$@"
+exec "$_workspaced" open lazy --bin "$_bin_name" "$_tool_name" -- "$@"
 {{- endfile }}
 {{- end }}
 {{- end }}
