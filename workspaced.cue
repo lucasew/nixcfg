@@ -76,6 +76,152 @@ workspaced: {
 		webapp:  "brave"
 	}
 
+
+	lazy_tools: {
+		"github:zed-industries/zed": {
+			version: "0.222.4"
+			bins: ["zed"]
+		}
+		codex: {
+			version: "0.104.0"
+			bins: ["codex"]
+			global: true
+		}
+		bun: {
+			version: "1.3.8"
+			bins: ["bun"]
+		}
+		"docker-compose": {
+			version: "5.0.1"
+			global: true
+			bins: ["docker-compose"]
+		}
+		fd: {
+			version: "10.3.0"
+			global: true
+			bins: ["fd"]
+		}
+		opencode: {
+			version: "1.1.40"
+			global: true
+			bins: ["opencode"]
+		}
+		rclone: {
+			version: "1.72.1"
+			global: true
+			bins: ["rclone"]
+		}
+		ripgrep: {
+			version: "15.1.0"
+			global: true
+			bins: ["rg"]
+		}
+		fzf: {
+			version: "0.67.0"
+			global: true
+			bins: ["fzf", "fzf-tmux"]
+		}
+		ruff: {
+			version: "0.14.14"
+			bins: ["ruff"]
+		}
+		shfmt: {
+			version: "3.12.0"
+			bins: ["shfmt"]
+		}
+		shellcheck: {
+			version: "0.11.0"
+			bins: ["shellcheck"]
+		}
+		sops: {
+			version: "3.11.0"
+			bins: ["sops"]
+		}
+		uv: {
+			version: "0.9.28"
+			global: true
+			bins: ["uv", "uvx"]
+		}
+		"yt-dlp": {
+			version: "2025.10.22"
+			global: true
+			bins: ["yt-dlp"]
+		}
+		terraform: {
+			version: "1.9.0"
+			bins: ["terraform"]
+		}
+		tflint: {
+			version: "0.60.0"
+			bins: ["tflint"]
+		}
+		go: {
+			version: "1.24.12"
+			bins: ["go", "gofmt"]
+		}
+		"golangci-lint": {
+			version: "1.61.0"
+			bins: ["golangci-lint"]
+		}
+		"github:docker/docker-language-server": {
+			version: "0.20.1"
+			global: true
+			bins: ["docker-langserver"]
+		}
+		"github:ffbinaries/ffbinaries-prebuilt": {
+			version: "6.1"
+			bins: ["ffmpeg", "ffprobe"]
+		}
+		"github:helix-editor/helix": {
+			version: "25.07.1"
+			global: true
+			bins: ["hx"]
+		}
+		"github:valentjn/ltex-ls": {
+			version: "16.0.0"
+			global: true
+			bins: ["ltex-ls"]
+		}
+		"npm:bash-language-server": {
+			version: "5.6.0"
+			global: true
+			bins: ["bash-language-server"]
+		}
+		"npm:vscode-langservers-extracted": {
+			version: "4.10.0"
+			bins: [
+				"vscode-html-language-server",
+				"vscode-css-language-server",
+				"vscode-json-language-server",
+				"vscode-eslint-language-server",
+			]
+		}
+		"vfox:clang": {
+			version: "18.1.8"
+			bins: ["clang", "clang-cpp"]
+		}
+		jless: {
+			version: "0.9.0"
+			global: true
+			bins: ["jless"]
+		}
+		gh: {
+			version: "2.86.0"
+			global: true
+			bins: ["gh"]
+		}
+		"ast-grep": {
+			version: "0.40.5"
+			global: true
+			bins: ["ast-grep", "sg"]
+		}
+		"github:boyter/scc": {
+			version: "3.6.0"
+			global: true
+			bins: ["scc"]
+		}
+	}
+
 	inputs: {
 		self: {
 			from: "self"
