@@ -1,7 +1,0 @@
-[drivers."workspaced/pkg/driver/notification.Driver"]
-notification_dbus = 100
-notification_notify_send = 10
-
-[drivers."workspaced/pkg/driver/dialog.Chooser"]
-rofi = 100
-terminal = 50

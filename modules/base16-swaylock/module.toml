@@ -1,3 +1,0 @@
-[module]
-name = "base16-swaylock"
-requires = ["base16"]
