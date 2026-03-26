@@ -43,16 +43,16 @@ context="ctrl+shift+period"
 history="ctrl+grave"
 
 [urgency_critical]
-background="#{{ (index (index .Modules "base16") "base08") }}"
-foreground="#{{ (index (index .Modules "base16") "base06") }}"
+background="#{{ .root.modules.base16.config.base08 }}"
+foreground="#{{ .root.modules.base16.config.base06 }}"
 timeout=10
 
 [urgency_low]
-background="#{{ (index (index .Modules "base16") "base01") }}"
-foreground="#{{ (index (index .Modules "base16") "base03") }}"
+background="#{{ .root.modules.base16.config.base01 }}"
+foreground="#{{ .root.modules.base16.config.base03 }}"
 timeout=5
 
 [urgency_normal]
-background="#{{ (index (index .Modules "base16") "base02") }}"
-foreground="#{{ (index (index .Modules "base16") "base05") }}"
+background="#{{ .root.modules.base16.config.base02 }}"
+foreground="#{{ .root.modules.base16.config.base05 }}"
 timeout=10

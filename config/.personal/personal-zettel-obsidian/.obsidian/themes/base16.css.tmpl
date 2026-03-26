@@ -1,99 +1,99 @@
 /* Base16 Default Dark Theme for Obsidian */
 /* Color Palette:
- * color0: #{{ (index (index .Modules "base16") "base00") }} - Background
- * color1: #{{ (index (index .Modules "base16") "base08") }} - Red
- * color2: #{{ (index (index .Modules "base16") "base0B") }} - Green
- * color3: #{{ (index (index .Modules "base16") "base0A") }} - Yellow
- * color4: #{{ (index (index .Modules "base16") "base0D") }} - Blue
- * color5: #{{ (index (index .Modules "base16") "base0E") }} - Magenta
- * color6: #{{ (index (index .Modules "base16") "base0C") }} - Cyan
- * color7: #{{ (index (index .Modules "base16") "base05") }} - Foreground
+ * color0: #{{ .root.modules.base16.config.base00 }} - Background
+ * color1: #{{ .root.modules.base16.config.base08 }} - Red
+ * color2: #{{ .root.modules.base16.config.base0B }} - Green
+ * color3: #{{ .root.modules.base16.config.base0A }} - Yellow
+ * color4: #{{ .root.modules.base16.config.base0D }} - Blue
+ * color5: #{{ .root.modules.base16.config.base0E }} - Magenta
+ * color6: #{{ .root.modules.base16.config.base0C }} - Cyan
+ * color7: #{{ .root.modules.base16.config.base05 }} - Foreground
  */
 
 .theme-dark {
   /* Base colors */
-  --background-primary: #{{ (index (index .Modules "base16") "base00") }};
-  --background-primary-alt: #{{ (index (index .Modules "base16") "base00") }};
-  --background-secondary: #{{ (index (index .Modules "base16") "base00") }};
-  --background-secondary-alt: #{{ (index (index .Modules "base16") "base00") }};
-  --background-modifier-border: #{{ (index (index .Modules "base16") "base02") }};
-  --background-modifier-form-field: #{{ (index (index .Modules "base16") "base00") }};
-  --background-modifier-form-field-highlighted: #{{ (index (index .Modules "base16") "base00") }};
+  --background-primary: #{{ .root.modules.base16.config.base00 }};
+  --background-primary-alt: #{{ .root.modules.base16.config.base00 }};
+  --background-secondary: #{{ .root.modules.base16.config.base00 }};
+  --background-secondary-alt: #{{ .root.modules.base16.config.base00 }};
+  --background-modifier-border: #{{ .root.modules.base16.config.base02 }};
+  --background-modifier-form-field: #{{ .root.modules.base16.config.base00 }};
+  --background-modifier-form-field-highlighted: #{{ .root.modules.base16.config.base00 }};
   --background-modifier-box-shadow: none;
-  --background-modifier-success: #{{ (index (index .Modules "base16") "base0B") }};
-  --background-modifier-error: #{{ (index (index .Modules "base16") "base08") }};
+  --background-modifier-success: #{{ .root.modules.base16.config.base0B }};
+  --background-modifier-error: #{{ .root.modules.base16.config.base08 }};
   --background-modifier-error-rgb: 171, 70, 66;
-  --background-modifier-error-hover: #{{ (index (index .Modules "base16") "base08") }};
+  --background-modifier-error-hover: #{{ .root.modules.base16.config.base08 }};
   --background-modifier-cover: rgba(24, 24, 24, 0.8);
 
   /* Text colors */
-  --text-normal: #{{ (index (index .Modules "base16") "base05") }};
-  --text-muted: #{{ (index (index .Modules "base16") "base04") }};
-  --text-faint: #{{ (index (index .Modules "base16") "base03") }};
-  --text-error: #{{ (index (index .Modules "base16") "base08") }};
-  --text-accent: #{{ (index (index .Modules "base16") "base0D") }};
-  --text-accent-hover: #{{ (index (index .Modules "base16") "base0C") }};
-  --text-on-accent: #{{ (index (index .Modules "base16") "base00") }};
+  --text-normal: #{{ .root.modules.base16.config.base05 }};
+  --text-muted: #{{ .root.modules.base16.config.base04 }};
+  --text-faint: #{{ .root.modules.base16.config.base03 }};
+  --text-error: #{{ .root.modules.base16.config.base08 }};
+  --text-accent: #{{ .root.modules.base16.config.base0D }};
+  --text-accent-hover: #{{ .root.modules.base16.config.base0C }};
+  --text-on-accent: #{{ .root.modules.base16.config.base00 }};
   --text-selection: rgba(124, 175, 194, 0.3);
 
   /* Interactive elements */
-  --interactive-normal: #{{ (index (index .Modules "base16") "base01") }};
-  --interactive-hover: #{{ (index (index .Modules "base16") "base02") }};
-  --interactive-accent: #{{ (index (index .Modules "base16") "base0D") }};
-  --interactive-accent-hover: #{{ (index (index .Modules "base16") "base0C") }};
+  --interactive-normal: #{{ .root.modules.base16.config.base01 }};
+  --interactive-hover: #{{ .root.modules.base16.config.base02 }};
+  --interactive-accent: #{{ .root.modules.base16.config.base0D }};
+  --interactive-accent-hover: #{{ .root.modules.base16.config.base0C }};
   --interactive-accent-rgb: 124, 175, 194;
-  --interactive-success: #{{ (index (index .Modules "base16") "base0B") }};
+  --interactive-success: #{{ .root.modules.base16.config.base0B }};
 
   /* Scrollbar */
-  --scrollbar-bg: #{{ (index (index .Modules "base16") "base00") }};
-  --scrollbar-thumb-bg: #{{ (index (index .Modules "base16") "base02") }};
-  --scrollbar-active-thumb-bg: #{{ (index (index .Modules "base16") "base03") }};
+  --scrollbar-bg: #{{ .root.modules.base16.config.base00 }};
+  --scrollbar-thumb-bg: #{{ .root.modules.base16.config.base02 }};
+  --scrollbar-active-thumb-bg: #{{ .root.modules.base16.config.base03 }};
 
   /* Syntax highlighting */
-  --code-normal: #{{ (index (index .Modules "base16") "base05") }};
-  --code-background: #{{ (index (index .Modules "base16") "base01") }};
-  --code-comment: #{{ (index (index .Modules "base16") "base03") }};
-  --code-function: #{{ (index (index .Modules "base16") "base0D") }};
-  --code-keyword: #{{ (index (index .Modules "base16") "base0E") }};
-  --code-string: #{{ (index (index .Modules "base16") "base0B") }};
-  --code-tag: #{{ (index (index .Modules "base16") "base08") }};
-  --code-important: #{{ (index (index .Modules "base16") "base0A") }};
-  --code-operator: #{{ (index (index .Modules "base16") "base0C") }};
-  --code-property: #{{ (index (index .Modules "base16") "base0A") }};
-  --code-punctuation: #{{ (index (index .Modules "base16") "base05") }};
-  --code-value: #{{ (index (index .Modules "base16") "base0A") }};
+  --code-normal: #{{ .root.modules.base16.config.base05 }};
+  --code-background: #{{ .root.modules.base16.config.base01 }};
+  --code-comment: #{{ .root.modules.base16.config.base03 }};
+  --code-function: #{{ .root.modules.base16.config.base0D }};
+  --code-keyword: #{{ .root.modules.base16.config.base0E }};
+  --code-string: #{{ .root.modules.base16.config.base0B }};
+  --code-tag: #{{ .root.modules.base16.config.base08 }};
+  --code-important: #{{ .root.modules.base16.config.base0A }};
+  --code-operator: #{{ .root.modules.base16.config.base0C }};
+  --code-property: #{{ .root.modules.base16.config.base0A }};
+  --code-punctuation: #{{ .root.modules.base16.config.base05 }};
+  --code-value: #{{ .root.modules.base16.config.base0A }};
 
   /* Headings */
-  --heading-color: #{{ (index (index .Modules "base16") "base05") }};
-  --inline-title-color: #{{ (index (index .Modules "base16") "base05") }};
+  --heading-color: #{{ .root.modules.base16.config.base05 }};
+  --inline-title-color: #{{ .root.modules.base16.config.base05 }};
 
   /* Links */
-  --link-internal-color: #{{ (index (index .Modules "base16") "base0D") }};
-  --link-internal-hover: #{{ (index (index .Modules "base16") "base0C") }};
-  --link-external-color: #{{ (index (index .Modules "base16") "base0E") }};
-  --link-color: #{{ (index (index .Modules "base16") "base0D") }};
-  --link-color-hover: #{{ (index (index .Modules "base16") "base0C") }};
-  --link-unresolved-color: #{{ (index (index .Modules "base16") "base04") }};
+  --link-internal-color: #{{ .root.modules.base16.config.base0D }};
+  --link-internal-hover: #{{ .root.modules.base16.config.base0C }};
+  --link-external-color: #{{ .root.modules.base16.config.base0E }};
+  --link-color: #{{ .root.modules.base16.config.base0D }};
+  --link-color-hover: #{{ .root.modules.base16.config.base0C }};
+  --link-unresolved-color: #{{ .root.modules.base16.config.base04 }};
 
   /* Text formatting */
-  --bold-color: #{{ (index (index .Modules "base16") "base08") }};
-  --italic-color: #{{ (index (index .Modules "base16") "base0B") }};
-  --inline-code-color: #{{ (index (index .Modules "base16") "base09") }};
+  --bold-color: #{{ .root.modules.base16.config.base08 }};
+  --italic-color: #{{ .root.modules.base16.config.base0B }};
+  --inline-code-color: #{{ .root.modules.base16.config.base09 }};
 
   /* Tags */
-  --tag-color: #{{ (index (index .Modules "base16") "base0D") }};
+  --tag-color: #{{ .root.modules.base16.config.base0D }};
   --tag-background: rgba(124, 175, 194, 0.05);
 
   /* Graphs */
-  --graph-line: #{{ (index (index .Modules "base16") "base02") }};
-  --graph-node: #{{ (index (index .Modules "base16") "base0D") }};
-  --graph-node-unresolved: #{{ (index (index .Modules "base16") "base03") }};
-  --graph-node-tag: #{{ (index (index .Modules "base16") "base0B") }};
-  --graph-node-attachment: #{{ (index (index .Modules "base16") "base0A") }};
+  --graph-line: #{{ .root.modules.base16.config.base02 }};
+  --graph-node: #{{ .root.modules.base16.config.base0D }};
+  --graph-node-unresolved: #{{ .root.modules.base16.config.base03 }};
+  --graph-node-tag: #{{ .root.modules.base16.config.base0B }};
+  --graph-node-attachment: #{{ .root.modules.base16.config.base0A }};
 
   /* Borders */
-  --divider-color: #{{ (index (index .Modules "base16") "base02") }};
-  --divider-color-hover: #{{ (index (index .Modules "base16") "base03") }};
+  --divider-color: #{{ .root.modules.base16.config.base02 }};
+  --divider-color-hover: #{{ .root.modules.base16.config.base03 }};
 
   /* Tables */
   --table-header-background: transparent;
@@ -102,65 +102,65 @@
   --table-row-alt-background: transparent;
 
   /* Checkboxes */
-  --checkbox-color: #{{ (index (index .Modules "base16") "base0D") }};
-  --checkbox-color-hover: #{{ (index (index .Modules "base16") "base0C") }};
-  --checkbox-border-color: #{{ (index (index .Modules "base16") "base03") }};
+  --checkbox-color: #{{ .root.modules.base16.config.base0D }};
+  --checkbox-color-hover: #{{ .root.modules.base16.config.base0C }};
+  --checkbox-border-color: #{{ .root.modules.base16.config.base03 }};
 
   /* Toggles */
-  --toggle-thumb-color: #{{ (index (index .Modules "base16") "base05") }};
-  --toggle-border-color: #{{ (index (index .Modules "base16") "base02") }};
+  --toggle-thumb-color: #{{ .root.modules.base16.config.base05 }};
+  --toggle-border-color: #{{ .root.modules.base16.config.base02 }};
 
   /* Vim mode cursor */
-  --vim-cursor: #{{ (index (index .Modules "base16") "base0D") }};
+  --vim-cursor: #{{ .root.modules.base16.config.base0D }};
 
   /* Prompts */
-  --prompt-border-color: #{{ (index (index .Modules "base16") "base02") }};
+  --prompt-border-color: #{{ .root.modules.base16.config.base02 }};
 
   /* File colors */
-  --color-red: #{{ (index (index .Modules "base16") "base08") }};
-  --color-orange: #{{ (index (index .Modules "base16") "base09") }};
-  --color-yellow: #{{ (index (index .Modules "base16") "base0A") }};
-  --color-green: #{{ (index (index .Modules "base16") "base0B") }};
-  --color-cyan: #{{ (index (index .Modules "base16") "base0C") }};
-  --color-blue: #{{ (index (index .Modules "base16") "base0D") }};
-  --color-purple: #{{ (index (index .Modules "base16") "base0E") }};
-  --color-pink: #{{ (index (index .Modules "base16") "base0E") }};
+  --color-red: #{{ .root.modules.base16.config.base08 }};
+  --color-orange: #{{ .root.modules.base16.config.base09 }};
+  --color-yellow: #{{ .root.modules.base16.config.base0A }};
+  --color-green: #{{ .root.modules.base16.config.base0B }};
+  --color-cyan: #{{ .root.modules.base16.config.base0C }};
+  --color-blue: #{{ .root.modules.base16.config.base0D }};
+  --color-purple: #{{ .root.modules.base16.config.base0E }};
+  --color-pink: #{{ .root.modules.base16.config.base0E }};
 
   /* Ribbons */
-  --ribbon-background: #{{ (index (index .Modules "base16") "base01") }};
-  --ribbon-background-collapsed: #{{ (index (index .Modules "base16") "base00") }};
+  --ribbon-background: #{{ .root.modules.base16.config.base01 }};
+  --ribbon-background-collapsed: #{{ .root.modules.base16.config.base00 }};
 
   /* Titlebar */
-  --titlebar-background: #{{ (index (index .Modules "base16") "base00") }};
+  --titlebar-background: #{{ .root.modules.base16.config.base00 }};
   --titlebar-background-focused: var(--titlebar-background);
 
   /* Tabs */
-  --tab-text-color: #{{ (index (index .Modules "base16") "base04") }};
-  --tab-text-color-focused: #{{ (index (index .Modules "base16") "base05") }};
-  --tab-text-color-active: #{{ (index (index .Modules "base16") "base05") }};
-  --tab-background-active: #{{ (index (index .Modules "base16") "base01") }};
+  --tab-text-color: #{{ .root.modules.base16.config.base04 }};
+  --tab-text-color-focused: #{{ .root.modules.base16.config.base05 }};
+  --tab-text-color-active: #{{ .root.modules.base16.config.base05 }};
+  --tab-background-active: #{{ .root.modules.base16.config.base01 }};
 
   /* Status bar */
-  --status-bar-background: #{{ (index (index .Modules "base16") "base00") }};
-  --status-bar-border-color: #{{ (index (index .Modules "base16") "base02") }};
+  --status-bar-background: #{{ .root.modules.base16.config.base00 }};
+  --status-bar-border-color: #{{ .root.modules.base16.config.base02 }};
 
   /* Search */
-  --search-clear-button-color: #{{ (index (index .Modules "base16") "base04") }};
+  --search-clear-button-color: #{{ .root.modules.base16.config.base04 }};
 
   /* Misc */
   --list-indent: 1.6em;
 }
 
 .is-mobile.theme-dark {
-  --background-primary: #{{ (index (index .Modules "base16") "base00") }} !important;
-  --background-secondary: #{{ (index (index .Modules "base16") "base00") }} !important;
+  --background-primary: #{{ .root.modules.base16.config.base00 }} !important;
+  --background-secondary: #{{ .root.modules.base16.config.base00 }} !important;
 }
 
 /* Clean code blocks */
 .theme-dark .markdown-preview-view pre,
 .theme-dark .markdown-rendered pre {
   background-color: #1a1a1a;
-  border: 1px solid #{{ (index (index .Modules "base16") "base01") }};
+  border: 1px solid #{{ .root.modules.base16.config.base01 }};
   border-radius: 2px;
   padding: 12px;
 }
@@ -293,7 +293,7 @@
 
 /* Blockquotes */
 .theme-dark .markdown-preview-view blockquote {
-  border-left: 3px solid #{{ (index (index .Modules "base16") "base03") }};
+  border-left: 3px solid #{{ .root.modules.base16.config.base03 }};
   background: transparent;
   padding-left: 16px;
   margin: 12px 0;
@@ -356,7 +356,7 @@
 
 /* Horizontal rules */
 .theme-dark hr {
-  border-color: #{{ (index (index .Modules "base16") "base02") }};
+  border-color: #{{ .root.modules.base16.config.base02 }};
 }
 
 /* Selection */
@@ -371,17 +371,17 @@
 }
 
 .theme-dark ::-webkit-scrollbar-track {
-  background: #{{ (index (index .Modules "base16") "base00") }};
+  background: #{{ .root.modules.base16.config.base00 }};
 }
 
 .theme-dark ::-webkit-scrollbar-thumb {
-  background: #{{ (index (index .Modules "base16") "base02") }};
+  background: #{{ .root.modules.base16.config.base02 }};
   border-radius: 5px;
   transition: background 0.1s ease;
 }
 
 .theme-dark ::-webkit-scrollbar-thumb:hover {
-  background: #{{ (index (index .Modules "base16") "base03") }};
+  background: #{{ .root.modules.base16.config.base03 }};
 }
 
 /* Ribbon menu */
@@ -393,7 +393,7 @@
 .theme-dark .callout {
   background: transparent;
   border: none;
-  border-left: 2px solid var(--callout-color, #{{ (index (index .Modules "base16") "base02") }});
+  border-left: 2px solid var(--callout-color, #{{ .root.modules.base16.config.base02 }});
   border-radius: 0;
   box-shadow: none;
   padding: 4px 12px;
@@ -1823,8 +1823,8 @@ body:not(.normal-header-bar) #cMenuToolbarModalBar.top {
 .theme-dark .markdown-preview-view th,
 .theme-dark .markdown-rendered th {
   background: transparent;
-  border: 1px solid #{{ (index (index .Modules "base16") "base02") }};
-  border-bottom: 2px solid #{{ (index (index .Modules "base16") "base03") }};
+  border: 1px solid #{{ .root.modules.base16.config.base02 }};
+  border-bottom: 2px solid #{{ .root.modules.base16.config.base03 }};
   padding: 6px 12px;
   text-align: left;
   font-weight: 700;
@@ -1865,7 +1865,7 @@ body:not(.normal-header-bar) #cMenuToolbarModalBar.top {
 /* Display math (block formulas) */
 .theme-dark .math.math-block {
   border: none;
-  border-left: 2px solid #{{ (index (index .Modules "base16") "base02") }};
+  border-left: 2px solid #{{ .root.modules.base16.config.base02 }};
   background: transparent;
   padding: 12px 0;
   margin: 16px 0;

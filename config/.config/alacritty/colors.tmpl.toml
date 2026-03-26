@@ -1,29 +1,29 @@
 # Auto-generated from template by workspaced
 
 [colors.primary]
-background = "#{{ (index (index .Modules "base16") "base00") }}"
-foreground = "#{{ (index (index .Modules "base16") "base05") }}"
+background = "#{{ .root.modules.base16.config.base00 }}"
+foreground = "#{{ .root.modules.base16.config.base05 }}"
 
 [colors.cursor]
-text   = "#{{ (index (index .Modules "base16") "base00") }}"
-cursor = "#{{ (index (index .Modules "base16") "base05") }}"
+text   = "#{{ .root.modules.base16.config.base00 }}"
+cursor = "#{{ .root.modules.base16.config.base05 }}"
 
 [colors.normal]
-black   = "#{{ (index (index .Modules "base16") "base00") }}"
-red     = "#{{ (index (index .Modules "base16") "base08") }}"
-green   = "#{{ (index (index .Modules "base16") "base0B") }}"
-yellow  = "#{{ (index (index .Modules "base16") "base0A") }}"
-blue    = "#{{ (index (index .Modules "base16") "base0D") }}"
-magenta = "#{{ (index (index .Modules "base16") "base0E") }}"
-cyan    = "#{{ (index (index .Modules "base16") "base0C") }}"
-white   = "#{{ (index (index .Modules "base16") "base05") }}"
+black   = "#{{ .root.modules.base16.config.base00 }}"
+red     = "#{{ .root.modules.base16.config.base08 }}"
+green   = "#{{ .root.modules.base16.config.base0B }}"
+yellow  = "#{{ .root.modules.base16.config.base0A }}"
+blue    = "#{{ .root.modules.base16.config.base0D }}"
+magenta = "#{{ .root.modules.base16.config.base0E }}"
+cyan    = "#{{ .root.modules.base16.config.base0C }}"
+white   = "#{{ .root.modules.base16.config.base05 }}"
 
 [colors.bright]
-black   = "#{{ (index (index .Modules "base16") "base03") }}"
-red     = "#{{ (index (index .Modules "base16") "base08") }}"
-green   = "#{{ (index (index .Modules "base16") "base0B") }}"
-yellow  = "#{{ (index (index .Modules "base16") "base0A") }}"
-blue    = "#{{ (index (index .Modules "base16") "base0D") }}"
-magenta = "#{{ (index (index .Modules "base16") "base0E") }}"
-cyan    = "#{{ (index (index .Modules "base16") "base0C") }}"
-white   = "#{{ (index (index .Modules "base16") "base07") }}"
+black   = "#{{ .root.modules.base16.config.base03 }}"
+red     = "#{{ .root.modules.base16.config.base08 }}"
+green   = "#{{ .root.modules.base16.config.base0B }}"
+yellow  = "#{{ .root.modules.base16.config.base0A }}"
+blue    = "#{{ .root.modules.base16.config.base0D }}"
+magenta = "#{{ .root.modules.base16.config.base0E }}"
+cyan    = "#{{ .root.modules.base16.config.base0C }}"
+white   = "#{{ .root.modules.base16.config.base07 }}"

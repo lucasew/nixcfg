@@ -5,12 +5,12 @@ exec "{{ home }}/.local/bin/workspaced" open exec -p "{{ userDataDir }}/shim/laz
 {{- endfile }}
 
 {{- /* Global shims for tools */ -}}
-{{- range $name, $tool := .LazyTools }}
-    {{- if $tool.Global }}
-        {{- $ref := $tool.Ref }}{{ if not $ref }}{{ $ref = $name }}{{ end }}
-        {{- $bins := $tool.Bins }}
+{{- range $name, $tool := .root.lazy_tools }}
+    {{- if $tool.global }}
+        {{- $ref := $tool.ref }}{{ if not $ref }}{{ $ref = $name }}{{ end }}
+        {{- $bins := $tool.bins }}
         {{- if eq (len $bins) 0 }}
-            {{- $binName := $tool.Alias }}
+            {{- $binName := $tool.alias }}
             {{- if not $binName }}
                 {{- $parts := split $ref ":" }}
                 {{- $binName = last $parts }}

@@ -27,7 +27,7 @@ requires = ["base16"]
 ### Accessing Base16 Colors in Templates
 
 ```go
-{{- $base16 := index .Modules "base16" }}
+{{- $base16 := .root.modules.base16.config }}
 color: #{{ $base16.base00 }}
 ```
 

@@ -1,7 +1,7 @@
-{{- range $name, $tool := .LazyTools }}
-{{- $bins := $tool.Bins }}
+{{- range $name, $tool := .root.lazy_tools }}
+{{- $bins := $tool.bins }}
 {{- if eq (len $bins) 0 }}
-  {{- $binName := $tool.Alias }}
+  {{- $binName := $tool.alias }}
   {{- if not $binName }}
     {{- $parts := split $name ":" }}
     {{- $binName = last $parts }}

@@ -11,33 +11,33 @@ input type:keyboard {
 bar {
   # swaybar_command waybar
   status_command i3pystatus -c $(sdw d root)/bin/_shortcuts/i3pystatus/main.py
-  font pango: {{ .Modules.fontconfig.monospace }} 10, {{ .Modules.fontconfig.emoji }} 10
+  font pango: {{ .root.modules.fontconfig.config.monospace }} 10, {{ .root.modules.fontconfig.config.emoji }} 10
   hidden_state hide
   mode invisible
   position top
 
   colors {
-    # background #00{{ (index (index .Modules "base16") "base00") }}
+    # background #00{{ .root.modules.base16.config.base00 }}
     background #00000000
-    statusline #{{ (index (index .Modules "base16") "base05") }}
-    separator #{{ (index (index .Modules "base16") "base00") }}
+    statusline #{{ .root.modules.base16.config.base05 }}
+    separator #{{ .root.modules.base16.config.base00 }}
 
     # name             border                 background             text
-    focused_workspace  #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base02") }} #{{ (index (index .Modules "base16") "base05") }}
-    active_workspace   #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base03") }} #{{ (index (index .Modules "base16") "base05") }}
-    inactive_workspace #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base05") }}
-    urgent_workspace   #{{ (index (index .Modules "base16") "base08") }} #{{ (index (index .Modules "base16") "base08") }} #{{ (index (index .Modules "base16") "base00") }}
-    binding_mode       #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base05") }}
+    focused_workspace  #{{ .root.modules.base16.config.base01 }} #{{ .root.modules.base16.config.base02 }} #{{ .root.modules.base16.config.base05 }}
+    active_workspace   #{{ .root.modules.base16.config.base01 }} #{{ .root.modules.base16.config.base03 }} #{{ .root.modules.base16.config.base05 }}
+    inactive_workspace #{{ .root.modules.base16.config.base01 }} #{{ .root.modules.base16.config.base01 }} #{{ .root.modules.base16.config.base05 }}
+    urgent_workspace   #{{ .root.modules.base16.config.base08 }} #{{ .root.modules.base16.config.base08 }} #{{ .root.modules.base16.config.base00 }}
+    binding_mode       #{{ .root.modules.base16.config.base00 }} #{{ .root.modules.base16.config.base00 }} #{{ .root.modules.base16.config.base05 }}
   }
 }
 
 # Property Name         Border                 Background             Text                   Indicator              Child
-client.focused          #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base05") }} #{{ (index (index .Modules "base16") "base0D") }} #{{ (index (index .Modules "base16") "base0C") }}
-client.focused_inactive #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base05") }} #{{ (index (index .Modules "base16") "base03") }} #{{ (index (index .Modules "base16") "base01") }}
-client.unfocused        #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base02") }} #{{ (index (index .Modules "base16") "base05") }} #{{ (index (index .Modules "base16") "base01") }} #{{ (index (index .Modules "base16") "base01") }}
-client.urgent           #{{ (index (index .Modules "base16") "base08") }} #{{ (index (index .Modules "base16") "base08") }} #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base08") }} #{{ (index (index .Modules "base16") "base08") }}
-client.placeholder      #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base05") }} #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base00") }}
-client.background       #{{ (index (index .Modules "base16") "base07") }} #{{ (index (index .Modules "base16") "base00") }} #{{ (index (index .Modules "base16") "base05") }}
+client.focused          #{{ .root.modules.base16.config.base01 }} #{{ .root.modules.base16.config.base00 }} #{{ .root.modules.base16.config.base05 }} #{{ .root.modules.base16.config.base0D }} #{{ .root.modules.base16.config.base0C }}
+client.focused_inactive #{{ .root.modules.base16.config.base01 }} #{{ .root.modules.base16.config.base01 }} #{{ .root.modules.base16.config.base05 }} #{{ .root.modules.base16.config.base03 }} #{{ .root.modules.base16.config.base01 }}
+client.unfocused        #{{ .root.modules.base16.config.base01 }} #{{ .root.modules.base16.config.base02 }} #{{ .root.modules.base16.config.base05 }} #{{ .root.modules.base16.config.base01 }} #{{ .root.modules.base16.config.base01 }}
+client.urgent           #{{ .root.modules.base16.config.base08 }} #{{ .root.modules.base16.config.base08 }} #{{ .root.modules.base16.config.base00 }} #{{ .root.modules.base16.config.base08 }} #{{ .root.modules.base16.config.base08 }}
+client.placeholder      #{{ .root.modules.base16.config.base00 }} #{{ .root.modules.base16.config.base00 }} #{{ .root.modules.base16.config.base05 }} #{{ .root.modules.base16.config.base00 }} #{{ .root.modules.base16.config.base00 }}
+client.background       #{{ .root.modules.base16.config.base07 }} #{{ .root.modules.base16.config.base00 }} #{{ .root.modules.base16.config.base05 }}
 
 # Workspace bindings
 bindsym $mod+0 workspace number 10

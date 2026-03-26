@@ -4,25 +4,25 @@
   <alias>
     <family>serif</family>
     <prefer>
-      <family>{{ .Modules.fontconfig.serif }}</family>
+      <family>{{ .root.modules.fontconfig.config.serif }}</family>
     </prefer>
   </alias>
   <alias>
     <family>sans</family>
     <prefer>
-      <family>{{ .Modules.fontconfig.sans_serif }}</family>
+      <family>{{ .root.modules.fontconfig.config.sans_serif }}</family>
     </prefer>
   </alias>
   <alias>
     <family>monospace</family>
     <prefer>
-      <family>{{ .Modules.fontconfig.monospace }}</family>
+      <family>{{ .root.modules.fontconfig.config.monospace }}</family>
     </prefer>
   </alias>
   <alias>
     <family>emoji</family>
     <prefer>
-      <family>{{ .Modules.fontconfig.emoji }}</family>
+      <family>{{ .root.modules.fontconfig.config.emoji }}</family>
     </prefer>
   </alias>
 </fontconfig>

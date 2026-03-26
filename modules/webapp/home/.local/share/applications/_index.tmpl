@@ -1,4 +1,4 @@
-{{- range $name, $app := .Modules.webapp.apps }}
+{{- range $name, $app := .root.modules.webapp.config.apps }}
 <<<WORKSPACED_FILE:webapp-{{ $name }}.desktop:0644>>>
 [Desktop Entry]
 Type=Application
