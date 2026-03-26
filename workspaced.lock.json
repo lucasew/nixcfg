@@ -9,6 +9,10 @@
     }
   },
   "tools": {
+    "ast_grep": {
+      "ref": "github:ast-grep/ast-grep",
+      "version": "0.42.0"
+    },
     "bun": {
       "ref": "mise:bun",
       "version": "1.3.11"
@@ -21,6 +25,26 @@
       "ref": "mise:codex",
       "version": "0.116.0"
     },
+    "docker_compose": {
+      "ref": "github:docker/compose",
+      "version": "v5.1.1"
+    },
+    "docker_language_server": {
+      "ref": "github:docker/docker-language-server",
+      "version": "v0.20.1"
+    },
+    "fd": {
+      "ref": "github:sharkdp/fd",
+      "version": "v10.4.2"
+    },
+    "ffmpeg": {
+      "ref": "github:ffbinaries/ffbinaries-prebuilt",
+      "version": "v6.1"
+    },
+    "fzf": {
+      "ref": "github:junegunn/fzf",
+      "version": "v0.70.0"
+    },
     "gh": {
       "ref": "github:cli/cli",
       "version": "v2.88.1"
@@ -29,9 +53,73 @@
       "ref": "mise:go",
       "version": "1.26.1"
     },
+    "golangci_lint": {
+      "ref": "github:golangci/golangci-lint",
+      "version": "v2.11.4"
+    },
+    "helix": {
+      "ref": "github:helix-editor/helix",
+      "version": "25.07.1"
+    },
     "jless": {
       "ref": "mise:jless",
       "version": "0.9.0"
+    },
+    "ltex_ls": {
+      "ref": "github:valentjn/ltex-ls",
+      "version": "16.0.0"
+    },
+    "opencode": {
+      "ref": "github:anomalyco/opencode",
+      "version": "v1.3.2"
+    },
+    "rclone": {
+      "ref": "github:rclone/rclone",
+      "version": "v1.73.3"
+    },
+    "ripgrep": {
+      "ref": "github:burntsushi/ripgrep",
+      "version": "15.1.0"
+    },
+    "ruff": {
+      "ref": "github:astral-sh/ruff",
+      "version": "0.15.7"
+    },
+    "scc": {
+      "ref": "github:boyter/scc",
+      "version": "v3.7.0"
+    },
+    "shellcheck": {
+      "ref": "github:koalaman/shellcheck",
+      "version": "v0.11.0"
+    },
+    "shfmt": {
+      "ref": "github:patrickvane/shfmt",
+      "version": "master"
+    },
+    "sops": {
+      "ref": "github:getsops/sops",
+      "version": "v3.12.2"
+    },
+    "terraform": {
+      "ref": "github:hashicorp/terraform",
+      "version": "v1.14.8"
+    },
+    "tflint": {
+      "ref": "github:terraform-linters/tflint",
+      "version": "v0.61.0"
+    },
+    "uv": {
+      "ref": "github:astral-sh/uv",
+      "version": "0.11.1"
+    },
+    "yt_dlp": {
+      "ref": "github:yt-dlp/yt-dlp",
+      "version": "2026.03.17"
+    },
+    "zed": {
+      "ref": "github:zed-industries/zed",
+      "version": "v0.230.0-pre"
     }
   }
 }
