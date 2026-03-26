@@ -21,6 +21,10 @@
       "ref": "mise:codex",
       "version": "0.116.0"
     },
+    "gh": {
+      "ref": "github:cli/cli",
+      "version": "v2.88.1"
+    },
     "go": {
       "ref": "mise:go",
       "version": "1.26.1"
