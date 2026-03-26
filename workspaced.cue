@@ -79,7 +79,7 @@ workspaced: {
 
 
 	lazy_tools: {
-		"github:zed-industries/zed": {
+		zed: {
 			ref: "github:zed-industries/zed"
 			bins: ["zed"]
 		}
@@ -92,7 +92,7 @@ workspaced: {
 			ref: "mise:bun"
 			bins: ["bun"]
 		}
-		"docker-compose": {
+		docker_compose: {
 			ref: "github:docker/compose"
 			global: true
 			bins: ["docker-compose"]
@@ -143,7 +143,7 @@ workspaced: {
 			global: true
 			bins: ["uv", "uvx"]
 		}
-		"yt-dlp": {
+		yt_dlp: {
 			ref: "github:yt-dlp/yt-dlp"
 			global: true
 			bins: ["yt-dlp"]
@@ -160,35 +160,35 @@ workspaced: {
 			ref: "mise:go"
 			bins: ["go", "gofmt"]
 		}
-		"golangci-lint": {
+		golangci_lint: {
 			ref: "github:golangci/golangci-lint"
 			bins: ["golangci-lint"]
 		}
-		"github:docker/docker-language-server": {
+		docker_language_server: {
 			ref: "github:docker/docker-language-server"
 			global: true
 			bins: ["docker-langserver"]
 		}
-		"github:ffbinaries/ffbinaries-prebuilt": {
+		ffmpeg: {
 			ref: "github:ffbinaries/ffbinaries-prebuilt"
 			bins: ["ffmpeg", "ffprobe"]
 		}
-		"github:helix-editor/helix": {
+		helix: {
 			ref: "github:helix-editor/helix"
 			global: true
 			bins: ["hx"]
 		}
-		"github:valentjn/ltex-ls": {
+		ltex_ls: {
 			ref: "github:valentjn/ltex-ls"
 			global: true
 			bins: ["ltex-ls"]
 		}
-		"npm:bash-language-server": {
+		bash_language_server: {
 			ref: "mise:npm:bash-language-server"
 			global: true
 			bins: ["bash-language-server"]
 		}
-		"npm:vscode-langservers-extracted": {
+		vscode_langservers: {
 			ref: "mise:npm:vscode-langservers-extracted"
 			bins: [
 				"vscode-html-language-server",
@@ -197,7 +197,7 @@ workspaced: {
 				"vscode-eslint-language-server",
 			]
 		}
-		"vfox:clang": {
+		clang: {
 			ref: "mise:vfox:clang"
 			bins: ["clang", "clang-cpp"]
 		}
@@ -211,12 +211,12 @@ workspaced: {
 			global: true
 			bins: ["gh"]
 		}
-		"ast-grep": {
+		ast_grep: {
 			ref: "github:ast-grep/ast-grep"
 			global: true
 			bins: ["ast-grep", "sg"]
 		}
-		"github:boyter/scc": {
+		scc: {
 			ref: "github:boyter/scc"
 			global: true
 			bins: ["scc"]

@@ -8,5 +8,26 @@
       "hash": "65224305098d14f359c18c341bc09f7401cceee1cc6652f71a34991ea30cb17f"
     }
   },
-  "tools": {}
+  "tools": {
+    "bun": {
+      "ref": "mise:bun",
+      "version": "1.3.11"
+    },
+    "clang": {
+      "ref": "mise:vfox:clang",
+      "version": "22.1.0"
+    },
+    "codex": {
+      "ref": "mise:codex",
+      "version": "0.116.0"
+    },
+    "go": {
+      "ref": "mise:go",
+      "version": "1.26.1"
+    },
+    "jless": {
+      "ref": "mise:jless",
+      "version": "0.9.0"
+    }
+  }
 }
