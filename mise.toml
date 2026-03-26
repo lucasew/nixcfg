@@ -9,8 +9,28 @@ run = "workspaced codebase format"
 
 [tasks.ci]
 description = "Run CI pipeline locally"
-depends = ["lint"]
+depends = ["lint", "test"]
+
+[tasks.test]
+depends = ["test:*"]
+
+[tasks."test:fallback"]
+run = "echo 'No tests defined yet'"
+
+[tasks.codegen]
+depends = ["codegen:*"]
+
+[tasks."codegen:fallback"]
+run = "echo 'No codegen tasks defined yet'"
 
 [tools]
 # "github:lucasew/workspaced" = "0.2.1"
 sops = "3.11.0"
+
+[tasks.install]
+depends = ["install:*"]
+
+[tasks."install:tools"]
+run = [
+    "mise install -C infra"
+]
