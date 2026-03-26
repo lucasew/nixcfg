@@ -76,6 +76,11 @@ workspaced: {
 		webapp:  "brave"
 	}
 
+	drivers: {
+		"workspaced/pkg/driver/terminal.Driver": {
+			"terminal_kitty": 70
+		}
+	}
 
 
 	lazy_tools: {
