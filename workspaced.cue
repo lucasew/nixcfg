@@ -161,25 +161,25 @@ workspaced: {
 			bins: ["go", "gofmt"]
 		}
 		"golangci-lint": {
-			ref: "mise:golangci-lint"
+			ref: "github:golangci/golangci-lint"
 			bins: ["golangci-lint"]
 		}
 		"github:docker/docker-language-server": {
-			ref: "mise:github:docker/docker-language-server"
+			ref: "github:docker/docker-language-server"
 			global: true
 			bins: ["docker-langserver"]
 		}
 		"github:ffbinaries/ffbinaries-prebuilt": {
-			ref: "mise:github:ffbinaries/ffbinaries-prebuilt"
+			ref: "github:ffbinaries/ffbinaries-prebuilt"
 			bins: ["ffmpeg", "ffprobe"]
 		}
 		"github:helix-editor/helix": {
-			ref: "mise:github:helix-editor/helix"
+			ref: "github:helix-editor/helix"
 			global: true
 			bins: ["hx"]
 		}
 		"github:valentjn/ltex-ls": {
-			ref: "mise:github:valentjn/ltex-ls"
+			ref: "github:valentjn/ltex-ls"
 			global: true
 			bins: ["ltex-ls"]
 		}
@@ -207,17 +207,17 @@ workspaced: {
 			bins: ["jless"]
 		}
 		gh: {
-			ref: "mise:gh"
+			ref: "github:cli/cli"
 			global: true
 			bins: ["gh"]
 		}
 		"ast-grep": {
-			ref: "mise:ast-grep"
+			ref: "github:ast-grep/ast-grep"
 			global: true
 			bins: ["ast-grep", "sg"]
 		}
 		"github:boyter/scc": {
-			ref: "mise:github:boyter/scc"
+			ref: "github:boyter/scc"
 			global: true
 			bins: ["scc"]
 		}
