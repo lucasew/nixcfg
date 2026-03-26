@@ -77,118 +77,119 @@ workspaced: {
 	}
 
 
+
 	lazy_tools: {
 		"github:zed-industries/zed": {
-			version: "0.222.4"
+			ref: "github:zed-industries/zed"
 			bins: ["zed"]
 		}
 		codex: {
-			version: "0.104.0"
+			ref: "mise:codex"
 			bins: ["codex"]
 			global: true
 		}
 		bun: {
-			version: "1.3.8"
+			ref: "mise:bun"
 			bins: ["bun"]
 		}
 		"docker-compose": {
-			version: "5.0.1"
+			ref: "github:docker/compose"
 			global: true
 			bins: ["docker-compose"]
 		}
 		fd: {
-			version: "10.3.0"
+			ref: "github:sharkdp/fd"
 			global: true
 			bins: ["fd"]
 		}
 		opencode: {
-			version: "1.1.40"
+			ref: "github:anomalyco/opencode"
 			global: true
 			bins: ["opencode"]
 		}
 		rclone: {
-			version: "1.72.1"
+			ref: "github:rclone/rclone"
 			global: true
 			bins: ["rclone"]
 		}
 		ripgrep: {
-			version: "15.1.0"
+			ref: "github:burntsushi/ripgrep"
 			global: true
 			bins: ["rg"]
 		}
 		fzf: {
-			version: "0.67.0"
+			ref: "github:junegunn/fzf"
 			global: true
 			bins: ["fzf", "fzf-tmux"]
 		}
 		ruff: {
-			version: "0.14.14"
+			ref: "github:astral-sh/ruff"
 			bins: ["ruff"]
 		}
 		shfmt: {
-			version: "3.12.0"
+			ref: "github:patrickvane/shfmt"
 			bins: ["shfmt"]
 		}
 		shellcheck: {
-			version: "0.11.0"
+			ref: "github:koalaman/shellcheck"
 			bins: ["shellcheck"]
 		}
 		sops: {
-			version: "3.11.0"
+			ref: "github:getsops/sops"
 			bins: ["sops"]
 		}
 		uv: {
-			version: "0.9.28"
+			ref: "github:astral-sh/uv"
 			global: true
 			bins: ["uv", "uvx"]
 		}
 		"yt-dlp": {
-			version: "2025.10.22"
+			ref: "github:yt-dlp/yt-dlp"
 			global: true
 			bins: ["yt-dlp"]
 		}
 		terraform: {
-			version: "1.9.0"
+			ref: "github:hashicorp/terraform"
 			bins: ["terraform"]
 		}
 		tflint: {
-			version: "0.60.0"
+			ref: "github:terraform-linters/tflint"
 			bins: ["tflint"]
 		}
 		go: {
-			version: "1.24.12"
+			ref: "mise:go"
 			bins: ["go", "gofmt"]
 		}
 		"golangci-lint": {
-			version: "1.61.0"
+			ref: "mise:golangci-lint"
 			bins: ["golangci-lint"]
 		}
 		"github:docker/docker-language-server": {
-			version: "0.20.1"
+			ref: "mise:github:docker/docker-language-server"
 			global: true
 			bins: ["docker-langserver"]
 		}
 		"github:ffbinaries/ffbinaries-prebuilt": {
-			version: "6.1"
+			ref: "mise:github:ffbinaries/ffbinaries-prebuilt"
 			bins: ["ffmpeg", "ffprobe"]
 		}
 		"github:helix-editor/helix": {
-			version: "25.07.1"
+			ref: "mise:github:helix-editor/helix"
 			global: true
 			bins: ["hx"]
 		}
 		"github:valentjn/ltex-ls": {
-			version: "16.0.0"
+			ref: "mise:github:valentjn/ltex-ls"
 			global: true
 			bins: ["ltex-ls"]
 		}
 		"npm:bash-language-server": {
-			version: "5.6.0"
+			ref: "mise:npm:bash-language-server"
 			global: true
 			bins: ["bash-language-server"]
 		}
 		"npm:vscode-langservers-extracted": {
-			version: "4.10.0"
+			ref: "mise:npm:vscode-langservers-extracted"
 			bins: [
 				"vscode-html-language-server",
 				"vscode-css-language-server",
@@ -197,26 +198,26 @@ workspaced: {
 			]
 		}
 		"vfox:clang": {
-			version: "18.1.8"
+			ref: "mise:vfox:clang"
 			bins: ["clang", "clang-cpp"]
 		}
 		jless: {
-			version: "0.9.0"
+			ref: "jless"
 			global: true
 			bins: ["jless"]
 		}
 		gh: {
-			version: "2.86.0"
+			ref: "mise:gh"
 			global: true
 			bins: ["gh"]
 		}
 		"ast-grep": {
-			version: "0.40.5"
+			ref: "mise:ast-grep"
 			global: true
 			bins: ["ast-grep", "sg"]
 		}
 		"github:boyter/scc": {
-			version: "3.6.0"
+			ref: "mise:github:boyter/scc"
 			global: true
 			bins: ["scc"]
 		}
