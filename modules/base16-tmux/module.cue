@@ -7,7 +7,6 @@ module: {
 	}
 
 	config: {
-		enable: bool | *true
 	}
 
 	drivers: {

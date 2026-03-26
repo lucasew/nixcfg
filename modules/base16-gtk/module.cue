@@ -7,7 +7,6 @@ module: {
 	}
 
 	config: {
-		enable: bool | *true
 		theme_name: string | *"base16"
 		dconf: {
 			"org/gnome/desktop/interface": {

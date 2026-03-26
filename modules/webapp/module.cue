@@ -7,7 +7,6 @@ module: {
 	}
 
 	config: {
-		enable: bool | *true
 		apps?: [string]: {
 			url: string
 			profile?: string

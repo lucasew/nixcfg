@@ -7,6 +7,5 @@ module: {
 	}
 
 	config: {
-		enable: bool | *true
 	}
 }
