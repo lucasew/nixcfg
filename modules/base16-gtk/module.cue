@@ -11,6 +11,13 @@ module: {
 		dconf: {
 			"org/gnome/desktop/interface": {
 				"gtk-theme": string | *theme_name
+				"color-scheme": string
+				if workspaced.modules.base16.config.dark_mode {
+					"color-scheme": *"prefer-dark" | string
+				}
+				if workspaced.modules.base16.config.dark_mode == false {
+					"color-scheme": *"prefer-light" | string
+				}
 			}
 		}
 	}
