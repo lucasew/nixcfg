@@ -97,7 +97,7 @@ jobs:
 
     steps:
       - name: Free up space
-        uses: lucasew/action-i-only-care-about-nix@main
+        uses: lucasew/action-i-only-care-about-nix@d506d49d44d5a575d1869a271512c3a1789984c2 # main
         if: ${{ github.event.inputs.free-space == 'true' }}
 
       - name: Prepare for Nix if cleaned up
@@ -119,7 +119,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           extra-conf: |
             build-dir = /nix/build
-      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@1828eb4e5414b8dfe36daae53ea3e4b8c3fdec7a # main
       - name: Run review
         env:
           PR: ${{ github.event.inputs.pr }}
@@ -169,7 +169,7 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a # v21
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@1828eb4e5414b8dfe36daae53ea3e4b8c3fdec7a # main
       - name: Run review
         env:
           PR: ${{ github.event.inputs.pr }}
@@ -219,7 +219,7 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a # v21
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@1828eb4e5414b8dfe36daae53ea3e4b8c3fdec7a # main
       - name: Run review
         env:
           PR: ${{ github.event.inputs.pr }}
