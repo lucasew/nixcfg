@@ -24,7 +24,10 @@ run_node() {
 		log_info "workspaced not found; cannot resolve node tool"
 		exit 1
 	fi
-	workspaced open lazy --home node -- "$@"
+	if workspaced open lazy --home node -- "$@"; then
+		return
+	fi
+	workspaced tool with mise:node -- "$@"
 }
 
 ensure_node() {
