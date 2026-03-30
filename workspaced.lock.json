@@ -24,6 +24,27 @@
     },
     {
       "kind": "tool",
+      "name": "bun",
+      "provider": "mise",
+      "ref": "mise:bun",
+      "version": "1.3.11"
+    },
+    {
+      "kind": "tool",
+      "name": "clang",
+      "provider": "mise",
+      "ref": "mise:vfox:clang",
+      "version": "22.1.0"
+    },
+    {
+      "kind": "tool",
+      "name": "codex",
+      "provider": "mise",
+      "ref": "mise:codex",
+      "version": "0.116.0"
+    },
+    {
+      "kind": "tool",
       "name": "docker_compose",
       "provider": "github",
       "ref": "github:docker/compose",
@@ -47,9 +68,9 @@
       "name": "fd",
       "provider": "github",
       "ref": "github:sharkdp/fd",
-      "version": "v10.4.2",
+      "version": "10.4.2",
       "depName": "sharkdp/fd",
-      "currentValue": "v10.4.2",
+      "currentValue": "10.4.2",
       "datasource": "github-releases"
     },
     {
@@ -77,19 +98,26 @@
       "name": "gh",
       "provider": "github",
       "ref": "github:cli/cli",
-      "version": "v2.89.0",
+      "version": "2.89.0",
       "depName": "cli/cli",
-      "currentValue": "v2.89.0",
+      "currentValue": "2.89.0",
       "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "go",
+      "provider": "mise",
+      "ref": "mise:go",
+      "version": "1.26.1"
     },
     {
       "kind": "tool",
       "name": "golangci_lint",
       "provider": "github",
       "ref": "github:golangci/golangci-lint",
-      "version": "v2.11.4",
+      "version": "2.11.4",
       "depName": "golangci/golangci-lint",
-      "currentValue": "v2.11.4",
+      "currentValue": "2.11.4",
       "datasource": "github-releases"
     },
     {
@@ -101,6 +129,13 @@
       "depName": "helix-editor/helix",
       "currentValue": "25.07.1",
       "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "jless",
+      "provider": "mise",
+      "ref": "mise:jless",
+      "version": "0.9.0"
     },
     {
       "kind": "tool",
@@ -157,9 +192,9 @@
       "name": "scc",
       "provider": "github",
       "ref": "github:boyter/scc",
-      "version": "v3.7.0",
+      "version": "3.6.0",
       "depName": "boyter/scc",
-      "currentValue": "v3.7.0",
+      "currentValue": "3.6.0",
       "datasource": "github-releases"
     },
     {
@@ -167,9 +202,9 @@
       "name": "shellcheck",
       "provider": "github",
       "ref": "github:koalaman/shellcheck",
-      "version": "v0.11.0",
+      "version": "0.11.0",
       "depName": "koalaman/shellcheck",
-      "currentValue": "v0.11.0",
+      "currentValue": "0.11.0",
       "datasource": "github-releases"
     },
     {
