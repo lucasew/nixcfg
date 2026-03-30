@@ -106,6 +106,11 @@ workspaced: {
 			global: true
 			bins: ["uv", "uvx"]
 		}
+		node: {
+			ref: "mise:node"
+			global: true
+			bins: ["node", "npm", "npx"]
+		}
 		yt_dlp: {
 			ref: "github:yt-dlp/yt-dlp"
 			global: true
@@ -352,5 +357,6 @@ workspaced: {
 		"base16-swaylock": {input: "self:modules/base16-swaylock", enable: true}
 		"script-directory": {input: "self:modules/script-directory", enable: true}
 		mise: {input: "self:modules/mise", enable: true}
+		hermes: {input: "self:modules/hermes", enable: true}
 	}
 }

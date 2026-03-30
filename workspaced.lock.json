@@ -152,7 +152,7 @@
       "name": "opencode",
       "provider": "github",
       "ref": "github:anomalyco/opencode",
-      "version": "v1.3.7",
+      "version": "v1.3.8",
       "depName": "anomalyco/opencode",
       "currentValue": "v1.3.7",
       "datasource": "github-releases"
@@ -276,6 +276,13 @@
       "depName": "zed-industries/zed",
       "currentValue": "v0.230.0-pre",
       "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "node",
+      "ref": "mise:node",
+      "version": "25.8.2",
+      "currentValue": "25.8.2"
     }
   ]
 }
