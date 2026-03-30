@@ -1,125 +1,246 @@
 {
-  "sources": {
-    "papirus": {
+  "dependencies": [
+    {
+      "kind": "source",
+      "name": "papirus",
       "provider": "github",
-      "path": "",
+      "ref": "HEAD",
       "repo": "PapirusDevelopmentTeam/papirus-icon-theme",
       "url": "https://codeload.github.com/PapirusDevelopmentTeam/papirus-icon-theme/tar.gz/702499f331aa9c38309e1af99de4021013916297",
-      "hash": "65224305098d14f359c18c341bc09f7401cceee1cc6652f71a34991ea30cb17f"
-    }
-  },
-  "tools": {
-    "ast_grep": {
+      "hash": "65224305098d14f359c18c341bc09f7401cceee1cc6652f71a34991ea30cb17f",
+      "depName": "PapirusDevelopmentTeam/papirus-icon-theme",
+      "currentValue": "702499f331aa9c38309e1af99de4021013916297",
+      "datasource": "github-tags"
+    },
+    {
+      "kind": "tool",
+      "name": "ast_grep",
+      "provider": "github",
       "ref": "github:ast-grep/ast-grep",
-      "version": "0.42.0"
+      "version": "0.42.0",
+      "depName": "ast-grep/ast-grep",
+      "currentValue": "0.42.0",
+      "datasource": "github-releases"
     },
-    "bun": {
-      "ref": "mise:bun",
-      "version": "1.3.11"
-    },
-    "clang": {
-      "ref": "mise:vfox:clang",
-      "version": "22.1.0"
-    },
-    "codex": {
-      "ref": "mise:codex",
-      "version": "0.116.0"
-    },
-    "docker_compose": {
+    {
+      "kind": "tool",
+      "name": "docker_compose",
+      "provider": "github",
       "ref": "github:docker/compose",
-      "version": "v5.1.1"
+      "version": "v5.1.1",
+      "depName": "docker/compose",
+      "currentValue": "v5.1.1",
+      "datasource": "github-releases"
     },
-    "docker_language_server": {
+    {
+      "kind": "tool",
+      "name": "docker_language_server",
+      "provider": "github",
       "ref": "github:docker/docker-language-server",
-      "version": "v0.20.1"
+      "version": "v0.20.1",
+      "depName": "docker/docker-language-server",
+      "currentValue": "v0.20.1",
+      "datasource": "github-releases"
     },
-    "fd": {
+    {
+      "kind": "tool",
+      "name": "fd",
+      "provider": "github",
       "ref": "github:sharkdp/fd",
-      "version": "v10.4.2"
+      "version": "v10.4.2",
+      "depName": "sharkdp/fd",
+      "currentValue": "v10.4.2",
+      "datasource": "github-releases"
     },
-    "ffmpeg": {
+    {
+      "kind": "tool",
+      "name": "ffmpeg",
+      "provider": "github",
       "ref": "github:ffbinaries/ffbinaries-prebuilt",
-      "version": "v6.1"
+      "version": "v6.1",
+      "depName": "ffbinaries/ffbinaries-prebuilt",
+      "currentValue": "v6.1",
+      "datasource": "github-releases"
     },
-    "fzf": {
+    {
+      "kind": "tool",
+      "name": "fzf",
+      "provider": "github",
       "ref": "github:junegunn/fzf",
-      "version": "v0.70.0"
+      "version": "v0.70.0",
+      "depName": "junegunn/fzf",
+      "currentValue": "v0.70.0",
+      "datasource": "github-releases"
     },
-    "gh": {
+    {
+      "kind": "tool",
+      "name": "gh",
+      "provider": "github",
       "ref": "github:cli/cli",
-      "version": "v2.88.1"
+      "version": "v2.89.0",
+      "depName": "cli/cli",
+      "currentValue": "v2.89.0",
+      "datasource": "github-releases"
     },
-    "go": {
-      "ref": "mise:go",
-      "version": "1.26.1"
-    },
-    "golangci_lint": {
+    {
+      "kind": "tool",
+      "name": "golangci_lint",
+      "provider": "github",
       "ref": "github:golangci/golangci-lint",
-      "version": "v2.11.4"
+      "version": "v2.11.4",
+      "depName": "golangci/golangci-lint",
+      "currentValue": "v2.11.4",
+      "datasource": "github-releases"
     },
-    "helix": {
+    {
+      "kind": "tool",
+      "name": "helix",
+      "provider": "github",
       "ref": "github:helix-editor/helix",
-      "version": "25.07.1"
+      "version": "25.07.1",
+      "depName": "helix-editor/helix",
+      "currentValue": "25.07.1",
+      "datasource": "github-releases"
     },
-    "jless": {
-      "ref": "mise:jless",
-      "version": "0.9.0"
-    },
-    "ltex_ls": {
+    {
+      "kind": "tool",
+      "name": "ltex_ls",
+      "provider": "github",
       "ref": "github:valentjn/ltex-ls",
-      "version": "16.0.0"
+      "version": "16.0.0",
+      "depName": "valentjn/ltex-ls",
+      "currentValue": "16.0.0",
+      "datasource": "github-releases"
     },
-    "opencode": {
+    {
+      "kind": "tool",
+      "name": "opencode",
+      "provider": "github",
       "ref": "github:anomalyco/opencode",
-      "version": "v1.3.2"
+      "version": "v1.3.7",
+      "depName": "anomalyco/opencode",
+      "currentValue": "v1.3.7",
+      "datasource": "github-releases"
     },
-    "rclone": {
+    {
+      "kind": "tool",
+      "name": "rclone",
+      "provider": "github",
       "ref": "github:rclone/rclone",
-      "version": "v1.73.3"
+      "version": "v1.73.3",
+      "depName": "rclone/rclone",
+      "currentValue": "v1.73.3",
+      "datasource": "github-releases"
     },
-    "ripgrep": {
+    {
+      "kind": "tool",
+      "name": "ripgrep",
+      "provider": "github",
       "ref": "github:burntsushi/ripgrep",
-      "version": "15.1.0"
+      "version": "15.1.0",
+      "depName": "burntsushi/ripgrep",
+      "currentValue": "15.1.0",
+      "datasource": "github-releases"
     },
-    "ruff": {
+    {
+      "kind": "tool",
+      "name": "ruff",
+      "provider": "github",
       "ref": "github:astral-sh/ruff",
-      "version": "0.15.7"
+      "version": "0.15.8",
+      "depName": "astral-sh/ruff",
+      "currentValue": "0.15.8",
+      "datasource": "github-releases"
     },
-    "scc": {
+    {
+      "kind": "tool",
+      "name": "scc",
+      "provider": "github",
       "ref": "github:boyter/scc",
-      "version": "v3.7.0"
+      "version": "v3.7.0",
+      "depName": "boyter/scc",
+      "currentValue": "v3.7.0",
+      "datasource": "github-releases"
     },
-    "shellcheck": {
+    {
+      "kind": "tool",
+      "name": "shellcheck",
+      "provider": "github",
       "ref": "github:koalaman/shellcheck",
-      "version": "v0.11.0"
+      "version": "v0.11.0",
+      "depName": "koalaman/shellcheck",
+      "currentValue": "v0.11.0",
+      "datasource": "github-releases"
     },
-    "shfmt": {
+    {
+      "kind": "tool",
+      "name": "shfmt",
+      "provider": "github",
       "ref": "github:patrickvane/shfmt",
-      "version": "master"
+      "version": "master",
+      "depName": "patrickvane/shfmt",
+      "currentValue": "master",
+      "datasource": "github-releases"
     },
-    "sops": {
+    {
+      "kind": "tool",
+      "name": "sops",
+      "provider": "github",
       "ref": "github:getsops/sops",
-      "version": "v3.12.2"
+      "version": "v3.12.2",
+      "depName": "getsops/sops",
+      "currentValue": "v3.12.2",
+      "datasource": "github-releases"
     },
-    "terraform": {
+    {
+      "kind": "tool",
+      "name": "terraform",
+      "provider": "github",
       "ref": "github:hashicorp/terraform",
-      "version": "v1.14.8"
+      "version": "v1.14.8",
+      "depName": "hashicorp/terraform",
+      "currentValue": "v1.14.8",
+      "datasource": "github-releases"
     },
-    "tflint": {
+    {
+      "kind": "tool",
+      "name": "tflint",
+      "provider": "github",
       "ref": "github:terraform-linters/tflint",
-      "version": "v0.61.0"
+      "version": "v0.61.0",
+      "depName": "terraform-linters/tflint",
+      "currentValue": "v0.61.0",
+      "datasource": "github-releases"
     },
-    "uv": {
+    {
+      "kind": "tool",
+      "name": "uv",
+      "provider": "github",
       "ref": "github:astral-sh/uv",
-      "version": "0.11.1"
+      "version": "0.11.2",
+      "depName": "astral-sh/uv",
+      "currentValue": "0.11.2",
+      "datasource": "github-releases"
     },
-    "yt_dlp": {
+    {
+      "kind": "tool",
+      "name": "yt_dlp",
+      "provider": "github",
       "ref": "github:yt-dlp/yt-dlp",
-      "version": "2026.03.17"
+      "version": "2026.03.17",
+      "depName": "yt-dlp/yt-dlp",
+      "currentValue": "2026.03.17",
+      "datasource": "github-releases"
     },
-    "zed": {
+    {
+      "kind": "tool",
+      "name": "zed",
+      "provider": "github",
       "ref": "github:zed-industries/zed",
-      "version": "v0.230.0-pre"
+      "version": "v0.230.0-pre",
+      "depName": "zed-industries/zed",
+      "currentValue": "v0.230.0-pre",
+      "datasource": "github-releases"
     }
-  }
+  ]
 }
