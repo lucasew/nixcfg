@@ -80,8 +80,6 @@ in
 
   nix.settings.min-free = 50 * 1024 * 1024 * 1024; # 50GB
 
-  services.nginx.enable = true;
-
   programs.ccache.enable = true;
 
   services.sunshine.enable = true;

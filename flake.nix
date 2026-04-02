@@ -75,7 +75,6 @@
       };
 
       pkgs = mkPkgs { inherit system; };
-      settings = builtins.fromTOML (builtins.readFile ./settings.toml);
       mkPkgs =
         {
           nixpkgs ? defaultNixpkgs,
@@ -98,7 +97,6 @@
       global = {
         username = "lucasew";
         email = "lucas59356@gmail.com";
-        hosts = settings.hosts;
         selectedDesktopEnvironment = "i3";
         environmentShell = ''
           source ${self}/bin/source_me

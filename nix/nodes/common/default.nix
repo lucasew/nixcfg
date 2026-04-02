@@ -20,8 +20,6 @@ in
     ./hosts.nix
     ./kvm.nix
     ./lvm.nix
-    ./nginx-root-domain.nix
-    ./nginx.nix
     ./nix-ld.nix
     ./nix-index-database.nix
     ./sops.nix
@@ -107,9 +105,4 @@ in
     autodetect = true;
     notifications.test = true;
   };
-
-  services.nginx.appendHttpConfig = ''
-    error_log stderr;
-    access_log syslog:server=unix:/dev/log combined;
-  '';
 }

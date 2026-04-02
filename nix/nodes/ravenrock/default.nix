@@ -86,7 +86,6 @@ in
     #   resolveLocalQueries = true;
     # };
     # php-utils.enable = true;
-    # vaultwarden.enable = true;
     # postgresql = {
     #   enable = true;
     #   enableTCPIP = true;
@@ -105,9 +104,5 @@ in
   cachix.enable = true;
 
   # boot.kernelPackages = pkgs.linuxPackages_5_4;
-  # services.nginx = {
-  #   enable = true;
-  #   enableReload = true;
-  # };
   system.stateVersion = "20.03";
 }

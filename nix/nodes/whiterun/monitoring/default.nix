@@ -5,7 +5,6 @@
 {
 
   imports = [
-    ./nginx.nix
     ./node-exporter.nix
     ./zfs.nix
     ./nvidia.nix

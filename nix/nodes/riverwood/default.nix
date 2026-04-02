@@ -47,8 +47,6 @@ in
 
   services.sunshine.enable = true;
 
-  services.nginx.enable = true;
-
   boot.plymouth.enable = true;
 
   programs.gamemode.enable = true;

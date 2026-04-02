@@ -6,11 +6,8 @@
 }:
 let
   node = global.hosts.${config.networking.hostName}.tailscale_ip or null;
-
-  nginxDomains = builtins.attrNames config.services.nginx.virtualHosts;
   baseDomain = "${config.networking.hostName}.${config.networking.domain}";
   allMySubdomains = lib.flatten [
-    nginxDomains
     baseDomain
   ];
 
