@@ -44,7 +44,7 @@
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    telegram-sendmail.url = "github:lucasew/telegram-sendmail?ref=pull/32/head";
+    telegram-sendmail.url = "github:lucasew/telegram-sendmail";
     telegram-sendmail.flake = false;
 
     phpelo.url = "github:lucasew/phpelo";
