@@ -189,6 +189,11 @@ workspaced: {
 			global: true
 			bins: ["scc"]
 		}
+		tirith: {
+			ref: "github:sheeki03/tirith"
+			global: true
+			bins: ["tirith"]
+		}
 	}
 
 	inputs: {
