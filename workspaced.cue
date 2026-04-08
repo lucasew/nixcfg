@@ -112,7 +112,7 @@ workspaced: {
 			bins: ["node", "npm", "npx"]
 		}
 		yt_dlp: {
-			ref: "github:yt-dlp/yt-dlp"
+			ref: "mise:yt-dlp"
 			global: true
 			bins: ["yt-dlp"]
 		}
