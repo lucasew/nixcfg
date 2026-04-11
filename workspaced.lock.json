@@ -88,7 +88,7 @@
       "name": "fzf",
       "provider": "github",
       "ref": "github:junegunn/fzf",
-      "version": "0.70.0",
+      "version": "v0.70.0",
       "depName": "junegunn/fzf",
       "currentValue": "v0.70.0",
       "datasource": "github-releases"
