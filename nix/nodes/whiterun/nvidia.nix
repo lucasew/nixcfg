@@ -21,12 +21,15 @@
     # nvidiaPersistenced = true;
   };
 
-  hardware.nvidia-container-toolkit = {
-    enable =
-      config.virtualisation.docker.enable || config.virtualisation.podman.enable;
+  hardware.nvidia-container-toolkit.enable = true;
+
+  virtualisation.docker = {
+    # DONT REMOVE THIS LINE, IT'S REQUIRED FOR --gpus=all to work
+    enableNvidia = true;
   };
 
   environment.systemPackages = with pkgs; [
+    libnvidia-container
     nvtopPackages.full
   ];
 }
