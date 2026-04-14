@@ -2,6 +2,7 @@
   self,
   config,
   pkgs,
+  lib,
   ...
 }:
 {
@@ -21,15 +22,28 @@
     # nvidiaPersistenced = true;
   };
 
-  hardware.nvidia-container-toolkit.enable = true;
+  hardware.nvidia-container-toolkit = {
+    enable = true;
+    device-name-strategy = "uuid";
+  };
 
   virtualisation.docker = {
     # DONT REMOVE THIS LINE, IT'S REQUIRED FOR --gpus=all to work
     enableNvidia = true;
   };
 
+  services.nomad.extraSettingsPlugins = [ pkgs.nomad-driver-nvidia ];
+  services.nomad.settings.plugin = lib.mkAfter [
+    {
+      nomad-device-nvidia = {
+        config = {
+          enabled = true;
+        };
+      };
+    }
+  ];
+
   environment.systemPackages = with pkgs; [
-    libnvidia-container
     nvtopPackages.full
   ];
 }
