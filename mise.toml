@@ -13,4 +13,4 @@ depends = ["lint"]
 
 [tools]
 # "github:lucasew/workspaced" = "0.2.1"
-sops = "3.11.0"
+sops = "3.12.2"
