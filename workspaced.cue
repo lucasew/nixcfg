@@ -194,6 +194,11 @@ workspaced: {
 			global: true
 			bins: ["tirith"]
 		}
+		jujutsu: {
+			ref: "github:jj-vcs/jj"
+			global: true
+			bins: ["jj"]
+		}
 	}
 
 	inputs: {
