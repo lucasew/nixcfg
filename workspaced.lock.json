@@ -255,7 +255,7 @@
       "ref": "github:astral-sh/uv",
       "version": "0.11.2",
       "depName": "astral-sh/uv",
-      "currentValue": "0.11.2",
+      "currentValue": "0.11.7",
       "datasource": "github-releases"
     },
     {
