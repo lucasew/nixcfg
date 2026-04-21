@@ -75,6 +75,11 @@ workspaced: {
 			global: true
 			bins: ["rclone"]
 		}
+		rtk: {
+			ref: "github:rtk-ai/rtk"
+			global: true
+			bins: ["rtk"]
+		}
 		ripgrep: {
 			ref: "github:burntsushi/ripgrep"
 			global: true
