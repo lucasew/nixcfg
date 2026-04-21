@@ -311,6 +311,12 @@
       "name": "jujutsu",
       "ref": "github:jj-vcs/jj",
       "version": "v0.40.0"
+    },
+    {
+      "kind": "tool",
+      "name": "rtk",
+      "ref": "github:rtk-ai/rtk",
+      "version": "0.37.2"
     }
   ]
 }
