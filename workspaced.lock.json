@@ -42,8 +42,8 @@
       "kind": "tool",
       "name": "codex",
       "ref": "github:openai/codex",
-      "version": "0.122.0",
-      "currentValue": "0.122.0"
+      "version": "rust-v0.122.0",
+      "currentValue": "rust-v0.122.0"
     },
     {
       "kind": "tool",
