@@ -41,9 +41,9 @@
     {
       "kind": "tool",
       "name": "codex",
-      "provider": "mise",
-      "ref": "mise:codex",
-      "version": "0.116.0"
+      "ref": "github:openai/codex",
+      "version": "0.122.0",
+      "currentValue": "0.122.0"
     },
     {
       "kind": "tool",
