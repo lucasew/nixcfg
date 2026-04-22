@@ -97,16 +97,6 @@
     },
     {
       "kind": "tool",
-      "name": "gh",
-      "provider": "github",
-      "ref": "github:cli/cli",
-      "version": "2.90.0",
-      "depName": "cli/cli",
-      "currentValue": "2.90.0",
-      "datasource": "github-releases"
-    },
-    {
-      "kind": "tool",
       "name": "go",
       "provider": "mise",
       "ref": "mise:go",
@@ -317,6 +307,12 @@
       "name": "rtk",
       "ref": "github:rtk-ai/rtk",
       "version": "0.37.2"
+    },
+    {
+      "kind": "tool",
+      "name": "gh",
+      "ref": "github:cli/cli",
+      "version": "2.89.0"
     }
   ]
 }
