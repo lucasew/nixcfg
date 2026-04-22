@@ -47,7 +47,7 @@ workspaced: {
 			bins: ["zed"]
 		}
 		codex: {
-			ref: "github:openai/codex"
+			ref: "mise:codex"
 			bins: ["codex"]
 			global: true
 		}
