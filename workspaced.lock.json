@@ -52,7 +52,7 @@
       "ref": "github:docker/compose",
       "version": "v5.1.3",
       "depName": "docker/compose",
-      "currentValue": "v5.1.1",
+      "currentValue": "v5.1.3",
       "datasource": "github-releases"
     },
     {
