@@ -13,3 +13,15 @@ trust_level = "trusted"
 
 [tui]
 status_line = ["model-with-reasoning", "project-root", "git-branch", "context-remaining", "five-hour-limit", "weekly-limit", "used-tokens", "total-input-tokens", "total-output-tokens"]
+
+[plugins."hugging-face@openai-curated"]
+enabled = true
+
+[plugins."vercel@openai-curated"]
+enabled = true
+
+[plugins."github@openai-curated"]
+enabled = true
+
+[plugins."superpowers@openai-curated"]
+enabled = true
