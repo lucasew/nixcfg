@@ -204,6 +204,11 @@ workspaced: {
 			global: true
 			bins: ["jj"]
 		}
+		pi: {
+			ref: "github:badlogic/pi-mono"
+			global: true
+			bins: ["pi"]
+		}
 	}
 
 	inputs: {

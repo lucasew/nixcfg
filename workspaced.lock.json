@@ -313,6 +313,12 @@
       "name": "gh",
       "ref": "github:cli/cli",
       "version": "2.89.0"
+    },
+    {
+      "kind": "tool",
+      "name": "pi",
+      "ref": "github:badlogic/pi-mono",
+      "version": "v0.70.2"
     }
   ]
 }
