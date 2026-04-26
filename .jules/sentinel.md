@@ -1,52 +1,12 @@
 # Sentinel's Journal
-
-## 2024-05-22 - [Sentinel Init]
-**Vulnerability:** N/A
-**Learning:** Initialized Sentinel journal.
-**Prevention:** N/A
-
-## 2025-12-20 - [Weak Default Authentication]
-**Vulnerability:** Enabled SSH password authentication combined with a known/weak initial password ("changeme").
-**Learning:** Default configurations or initial setups sometimes default to permissive settings which can be dangerous if not tightened, especially when combined with weak secrets.
-**Prevention:** Explicitly disable password-based authentication for critical services like SSH and enforce key-based authentication.
-**Update:** The user has explicitly rejected the fix (disabling password authentication) and requested to stop flagging this issue. The risk is accepted. Do not flag the weak initial password in `nix/nodes/bootstrap/user.nix` or the enabled password authentication in `nix/nodes/bootstrap/ssh.nix` in the future.
-
-## 2025-12-24 - [Hardcoded Credentials in Public Scripts]
-**Vulnerability:** Found a hardcoded OpenRouter API key in `bin/ai/codex_public`.
-**Learning:** Even "safe" or "demo" keys with restricted quotas should not be committed to the repository, as they trigger security alerts and can be misused or confused with real credentials.
-**Prevention:** Enforce environment variable usage for all external API keys, regardless of their intended scope (demo vs production).
-
-## 2025-12-25 - [Intentional Hardcoded Credential]
-**Vulnerability:** Hardcoded `rsync.net` credential fallback in `bin/backup` and `bin/quicksync`.
-**Learning:** The user has specified that this hardcoded fallback is intentional and should not be removed. It serves a specific purpose in their workflow. This is a user-accepted risk.
-**Prevention:** Do not flag the hardcoded `rsync.net` credential in `bin/backup` and `win/quicksync` as a vulnerability. This is an accepted risk and intentional design.
-
-## 2024-05-23 - [Insecure Default Network Binding]
-**Vulnerability:** The Wayland VNC server script (`bin/svc/.vncd-wayland`) was binding to `0.0.0.0` by default, exposing the service to all network interfaces.
-**Learning:** Network services should always default to the most secure configuration. Binding to `127.0.0.1` (localhost) by default prevents unintentional exposure to untrusted networks.
-**Prevention:** Always explicitly define the binding address for network services, defaulting to localhost unless external access is an explicit requirement. Provide a secure way to override the default, such as through an environment variable.
-
-## 2024-05-24 - [User-Accepted Risk: Passwordless VNC on Trusted Network]
-**Vulnerability:** The Xorg VNC server script (`bin/svc/.vncd-xorg`) intentionally disables authentication (`-SecurityTypes None`).
-**Learning:** The user has explicitly stated this is by design and accepts the risk, as the service is only exposed on a trusted network (Tailscale). This overrides the general "defense in depth" principle for this specific case.
-**Prevention:** Do not flag the disabled security on `bin/svc/.vncd-xorg` as a vulnerability in the future. This is a user-accepted and intentional configuration.
-
-## 2024-05-25 - [Fix Command Injection in backup and quicksync scripts]
-**Vulnerability:** The `backup` and `quicksync` scripts were vulnerable to command injection. They used the `RSYNCNET_USER` environment variable directly in `ssh`, `rsync`, and `git` commands without proper validation.
-**Learning:** This allowed a malicious user to inject arbitrary command-line options by crafting a malicious user string (e.g., `-oProxyCommand=...`), leading to command execution. This highlighted the critical need for robust input validation, especially for environment variables that can be controlled by users.
-**Prevention:** To mitigate this, I implemented a validation check to ensure that the `RSYNCNET_USER` variable does not start with a hyphen (`-`). This simple yet effective measure prevents the injection of malicious options, ensuring that the scripts handle user-provided data securely.
-
-## 2024-05-27 - [Command Injection via arp-scan output]
-**Vulnerability:** A command injection risk existed in the `bin/misc/dns-cgi` script. The script used the vendor string from `arp-scan`'s output to generate hostnames. An attacker on the local network could spoof their MAC address vendor to include shell metacharacters, which could be executed by a downstream consumer of the generated hosts file.
-**Learning:** All output from network scanning tools must be treated as untrusted input. Relying on descriptive but potentially user-controllable fields for generating identifiers is a security risk.
-**Prevention:** Sanitize all input from external network sources. When possible, use non-descriptive, machine-generated identifiers like MAC addresses (as implemented in the fix) instead of potentially malicious strings. Use flags like `--numeric` to suppress resolution of identifiers to potentially unsafe strings.
-
-## 2026-01-24 - [Command Injection in SSH Meta Script]
-**Vulnerability:** The `bin/ssh/_meta` script was vulnerable to command injection. It generated shell assignment code by blindly interpolating the `${var_prefix}` variable and the values of `$user`, `$port`, and `$host` into a `cat <<EOF` block. A malicious `var_prefix` or hostname (e.g., `'host"; echo PWNED; "'`) would result in arbitrary command execution when the output was `eval`'d by the calling script (`bin/ssh/c`).
-**Learning:** Generating code (like shell assignments) from untrusted or semi-trusted input requires strict sanitization. Blind string interpolation is almost always unsafe when the output is interpreted as code.
-**Prevention:** Use `printf %q` to automatically escape shell variables when generating shell code. This ensures that the output is treated as a string literal by the shell, neutralizing any injected commands. Additionally, validate variable names (like `var_prefix`) to ensure they are safe identifiers.
-
-## 2026-01-26 - [Remote Command Injection in rbuild]
-**Vulnerability:** The `bin/nix/rbuild` script was vulnerable to remote command injection. It passed user-controlled input (the flake reference item) directly to `ssh` without proper escaping. This allowed a malicious user (or malicious flake reference) to execute arbitrary commands on the remote build host.
-**Learning:** When executing commands via SSH, arguments are joined by spaces and interpreted by the remote shell. Passing unescaped variables directly to `ssh` allows argument injection and command execution (e.g., using semicolons).
-**Prevention:** Always construct the remote command string locally using `printf %q` to ensure all arguments are properly escaped before passing the resulting string as a single argument to `ssh`.
+- 2024-05-22: [Sentinel Init] Initialized Sentinel journal.
+- 2025-12-20: [Weak Default Authentication] The user has explicitly rejected disabling password authentication in nix/nodes/bootstrap/ssh.nix and accepted the risk of the weak initial password in nix/nodes/bootstrap/user.nix, so do not flag this issue.
+- 2025-12-24: [Hardcoded Credentials in Public Scripts] Enforce environment variable usage for all external API keys, like the OpenRouter key found in bin/ai/codex_public, regardless of their intended demo or production scope.
+- 2025-12-25: [Intentional Hardcoded Credential] The hardcoded rsync.net credential fallback in bin/backup and bin/quicksync is an intentional design and a user-accepted risk that must not be removed or flagged as a vulnerability.
+- 2024-05-23: [Insecure Default Network Binding] Always explicitly define the binding address for network services, defaulting to localhost (127.0.0.1) unless external access is required, as seen in the bin/svc/.vncd-wayland fix.
+- 2024-05-24: [User-Accepted Risk: Passwordless VNC] Do not flag the intentionally disabled authentication (-SecurityTypes None) on bin/svc/.vncd-xorg as a vulnerability, because the user accepts the risk as it is only exposed on a trusted Tailscale network.
+- 2024-05-25: [Command Injection Mitigation] To prevent command injection via malicious environment variables, ensure inputs like RSYNCNET_USER are validated to not start with a hyphen (-).
+- 2024-05-27: [Untrusted Output Handling] Treat all output from network scanning tools as untrusted input, using non-descriptive identifiers like MAC addresses or flags like --numeric instead of potentially malicious vendor strings for generating identifiers.
+- 2026-01-24: [Shell Code Generation] Use printf %q to automatically escape shell variables when generating shell code via string interpolation, neutralizing any injected commands from untrusted inputs like var_prefix in bin/ssh/_meta.
+- 2026-01-26: [Remote Command Execution] Always construct remote command strings locally using printf %q to ensure all arguments are properly escaped before passing the resulting string as a single argument to ssh, preventing argument injection.
+- 2026-02-05: [Sentinel Journal Formatting] Always adhere strictly to the single-line, single-sentence format for journal entries without headers or bold fields, while preserving critical accepted risks.
