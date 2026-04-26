@@ -11,10 +11,20 @@
     - i3: daily driver, working nice, playback buttons works when locked
     - gnone, xfce and kde: not using anymore, may delete later
 
-- machines referenced:
-    - riverwood: my main laptop, Acer A315-51-51SL 12GB RAM 1TB SSD dual booted with windows 10 (i think)
-    - whiterun: my battlestation, Ryzen 5600G, 32GB RAM 1TB SSD + 2x1TB DVR HDDs + a RTX 3060 in the future
-    - ravenrock: a machine in the cloud, it's provisioned using terraform from `infra/turbo/gcp.tf`
+## Project Structure
+
+- `nix/nodes/` - Machine configurations (Home-manager removed - configs migrated to workspaced).
+- `nix/overlay.nix` - Defines `pkgs.custom.*`. Sources in `nix/pkgs/custom/`.
+- `bin/` - Contains various scripts for different tasks. Environment initialization is handled by `source bin/source_me`.
+- `nix/nodes/common/sops.nix` - Manages secrets via `sops-nix`.
+- `flake.nix` - Contains global attributes (`global` attr: user, email, IPs, DE).
+- `workspaced/` - User configs/dotfiles manager. See `workspaced/AGENTS.md` for development documentation.
+
+## Machines referenced:
+
+- riverwood: my main laptop, Acer A315-51-51SL 12GB RAM 1TB SSD dual booted with windows 10 (i think)
+- whiterun: my battlestation, Ryzen 5600G, 32GB RAM 1TB SSD + 2x1TB DVR HDDs + a RTX 3060 in the future
+- ravenrock: a machine in the cloud, it's provisioned using terraform from `infra/turbo/gcp.tf`
 
 - licence
     - nothing special
