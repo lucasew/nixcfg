@@ -92,7 +92,7 @@
       "ref": "github:junegunn/fzf",
       "version": "v0.70.0",
       "depName": "junegunn/fzf",
-      "currentValue": "v0.70.0",
+      "currentValue": "v0.72.0",
       "datasource": "github-releases"
     },
     {
