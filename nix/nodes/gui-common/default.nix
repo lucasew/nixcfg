@@ -48,6 +48,7 @@ in
     zenity
     nix-output-monitor
     nbr.wine-apps._7zip
+    devenv
   ];
 
   programs.man.enable = true;
