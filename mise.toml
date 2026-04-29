@@ -7,10 +7,36 @@ run = "workspaced codebase lint"
 description = "Format all files"
 run = "workspaced codebase format"
 
+[tasks.install]
+description = "Install dependencies"
+depends = ["install:*"]
+
+[tasks."install:tools"]
+description = "Install tool dependencies for sub-environments"
+run = "mise install -C infra"
+
+[tasks."install:fallback"]
+run = "echo 'No install tasks defined'"
+
+[tasks.test]
+description = "Run tests"
+depends = ["test:*"]
+
+[tasks."test:fallback"]
+run = "echo 'No tests defined'"
+
+[tasks.codegen]
+description = "Update generated code"
+depends = ["codegen:*"]
+run = "mise run fmt"
+
+[tasks."codegen:fallback"]
+run = "echo 'No codegen defined'"
+
 [tasks.ci]
 description = "Run CI pipeline locally"
-depends = ["lint"]
+depends = ["lint", "test"]
 
 [tools]
-# "github:lucasew/workspaced" = "0.2.1"
+"github:lucasew/workspaced" = "0.2.1"
 sops = "3.11.0"
