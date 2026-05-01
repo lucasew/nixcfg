@@ -265,7 +265,7 @@
       "name": "zed",
       "provider": "github",
       "ref": "github:zed-industries/zed",
-      "version": "v0.233.1-pre",
+      "version": "v0.232.3",
       "depName": "zed-industries/zed",
       "currentValue": "v0.232.3",
       "datasource": "github-releases"
