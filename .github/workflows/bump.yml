@@ -42,7 +42,7 @@ jobs:
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
             build-dir = /nix/build
       - uses: DeterminateSystems/magic-nix-cache-action@1828eb4e5414b8dfe36daae53ea3e4b8c3fdec7a # main
-      - uses: cachix/cachix-action@3ba601ff5bbb07c7220846facfa2cd81eeee15a1 # v16
+      - uses: cachix/cachix-action@1eb2ef646ac0255473d23a5907ad7b04ce94065c # v17
         with:
           name: lucasew-personal
           authToken: '${{ secrets.CACHIX_TOKEN }}'
