@@ -9,8 +9,28 @@ run = "workspaced codebase format"
 
 [tasks.ci]
 description = "Run CI pipeline locally"
-depends = ["lint"]
+depends = ["lint", "test"]
 
 [tools]
 # "github:lucasew/workspaced" = "0.2.1"
 sops = "3.11.0"
+
+[tasks."install:tools"]
+description = "Install tools"
+run = "mise install"
+
+[tasks.install]
+depends = ["install:*"]
+[tasks."test:fallback"]
+description = "Fallback test task"
+run = "echo 'No tests to run'"
+
+[tasks.test]
+depends = ["test:*"]
+
+[tasks."codegen:fallback"]
+description = "Fallback codegen task"
+run = "echo 'No codegen to run'"
+
+[tasks.codegen]
+depends = ["codegen:*"]
