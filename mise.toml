@@ -7,9 +7,30 @@ run = "workspaced codebase lint"
 description = "Format all files"
 run = "workspaced codebase format"
 
+[tasks."test:fallback"]
+description = "Dummy task for test wildcard"
+run = "true"
+
+[tasks.test]
+depends = ["test:*"]
+
+[tasks."codegen:fallback"]
+description = "Dummy task for codegen wildcard"
+run = "true"
+
+[tasks.codegen]
+depends = ["codegen:*"]
+
+[tasks."install:fallback"]
+description = "Dummy task for install wildcard"
+run = "true"
+
+[tasks.install]
+depends = ["install:*"]
+
 [tasks.ci]
 description = "Run CI pipeline locally"
-depends = ["lint"]
+depends = ["lint", "test"]
 
 [tools]
 # "github:lucasew/workspaced" = "0.2.1"
