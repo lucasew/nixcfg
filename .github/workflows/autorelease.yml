@@ -58,5 +58,8 @@ jobs:
           branch: "autorelease/codegen"
           delete-branch: true
 
+      - name: Install workspaced
+        run: nix profile install github:lucasew/workspaced
+
       - name: Run CI
         run: mise run ci
