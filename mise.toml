@@ -9,7 +9,25 @@ run = "workspaced codebase format"
 
 [tasks.ci]
 description = "Run CI pipeline locally"
-depends = ["lint"]
+depends = ["lint", "test"]
+
+[tasks."install:fallback"]
+run = "echo 'No subtasks for install'"
+
+[tasks.install]
+depends = ["install:*"]
+
+[tasks."test:fallback"]
+run = "echo 'No subtasks for test'"
+
+[tasks.test]
+depends = ["test:*"]
+
+[tasks."codegen:fallback"]
+run = "echo 'No subtasks for codegen'"
+
+[tasks.codegen]
+depends = ["codegen:*"]
 
 [tools]
 # "github:lucasew/workspaced" = "0.2.1"
