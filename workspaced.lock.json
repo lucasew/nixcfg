@@ -147,7 +147,7 @@
       "ref": "github:anomalyco/opencode",
       "version": "v1.4.10",
       "depName": "anomalyco/opencode",
-      "currentValue": "v1.14.20",
+      "currentValue": "v1.14.40",
       "datasource": "github-releases"
     },
     {
