@@ -227,7 +227,7 @@
       "ref": "github:hashicorp/terraform",
       "version": "v1.15.0-rc2",
       "depName": "hashicorp/terraform",
-      "currentValue": "v1.14.8",
+      "currentValue": "v1.15.2",
       "datasource": "github-releases"
     },
     {
