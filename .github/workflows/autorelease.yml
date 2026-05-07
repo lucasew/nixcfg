@@ -60,8 +60,9 @@ jobs:
 
       - name: Install workspaced CLI
         run: |
-          go install github.com/lucasew/workspaced/cmd/workspaced@v0.2.1
-          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+          mkdir -p /tmp/workspaced
+          curl -sSL https://github.com/lucasew/workspaced/releases/download/0.2.1/workspaced_Linux_x86_64.tar.gz | tar -xz -C /tmp/workspaced
+          echo "/tmp/workspaced" >> $GITHUB_PATH
 
       - name: Run CI
         run: mise run ci
