@@ -110,7 +110,7 @@
       "ref": "github:golangci/golangci-lint",
       "version": "2.11.4",
       "depName": "golangci/golangci-lint",
-      "currentValue": "2.11.4",
+      "currentValue": "2.12.2",
       "datasource": "github-releases"
     },
     {
