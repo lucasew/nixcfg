@@ -177,7 +177,7 @@
       "ref": "github:astral-sh/ruff",
       "version": "0.15.8",
       "depName": "astral-sh/ruff",
-      "currentValue": "0.15.8",
+      "currentValue": "0.15.12",
       "datasource": "github-releases"
     },
     {
