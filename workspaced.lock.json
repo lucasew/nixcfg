@@ -217,7 +217,7 @@
       "ref": "github:getsops/sops",
       "version": "v3.12.2",
       "depName": "getsops/sops",
-      "currentValue": "v3.12.2",
+      "currentValue": "v3.13.0",
       "datasource": "github-releases"
     },
     {
