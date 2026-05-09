@@ -209,6 +209,11 @@ workspaced: {
 			global: true
 			bins: ["pi"]
 		}
+		coder: {
+			ref: "github:coder/coder"
+			global: true
+			bins: ["coder"]
+		}
 	}
 
 	inputs: {

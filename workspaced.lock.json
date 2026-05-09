@@ -319,6 +319,12 @@
       "name": "pi",
       "ref": "github:badlogic/pi-mono",
       "version": "v0.70.2"
+    },
+    {
+      "kind": "tool",
+      "name": "coder",
+      "ref": "github:coder/coder",
+      "version": "v2.33.2"
     }
   ]
 }
