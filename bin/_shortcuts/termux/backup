@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-exec workspaced utils backup run
+exec workspaced home backup run
