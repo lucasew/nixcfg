@@ -27,41 +27,22 @@ workspaced: {
 		}
 	}
 
-	backup: {
+		backup: {
 		rsyncnet_user: "de3163@de3163.rsync.net"
 		remote_path:   "backup/lucasew"
-		git_repos: [
-			{
-				src: "\(workspaced.runtime.home)/.personal/personal-beancount"
-				dst: "ssh://de3163@de3163.rsync.net//data2/home/de3163/git-personal/personal-beancount"
-			},
-			{
-				src: "\(workspaced.runtime.home)/.personal/personal-bookmarks"
-				dst: "ssh://de3163@de3163.rsync.net//data2/home/de3163/git-personal/personal-bookmarks"
-			},
-			{
-				src: "\(workspaced.runtime.home)/.personal/personal-decsync"
-				dst: "ssh://de3163@de3163.rsync.net//data2/home/de3163/git-personal/personal-decsync"
-			},
-			{
-				src: "\(workspaced.runtime.home)/.personal/personal-keepass"
-				dst: "ssh://de3163@de3163.rsync.net//data2/home/de3163/git-personal/personal-keepass"
-			},
-			{
-				src: "\(workspaced.runtime.home)/.personal/personal-zettel-obsidian"
-				dst: "ssh://de3163@de3163.rsync.net//data2/home/de3163/git-personal/personal-zettel-obsidian"
-			},
-			{
-				src: "\(workspaced.runtime.home)/.personal/personal-zettel-org"
-				dst: "ssh://de3163@de3163.rsync.net//data2/home/de3163/git-personal/personal-zettel-org"
-			},
-		]
 		actions: [
-			 if workspaced.runtime.hostname != "whiterun" for repo in workspaced.backup.git_repos {
-				name: "git repo \(repo.src) -> \(repo.dst)"
+			if workspaced.runtime.hostname != "whiterun" for name in [
+				"personal-beancount",
+				"personal-bookmarks",
+				"personal-decsync",
+				"personal-keepass",
+				"personal-zettel-obsidian",
+				"personal-zettel-org",
+			] {
+				name: "git repo \(name)"
 				kind: "git_repo_sync"
-				src:  repo.src
-				dst:  repo.dst
+				src:  "\(workspaced.runtime.home)/.personal/\(name)"
+				dst:  "ssh://de3163@de3163.rsync.net:git-personal/\(name)"
 			},
 			if workspaced.runtime.hostname == "whiterun" {
 				name: "cantgit"
