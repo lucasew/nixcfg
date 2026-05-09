@@ -63,7 +63,7 @@ workspaced: {
 				src:  repo.src
 				dst:  repo.dst
 			},
-			if !workspaced.runtime.is_phone {
+			if workspaced.runtime.hostname == "whiterun" {
 				name: "cantgit"
 				kind: "rsync"
 				src:  "\(workspaced.runtime.home)/WORKSPACE/CANTGIT/"
