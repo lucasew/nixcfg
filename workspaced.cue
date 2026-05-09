@@ -31,18 +31,18 @@ workspaced: {
 		rsyncnet_user: "de3163@de3163.rsync.net"
 		remote_path:   "backup/lucasew"
 		actions: [
-			if workspaced.runtime.hostname != "whiterun" for name in [
+			for repo_name in [
 				"personal-beancount",
 				"personal-bookmarks",
 				"personal-decsync",
 				"personal-keepass",
 				"personal-zettel-obsidian",
 				"personal-zettel-org",
-			] {
-				name: "git repo \(name)"
+			] if workspaced.runtime.hostname != "whiterun" {
+				name: "git repo \(repo_name)"
 				kind: "git_repo_sync"
-				src:  "\(workspaced.runtime.home)/.personal/\(name)"
-				dst:  "ssh://de3163@de3163.rsync.net:git-personal/\(name)"
+				src:  "\(workspaced.runtime.home)/.personal/\(repo_name)"
+				dst:  "ssh://de3163@de3163.rsync.net:git-personal/\(repo_name)"
 			},
 			if workspaced.runtime.hostname == "whiterun" {
 				name: "cantgit"
