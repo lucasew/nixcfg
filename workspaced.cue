@@ -325,6 +325,11 @@ workspaced: {
 			enable: true
 			config: {
 				apps: {
+					workx: {
+						profile: "XAI"
+						desktop_name: "Trabson"
+						url: ""
+					}
 					"castable-iframe": {
 						url:     "https://castable-iframe.vercel.app/"
 						profile: "castable-iframe"
