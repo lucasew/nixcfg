@@ -7,3 +7,4 @@ out.nar
 __pycache__
 workspaced/workspaced_test
 workspaced
+.codex
