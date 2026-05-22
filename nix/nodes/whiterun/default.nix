@@ -30,8 +30,6 @@ in
 
   services.minecraft-server.enable = true;
 
-  services.phpelo.enable = true;
-
   programs.nix-ld.enable = true;
 
   hardware.nvidia.modesetting.enable = false;

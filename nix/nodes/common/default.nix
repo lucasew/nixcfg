@@ -35,6 +35,8 @@ in
 
   services.lvm.enable = mkDefault false;
 
+  services.phpelo.enable = false;
+
   programs.fuse.userAllowOther = true;
 
   services.cloud-savegame = {
