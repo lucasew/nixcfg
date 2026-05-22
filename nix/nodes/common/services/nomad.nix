@@ -43,5 +43,24 @@
         ];
       };
     };
+
+    # Nomad resolves/binds against tailscale0; ensure it starts after
+    # Tailscale daemon, autoconnect, and device availability at boot.
+    systemd.services.nomad = {
+      wantedBy = [ "multi-user.target" ];
+      wants = [
+        "network-online.target"
+        "tailscaled.service"
+        "tailscale-autoconnect.service"
+      ];
+      after = [
+        "network-online.target"
+        "tailscaled.service"
+        "tailscale-autoconnect.service"
+        "sys-subsystem-net-devices-tailscale0.device"
+      ];
+      bindsTo = [ "sys-subsystem-net-devices-tailscale0.device" ];
+      requires = [ "tailscaled.service" ];
+    };
   };
 }
