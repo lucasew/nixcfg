@@ -48,6 +48,8 @@ in
       hosts = lib.mkOption {
         description = "Services to expose to ts-proxy";
 
+        default = {};
+
         type = lib.types.attrsOf (
           lib.types.submodule (
             { name, ... }:
