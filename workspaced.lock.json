@@ -108,7 +108,7 @@
       "name": "golangci_lint",
       "provider": "github",
       "ref": "github:golangci/golangci-lint",
-      "version": "2.11.4",
+      "version": "2.12.2",
       "depName": "golangci/golangci-lint",
       "currentValue": "2.12.2",
       "datasource": "github-releases"

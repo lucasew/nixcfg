@@ -77,11 +77,11 @@ workspaced: {
 				src:  "/sdcard/Android/media/com.whatsapp/WhatsApp/Backups/"
 				dst:  "\(workspaced.backup.rsyncnet_user):\(workspaced.backup.remote_path)/WhatsApp"
 			},
-			if workspaced.runtime.is_phone {
-				name: "termux packages list"
-				kind: "termux_packages_snapshot"
-				output: "\(workspaced.runtime.home)/.cache/backup/termux/packages.txt"
-			},
+			// if workspaced.runtime.is_phone {
+			// 	name: "termux packages list"
+			// 	kind: "termux_packages_snapshot"
+			// 	output: "\(workspaced.runtime.home)/.cache/backup/termux/packages.txt"
+			// },
 			if workspaced.runtime.is_phone {
 				name: "termux sync home"
 				kind: "rsync"
