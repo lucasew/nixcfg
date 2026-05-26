@@ -309,7 +309,7 @@ workspaced: {
 	modules: {
 		icons: {
 			input: "core:base16-icons-linux"
-			enable: !workspaced.runtime.is_phone
+			enable: !workspaced.runtime.is_phone || !(workspaced.runtime.hostname == "ravenrock")
 			config: {
 				input_dir: "papirus:Papirus"
 			}
