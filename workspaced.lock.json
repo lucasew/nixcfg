@@ -325,6 +325,12 @@
       "name": "coder",
       "ref": "github:coder/coder",
       "version": "v2.33.2"
+    },
+    {
+      "kind": "tool",
+      "name": "herdr",
+      "ref": "github:ogulcancelik/herdr",
+      "version": "v0.6.2"
     }
   ]
 }

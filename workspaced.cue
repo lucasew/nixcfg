@@ -289,6 +289,11 @@ workspaced: {
 			global: true
 			bins: ["coder"]
 		}
+		herdr: {
+			ref: "github:ogulcancelik/herdr"
+			global: true
+			bins: ["herdr"]
+		}
 	}
 
 	inputs: {
