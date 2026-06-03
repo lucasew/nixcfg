@@ -7,157 +7,66 @@
       "ref": "702499f331aa9c38309e1af99de4021013916297",
       "repo": "PapirusDevelopmentTeam/papirus-icon-theme",
       "url": "https://codeload.github.com/PapirusDevelopmentTeam/papirus-icon-theme/tar.gz/702499f331aa9c38309e1af99de4021013916297",
-      "hash": "65224305098d14f359c18c341bc09f7401cceee1cc6652f71a34991ea30cb17f",
-      "depName": "PapirusDevelopmentTeam/papirus-icon-theme",
-      "currentValue": "702499f331aa9c38309e1af99de4021013916297",
-      "datasource": "github-tags"
-    },
-    {
-      "kind": "tool",
-      "name": "ast_grep",
-      "provider": "github",
-      "ref": "github:ast-grep/ast-grep",
-      "version": "0.42.1",
-      "depName": "ast-grep/ast-grep",
-      "currentValue": "0.42.1",
-      "datasource": "github-releases"
-    },
-    {
-      "kind": "tool",
-      "name": "bun",
-      "provider": "mise",
-      "ref": "mise:bun",
-      "version": "1.3.12",
-      "currentValue": "1.3.12"
-    },
-    {
-      "kind": "tool",
-      "name": "clang",
-      "provider": "mise",
-      "ref": "mise:vfox:clang",
-      "version": "22.1.3",
-      "currentValue": "22.1.3"
-    },
-    {
-      "kind": "tool",
-      "name": "codex",
-      "ref": "mise:codex",
-      "version": "rust-v0.122.0",
-      "currentValue": "rust-v0.122.0"
-    },
-    {
-      "kind": "tool",
-      "name": "docker_compose",
-      "provider": "github",
-      "ref": "github:docker/compose",
-      "version": "v5.1.3",
-      "depName": "docker/compose",
-      "currentValue": "v5.1.3",
-      "datasource": "github-releases"
-    },
-    {
-      "kind": "tool",
-      "name": "docker_language_server",
-      "provider": "github",
-      "ref": "github:docker/docker-language-server",
-      "version": "v0.20.1",
-      "depName": "docker/docker-language-server",
-      "currentValue": "v0.20.1",
-      "datasource": "github-releases"
-    },
-    {
-      "kind": "tool",
-      "name": "fd",
-      "provider": "github",
-      "ref": "github:sharkdp/fd",
-      "version": "10.4.2",
-      "depName": "sharkdp/fd",
-      "currentValue": "10.4.2",
-      "datasource": "github-releases"
-    },
-    {
-      "kind": "tool",
-      "name": "ffmpeg",
-      "provider": "github",
-      "ref": "github:ffbinaries/ffbinaries-prebuilt",
-      "version": "v6.1",
-      "depName": "ffbinaries/ffbinaries-prebuilt",
-      "currentValue": "v6.1",
-      "datasource": "github-releases"
-    },
-    {
-      "kind": "tool",
-      "name": "fzf",
-      "provider": "github",
-      "ref": "github:junegunn/fzf",
-      "version": "v0.70.0",
-      "depName": "junegunn/fzf",
-      "currentValue": "v0.70.0",
-      "datasource": "github-releases"
-    },
-    {
-      "kind": "tool",
-      "name": "go",
-      "provider": "mise",
-      "ref": "mise:go",
-      "version": "1.26.2",
-      "currentValue": "1.26.2"
-    },
-    {
-      "kind": "tool",
-      "name": "golangci_lint",
-      "provider": "github",
-      "ref": "github:golangci/golangci-lint",
-      "version": "2.12.2",
-      "depName": "golangci/golangci-lint",
-      "currentValue": "2.12.2",
-      "datasource": "github-releases"
-    },
-    {
-      "kind": "tool",
-      "name": "helix",
-      "provider": "github",
-      "ref": "github:helix-editor/helix",
-      "version": "25.07.1",
-      "depName": "helix-editor/helix",
-      "currentValue": "25.07.1",
-      "datasource": "github-releases"
-    },
-    {
-      "kind": "tool",
-      "name": "jless",
-      "provider": "mise",
-      "ref": "mise:jless",
-      "version": "0.9.0"
-    },
-    {
-      "kind": "tool",
-      "name": "ltex_ls",
-      "provider": "github",
-      "ref": "github:valentjn/ltex-ls",
-      "version": "16.0.0",
-      "depName": "valentjn/ltex-ls",
-      "currentValue": "16.0.0",
-      "datasource": "github-releases"
+      "hash": "65224305098d14f359c18c341bc09f7401cceee1cc6652f71a34991ea30cb17f"
     },
     {
       "kind": "tool",
       "name": "opencode",
       "provider": "github",
       "ref": "github:anomalyco/opencode",
-      "version": "v1.4.10",
+      "version": "v1.15.13",
       "depName": "anomalyco/opencode",
-      "currentValue": "v1.14.41",
+      "currentValue": "v1.15.13",
       "datasource": "github-releases"
     },
     {
       "kind": "tool",
-      "name": "rclone",
+      "name": "ast_grep",
       "provider": "github",
-      "ref": "github:rclone/rclone",
-      "version": "v1.73.4",
-      "depName": "rclone/rclone",
-      "currentValue": "v1.73.3",
+      "ref": "github:ast-grep/ast-grep",
+      "version": "0.43.0",
+      "depName": "ast-grep/ast-grep",
+      "currentValue": "0.43.0",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "ruff",
+      "provider": "github",
+      "ref": "github:astral-sh/ruff",
+      "version": "0.15.15",
+      "depName": "astral-sh/ruff",
+      "currentValue": "0.15.15",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "uv",
+      "provider": "github",
+      "ref": "github:astral-sh/uv",
+      "version": "0.11.18",
+      "depName": "astral-sh/uv",
+      "currentValue": "0.11.18",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "pi",
+      "provider": "github",
+      "ref": "github:badlogic/pi-mono",
+      "version": "v0.78.0",
+      "depName": "badlogic/pi-mono",
+      "currentValue": "v0.78.0",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "scc",
+      "provider": "github",
+      "ref": "github:boyter/scc",
+      "version": "v3.7.0",
+      "depName": "boyter/scc",
+      "currentValue": "v3.7.0",
       "datasource": "github-releases"
     },
     {
@@ -172,22 +81,112 @@
     },
     {
       "kind": "tool",
-      "name": "ruff",
+      "name": "gh",
       "provider": "github",
-      "ref": "github:astral-sh/ruff",
-      "version": "0.15.8",
-      "depName": "astral-sh/ruff",
-      "currentValue": "0.15.8",
+      "ref": "github:cli/cli",
+      "version": "v2.93.0",
+      "depName": "cli/cli",
+      "currentValue": "v2.93.0",
       "datasource": "github-releases"
     },
     {
       "kind": "tool",
-      "name": "scc",
+      "name": "coder",
       "provider": "github",
-      "ref": "github:boyter/scc",
-      "version": "3.6.0",
-      "depName": "boyter/scc",
-      "currentValue": "3.7.0",
+      "ref": "github:coder/coder",
+      "version": "v2.34.0",
+      "depName": "coder/coder",
+      "currentValue": "v2.34.0",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "docker_compose",
+      "provider": "github",
+      "ref": "github:docker/compose",
+      "version": "v5.1.4",
+      "depName": "docker/compose",
+      "currentValue": "v5.1.4",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "docker_language_server",
+      "provider": "github",
+      "ref": "github:docker/docker-language-server",
+      "version": "v0.20.1",
+      "depName": "docker/docker-language-server",
+      "currentValue": "v0.20.1",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "ffmpeg",
+      "provider": "github",
+      "ref": "github:ffbinaries/ffbinaries-prebuilt",
+      "version": "v6.1",
+      "depName": "ffbinaries/ffbinaries-prebuilt",
+      "currentValue": "v6.1",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "sops",
+      "provider": "github",
+      "ref": "github:getsops/sops",
+      "version": "v3.13.1",
+      "depName": "getsops/sops",
+      "currentValue": "v3.13.1",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "golangci_lint",
+      "provider": "github",
+      "ref": "github:golangci/golangci-lint",
+      "version": "v2.12.2",
+      "depName": "golangci/golangci-lint",
+      "currentValue": "v2.12.2",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "terraform",
+      "provider": "github",
+      "ref": "github:hashicorp/terraform",
+      "version": "v1.16.0-alpha20260603",
+      "depName": "hashicorp/terraform",
+      "currentValue": "v1.16.0-alpha20260603",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "helix",
+      "provider": "github",
+      "ref": "github:helix-editor/helix",
+      "version": "25.07.1",
+      "depName": "helix-editor/helix",
+      "currentValue": "25.07.1",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "jujutsu",
+      "provider": "github",
+      "ref": "github:jj-vcs/jj",
+      "version": "v0.41.0",
+      "depName": "jj-vcs/jj",
+      "currentValue": "v0.41.0",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "fzf",
+      "provider": "github",
+      "ref": "github:junegunn/fzf",
+      "version": "v0.73.1",
+      "depName": "junegunn/fzf",
+      "currentValue": "v0.73.1",
       "datasource": "github-releases"
     },
     {
@@ -195,9 +194,19 @@
       "name": "shellcheck",
       "provider": "github",
       "ref": "github:koalaman/shellcheck",
-      "version": "0.11.0",
+      "version": "v0.11.0",
       "depName": "koalaman/shellcheck",
-      "currentValue": "0.11.0",
+      "currentValue": "v0.11.0",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "herdr",
+      "provider": "github",
+      "ref": "github:ogulcancelik/herdr",
+      "version": "v0.6.8",
+      "depName": "ogulcancelik/herdr",
+      "currentValue": "v0.6.8",
       "datasource": "github-releases"
     },
     {
@@ -212,22 +221,42 @@
     },
     {
       "kind": "tool",
-      "name": "sops",
+      "name": "rclone",
       "provider": "github",
-      "ref": "github:getsops/sops",
-      "version": "v3.12.2",
-      "depName": "getsops/sops",
-      "currentValue": "v3.13.0",
+      "ref": "github:rclone/rclone",
+      "version": "v1.74.2",
+      "depName": "rclone/rclone",
+      "currentValue": "v1.74.2",
       "datasource": "github-releases"
     },
     {
       "kind": "tool",
-      "name": "terraform",
+      "name": "rtk",
       "provider": "github",
-      "ref": "github:hashicorp/terraform",
-      "version": "v1.15.0-rc2",
-      "depName": "hashicorp/terraform",
-      "currentValue": "v1.14.8",
+      "ref": "github:rtk-ai/rtk",
+      "version": "v0.42.1",
+      "depName": "rtk-ai/rtk",
+      "currentValue": "v0.42.1",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "fd",
+      "provider": "github",
+      "ref": "github:sharkdp/fd",
+      "version": "v10.4.2",
+      "depName": "sharkdp/fd",
+      "currentValue": "v10.4.2",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "name": "tirith",
+      "provider": "github",
+      "ref": "github:sheeki03/tirith",
+      "version": "threatdb-26874685865-1",
+      "depName": "sheeki03/tirith",
+      "currentValue": "threatdb-26874685865-1",
       "datasource": "github-releases"
     },
     {
@@ -235,29 +264,19 @@
       "name": "tflint",
       "provider": "github",
       "ref": "github:terraform-linters/tflint",
-      "version": "v0.61.0",
+      "version": "v0.63.1",
       "depName": "terraform-linters/tflint",
-      "currentValue": "v0.62.0",
+      "currentValue": "v0.63.1",
       "datasource": "github-releases"
     },
     {
       "kind": "tool",
-      "name": "uv",
+      "name": "ltex_ls",
       "provider": "github",
-      "ref": "github:astral-sh/uv",
-      "version": "0.11.7",
-      "depName": "astral-sh/uv",
-      "currentValue": "0.11.7",
-      "datasource": "github-releases"
-    },
-    {
-      "kind": "tool",
-      "name": "yt_dlp",
-      "provider": "github",
-      "ref": "mise:yt-dlp",
-      "version": "2026.03.17",
-      "depName": "yt-dlp/yt-dlp",
-      "currentValue": "2026.03.17",
+      "ref": "github:valentjn/ltex-ls",
+      "version": "16.0.0",
+      "depName": "valentjn/ltex-ls",
+      "currentValue": "16.0.0",
       "datasource": "github-releases"
     },
     {
@@ -265,72 +284,66 @@
       "name": "zed",
       "provider": "github",
       "ref": "github:zed-industries/zed",
-      "version": "v0.232.3",
+      "version": "v1.6.0-pre",
       "depName": "zed-industries/zed",
-      "currentValue": "v1.0.1",
+      "currentValue": "v1.6.0-pre",
       "datasource": "github-releases"
     },
     {
       "kind": "tool",
+      "name": "bun",
+      "provider": "mise",
+      "ref": "mise:bun",
+      "version": "1.3.14",
+      "currentValue": "1.3.14"
+    },
+    {
+      "kind": "tool",
+      "name": "codex",
+      "provider": "mise",
+      "ref": "mise:codex",
+      "version": "0.135.0",
+      "currentValue": "0.135.0"
+    },
+    {
+      "kind": "tool",
+      "name": "go",
+      "provider": "mise",
+      "ref": "mise:go",
+      "version": "1.26.4",
+      "currentValue": "1.26.4"
+    },
+    {
+      "kind": "tool",
+      "name": "jless",
+      "provider": "mise",
+      "ref": "mise:jless",
+      "version": "0.9.0",
+      "currentValue": "0.9.0"
+    },
+    {
+      "kind": "tool",
       "name": "node",
+      "provider": "mise",
       "ref": "mise:node",
-      "version": "25.8.2",
-      "currentValue": "25.8.2"
+      "version": "26.3.0",
+      "currentValue": "26.3.0"
     },
     {
       "kind": "tool",
-      "name": "bash_language_server",
-      "ref": "mise:npm:bash-language-server",
-      "version": "5.6.0"
+      "name": "clang",
+      "provider": "mise",
+      "ref": "mise:vfox:clang",
+      "version": "22.1.3",
+      "currentValue": "22.1.3"
     },
     {
       "kind": "tool",
-      "name": "tirith",
-      "ref": "github:sheeki03/tirith",
-      "version": "0.2.12",
-      "currentValue": "0.2.12"
-    },
-    {
-      "kind": "tool",
-      "name": "vscode_langservers",
-      "ref": "mise:npm:vscode-langservers-extracted",
-      "version": "4.10.0"
-    },
-    {
-      "kind": "tool",
-      "name": "jujutsu",
-      "ref": "github:jj-vcs/jj",
-      "version": "v0.40.0"
-    },
-    {
-      "kind": "tool",
-      "name": "rtk",
-      "ref": "github:rtk-ai/rtk",
-      "version": "0.37.2"
-    },
-    {
-      "kind": "tool",
-      "name": "gh",
-      "ref": "github:cli/cli",
-      "version": "2.89.0"
-    },
-    {
-      "kind": "tool",
-      "name": "pi",
-      "ref": "github:badlogic/pi-mono",
-      "version": "v0.70.2"
-    },
-    {
-      "kind": "tool",
-      "name": "coder",
-      "ref": "github:coder/coder",
-      "version": "v2.33.2"
-    },
-    {
-      "kind": "tool",
-      "name": "herdr",
-      "ref": "github:ogulcancelik/herdr",
-      "version": "v0.6.2"
+      "name": "yt_dlp",
+      "provider": "mise",
+      "ref": "mise:yt-dlp",
+      "version": "2026.03.17",
+      "currentValue": "2026.03.17"
     }
   ]
 }
