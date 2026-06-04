@@ -344,6 +344,14 @@
       "ref": "mise:yt-dlp",
       "version": "2026.03.17",
       "currentValue": "2026.03.17"
+    },
+    {
+      "kind": "tool",
+      "name": "grok",
+      "provider": "registry",
+      "ref": "registry:grok-build",
+      "version": "0.2.20",
+      "currentValue": "0.2.20"
     }
   ]
 }

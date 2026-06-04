@@ -294,6 +294,11 @@ workspaced: {
 			global: true
 			bins: ["herdr"]
 		}
+		grok: {
+			ref: "grok-build"
+			global: true
+			bins: ["grok"]
+		}
 	}
 
 	inputs: {
