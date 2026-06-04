@@ -270,7 +270,7 @@ workspaced: {
 			bins: ["scc"]
 		}
 		tirith: {
-			ref: "github:sheeki03/tirith"
+			ref: "tirith"
 			global: true
 			bins: ["tirith"]
 		}
