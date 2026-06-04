@@ -251,16 +251,6 @@
     },
     {
       "kind": "tool",
-      "name": "tirith",
-      "provider": "github",
-      "ref": "github:sheeki03/tirith",
-      "version": "threatdb-26874685865-1",
-      "depName": "sheeki03/tirith",
-      "currentValue": "threatdb-26874685865-1",
-      "datasource": "github-releases"
-    },
-    {
-      "kind": "tool",
       "name": "tflint",
       "provider": "github",
       "ref": "github:terraform-linters/tflint",
@@ -352,6 +342,17 @@
       "ref": "registry:grok-build",
       "version": "0.2.20",
       "currentValue": "0.2.20"
+    },
+    {
+      "kind": "tool",
+      "name": "tirith",
+      "provider": "github",
+      "ref": "registry:tirith",
+      "version": "v0.3.1",
+      "depName": "sheeki03/tirith",
+      "currentValue": "v0.3.1",
+      "datasource": "github-releases",
+      "versioning": "semver"
     }
   ]
 }
