@@ -226,7 +226,7 @@
       "ref": "github:rclone/rclone",
       "version": "v1.74.2",
       "depName": "rclone/rclone",
-      "currentValue": "v1.74.2",
+      "currentValue": "v1.74.3",
       "datasource": "github-releases"
     },
     {
