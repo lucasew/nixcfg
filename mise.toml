@@ -11,6 +11,9 @@ run = "workspaced codebase format"
 description = "Run CI pipeline locally"
 depends = ["lint"]
 
+[tasks.install]
+depends = ["install:*"]
+
 [tools]
 # "github:lucasew/workspaced" = "0.2.1"
 sops = "3.11.0"
