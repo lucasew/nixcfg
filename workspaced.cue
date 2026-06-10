@@ -53,6 +53,7 @@ workspaced: {
 			if workspaced.runtime.is_phone {
 				name:     "camera"
 				kind:     "rsync"
+				skip_permissions: true
 				src:      "/sdcard/DCIM/Camera/"
 				dst:      "\(workspaced.backup.rsyncnet_user):\(workspaced.backup.remote_path)/camera"
 				excludes: [".thumbnails"]
@@ -60,6 +61,7 @@ workspaced: {
 			if workspaced.runtime.is_phone {
 				name:     "pictures"
 				kind:     "rsync"
+				skip_permissions: true
 				src:      "/sdcard/Pictures/"
 				dst:      "\(workspaced.backup.rsyncnet_user):\(workspaced.backup.remote_path)/pictures"
 				excludes: [".thumbnails"]
@@ -67,6 +69,7 @@ workspaced: {
 			if workspaced.runtime.is_phone {
 				name:     "whatsapp media"
 				kind:     "rsync"
+				skip_permissions: true
 				src:      "/sdcard/Android/media/com.whatsapp/WhatsApp/Media/"
 				dst:      "\(workspaced.backup.rsyncnet_user):\(workspaced.backup.remote_path)/WhatsApp"
 				excludes: [".Links", ".Statuses"]
@@ -74,6 +77,7 @@ workspaced: {
 			if workspaced.runtime.is_phone {
 				name: "whatsapp backups"
 				kind: "rsync"
+				skip_permissions: true
 				src:  "/sdcard/Android/media/com.whatsapp/WhatsApp/Backups/"
 				dst:  "\(workspaced.backup.rsyncnet_user):\(workspaced.backup.remote_path)/WhatsApp"
 			},
@@ -85,6 +89,7 @@ workspaced: {
 			if workspaced.runtime.is_phone {
 				name: "termux sync home"
 				kind: "rsync"
+				skip_permissions: true
 				src:  "\(workspaced.runtime.home)/.cache/backup/termux/"
 				dst:  "\(workspaced.backup.rsyncnet_user):\(workspaced.backup.remote_path)/termux/"
 			},
@@ -98,6 +103,7 @@ workspaced: {
 			if workspaced.runtime.is_phone {
 				name: "termux archive upload"
 				kind: "rsync"
+				skip_permissions: true
 				src:  "\(workspaced.runtime.home)/.cache/backup/termux.tar"
 				dst:  "\(workspaced.backup.rsyncnet_user):\(workspaced.backup.remote_path)/termux.tar"
 			},
