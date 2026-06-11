@@ -119,12 +119,6 @@ workspaced: {
 		"workspaced/pkg/driver/terminal.Driver": {
 			"terminal_kitty": 70
 		}
-		"workspaced/pkg/driver/exec.Driver": {
-			"exec_termux": 0
-		}
-		"workspaced/pkg/driver/env.Driver": {
-			"env_termux": 0
-		}
 	}
 
 
