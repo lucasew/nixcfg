@@ -243,26 +243,26 @@ workspaced: {
 			global: true
 			bins: ["ltex-ls"]
 		}
-		bash_language_server: {
-			ref: "mise:npm:bash-language-server"
-			global: true
-			bins: ["bash-language-server"]
-		}
-		vscode_langservers: {
-			ref: "mise:npm:vscode-langservers-extracted"
-			bins: [
-				"vscode-html-language-server",
-				"vscode-css-language-server",
-				"vscode-json-language-server",
-				"vscode-eslint-language-server",
-			]
-		}
+		// bash_language_server: {
+		// 	ref: "mise:npm:bash-language-server"
+		// 	global: true
+		// 	bins: ["bash-language-server"]
+		// }
+		// vscode_langservers: {
+		// 	ref: "mise:npm:vscode-langservers-extracted"
+		// 	bins: [
+		// 		"vscode-html-language-server",
+		// 		"vscode-css-language-server",
+		// 		"vscode-json-language-server",
+		// 		"vscode-eslint-language-server",
+		// 	]
+		// }
 		clang: {
 			ref: "mise:vfox:clang"
 			bins: ["clang", "clang-cpp"]
 		}
 		jless: {
-			ref: "jless"
+			ref: "github:PaulJuliusMartinez/jless"
 			global: true
 			bins: ["jless"]
 		}

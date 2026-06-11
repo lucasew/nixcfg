@@ -11,6 +11,16 @@
     },
     {
       "kind": "tool",
+      "name": "jless",
+      "provider": "mise",
+      "ref": "github:PaulJuliusMartinez/jless",
+      "version": "v0.9.0",
+      "depName": "PaulJuliusMartinez/jless",
+      "currentValue": "v0.9.0",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
       "name": "opencode",
       "provider": "github",
       "ref": "github:anomalyco/opencode",
@@ -302,14 +312,6 @@
       "ref": "mise:go",
       "version": "1.26.4",
       "currentValue": "1.26.4"
-    },
-    {
-      "kind": "tool",
-      "name": "jless",
-      "provider": "mise",
-      "ref": "mise:jless",
-      "version": "0.9.0",
-      "currentValue": "0.9.0"
     },
     {
       "kind": "tool",
