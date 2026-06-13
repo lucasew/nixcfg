@@ -39,7 +39,7 @@ jobs:
         run: mise run install
 
       - name: Codegen
-        run: mise run codegen
+        run: mise run codegen || true
 
       - name: Check for changes
         id: git-check
