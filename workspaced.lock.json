@@ -241,16 +241,6 @@
     },
     {
       "kind": "tool",
-      "name": "actionlint",
-      "provider": "github",
-      "ref": "github:rhysd/actionlint",
-      "version": "v1.7.12",
-      "depName": "rhysd/actionlint",
-      "currentValue": "v1.7.12",
-      "datasource": "github-releases"
-    },
-    {
-      "kind": "tool",
       "name": "rtk",
       "provider": "github",
       "ref": "github:rtk-ai/rtk",

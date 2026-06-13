@@ -17,6 +17,12 @@ run = "mise install"
 [tasks.install]
 depends = ["install:*"]
 
+[tasks."codegen:noop"]
+run = "true"
+
+[tasks.codegen]
+depends = ["codegen:*"]
+
 [tools]
 # "github:lucasew/workspaced" = "0.2.1"
 sops = "3.11.0"
