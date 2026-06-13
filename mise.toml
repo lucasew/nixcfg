@@ -1,4 +1,7 @@
 # Warning: Do not unify this file with others. Keep tool definitions localized.
+[env]
+PATH = "~/.local/bin:{{env.PATH}}"
+
 [tasks.lint]
 description = "Run all linters"
 run = "workspaced codebase lint"
@@ -21,6 +24,13 @@ mise install
 mise install -C infra
 """
 
+[tasks."install:workspaced"]
+description = "Install workspaced CLI for CI"
+run = """
+mkdir -p ~/.local/bin
+curl -sL "https://github.com/lucasew/workspaced/releases/download/0.2.1/workspaced_Linux_x86_64.tar.gz" | tar -xz -C ~/.local/bin workspaced
+"""
+
 [tasks.test]
 depends = ["test:*"]
 
@@ -28,8 +38,6 @@ depends = ["test:*"]
 description = "Test Nix configuration"
 run = "command -v nix >/dev/null && nix --accept-flake-config --extra-experimental-features 'nix-command flakes impure-derivations ca-derivations' flake check --impure || echo 'Nix not found, skipping'"
 
-[tasks.codegen]
-depends = ["codegen:*"]
 
 [tools]
 # "github:lucasew/workspaced" = "0.2.1"

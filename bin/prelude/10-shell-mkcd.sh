@@ -1,2 +1,2 @@
 # shellcheck shell=bash
-mkcd() { [ ! -z "$1" ] && mkdir -p "$1" && cd "$_"; }
+mkcd() { [ -n "$1" ] && mkdir -p "$1" && cd "$_"; }
