@@ -11,6 +11,9 @@ run = "workspaced codebase format"
 description = "Run CI pipeline locally"
 depends = ["lint"]
 
+[tasks."install:tools"]
+run = "mise install"
+
 [tasks.install]
 depends = ["install:*"]
 
