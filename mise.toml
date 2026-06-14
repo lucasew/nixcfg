@@ -17,3 +17,6 @@ depends = ["install:*"]
 [tools]
 # "github:lucasew/workspaced" = "0.2.1"
 sops = "3.11.0"
+
+[tasks."install:tools"]
+run = "mise install"
