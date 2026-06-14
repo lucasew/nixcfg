@@ -38,7 +38,7 @@ jobs:
       - name: Install workspaced
         run: |
           mkdir -p ~/.local/bin
-          curl -sSL -o workspaced.tar.gz https://github.com/lucasew/workspaced/releases/download/v1.17.1/workspaced_Linux_x86_64.tar.gz
+          curl -sSL -o workspaced.tar.gz https://github.com/lucasew/workspaced/releases/latest/download/workspaced_Linux_x86_64.tar.gz
           tar -xzf workspaced.tar.gz workspaced
           mv workspaced ~/.local/bin/
           rm workspaced.tar.gz

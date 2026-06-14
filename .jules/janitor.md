@@ -36,3 +36,5 @@
 **Pattern:** Prefer pipelines with `xargs -0 -r` over command substitution for passing file lists to tools, as it handles empty lists and filenames with spaces correctly.
 - 2026-05-06: Formatting was applied to .jules/sentinel.md using prettier to ensure empty lines follow markdown headers.
 - 2026-06-14: [Explicitly defining `install:*` tools task and downloading missing workspaced binary in CI resolves installation step failures.]
+- 2026-06-14: [When downloading precompiled GitHub release tarballs via `curl`, use `latest/download/` path to avoid 404 errors causing `tar: not in gzip format` failures.]
+- 2026-06-14: When downloading GitHub release tarballs, use `latest/download/` to avoid 404s and `tar: not in gzip format` errors.
