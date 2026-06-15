@@ -17,6 +17,12 @@ depends = ["install:*"]
 [tasks."install:tools"]
 run = "mise install"
 
+[tasks.codegen]
+depends = ["codegen:*"]
+
+[tasks."codegen:dummy"]
+run = "echo ok"
+
 [tools]
 # "github:lucasew/workspaced" = "0.2.1"
 sops = "3.11.0"
