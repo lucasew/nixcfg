@@ -40,3 +40,8 @@
 **Issue:** `mise run ci` and CI jobs failed due to missing `install:*`, `test:*`, and `codegen:*` task configurations in `mise.toml`.
 **Root Cause:** The `autorelease.yml` workflow and local CI task expected wildcard and specific task definitions in `mise.toml` that were not defined.
 **Solution:** Added `install:tools`, `test:dummy`, and `codegen:dummy` tasks, and defined explicit wildcard `depends` for `test`, `install`, and `codegen` in `mise.toml`.
+
+## Issue: Missing workspaced CLI in CI
+**Issue:** `mise run ci` failed in `autorelease.yml` with `workspaced: not found` despite `github:lucasew/workspaced` being present but commented out in `mise.toml`.
+**Root Cause:** The `workspaced` CLI tool cannot be installed natively via `mise`'s `[tools]` section due to module path mismatches and is intentionally commented out. It must be present in the runner's PATH for `workspaced codebase lint` to execute successfully.
+**Solution:** Added an explicit installation step in `autorelease.yml` to download and extract the precompiled `workspaced` binary directly into `~/.local/bin` using `curl` and `tar`.

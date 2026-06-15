@@ -35,6 +35,9 @@ jobs:
       - name: Trust mise config
         run: find . -type f -name "mise.toml" -exec mise trust --yes {} \;
 
+      - name: Install workspaced
+        run: curl -sSL https://github.com/lucasew/workspaced/releases/download/0.2.1/workspaced_Linux_x86_64.tar.gz | tar -xz -C ~/.local/bin workspaced
+
       - name: Install dependencies
         run: mise run install
 
