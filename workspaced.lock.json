@@ -342,8 +342,8 @@
       "name": "grok",
       "provider": "registry",
       "ref": "registry:grok-build",
-      "version": "0.2.20",
-      "currentValue": "0.2.20"
+      "version": "0.2.51",
+      "currentValue": "0.2.51"
     },
     {
       "kind": "tool",
