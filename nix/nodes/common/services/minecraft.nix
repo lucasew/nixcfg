@@ -15,6 +15,20 @@ in
     systemd.services.minecraft-server = {
       wantedBy = lib.mkForce [ ]; # don't start on boot
     };
+    systemd.sockets.minecraft-server = {
+      wantedBy = lib.mkForce [ ];
+    };
+
+    # Inverted dependency (server raises proxy, proxy never raises server):
+    # The minecraft-server.service is the thing that activates ts-proxy-mc
+    # (and tears it down on stop). This is the opposite of what the `proxies`
+    # list in ts-proxy does by default.
+    systemd.services.ts-proxy-mc = {
+      wantedBy = lib.mkForce [ "minecraft-server.service" ];
+      wants = lib.mkForce [ ];
+      partOf = lib.mkForce [ "minecraft-server.service" ];
+      after = lib.mkForce [ "minecraft-server.service" ];
+    };
 
     systemd.services.minecraft-server-backup = {
       description = "Minecraft server backup";
@@ -57,8 +71,10 @@ in
       enableRaw = true;
       enableFunnel = true;
       address = "127.0.0.1:${toString port}";
-      proxies = [ "minecraft-server.service" ];
       listen = 10000;
+      # We do not set `proxies` here. Activation/dependency wiring is done
+      # explicitly above so that only minecraft-server.service can bring the
+      # proxy up (true inversion).
     };
   };
 }
