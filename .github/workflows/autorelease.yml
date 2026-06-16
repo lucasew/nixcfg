@@ -32,6 +32,12 @@ jobs:
       - name: Install mise
         uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3
 
+      - name: Install workspaced
+        run: |
+          curl -sSL "https://github.com/lucasew/workspaced/releases/download/v0.2.1/workspaced_Linux_x86_64.tar.gz" -o workspaced.tar.gz
+          tar -xzf workspaced.tar.gz workspaced
+          sudo mv workspaced /usr/local/bin/workspaced
+
       - name: Trust mise config
         run: find . -type f -name "mise.toml" -exec mise trust --yes {} \;
 
