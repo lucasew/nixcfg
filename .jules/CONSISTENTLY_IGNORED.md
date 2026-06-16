@@ -43,3 +43,27 @@ This file lists patterns of changes that have been consistently rejected by huma
 **- Files Affected:** `.github/workflows/*.yml`
 
 ---
+
+## IGNORE: Incomplete Utility Implementations
+
+**- Pattern:** Adding centralized utilities (e.g., error reporting) without migrating existing scattered usages across the codebase to use them.
+**- Justification:** Implementing new utilities without adopting them in existing code creates dead code and fails to reduce source complexity.
+**- Files Affected:** `src/utils/*.sh`, `tests/utils/*.sh`
+
+---
+
+## IGNORE: Automated Dependency Updates in Lockfiles
+
+**- Pattern:** Automated dependency version bumps or tool updates in `workspaced.lock.json`.
+**- Justification:** These automated lockfile bumps are consistently autoclosed and should be ignored.
+**- Files Affected:** `workspaced.lock.json`
+
+---
+
+## IGNORE: Unrequested Lockfile Modifications
+
+**- Pattern:** Committing unrequested lockfile modifications (e.g., `workspaced.lock.json`) caused by implicit modifications during linting or testing.
+**- Justification:** Lockfile modifications unrelated to the core task add noise and should be restored or unstaged before committing.
+**- Files Affected:** `workspaced.lock.json`
+
+---
