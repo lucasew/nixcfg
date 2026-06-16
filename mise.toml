@@ -20,3 +20,9 @@ sops = "3.11.0"
 
 [tasks."install:tools"]
 run = "mise install"
+
+[tasks."codegen:dummy"]
+run = "echo ok"
+
+[tasks.codegen]
+depends = ["codegen:*"]
