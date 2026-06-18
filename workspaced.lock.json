@@ -106,7 +106,7 @@
       "ref": "github:coder/coder",
       "version": "v2.34.0",
       "depName": "coder/coder",
-      "currentValue": "v2.34.0",
+      "currentValue": "v2.34.3",
       "datasource": "github-releases"
     },
     {
