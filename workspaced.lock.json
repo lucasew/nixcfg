@@ -96,7 +96,7 @@
       "ref": "github:cli/cli",
       "version": "v2.93.0",
       "depName": "cli/cli",
-      "currentValue": "v2.93.0",
+      "currentValue": "v2.95.0",
       "datasource": "github-releases"
     },
     {
