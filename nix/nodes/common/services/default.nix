@@ -9,7 +9,6 @@
     ./python-microservices
     ./ts-proxy.nix
     ./ngircd.nix
-    ./minecraft.nix
     ./phpelo.nix
   ];
 

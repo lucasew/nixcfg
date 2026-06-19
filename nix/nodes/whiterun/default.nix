@@ -28,8 +28,6 @@ in
   ];
 
 
-  services.minecraft-server.enable = true;
-
   programs.nix-ld.enable = true;
 
   hardware.nvidia.modesetting.enable = false;
@@ -68,12 +66,6 @@ in
   fileSystems."/media/ssd1tb" = {
     device = "/dev/disk/by-label/ssd1tb";
     fsType = "ext4";
-  };
-
-  fileSystems."/var/backup" = {
-    device = "/media/storage/backup/var";
-    fsType = "none";
-    options = [ "bind" ];
   };
 
   nix.settings.min-free = 50 * 1024 * 1024 * 1024; # 50GB
