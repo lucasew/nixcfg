@@ -54,7 +54,6 @@ in
   services.flatpak.enable = true;
 
   networking.networkmanager.wifi.scanRandMacAddress = true;
-  networking.hostId = "dabd2d19";
   services.cockpit.enable = true;
 
   services.telegram-sendmail.enable = true;

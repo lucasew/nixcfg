@@ -19,10 +19,7 @@
       gid = 1999;
     };
   };
-  security.pam.enableEcryptfs = true;
-  boot.kernelModules = [ "ecryptfs" ];
   environment.systemPackages = with pkgs; [
-    ecryptfs
     brave
   ];
   virtualisation.podman.enable = true;

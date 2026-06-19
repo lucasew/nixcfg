@@ -53,9 +53,7 @@ in
     };
 
     services.minecraft-server = {
-      package = pkgs.unstable.minecraftServers.vanilla-1-15.override {
-        jre_headless = pkgs.unstable.openjdk8;
-      };
+      package = pkgs.unstable.minecraft-server;
       declarative = true;
       eula = true;
       serverProperties = {

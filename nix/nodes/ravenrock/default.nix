@@ -53,7 +53,7 @@ in
   networking.hostName = "ravenrock";
   environment.systemPackages = with pkgs; [
     htop
-    neofetch
+    fastfetch
   ];
   networking.firewall = {
     enable = true;

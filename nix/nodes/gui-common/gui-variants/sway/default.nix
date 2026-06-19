@@ -63,8 +63,8 @@ in
       script = "nm-applet";
     };
     systemd.user.services.blueberry-tray = {
-      path = with pkgs; [ blueberry ];
-      script = "blueberry-tray; while true; do sleep 3600; done";
+      path = with pkgs; [ blueman ];
+      script = "blueman-applet; while true; do sleep 3600; done";
     };
 
     services.flatpak.enable = true;
@@ -81,7 +81,7 @@ in
       grim
       imv
       eog # eye of gnome
-      xfce.ristretto
+      ristretto
       pcmanfm
       kitty
       slurp

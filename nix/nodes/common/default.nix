@@ -96,7 +96,7 @@ in
       usbutils
       htop
       lm_sensors
-      neofetch
+      fastfetch
       lls # like netstat
       cached-nix-shell
     ];

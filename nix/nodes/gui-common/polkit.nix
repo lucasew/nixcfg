@@ -16,7 +16,7 @@ in
       agent = lib.mkOption {
         type = lib.types.path;
         description = "Where the polkit agent is located";
-        default = "${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1";
+        default = "${pkgs.mate-polkit}/libexec/polkit-mate-authentication-agent-1";
       };
     };
   };

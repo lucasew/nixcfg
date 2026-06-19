@@ -170,7 +170,7 @@ in
               Slice = "ts-proxy.slice";
               # User = cfg.user;
               # Group = cfg.group;
-              Restart = "always";
+              Restart = lib.mkForce "always";
               RestartSec = "10s";
             };
           };

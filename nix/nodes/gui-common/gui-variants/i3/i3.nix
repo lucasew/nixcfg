@@ -46,7 +46,7 @@ in
         xclip
         i3status
         unstable.i3pystatus
-        mate.mate-polkit
+        mate-polkit
       ];
   };
 }

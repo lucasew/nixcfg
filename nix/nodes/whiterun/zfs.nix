@@ -15,7 +15,6 @@
     package = pkgs.zfs_2_4;
     forceImportRoot = false;
     requestEncryptionCredentials = [ "zroot" ];
-    allowHibernation = true;
     # extraPools = [ "storage" ];
   };
   virtualisation.docker.storageDriver = "zfs";

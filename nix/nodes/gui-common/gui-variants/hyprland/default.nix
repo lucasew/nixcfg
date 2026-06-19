@@ -44,13 +44,9 @@
     };
     systemd.user.services.blueberry-tray = {
       path = with pkgs; [
-        blueberry
-        # (blueberry.overrideAttrs (old: {
-        #   patches = (old.patches or [ ]) ++ [ ./blueberry-tray-fix.patch ];
-        #   buildInputs = old.buildInputs ++ [ pkgs.libappindicator-gtk3 ];
-        # }))
+        blueman
       ];
-      script = "blueberry-tray; while true; do sleep 3600; done";
+      script = "blueman-applet; while true; do sleep 3600; done";
       restartIfChanged = true;
     };
 
@@ -117,7 +113,7 @@
     environment.systemPackages = with pkgs; [
       swaylock
       eog # eye of gnome
-      xfce.ristretto
+      ristretto
       pcmanfm
       playerctl
       brightnessctl

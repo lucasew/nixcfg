@@ -18,6 +18,7 @@
       "ntfs"
       "zfs"
     ];
+    zfs.forceImportRoot = false;
     plymouth = {
       enable = true;
       theme = "breeze";
@@ -42,7 +43,7 @@
   networking = {
     hostId = "2c6b15e1";
     hostName = "recovery-iso";
-    wireless.enable = false;
+    wireless.enable = lib.mkForce false;
   };
 
   system.stateVersion = "22.05"; # Did you read the comment?

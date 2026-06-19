@@ -8,6 +8,9 @@ let
   inherit (global) username;
 in
 {
+  disabledModules = [
+    "services/desktops/dunst.nix"
+  ];
   imports = [
     ../common
     ./gui-variants
@@ -38,7 +41,7 @@ in
     pv
     # Extra
     distrobox # plan b
-    xorg.xkill
+    xkill
     waypipe
     xwayland-satellite
     # GUI utilities
@@ -51,7 +54,7 @@ in
     devenv
   ];
 
-  programs.man.enable = true;
+  documentation.man.enable = true;
 
   programs.dconf.enable = true;
   services.dbus.packages = with pkgs; [ dconf ];
