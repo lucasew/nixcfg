@@ -254,7 +254,7 @@ workspaced: {
 		// 	]
 		// }
 		clang: {
-			ref: "mise:vfox:clang"
+			ref: "llvm"
 			bins: ["clang", "clang-cpp"]
 		}
 		jless: {

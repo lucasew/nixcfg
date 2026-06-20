@@ -333,14 +333,6 @@
     },
     {
       "kind": "tool",
-      "name": "clang",
-      "provider": "mise",
-      "ref": "mise:vfox:clang",
-      "version": "22.1.3",
-      "currentValue": "22.1.3"
-    },
-    {
-      "kind": "tool",
       "name": "yt_dlp",
       "provider": "mise",
       "ref": "mise:yt-dlp",
@@ -354,6 +346,14 @@
       "ref": "registry:grok-build",
       "version": "0.2.51",
       "currentValue": "0.2.51"
+    },
+    {
+      "kind": "tool",
+      "name": "clang",
+      "provider": "mise",
+      "ref": "registry:llvm",
+      "version": "22.1.8",
+      "currentValue": "22.1.8"
     },
     {
       "kind": "tool",
