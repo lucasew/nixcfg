@@ -352,7 +352,7 @@
       "ref": "registry:tirith",
       "version": "v0.3.1",
       "depName": "sheeki03/tirith",
-      "currentValue": "v0.3.1",
+      "currentValue": "v0.3.3",
       "datasource": "github-releases",
       "versioning": "semver"
     }
