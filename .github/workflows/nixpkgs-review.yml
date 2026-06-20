@@ -114,7 +114,7 @@ jobs:
       - name: Fetch nixpkgs from git if not
         if: steps.git-nixpkgs.outputs.cache-hit != 'true'
         run: git clone https://github.com/NixOS/nixpkgs nixpkgs
-      - uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a # v21
+      - uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25 # v22
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           extra-conf: |
@@ -166,7 +166,7 @@ jobs:
       - name: Fetch nixpkgs from git if not
         if: steps.git-nixpkgs.outputs.cache-hit != 'true'
         run: git clone https://github.com/NixOS/nixpkgs nixpkgs
-      - uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a # v21
+      - uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25 # v22
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - uses: DeterminateSystems/magic-nix-cache-action@1828eb4e5414b8dfe36daae53ea3e4b8c3fdec7a # main
@@ -216,7 +216,7 @@ jobs:
       - name: Fetch nixpkgs from git if not
         if: steps.git-nixpkgs.outputs.cache-hit != 'true'
         run: git clone https://github.com/NixOS/nixpkgs nixpkgs
-      - uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a # v21
+      - uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25 # v22
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - uses: DeterminateSystems/magic-nix-cache-action@1828eb4e5414b8dfe36daae53ea3e4b8c3fdec7a # main
