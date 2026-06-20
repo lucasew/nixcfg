@@ -1,5 +1,7 @@
 package workspaced
 
+#default_borderless_browser: "helium"
+
 workspaced: {
 
 	desktop: wallpaper: {
@@ -112,7 +114,7 @@ workspaced: {
 
 	browser: {
 		default: "zen"
-		webapp:  "brave"
+		webapp:  "helium"
 	}
 
 	drivers: {
@@ -347,105 +349,130 @@ workspaced: {
 			config: {
 				apps: {
 					workx: {
+						browser: "brave"
 						profile: "XAI"
 						desktop_name: "Trabson"
 						url: ""
 					}
 					"castable-iframe": {
+						browser: #default_borderless_browser
 						url:     "https://castable-iframe.vercel.app/"
 						profile: "castable-iframe"
 					}
-					gemini: url: "https://gemini.google.com"
-					teste:  url: "https://google.com"
+					gemini: {
+						browser: #default_borderless_browser
+						url: "https://gemini.google.com"
+					}
 					element: {
+						browser: #default_borderless_browser
 						url:          "https://app.element.io"
 						profile:      "element"
 						desktop_name: "Element Matrix"
 					}
 					reemo: {
+						browser: #default_borderless_browser
 						url:          "https://reemo.io"
 						desktop_name: "Remote control"
 					}
 					clickup: {
+						browser: #default_borderless_browser
 						url:          "https://clickup.com"
 						desktop_name: "ClickUp"
 					}
 					facebook: {
+						browser: #default_borderless_browser
 						url:          "https://facebook.com"
 						profile:      "facebook"
 						desktop_name: "Facebook"
 					}
 					pocketcasts: {
+						browser: #default_borderless_browser
 						url:          "https://pocketcasts.com"
 						desktop_name: "PocketCasts"
 						icon:         "sound"
 					}
 					twitter: {
+						browser: #default_borderless_browser
 						url:          "https://twitter.com"
 						profile:      "twitter"
 						desktop_name: "Twitter"
 					}
 					"discord-pessoal": {
+						browser: #default_borderless_browser
 						url:          "https://discord.com/channels/me"
 						profile:      "discord-pessoal"
 						desktop_name: "Discord (pessoal)"
 					}
 					"discord-profissional": {
+						browser: #default_borderless_browser
 						url:          "https://discord.com/channels/me"
 						profile:      "discord-profissional"
 						desktop_name: "Discord (profissional)"
 					}
 					"youtube-tv": {
+						browser: #default_borderless_browser
 						url:          "https://youtube.com/tv"
 						profile:      "youtube-tv"
 						desktop_name: "YouTube (UI para TV)"
 					}
 					whatsapp: {
+						browser: #default_borderless_browser
 						url:          "web.whatsapp.com"
 						profile:      "zap"
 						desktop_name: "WhatsApp"
 					}
 					notion: {
+						browser: #default_borderless_browser
 						url:          "notion.so"
 						profile:      "notion"
 						desktop_name: "Notion"
 					}
 					duolingo: {
+						browser: #default_borderless_browser
 						url:          "duolingo.com"
 						desktop_name: "Duolingo"
 					}
 					"youtube-music": {
+						browser: #default_borderless_browser
 						url:          "music.youtube.com"
 						profile:      "youtubemusic"
 						desktop_name: "Youtube Music"
 					}
 					planttext: {
+						browser: #default_borderless_browser
 						url:          "https://www.planttext.com/"
 						desktop_name: "PlantText"
 					}
 					rainmode: {
+						browser: #default_borderless_browser
 						url:          "https://youtu.be/mPZkdNFkNps"
 						desktop_name: "Tocar som de chuva"
 						icon:         "weather-showers"
 					}
 					gmail: {
+						browser: #default_borderless_browser
 						url:          "gmail.com"
 						desktop_name: "GMail"
 					}
 					keymash: {
+						browser: #default_borderless_browser
 						url:          "https://keyma.sh/learn"
 						desktop_name: "keyma.sh: Keyboard typing train"
 					}
 					calendar: {
+						browser: #default_borderless_browser
 						url:          "https://calendar.google.com/calendar/u/0/r/customday"
 						desktop_name: "Calendário"
 						icon:         "x-office-calendar"
 					}
-					"twitch-dashboard": url: "https://dashboard.twitch.tv/stream-manager"
-					"trello-pessoal":   url: "https://trello.com/b/bjoRKSM2/pessoal"
-					"trello-side-projects": url: "https://trello.com/b/36ncJYYV/side-projects"
-					"trello-dashboard": url: "trello.com"
-					"geforce-now":      url: "play.geforcenow.com"
+					"twitch-dashboard": {
+						browser: #default_borderless_browser
+						url: "https://dashboard.twitch.tv/stream-manager"
+					}
+					"geforce-now": {
+						browser: #default_borderless_browser
+						url: "play.geforcenow.com"
+					}
 				}
 			}
 		}

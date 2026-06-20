@@ -8,6 +8,7 @@ module: {
 
 	config: {
 		apps?: [string]: {
+			browser: string | *null
 			url: string
 			profile?: string
 			desktop_name?: string
