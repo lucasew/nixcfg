@@ -181,6 +181,16 @@
     },
     {
       "kind": "tool",
+      "name": "helium_browser",
+      "provider": "github",
+      "ref": "github:imputnet/helium-linux",
+      "version": "0.13.4.1",
+      "depName": "imputnet/helium-linux",
+      "currentValue": "0.13.4.1",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
       "name": "jujutsu",
       "provider": "github",
       "ref": "github:jj-vcs/jj",

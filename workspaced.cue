@@ -305,6 +305,11 @@ workspaced: {
 			global: true
 			bins: ["grok"]
 		}
+		helium_browser: {
+			ref: "github:imputnet/helium-linux"
+			global: true
+			bins: ["helium"]
+		}
 	}
 
 	inputs: {
