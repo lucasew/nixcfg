@@ -2,6 +2,14 @@
   "dependencies": [
     {
       "kind": "source",
+      "ref": "2c606141936f1eeef17fa3043a72095b4765b9c2",
+      "depName": "forrestchang/andrej-karpathy-skills",
+      "currentValue": "2c606141936f1eeef17fa3043a72095b4765b9c2",
+      "currentDigest": "10d372aba5bf8d55993c5dfebb2e0475ad5e7eecfc498d782c0e6ccf13d97ea5",
+      "datasource": "github-tags"
+    },
+    {
+      "kind": "source",
       "ref": "702499f331aa9c38309e1af99de4021013916297",
       "depName": "PapirusDevelopmentTeam/papirus-icon-theme",
       "currentValue": "702499f331aa9c38309e1af99de4021013916297",

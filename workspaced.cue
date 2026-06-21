@@ -322,6 +322,10 @@ workspaced: {
 			from: "github:PapirusDevelopmentTeam/papirus-icon-theme"
 			version: "HEAD"
 		}
+		skills_karpathy: {
+			from: "github:forrestchang/andrej-karpathy-skills"
+			version: "HEAD"
+		}
 	}
 
 	modules: {
@@ -511,5 +515,16 @@ workspaced: {
 		"script-directory": {input: "self:modules/script-directory", enable: true}
 		mise: {input: "self:modules/mise", enable: true}
 		hermes: {input: "self:modules/hermes", enable: true}
+
+		// Install Andrej Karpathy skills using core:place + input (renovate-updatable)
+		skills_karpathy: {
+			from: "core:place"
+			config: {
+				items: {
+					".grok/skills": "skills_karpathy:skills"
+					".codex/skills": "skills_karpathy:skills"
+				}
+			}
+		}
 	}
 }
