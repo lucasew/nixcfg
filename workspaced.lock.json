@@ -3,10 +3,10 @@
     {
       "kind": "source",
       "ref": "25d22f864ad68cc447a4cb93aefde918aa4aec9f",
-      "depName": "",
+      "depName": "JuliusBrussee/caveman",
       "currentValue": "25d22f864ad68cc447a4cb93aefde918aa4aec9f",
       "currentDigest": "ea004bef8c47dbc64bf214e96bfcd67bd46831b652cafc3523628889d874f375",
-      "datasource": ""
+      "datasource": "github-tags"
     },
     {
       "kind": "source",
@@ -19,10 +19,10 @@
     {
       "kind": "source",
       "ref": "4a3c05b69e64f4925f7fc65c88890f614f79caf0",
-      "depName": "",
+      "depName": "alirezarezvani/claude-skills",
       "currentValue": "4a3c05b69e64f4925f7fc65c88890f614f79caf0",
       "currentDigest": "a90ff8cc1926f71a8ac1f52a84c5525a2c685d197290286def8891fded2f2f25",
-      "datasource": ""
+      "datasource": "github-tags"
     },
     {
       "kind": "source",
@@ -34,11 +34,19 @@
     },
     {
       "kind": "source",
+      "ref": "HEAD",
+      "depName": "PapirusDevelopmentTeam/papirus-icon-theme",
+      "currentValue": "HEAD",
+      "currentDigest": "65224305098d14f359c18c341bc09f7401cceee1cc6652f71a34991ea30cb17f",
+      "datasource": "github-tags"
+    },
+    {
+      "kind": "source",
       "ref": "d15eabbe5d2122eedc060bae8a771381e9873d1b",
-      "depName": "",
+      "depName": "nidhinjs/prompt-master",
       "currentValue": "d15eabbe5d2122eedc060bae8a771381e9873d1b",
       "currentDigest": "bde682e56eb53dc2442121983746b2e5eba58c6b34c1e6d6593f307ae817088e",
-      "datasource": ""
+      "datasource": "github-tags"
     },
     {
       "kind": "tool",
