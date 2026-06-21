@@ -540,6 +540,7 @@ workspaced: {
 #skills: {
 	lewtec: {
 		from: "github:lewtec/skills"
+		version: "93568d755f6bdb932c576fb3d4b928eb857cc860"
 	}
 }
 
