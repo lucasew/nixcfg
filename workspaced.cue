@@ -240,24 +240,6 @@ workspaced: {
 	}
 }
 
-// ========== Karpathy skills
-workspaced: {
-	inputs: skills_karpathy: {
-		from: "github:forrestchang/andrej-karpathy-skills"
-		version: "HEAD"
-	}
-
-	modules: skills_karpathy: {
-		from: "core:place"
-		config: {
-			items: {
-				".grok/skills": "skills_karpathy:skills"
-				".codex/skills": "skills_karpathy:skills"
-			}
-		}
-	}
-}
-
 // ========== Base 16
 workspaced: {
 	inputs: {
@@ -552,3 +534,62 @@ workspaced: {
 		]
 	}
 }
+
+#skills: {
+	karpathy: {
+		from: "github:forrestchang/andrej-karpathy-skills"
+		version: "HEAD"
+	}
+}
+
+// ========== Agent skills
+
+#skills: {
+	karpathy: {
+		from:    "github:forrestchang/andrej-karpathy-skills"
+	}
+	caveman: {
+		from: "github:JuliusBrussee/caveman"
+	}
+	prompt_master: {
+		from: "github:nidhinjs/prompt-master"
+		origin: "."
+		destination: "prompt-master" 
+	}
+	tech_debt_tracker: {
+		from: "github:alirezarezvani/claude-skills"
+		origin: "engineering/skills/tech-debt-tracker"
+		destination: "tech-debt-tracker"
+	}
+}
+
+#skills: [string]: {
+	from: string
+	version: string | *"HEAD"
+	origin: string | *"skills"
+	destination: string | *""
+}
+workspaced: {
+	inputs: {
+		for name, src in #skills {
+			"skills_\(name)": {
+				from: src.from
+				version: src.version
+			}
+		}
+	}
+	modules: {
+		for name, value in #skills {
+			"skills_\(name)": {
+				from: "core:place"
+				config: {
+					items: {
+						".grok/skills/\(value.destination)":  "skills_\(name):\(value.origin)"
+						".codex/skills/\(value.destination)": "skills_\(name):\(value.origin)"
+					}
+				}
+			}
+		}
+	}
+}
+
