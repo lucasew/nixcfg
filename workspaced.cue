@@ -1,6 +1,5 @@
 package workspaced
 
-#default_borderless_browser: "helium"
 
 workspaced: {
 
@@ -112,10 +111,6 @@ workspaced: {
 		]
 	}
 
-	browser: {
-		default: "zen"
-		webapp:  "helium"
-	}
 
 	drivers: {
 		"workspaced/pkg/driver/terminal.Driver": {
@@ -307,32 +302,15 @@ workspaced: {
 			global: true
 			bins: ["grok"]
 		}
-		helium_browser: {
-			ref: "github:imputnet/helium-linux"
-			global: true
-			bins: ["helium"]
-		}
 	}
 
 	inputs: {
 		self: {
 			from: "self"
 		}
-		papirus: {
-			from: "github:PapirusDevelopmentTeam/papirus-icon-theme"
-			version: "HEAD"
-		}
 	}
 
 	modules: {
-		icons: {
-			input: "core:base16-icons-linux"
-			enable: !workspaced.runtime.is_phone && !(workspaced.runtime.hostname == "ravenrock")
-			config: {
-				input_dir: "papirus:Papirus"
-			}
-		}
-
 		fontconfig: {
 			input: "self:modules/fontconfig"
 			enable:      true
@@ -343,6 +321,100 @@ workspaced: {
 				emoji:       "Noto Color Emoji"
 			}
 		}
+		
+		"script-directory": {input: "self:modules/script-directory", enable: true}
+		mise: {input: "self:modules/mise", enable: true}
+		hermes: {input: "self:modules/hermes", enable: true}
+	}
+}
+
+// ========== Karpathy skills
+workspaced: {
+	inputs: skills_karpathy: {
+		from: "github:forrestchang/andrej-karpathy-skills"
+		version: "HEAD"
+	}
+
+	modules: skills_karpathy: {
+		from: "core:place"
+		config: {
+			items: {
+				".grok/skills": "skills_karpathy:skills"
+				".codex/skills": "skills_karpathy:skills"
+			}
+		}
+	}
+}
+
+// ========== Base 16
+workspaced: {
+	inputs: {
+		papirus: {
+			from: "github:PapirusDevelopmentTeam/papirus-icon-theme"
+			version: "HEAD"
+		}
+	}
+	modules: {
+		icons: {
+			input: "core:base16-icons-linux"
+			enable: !workspaced.runtime.is_phone && !(workspaced.runtime.hostname == "ravenrock")
+			config: {
+				input_dir: "papirus:Papirus"
+			}
+		}
+
+		base16: {
+			input: "self:modules/base16"
+			enable: true
+			config: {
+				base00: "282c34"
+				base01: "353b45"
+				base02: "3e4451"
+				base03: "545862"
+				base04: "565c64"
+				base05: "abb2bf"
+				base06: "b6bdca"
+				base07: "c8ccd4"
+				base08: "e06c75"
+				base09: "d19a66"
+				base0A: "e5c07b"
+				base0B: "98c379"
+				base0C: "56b6c2"
+				base0D: "61afef"
+				base0E: "c678dd"
+				base0F: "be5046"
+			}
+		}
+
+		"base16-shell":   {input: "self:modules/base16-shell", enable: true}
+		"base16-helix":   {input: "self:modules/base16-helix", enable: true}
+		"base16-vscode":  {input: "self:modules/base16-vscode", enable: true}
+		"base16-sway":    {input: "self:modules/base16-sway", enable: true}
+		"base16-gtk":     {input: "self:modules/base16-gtk", enable: true}
+		"base16-rofi":    {input: "self:modules/base16-rofi", enable: true}
+		"base16-dunst":   {input: "self:modules/base16-dunst", enable: true}
+		"base16-tmux":    {input: "self:modules/base16-tmux", enable: true}
+		"base16-opencode": {input: "self:modules/base16-opencode", enable: true}
+		"base16-swaylock": {input: "self:modules/base16-swaylock", enable: true}
+	}
+}
+
+// Webapps
+#default_borderless_browser: "helium"
+
+workspaced: {
+	browser: {
+		default: "zen"
+		webapp:  "helium"
+	}
+	lazy_tools: {
+		helium_browser: {
+			ref: "github:imputnet/helium-linux"
+			global: true
+			bins: ["helium"]
+		}
+	}
+	modules: {
 		webapp: {
 			input: "self:modules/webapp"
 			enable: true
@@ -476,65 +548,5 @@ workspaced: {
 				}
 			}
 		}
-		"script-directory": {input: "self:modules/script-directory", enable: true}
-		mise: {input: "self:modules/mise", enable: true}
-		hermes: {input: "self:modules/hermes", enable: true}
-	}
-}
-
-// ========== Karpathy skills
-workspaced: {
-	inputs: skills_karpathy: {
-		from: "github:forrestchang/andrej-karpathy-skills"
-		version: "HEAD"
-	}
-
-	modules: skills_karpathy: {
-		from: "core:place"
-		config: {
-			items: {
-				".grok/skills": "skills_karpathy:skills"
-				".codex/skills": "skills_karpathy:skills"
-			}
-		}
-	}
-}
-
-// ========== Base 16
-workspaced: {
-	modules: {
-		base16: {
-			input: "self:modules/base16"
-			enable: true
-			config: {
-				base00: "282c34"
-				base01: "353b45"
-				base02: "3e4451"
-				base03: "545862"
-				base04: "565c64"
-				base05: "abb2bf"
-				base06: "b6bdca"
-				base07: "c8ccd4"
-				base08: "e06c75"
-				base09: "d19a66"
-				base0A: "e5c07b"
-				base0B: "98c379"
-				base0C: "56b6c2"
-				base0D: "61afef"
-				base0E: "c678dd"
-				base0F: "be5046"
-			}
-		}
-
-		"base16-shell":   {input: "self:modules/base16-shell", enable: true}
-		"base16-helix":   {input: "self:modules/base16-helix", enable: true}
-		"base16-vscode":  {input: "self:modules/base16-vscode", enable: true}
-		"base16-sway":    {input: "self:modules/base16-sway", enable: true}
-		"base16-gtk":     {input: "self:modules/base16-gtk", enable: true}
-		"base16-rofi":    {input: "self:modules/base16-rofi", enable: true}
-		"base16-dunst":   {input: "self:modules/base16-dunst", enable: true}
-		"base16-tmux":    {input: "self:modules/base16-tmux", enable: true}
-		"base16-opencode": {input: "self:modules/base16-opencode", enable: true}
-		"base16-swaylock": {input: "self:modules/base16-swaylock", enable: true}
 	}
 }
