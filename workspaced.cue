@@ -535,31 +535,11 @@ workspaced: {
 	}
 }
 
-#skills: {
-	karpathy: {
-		from: "github:forrestchang/andrej-karpathy-skills"
-		version: "HEAD"
-	}
-}
-
 // ========== Agent skills
 
 #skills: {
-	karpathy: {
-		from:    "github:forrestchang/andrej-karpathy-skills"
-	}
-	caveman: {
-		from: "github:JuliusBrussee/caveman"
-	}
-	prompt_master: {
-		from: "github:nidhinjs/prompt-master"
-		origin: "."
-		destination: "prompt-master" 
-	}
-	tech_debt_tracker: {
-		from: "github:alirezarezvani/claude-skills"
-		origin: "engineering/skills/tech-debt-tracker"
-		destination: "tech-debt-tracker"
+	lewtec: {
+		from: "github:lewtec/skills"
 	}
 }
 
