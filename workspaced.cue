@@ -322,10 +322,6 @@ workspaced: {
 			from: "github:PapirusDevelopmentTeam/papirus-icon-theme"
 			version: "HEAD"
 		}
-		skills_karpathy: {
-			from: "github:forrestchang/andrej-karpathy-skills"
-			version: "HEAD"
-		}
 	}
 
 	modules: {
@@ -480,6 +476,33 @@ workspaced: {
 				}
 			}
 		}
+		"script-directory": {input: "self:modules/script-directory", enable: true}
+		mise: {input: "self:modules/mise", enable: true}
+		hermes: {input: "self:modules/hermes", enable: true}
+	}
+}
+
+// ========== Karpathy skills
+workspaced: {
+	inputs: skills_karpathy: {
+		from: "github:forrestchang/andrej-karpathy-skills"
+		version: "HEAD"
+	}
+
+	modules: skills_karpathy: {
+		from: "core:place"
+		config: {
+			items: {
+				".grok/skills": "skills_karpathy:skills"
+				".codex/skills": "skills_karpathy:skills"
+			}
+		}
+	}
+}
+
+// ========== Base 16
+workspaced: {
+	modules: {
 		base16: {
 			input: "self:modules/base16"
 			enable: true
@@ -502,6 +525,7 @@ workspaced: {
 				base0F: "be5046"
 			}
 		}
+
 		"base16-shell":   {input: "self:modules/base16-shell", enable: true}
 		"base16-helix":   {input: "self:modules/base16-helix", enable: true}
 		"base16-vscode":  {input: "self:modules/base16-vscode", enable: true}
@@ -512,19 +536,5 @@ workspaced: {
 		"base16-tmux":    {input: "self:modules/base16-tmux", enable: true}
 		"base16-opencode": {input: "self:modules/base16-opencode", enable: true}
 		"base16-swaylock": {input: "self:modules/base16-swaylock", enable: true}
-		"script-directory": {input: "self:modules/script-directory", enable: true}
-		mise: {input: "self:modules/mise", enable: true}
-		hermes: {input: "self:modules/hermes", enable: true}
-
-		// Install Andrej Karpathy skills using core:place + input (renovate-updatable)
-		skills_karpathy: {
-			from: "core:place"
-			config: {
-				items: {
-					".grok/skills": "skills_karpathy:skills"
-					".codex/skills": "skills_karpathy:skills"
-				}
-			}
-		}
 	}
 }
