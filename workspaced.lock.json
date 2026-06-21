@@ -172,6 +172,20 @@
     },
     {
       "kind": "tool",
+      "ref": "github:openai/codex",
+      "depName": "openai/codex",
+      "currentValue": "rust-v0.142.0-alpha.7",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
+      "ref": "github:oven-sh/bun",
+      "depName": "oven-sh/bun",
+      "currentValue": "bun-v1.3.14",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
       "ref": "github:patrickvane/shfmt",
       "depName": "patrickvane/shfmt",
       "currentValue": "master",
@@ -256,6 +270,13 @@
     },
     {
       "kind": "tool",
+      "ref": "registry:golang",
+      "depName": "",
+      "currentValue": "1.26.4",
+      "datasource": ""
+    },
+    {
+      "kind": "tool",
       "ref": "registry:grok-build",
       "depName": "",
       "currentValue": "0.2.59",
@@ -266,6 +287,13 @@
       "ref": "registry:llvm",
       "depName": "",
       "currentValue": "22.1.8",
+      "datasource": ""
+    },
+    {
+      "kind": "tool",
+      "ref": "registry:nodejs",
+      "depName": "",
+      "currentValue": "v26.3.1",
       "datasource": ""
     },
     {

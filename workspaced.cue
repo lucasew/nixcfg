@@ -28,89 +28,6 @@ workspaced: {
 		}
 	}
 
-		backup: {
-		rsyncnet_user: "de3163@de3163.rsync.net"
-		remote_path:   "backup/lucasew"
-		actions: [
-			for repo_name in [
-				"personal-zettel-obsidian",
-				"personal-beancount",
-				"personal-keepass",
-				"personal-bookmarks",
-				"personal-decsync",
-				"personal-zettel-org",
-			] if workspaced.runtime.hostname != "whiterun" {
-				name: "git repo \(repo_name)"
-				kind: "git_repo_sync"
-				src:  "\(workspaced.runtime.home)/.personal/\(repo_name)"
-				dst:  "de3163@de3163.rsync.net:git-personal/\(repo_name)"
-			},
-			if workspaced.runtime.hostname == "whiterun" {
-				name: "cantgit"
-				kind: "rsync"
-				src:  "\(workspaced.runtime.home)/WORKSPACE/CANTGIT/"
-				dst:  "\(workspaced.backup.rsyncnet_user):\(workspaced.backup.remote_path)/CANTGIT"
-			},
-			if workspaced.runtime.is_phone {
-				name:     "camera"
-				kind:     "rsync"
-				skip_permissions: true
-				src:      "/sdcard/DCIM/Camera/"
-				dst:      "\(workspaced.backup.rsyncnet_user):\(workspaced.backup.remote_path)/camera"
-				excludes: [".thumbnails"]
-			},
-			if workspaced.runtime.is_phone {
-				name:     "pictures"
-				kind:     "rsync"
-				skip_permissions: true
-				src:      "/sdcard/Pictures/"
-				dst:      "\(workspaced.backup.rsyncnet_user):\(workspaced.backup.remote_path)/pictures"
-				excludes: [".thumbnails"]
-			},
-			if workspaced.runtime.is_phone {
-				name:     "whatsapp media"
-				kind:     "rsync"
-				skip_permissions: true
-				src:      "/sdcard/Android/media/com.whatsapp/WhatsApp/Media/"
-				dst:      "\(workspaced.backup.rsyncnet_user):\(workspaced.backup.remote_path)/WhatsApp"
-				excludes: [".Links", ".Statuses"]
-			},
-			if workspaced.runtime.is_phone {
-				name: "whatsapp backups"
-				kind: "rsync"
-				skip_permissions: true
-				src:  "/sdcard/Android/media/com.whatsapp/WhatsApp/Backups/"
-				dst:  "\(workspaced.backup.rsyncnet_user):\(workspaced.backup.remote_path)/WhatsApp"
-			},
-			// if workspaced.runtime.is_phone {
-			// 	name: "termux packages list"
-			// 	kind: "termux_packages_snapshot"
-			// 	output: "\(workspaced.runtime.home)/.cache/backup/termux/packages.txt"
-			// },
-			if workspaced.runtime.is_phone {
-				name: "termux sync home"
-				kind: "rsync"
-				skip_permissions: true
-				src:  "\(workspaced.runtime.home)/.cache/backup/termux/"
-				dst:  "\(workspaced.backup.rsyncnet_user):\(workspaced.backup.remote_path)/termux/"
-			},
-			if workspaced.runtime.is_phone {
-				name:      "termux archive"
-				kind:      "archive"
-				input_dir: "\(workspaced.runtime.home)/.cache/backup/termux"
-				output:    "\(workspaced.runtime.home)/.cache/backup/termux.tar"
-				format:    "tar"
-			},
-			if workspaced.runtime.is_phone {
-				name: "termux archive upload"
-				kind: "rsync"
-				skip_permissions: true
-				src:  "\(workspaced.runtime.home)/.cache/backup/termux.tar"
-				dst:  "\(workspaced.backup.rsyncnet_user):\(workspaced.backup.remote_path)/termux.tar"
-			},
-		]
-	}
-
 
 	drivers: {
 		"workspaced/pkg/driver/terminal.Driver": {
@@ -125,12 +42,12 @@ workspaced: {
 			bins: ["zed"]
 		}
 		codex: {
-			ref: "mise:codex"
+			ref: "github:openai/codex"
 			bins: ["codex"]
 			global: true
 		}
 		bun: {
-			ref: "mise:bun"
+			ref: "github:oven-sh/bun"
 			bins: ["bun"]
 		}
 		docker_compose: {
@@ -190,14 +107,9 @@ workspaced: {
 			bins: ["uv", "uvx"]
 		}
 		node: {
-			ref: "mise:node"
+			ref: "nodejs"
 			global: true
 			bins: ["node", "npm", "npx"]
-		}
-		yt_dlp: {
-			ref: "mise:yt-dlp"
-			global: true
-			bins: ["yt-dlp"]
 		}
 		terraform: {
 			ref: "github:hashicorp/terraform"
@@ -208,7 +120,7 @@ workspaced: {
 			bins: ["tflint"]
 		}
 		go: {
-			ref: "mise:go"
+			ref: "golang"
 			bins: ["go", "gofmt"]
 		}
 		golangci_lint: {
@@ -548,5 +460,95 @@ workspaced: {
 				}
 			}
 		}
+	}
+}
+
+
+// =========== Backup
+#rsyncnet_user: "de3163@de3163.rsync.net"
+#is_whiterun: workspaced.runtime.hostname != "whiterun"
+#is_phone: workspaced.runtime.is_phone
+#remote_path: "backup/lucasew"
+
+workspaced: {
+	backup: {
+		actions: [
+			for repo_name in [
+				"personal-zettel-obsidian",
+				"personal-beancount",
+				"personal-keepass",
+				"personal-bookmarks",
+				"personal-decsync",
+				"personal-zettel-org",
+			] if !#is_whiterun {
+				name: "git repo \(repo_name)"
+				kind: "git_repo_sync"
+				src:  "\(workspaced.runtime.home)/.personal/\(repo_name)"
+				dst:  "\(#rsyncnet_user):git-personal/\(repo_name)"
+			},
+			if !#is_whiterun {
+				name: "cantgit"
+				kind: "rsync"
+				src:  "\(workspaced.runtime.home)/WORKSPACE/CANTGIT/"
+				dst:  "\(#rsyncnet_user):\(#remote_path)/CANTGIT"
+			},
+			if #is_phone {
+				name:     "camera"
+				kind:     "rsync"
+				skip_permissions: true
+				src:      "/sdcard/DCIM/Camera/"
+				dst:      "\(#rsyncnet_user):\(#remote_path)/camera"
+				excludes: [".thumbnails"]
+			},
+			if #is_phone {
+				name:     "pictures"
+				kind:     "rsync"
+				skip_permissions: true
+				src:      "/sdcard/Pictures/"
+				dst:      "\(#rsyncnet_user):\(#remote_path)/pictures"
+				excludes: [".thumbnails"]
+			},
+			if #is_phone {
+				name:     "whatsapp media"
+				kind:     "rsync"
+				skip_permissions: true
+				src:      "/sdcard/Android/media/com.whatsapp/WhatsApp/Media/"
+				dst:      "\(#rsyncnet_user):\(#remote_path)/WhatsApp"
+				excludes: [".Links", ".Statuses"]
+			},
+			if #is_phone {
+				name: "whatsapp backups"
+				kind: "rsync"
+				skip_permissions: true
+				src:  "/sdcard/Android/media/com.whatsapp/WhatsApp/Backups/"
+				dst:  "\(#rsyncnet_user):\(#remote_path)/WhatsApp"
+			},
+			// if workspaced.runtime.is_phone {
+			// 	name: "termux packages list"
+			// 	kind: "termux_packages_snapshot"
+			// 	output: "\(workspaced.runtime.home)/.cache/backup/termux/packages.txt"
+			// },
+			if #is_phone {
+				name: "termux sync home"
+				kind: "rsync"
+				skip_permissions: true
+				src:  "\(workspaced.runtime.home)/.cache/backup/termux/"
+				dst:  "\(#rsyncnet_user):\(#remote_path)/termux/"
+			},
+			if #is_phone {
+				name:      "termux archive"
+				kind:      "archive"
+				input_dir: "\(workspaced.runtime.home)/.cache/backup/termux"
+				output:    "\(workspaced.runtime.home)/.cache/backup/termux.tar"
+				format:    "tar"
+			},
+			if #is_phone {
+				name: "termux archive upload"
+				kind: "rsync"
+				skip_permissions: true
+				src:  "\(workspaced.runtime.home)/.cache/backup/termux.tar"
+				dst:  "\(#rsyncnet_user):\(#remote_path)/termux.tar"
+			},
+		]
 	}
 }
