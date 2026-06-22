@@ -5,7 +5,7 @@
       "ref": "github:PapirusDevelopmentTeam/papirus-icon-theme",
       "depName": "PapirusDevelopmentTeam/papirus-icon-theme",
       "packageName": "https://github.com/PapirusDevelopmentTeam/papirus-icon-theme",
-      "currentValue": "HEAD",
+      "currentValue": "master",
       "currentDigest": "702499f331aa9c38309e1af99de4021013916297",
       "datasource": "git-refs"
     },
@@ -170,7 +170,7 @@
       "ref": "github:lucasew/workspaced",
       "depName": "lucasew/workspaced",
       "packageName": "https://github.com/lucasew/workspaced",
-      "currentValue": "HEAD",
+      "currentValue": "master",
       "currentDigest": "833e99da856a33ef2809a0606ed338224a456eca",
       "datasource": "git-refs"
     },
