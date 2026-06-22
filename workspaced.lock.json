@@ -161,7 +161,7 @@
       "ref": "github:lewtec/skills",
       "depName": "lewtec/skills",
       "packageName": "https://github.com/lewtec/skills",
-      "currentValue": "HEAD",
+      "currentValue": "master",
       "currentDigest": "6c8a915b968e29acd06abdd7dbc0598a7891b5de",
       "datasource": "git-refs"
     },
