@@ -4,6 +4,46 @@ This file lists patterns of changes that have been consistently rejected by huma
 
 ---
 
+## IGNORE: Out-of-Scope Agent Modifications
+
+**- Pattern:** Agents modifying files outside their strictly allowed paths (e.g., modifying `mise.toml` or `.github/workflows/` when limited to `src/`).
+**- Justification:** Agents must adhere to their designated scope and leave out-of-scope fixes to the appropriate agent.
+**- Files Affected:** `*`
+
+---
+
+## IGNORE: Adding Dummy/Fallback mise Tasks
+
+**- Pattern:** Adding fallback tasks like `[tasks."test:dummy"]` or `[tasks."install:tools"]` to `mise.toml` to fix CI wildcard issues.
+**- Justification:** Adding dummy/fallback tasks adds unnecessary noise and clutters the configuration.
+**- Files Affected:** `mise.toml`, `*/mise.toml`
+
+---
+
+## IGNORE: Incomplete Utility Implementations
+
+**- Pattern:** Adding centralized utilities (e.g., error reporting) without migrating existing scattered usages across the codebase to use them.
+**- Justification:** Implementing new utilities without adopting them in existing code creates dead code and fails to reduce source complexity.
+**- Files Affected:** `src/utils/*.sh`, `tests/utils/*.sh`
+
+---
+
+## IGNORE: Automated Dependency Updates in Lockfiles
+
+**- Pattern:** Automated dependency version bumps or tool updates in `workspaced.lock.json`.
+**- Justification:** These automated lockfile bumps are consistently autoclosed and should be ignored.
+**- Files Affected:** `workspaced.lock.json`
+
+---
+
+## IGNORE: Unrequested Lockfile Modifications
+
+**- Pattern:** Committing unrequested lockfile modifications (e.g., `workspaced.lock.json`) caused by implicit modifications during linting or testing.
+**- Justification:** Lockfile modifications unrelated to the core task add noise and should be restored or unstaged before committing.
+**- Files Affected:** `workspaced.lock.json`
+
+---
+
 ## IGNORE: Flagging Weak Default Authentication (SSH)
 
 **- Pattern:** Flagging enabled SSH password authentication or the use of the weak 'changeme' initial password as a vulnerability.
