@@ -540,7 +540,13 @@ workspaced: {
 #skills: {
 	lewtec: {
 		from: "github:lewtec/skills"
-		version: "93568d755f6bdb932c576fb3d4b928eb857cc860"
+		version: "6c8a915b968e29acd06abdd7dbc0598a7891b5de"
+	}
+}
+
+#skills: {
+	workspaced: {
+		from: "github:lucasew/workspaced"
 	}
 }
 
