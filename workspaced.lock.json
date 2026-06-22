@@ -25,7 +25,7 @@
       "kind": "tool",
       "ref": "github:ast-grep/ast-grep",
       "depName": "ast-grep/ast-grep",
-      "currentValue": "0.43.0",
+      "currentValue": "0.44.0",
       "datasource": "github-releases"
     },
     {
