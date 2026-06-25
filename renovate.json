@@ -8,18 +8,6 @@
   "nix": {
     "enabled": true
   },
-  "customManagers": [
-    {
-      "customType": "jsonata",
-      "fileFormat": "json",
-      "managerFilePatterns": [
-        "/(^|/)workspaced\\.lock\\.json$/"
-      ],
-      "matchStrings": [
-        "dependencies.{\"depName\": depName, \"currentValue\": currentValue, \"currentDigest\": currentDigest, \"datasource\": datasource, \"packageName\": packageName, \"versioning\": versioning}"
-      ]
-    }
-  ],
   "packageRules": [
     {
       "automerge": true,
