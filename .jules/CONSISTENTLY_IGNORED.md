@@ -84,10 +84,10 @@ This file lists patterns of changes that have been consistently rejected by huma
 
 ---
 
-## IGNORE: Adding Empty Lines After Journal Headers
+## IGNORE: Unrequested Documentation/README Updates
 
-**- Pattern:** Adding empty lines between Markdown headers and semantically structured metadata tags in agent journals (e.g., `.jules/sentinel.md`) to comply with Prettier formatting rules.
-**- Justification:** The project prefers maintaining the exact metadata block format directly under headers without empty lines, as this pattern is consistently rejected.
-**- Files Affected:** `.jules/*.md`
+**- Pattern:** Unrequested documentation or README updates (e.g., adding missing READMEs for base16 modules, riverwood, android nodes, and infra/turbo).
+**- Justification:** These documentation updates are consistently autoclosed/rejected and should be ignored.
+**- Files Affected:** `**/*.md`, `**/*.mdx`, `**/*.txt`, `**/*.d.ts`, `**/*.ts`, `**/*.svelte`
 
 ---
