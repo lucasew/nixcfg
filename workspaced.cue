@@ -538,13 +538,12 @@ workspaced: {
 // ========== Agent skills
 
 #skills: {
-	lewtec: {
-		from: "github:lewtec/skills"
-		version: "6c8a915b968e29acd06abdd7dbc0598a7891b5de"
+	if !#is_phone {
+		lewtec: {
+			from: "github:lewtec/skills"
+			version: "811e8f8ce4cd77827c230f30b8127cbaa190ec7b"
+		}
 	}
-}
-
-#skills: {
 	workspaced: {
 		from: "github:lucasew/workspaced"
 	}
