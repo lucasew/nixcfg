@@ -547,6 +547,9 @@ workspaced: {
 	workspaced: {
 		from: "github:lucasew/workspaced"
 	}
+	local_skills: {
+		from: "self:skills"
+	}
 }
 
 #skills: [string]: {
