@@ -13,6 +13,7 @@ module: {
 			profile?: string
 			desktop_name?: string
 			icon?: string
+			extra_flags: [...string]
 		}
 	}
 }

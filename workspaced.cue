@@ -314,6 +314,10 @@ workspaced: {
 						profile: "XAI"
 						desktop_name: "Trabson"
 						url: ""
+						extra_flags: [
+							"--proxy-server",
+							"socks5h://job-xai.stargazer-shark.ts.net:1080"
+						]
 					}
 					"castable-iframe": {
 						browser: #default_borderless_browser
