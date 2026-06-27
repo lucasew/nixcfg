@@ -217,12 +217,6 @@ workspaced: {
 		}
 	}
 
-	inputs: {
-		self: {
-			from: "self"
-		}
-	}
-
 	modules: {
 		fontconfig: {
 			input: "self:modules/fontconfig"
@@ -552,8 +546,7 @@ workspaced: {
 	// We reference the built-in "self" input directly below instead of
 	// creating a pointless named alias like "skills_local_skills".
 	local_skills: {
-		from: "self"
-		origin: "skills"
+		from: "self:skills"
 	}
 }
 
