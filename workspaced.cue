@@ -5,7 +5,7 @@ import "strings"
 workspaced: {
 
 	desktop: wallpaper: {
-		dir:     "\(workspaced.runtime.dotfiles_root)/assets"
+		dir:     "\(workspaced.runtime.dotfiles_root)/assets/wallpapers"
 		default: "wall.jpg"
 	}
 
