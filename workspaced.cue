@@ -1,5 +1,6 @@
 package workspaced
 
+import "strings"
 
 workspaced: {
 
@@ -547,8 +548,12 @@ workspaced: {
 	workspaced: {
 		from: "github:lucasew/workspaced"
 	}
+	// Local skills come straight from the workspace tree.
+	// We reference the built-in "self" input directly below instead of
+	// creating a pointless named alias like "skills_local_skills".
 	local_skills: {
-		from: "self:skills"
+		from: "self"
+		origin: "skills"
 	}
 }
 
@@ -558,23 +563,40 @@ workspaced: {
 	origin: string | *"skills"
 	destination: string | *""
 }
+
+// Remote (github etc.) skills need named inputs for locking/version pins.
+// Local self-based ones do not — we reference "self:..." directly.
 workspaced: {
 	inputs: {
-		for name, src in #skills {
+		for name, src in #skills if !strings.HasPrefix(src.from, "self") {
 			"skills_\(name)": {
 				from: src.from
 				version: src.version
 			}
 		}
 	}
+
+	// Generate place modules for all skills.
+	// For self sources we use the direct "self:..." ref (no named input needed).
 	modules: {
-		for name, value in #skills {
+		for name, value in #skills if !strings.HasPrefix(value.from, "self") {
 			"skills_\(name)": {
 				from: "core:place"
 				config: {
 					items: {
 						".grok/skills/\(value.destination)":  "skills_\(name):\(value.origin)"
 						".codex/skills/\(value.destination)": "skills_\(name):\(value.origin)"
+					}
+				}
+			}
+		}
+		for name, value in #skills if strings.HasPrefix(value.from, "self") {
+			"skills_\(name)": {
+				from: "core:place"
+				config: {
+					items: {
+						".grok/skills/\(value.destination)":  "self:\(value.origin)"
+						".codex/skills/\(value.destination)": "self:\(value.origin)"
 					}
 				}
 			}
