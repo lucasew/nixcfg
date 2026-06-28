@@ -1,2 +1,4 @@
 #!/usr/bin/env bash
+
+export WORKSPACED_NO_PROOT=1
 exec workspaced home backup run
