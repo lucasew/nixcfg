@@ -447,7 +447,8 @@ workspaced: {
 
 // =========== Backup
 #rsyncnet_user: "de3163@de3163.rsync.net"
-#is_whiterun: workspaced.runtime.hostname != "whiterun"
+#is_whiterun: workspaced.runtime.hostname == "whiterun"
+#is_riverwood: workspaced.runtime.hostname == "riverwood"
 #is_phone: workspaced.runtime.is_phone
 #remote_path: "backup/lucasew"
 
@@ -461,15 +462,16 @@ workspaced: {
 				"personal-bookmarks",
 				"personal-decsync",
 				"personal-zettel-org",
-			] if !#is_whiterun {
+			] if (#is_whiterun || #is_phone || #is_riverwood) {
 				name: "git repo \(repo_name)"
 				kind: "git_repo_sync"
 				src:  "\(workspaced.runtime.home)/.personal/\(repo_name)"
 				dst:  "\(#rsyncnet_user):git-personal/\(repo_name)"
 			},
-			if !#is_whiterun {
+			if (#is_whiterun || #is_riverwood) {
 				name: "cantgit"
 				kind: "rsync"
+				skip_permissions: true
 				src:  "\(workspaced.runtime.home)/WORKSPACE/CANTGIT/"
 				dst:  "\(#rsyncnet_user):\(#remote_path)/CANTGIT"
 			},
