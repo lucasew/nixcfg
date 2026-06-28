@@ -3,6 +3,7 @@
 ## Mandates
 - **Do NOT unify `mise.toml` files.** Keep them localized in `/`, `workspaced/`, and `infra/` to maintain context-specific tool versions and tasks.
 - **Script usage**: Use `sdw` over `sd` to ensure the latest version from the dotfiles directory is used.
+- Never run `workspaced codebase apply` on this repo
 
 ## Where To Find Things
 - `nix/` -> Nix/NixOS configs

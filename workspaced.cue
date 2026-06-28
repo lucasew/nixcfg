@@ -542,7 +542,7 @@ workspaced: {
 	if !#is_phone {
 		lewtec: {
 			from: "github:lewtec/skills"
-			version: "23c62bdfd359fb07c55ec74281cb34b3bb3b133f"
+			version: "431054e2f8577cb7eea07386733b955ab6110954"
 		}
 	}
 	workspaced: {
@@ -565,6 +565,7 @@ workspaced: {
 
 // Remote (github etc.) skills need named inputs for locking/version pins.
 // Local self-based ones do not — we reference "self:..." directly.
+// core:place TargetBase is $HOME, so destinations are under ~/.agents/skills.
 workspaced: {
 	inputs: {
 		for name, src in #skills if !strings.HasPrefix(src.from, "self") {
@@ -583,8 +584,7 @@ workspaced: {
 				from: "core:place"
 				config: {
 					items: {
-						".grok/skills/\(value.destination)":  "skills_\(name):\(value.origin)"
-						".codex/skills/\(value.destination)": "skills_\(name):\(value.origin)"
+						".agents/skills/\(value.destination)": "skills_\(name):\(value.origin)"
 					}
 				}
 			}
@@ -594,8 +594,7 @@ workspaced: {
 				from: "core:place"
 				config: {
 					items: {
-						".grok/skills/\(value.destination)":  "self:\(value.origin)"
-						".codex/skills/\(value.destination)": "self:\(value.origin)"
+						".agents/skills/\(value.destination)": "self:\(value.origin)"
 					}
 				}
 			}
