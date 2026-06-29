@@ -42,3 +42,10 @@
 **Root Cause:** CI explicitly triggers wildcard dependencies that had no concrete tasks defined in `mise.toml`.
 **Solution:** Added `install:tools` that runs `mise install`, and `codegen:dummy` that runs `echo ok` to satisfy the dependency wildcards.
 **Pattern:** Ensure `mise.toml` explicitly defines wildcard task dependents (like `codegen:dummy`) if CI relies on `mise run ...` for those generic patterns.
+
+## 2026-06-29 - Missing `workspaced` in CI
+
+**Issue:** `mise run ci` failed in GitHub Actions because `workspaced` was not found (`sh: 1: workspaced: not found`).
+**Root Cause:** The `workspaced` tool cannot be natively installed via `mise`'s `[tools]` section (e.g., `github:lucasew/workspaced`) and therefore was missing from the runner's PATH when `mise run ci` executed `workspaced codebase lint`.
+**Solution:** Explicitly installed the precompiled `workspaced` binary via `curl` and `tar` into the CI runner's environment before running `mise run ci`.
+**Pattern:** Tools that are required for CI pipelines but unsupported natively by `mise` or other environment managers must be explicitly installed manually within the CI workflows.

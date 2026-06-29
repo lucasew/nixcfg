@@ -57,5 +57,16 @@ jobs:
           branch: "autorelease/codegen"
           delete-branch: true
 
+      - name: Install workspaced
+        run: |
+          curl -fsSL https://github.com/lucasew/workspaced/releases/download/0.2.1/workspaced_Linux_x86_64.tar.gz -o workspaced.tar.gz
+          tar -xzf workspaced.tar.gz workspaced
+          chmod +x workspaced
+          mkdir -p ~/.local/bin
+          mv workspaced ~/.local/bin/workspaced
+          rm workspaced.tar.gz
+
       - name: Run CI
-        run: mise run ci
+        run: |
+          export PATH=~/.local/bin:$PATH
+          mise run ci
