@@ -21,3 +21,10 @@ sops = "3.13.1"
 [tasks."install:tools"]
 description = "Install tools"
 run = "mise install"
+
+[tasks.codegen]
+depends = ["codegen:*"]
+
+[tasks."codegen:dummy"]
+description = "Dummy codegen task"
+run = "echo ok"
