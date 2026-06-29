@@ -35,3 +35,10 @@
 **Solution:** Replaced command substitution with `shfmt -f=0 . | xargs -0 -r ...` to robustly pipe file lists. Added `install:tools` task to explicitly run `mise install`.
 **Pattern:** Prefer pipelines with `xargs -0 -r` over command substitution for passing file lists to tools, as it handles empty lists and filenames with spaces correctly.
 - 2026-05-06: Formatting was applied to .jules/sentinel.md using prettier to ensure empty lines follow markdown headers.
+
+## 2026-06-29 - Missing dependencies in CI
+
+**Issue:** `mise run install` and `mise run codegen` failed in CI due to missing task references (`install:*`, `codegen:*`).
+**Root Cause:** CI explicitly triggers wildcard dependencies that had no concrete tasks defined in `mise.toml`.
+**Solution:** Added `install:tools` that runs `mise install`, and `codegen:dummy` that runs `echo ok` to satisfy the dependency wildcards.
+**Pattern:** Ensure `mise.toml` explicitly defines wildcard task dependents (like `codegen:dummy`) if CI relies on `mise run ...` for those generic patterns.
