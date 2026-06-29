@@ -59,14 +59,11 @@ jobs:
 
       - name: Install workspaced
         run: |
-          curl -fsSL https://github.com/lucasew/workspaced/releases/download/0.2.1/workspaced_Linux_x86_64.tar.gz -o workspaced.tar.gz
-          tar -xzf workspaced.tar.gz workspaced
-          chmod +x workspaced
-          mkdir -p ~/.local/bin
-          mv workspaced ~/.local/bin/workspaced
-          rm workspaced.tar.gz
+          export DOWNLOAD_DIR="$(mktemp -d)"
+          curl -sSL https://raw.githubusercontent.com/lucasew/workspaced/master/setup > "$DOWNLOAD_DIR/setup"
+          chmod +x "$DOWNLOAD_DIR/setup"
+          "$DOWNLOAD_DIR/setup" self-install -f
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Run CI
-        run: |
-          export PATH=~/.local/bin:$PATH
-          mise run ci
+        run: mise run ci
