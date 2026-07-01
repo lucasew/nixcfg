@@ -542,7 +542,7 @@ workspaced: {
 	if !#is_phone {
 		lewtec: {
 			from: "github:lewtec/skills"
-			version: "d5919592376da50a6405e099b9afe0efdf4b15af"
+			version: "b5e4e7f4494d7177c897354f4e508ec7520aa568"
 		}
 	}
 	workspaced: {
