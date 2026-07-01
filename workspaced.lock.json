@@ -48,7 +48,7 @@
       "kind": "tool",
       "ref": "github:badlogic/pi-mono",
       "depName": "badlogic/pi-mono",
-      "currentValue": "v0.79.9",
+      "currentValue": "v0.80.3",
       "datasource": "github-releases"
     },
     {
