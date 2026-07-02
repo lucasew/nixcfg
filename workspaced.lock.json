@@ -241,7 +241,7 @@
       "kind": "tool",
       "ref": "github:zed-industries/zed",
       "depName": "zed-industries/zed",
-      "currentValue": "v1.8.0-pre",
+      "currentValue": "v1.9.0",
       "datasource": "github-releases"
     },
     {
