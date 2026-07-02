@@ -104,7 +104,7 @@
       "kind": "tool",
       "ref": "github:getsops/sops",
       "depName": "getsops/sops",
-      "currentValue": "v3.13.1",
+      "currentValue": "v3.13.2",
       "datasource": "github-releases"
     },
     {
