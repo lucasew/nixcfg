@@ -57,5 +57,13 @@ jobs:
           branch: "autorelease/codegen"
           delete-branch: true
 
+      - name: Install workspaced
+        run: |
+          export DOWNLOAD_DIR="$(mktemp -d)"
+          curl -sSL https://raw.githubusercontent.com/lucasew/workspaced/master/setup > "$DOWNLOAD_DIR/setup"
+          chmod +x "$DOWNLOAD_DIR/setup"
+          "$DOWNLOAD_DIR/setup" self-install -f
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
       - name: Run CI
         run: mise run ci
