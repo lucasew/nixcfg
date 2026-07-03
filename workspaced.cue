@@ -309,8 +309,13 @@ workspaced: {
 			enable: true
 			config: {
 				apps: {
+					main: {
+						browser: #default_borderless_browser
+						desktop_name: "Navegador"
+						url: ""
+					}
 					workx: {
-						browser: "brave"
+						browser: #default_borderless_browser
 						profile: "XAI"
 						desktop_name: "Trabson"
 						url: ""
