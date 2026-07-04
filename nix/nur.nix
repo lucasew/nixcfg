@@ -25,7 +25,6 @@ pkgs.lib.makeScope pkgs.newScope (
 
     # custom things
     custom_neovim = p ./pkgs/custom/neovim;
-    custom_rofi = p ./pkgs/custom/rofi.nix;
 
     # utils
     pkg = p ./pkgs/pkg.nix;

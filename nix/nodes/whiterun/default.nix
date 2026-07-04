@@ -25,6 +25,7 @@ in
     ./zfs.nix
     # ./container-inet-rdp.nix
     ./container-nat.nix
+    ./plymouth.nix
   ];
 
 
@@ -77,8 +78,6 @@ in
   services.hardware.openrgb.enable = true;
 
   programs.gamemode.enable = true;
-
-  boot.plymouth.enable = true;
 
   # services.boinc.enable = true;
 

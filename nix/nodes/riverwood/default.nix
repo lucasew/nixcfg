@@ -22,6 +22,7 @@ in
     ./remote-build.nix
     ./tuning.nix
     ./earlyoom.nix
+    ./plymouth.nix
   ];
 
 
@@ -46,8 +47,6 @@ in
   programs.sway.enable = true;
 
   services.sunshine.enable = true;
-
-  boot.plymouth.enable = true;
 
   programs.gamemode.enable = true;
 

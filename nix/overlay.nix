@@ -50,6 +50,8 @@ in
     }
   );
 
+  plymouthSvgLogo = cp ./pkgs/plymouthSvgLogo.nix;
+
   buildFHSUserEnv = prev.buildFHSEnv;
 
   personal-utils = cp ./pkgs/personal-utils.nix;
@@ -104,7 +106,6 @@ in
     emacs = cp ./pkgs/custom/emacs;
     firefox = cp ./pkgs/custom/firefox;
     tixati = cp ./pkgs/custom/tixati.nix;
-    rofi = cp ./pkgs/custom/rofi.nix; # Just returns base rofi package
     pidgin = cp ./pkgs/custom/pidgin.nix;
     send2kindle = cp ./pkgs/custom/send2kindle.nix;
     retroarch = cp ./pkgs/custom/retroarch.nix;
