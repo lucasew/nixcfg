@@ -1,33 +1,7 @@
-# base16-rofi Module
+# base16-rofi
 
-Generates rofi theme based on the base16 color palette.
+Writes `~/.config/rofi/theme.rasi`. Needs `base16`. Slot list: [../README.md](../README.md).
 
-## Features
+Covers normal / active / urgent. `base00` bg, `base01` selection, `base04`/`base05` text, `base08` urgent, `base0D` active.
 
-- Complete rofi color scheme using base16 palette
-- Supports normal, active, and urgent states
-- Consistent look with other base16 modules
-
-## Generated Files
-
-- `~/.config/rofi/theme.rasi`
-
-## Usage
-
-Rofi will automatically use the generated theme. Launch rofi normally:
-
-```bash
-rofi -show drun
-```
-
-## Base16 Color Mapping
-
-- **base00**: Background
-- **base01**: Light background (selected items)
-- **base04/base05**: Foreground colors
-- **base08**: Red (urgent states)
-- **base0D**: Blue (active states)
-
-## Dependencies
-
-Requires the `base16` module to be enabled with a valid color palette.
+`rofi -show drun` picks it up if rofi is pointed at that theme file.

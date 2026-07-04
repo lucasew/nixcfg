@@ -1,28 +1,32 @@
 # AGENTS.md
 
 ## Mandates
-- **Do NOT unify `mise.toml` files.** Keep them localized in `/`, `workspaced/`, and `infra/` to maintain context-specific tool versions and tasks.
-- **Script usage**: Use `sdw` over `sd` to ensure the latest version from the dotfiles directory is used.
-- Never run `workspaced codebase apply` on this repo
 
-## Where To Find Things
-- `nix/` -> Nix/NixOS configs
-- `nix/nodes/` -> Machine-specific configs and non-NixOS device scripts like Android
-- `nix/pkgs/custom/` -> Custom package sources (defined in `nix/overlay.nix`)
-- `modules/` -> Workspaced modules for configs and base16 colors
-- `bin/` -> CLI scripts (Env init: `source bin/source_me`)
-- `config/` -> Raw dotfiles
-- `infra/` -> Terraform definitions
-- `flake.nix` -> Global settings (user, email, IPs, DE)
-- `nix/nodes/common/sops.nix` -> Secrets (sops-nix managed)
+- Do not unify `mise.toml` files.
+- Prefer `sdw` over `sd` so you run the copy from this dotfiles tree, not a stale shim.
+- Never run `workspaced codebase apply` on this repo.
 
-## Machine Context
-- **riverwood**: Laptop, Intel CPU/GPU, ext4, Sway/i3.
-- **whiterun**: Desktop, Ryzen 5600G, ZFS, Monitoring/Containers.
-- **ravenrock**: Cloud (GCP), Turbo VM (currently unused).
+## Where things live
 
-## Common Commands
-- **NixOS Apply**: `sudo nixos-rebuild switch --flake .`
-- **Deploy**: `sd nix rrun .#deploy`
-- **Build**: `nix build .#nixosConfigurations.MACHINE.config.system.build.toplevel`
-- **Workspaced**: `workspaced home apply` / `workspaced home plan` / `workspaced driver doctor`
+- `nix/` - Nix/NixOS configs
+- `nix/nodes/` - per-machine configs and non-NixOS bits (Android, etc.)
+- `nix/pkgs/custom/` - custom package sources (`nix/overlay.nix`)
+- `modules/` - workspaced modules (configs, base16 themes)
+- `bin/` - CLI scripts (`source bin/source_me` for env)
+- `config/` - raw dotfiles / templates
+- `infra/` - Terraform
+- `flake.nix` - global knobs (user, email, IPs, DE)
+- `nix/nodes/common/sops.nix` - secrets via sops-nix
+
+## Machines
+
+- riverwood - laptop, Intel CPU/GPU, ext4, Sway/i3
+- whiterun - desktop, Ryzen 5600G, ZFS, monitoring/containers
+- ravenrock - Hostinger VPS, running debian, config has a older version for GCP
+
+## Common commands
+
+- NixOS apply: `sudo nixos-rebuild switch --flake .`
+- Deploy: `sd nix rrun .#deploy`
+- Build: `nix build .#nixosConfigurations.MACHINE.config.system.build.toplevel`
+- Workspaced: `workspaced home apply` / `workspaced home plan` / `workspaced driver doctor`

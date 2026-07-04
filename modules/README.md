@@ -1,145 +1,95 @@
-# Workspaced Modules Guide
+# Workspaced modules
 
-## Creating Base16 Modules
+Stuff under `modules/` is wired in via `workspaced.cue` (`input: "self:modules/..."`). Palette lives in `modules.base16.config`; the `base16-*` modules just paint apps with it.
 
-Base16 modules apply the color palette defined in `settings.toml` to various applications.
-
-### Basic Structure
+## New base16 module
 
 ```
 modules/base16-{app}/
-├── module.toml         # Module metadata
-├── defaults.toml       # Driver preferences (optional)
-├── README.md          # Documentation
+├── module.cue
+├── README.md          # optional, keep short
 └── home/
     └── .config/{app}/
-        └── config.ext.tmpl  # Template file
+        └── something.tmpl
 ```
 
-### module.toml
+`module.cue`:
 
-```toml
-[module]
-name = "base16-{app}"
-requires = ["base16"]
+```cue
+package module
+
+module: {
+	meta: {
+		requires: ["base16"]
+		recommends: []
+	}
+	config: {}
+}
 ```
 
-### Accessing Base16 Colors in Templates
+Enable in `workspaced.cue`:
+
+```cue
+"base16-{app}": {input: "self:modules/base16-{app}", enable: true}
+```
+
+Colors in templates:
 
 ```go
 {{- $base16 := .root.modules.base16.config }}
 color: #{{ $base16.base00 }}
 ```
 
-## The `.d.tmpl` Pattern
+Check with `workspaced home plan`, then `workspaced home apply`.
 
-For configs that need to be split across multiple sources (main config + theme), use the `.d.tmpl` pattern:
+## `.d.tmpl` dirs
 
-### How It Works
+When one output file needs pieces from different places (bindings here, colors there), use a directory named `something.d.tmpl/`. Workspaced concatenates its files in alpha order into `something`.
 
-1. Create a directory with `.d.tmpl` suffix
-2. Add multiple files (can be from different modules)
-3. Workspaced concatenates them into a single output file
+Number prefixes set order: `00-` early, `10-` base, `50-` theme, `90-` late.
 
-### Example: tmux
+tmux:
 
-```
-config/.config/tmux/tmux.conf.d.tmpl/
-  └── 10-base.conf                    # Main config (bindings, etc)
-
-modules/base16-tmux/home/.config/tmux/tmux.conf.d.tmpl/
-  └── 50-base16-theme.conf.tmpl       # Colors from module
-
-→ Generates: ~/.config/tmux/tmux.conf (single file)
-```
-
-### Ordering
-
-Files are concatenated in **alphabetical order**. Use numeric prefixes to control order:
-- `00-` - Critical early configs
-- `10-` - Base configuration
-- `50-` - Themes and styling
-- `90-` - Late configs
-
-### When to Use `.d.tmpl`
-
-✅ **Use when:**
-- Config has functional parts (bindings) + theme parts (colors)
-- Multiple modules need to contribute to same file
-- Want separation of concerns
-
-❌ **Don't use when:**
-- Single module owns entire config
-- Config is theme-only (just use `.tmpl`)
-
-## Base16 Color Reference
-
-| Color | Purpose | Example Usage |
-|-------|---------|---------------|
-| base00 | Background | Main background |
-| base01 | Lighter background | Line numbers, status bars |
-| base02 | Selection background | Selected items |
-| base03 | Comments, invisibles | Subtle elements |
-| base04 | Dark foreground | Status bar text |
-| base05 | Default foreground | Main text |
-| base06 | Light foreground | Highlighted text |
-| base07 | Light background | Unused in dark themes |
-| base08 | Red | Error, destructive, urgent |
-| base09 | Orange | Warnings, modified |
-| base0A | Yellow | Warnings |
-| base0B | Green | Success, additions |
-| base0C | Cyan | Info, low urgency |
-| base0D | Blue | Accent, links, active |
-| base0E | Purple | Special, visited links |
-| base0F | Brown | Deprecated |
-
-## Examples
-
-### Simple Theme Module (rofi, dunst)
-
-Single template file, module owns entire config:
-```
-modules/base16-rofi/home/.config/rofi/theme.rasi.tmpl
-```
-
-### Complex Module with `.d.tmpl` (tmux, bashrc)
-
-Multiple sources concatenated:
 ```
 config/.config/tmux/tmux.conf.d.tmpl/10-base.conf
-modules/base16-tmux/...tmux.conf.d.tmpl/50-theme.conf.tmpl
-→ ~/.config/tmux/tmux.conf
+modules/base16-tmux/home/.config/tmux/tmux.conf.d.tmpl/50-base16-theme.conf.tmpl
+-> ~/.config/tmux/tmux.conf
 ```
 
-### Multi-File Module (gtk)
+Use it when more than one module touches the same file. If one module owns the whole config, a plain `.tmpl` is enough.
 
-Creates files in multiple locations:
-```
-modules/base16-gtk/home/
-  ├── .local/share/themes/base16/gtk-2.0/gtkrc.tmpl
-  ├── .local/share/themes/base16/gtk-3.0/gtk.css.tmpl
-  └── .config/qt5ct/colors/base16.conf.tmpl
-```
+## Palette (`base00`-`base0F`)
 
-## Migration Checklist
+| Slot   | Usual role                          |
+|--------|-------------------------------------|
+| base00 | background                          |
+| base01 | lighter bg (status, line numbers)   |
+| base02 | selection bg                        |
+| base03 | comments / faint UI                 |
+| base04 | dim foreground                      |
+| base05 | default foreground                  |
+| base06 | bright foreground                   |
+| base07 | light bg (mostly unused in dark)    |
+| base08 | red (error, urgent)                 |
+| base09 | orange (warn, modified)             |
+| base0A | yellow                              |
+| base0B | green (ok, additions)               |
+| base0C | cyan                                |
+| base0D | blue (accent, active)               |
+| base0E | purple                              |
+| base0F | brown / deprecated                  |
 
-When converting a legacy config to a module:
+Defined in `modules/base16/module.cue` (`dark_mode` plus hex slots). Values are set in `workspaced.cue`.
 
-1. ✅ Create module structure
-2. ✅ Move template from `config/` to `modules/{name}/home/`
-3. ✅ Remove old template from `config/`
-4. ✅ Add `[modules.{name}]` to `settings.toml`
-5. ✅ Test with `workspaced home plan`
-6. ✅ Apply with `workspaced home apply`
+## Shapes that already exist here
 
-## Existing Base16 Modules
+- One file, module owns it: `base16-rofi` -> `theme.rasi.tmpl`, `base16-dunst` -> `dunstrc.tmpl`
+- Splice into a shared file: `base16-tmux`, `base16-shell` (`.d.tmpl`)
+- Several paths: `base16-gtk` (GTK 2/3/4 + qt5ct/qt6ct)
 
-- `base16` - Core palette definition
-- `base16-shell` - Terminal colors
-- `base16-sway` - Sway WM + Waybar
-- `base16-helix` - Helix editor
-- `base16-vscode` - VS Code
-- `base16-gtk` - GTK 2/3/4 + Qt 5/6
-- `base16-rofi` - Rofi launcher
-- `base16-dunst` - Dunst notifications
-- `base16-tmux` - Tmux terminal multiplexer
+## Modules in this repo
+
+- `base16` - palette + a few driver weights
+- `base16-shell`, `base16-sway`, `base16-swaylock`, `base16-helix`, `base16-vscode`
+- `base16-gtk`, `base16-rofi`, `base16-dunst`, `base16-tmux`, `base16-opencode`
+- also non-theme: `fontconfig`, `mise`, `script-directory`, `webapp`, `hermes`
