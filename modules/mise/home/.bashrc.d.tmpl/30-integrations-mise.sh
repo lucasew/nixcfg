@@ -18,3 +18,8 @@ if command -v mise >/dev/null 2>&1; then
 fi
 
 export MISE_ALL_COMPILE=false
+
+# Termux: mise activate defines a function that shadows the binary.
+if [[ -n "${TERMUX_VERSION:-}${ANDROID_ROOT:-}" ]] && command -v mise >/dev/null 2>&1; then
+	unset -f mise 2>/dev/null || true
+fi

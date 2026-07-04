@@ -15,7 +15,7 @@ in
     "sshfs-TMP2" = {
       path = with pkgs; [ sshfs ];
       script = ''
-        . ${../../../bin/prelude/30-integrations-ssh-agent.sh}
+        . ${../../../config/.bashrc.d.tmpl/30-integrations-ssh-agent.sh}
         exec sshfs $(whoami)@whiterun:/home/$(whoami)/TMP2 /home/$(whoami)/TMP2 ${sshfsArgs}
       '';
       restartIfChanged = true;
@@ -24,7 +24,7 @@ in
     "sshfs-WORKSPACE" = {
       path = with pkgs; [ sshfs ];
       script = ''
-        . ${../../../bin/prelude/30-integrations-ssh-agent.sh}
+        . ${../../../config/.bashrc.d.tmpl/30-integrations-ssh-agent.sh}
         exec sshfs $(whoami)@whiterun:/home/$(whoami)/WORKSPACE /home/$(whoami)/WORKSPACE ${sshfsArgs}
       '';
       restartIfChanged = true;

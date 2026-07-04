@@ -16,9 +16,6 @@ let
   };
 in
 {
-  imports = [
-    ../../workspaced.nix
-  ];
 
   config = lib.mkIf config.services.xserver.windowManager.i3.enable {
     # Portal configuration

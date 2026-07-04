@@ -21,7 +21,6 @@ in
     ../optional/flatpak.nix
     ../optional/kdeconnect-indicator.nix
     ../optional/dunst.nix
-    ../../workspaced.nix
   ];
   config = lib.mkIf config.programs.sway.enable {
     programs.ssh.startAgent = true;

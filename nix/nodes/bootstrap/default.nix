@@ -65,7 +65,7 @@ in
     promptInit = builtins.concatStringsSep "\n" (
       map (builtins.readFile) [
         ./bash_init.sh
-        ../../../bin/prelude/40-ui-prompt.sh
+        ../../../config/.bashrc.d.tmpl/40-ui-prompt.sh
       ]
     );
   };
