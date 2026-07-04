@@ -8,7 +8,6 @@
     ./netusage
     ./python-microservices
     ./ts-proxy.nix
-    ./ngircd.nix
     ./phpelo.nix
   ];
 

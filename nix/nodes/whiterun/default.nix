@@ -38,10 +38,6 @@ in
     "vfs.zfs.arc_sys_free" = 4 * 1024 * 1024 * 1024; # make ZFS free arc before hitting swap
   };
 
-  services.ngircd = {
-    enable = true;
-  };
-
   networking.interfaces.enp5s0.wakeOnLan.enable = true;
 
   fileSystems."/media/downloads" = {
