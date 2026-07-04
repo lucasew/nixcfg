@@ -17,7 +17,6 @@ in
     ./ansible-python.nix
     ./services
 
-    ./hosts.nix
     ./kvm.nix
     ./lvm.nix
     ./nix-ld.nix

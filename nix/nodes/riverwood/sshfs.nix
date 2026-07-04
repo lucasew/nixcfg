@@ -6,28 +6,27 @@ let
     "-o"
     "reconnect,ServerAliveInterval=15,ServerAliveCountMax=3,allow_other,default_permissions,cache=no"
   ];
+  sshAgentSnippet = ../../../config/.bashrc.d.tmpl/30-integrations-ssh-agent.sh;
+  mounts = [
+    "TMP2"
+    "WORKSPACE"
+  ];
+  mkMount = name: {
+    path = [ pkgs.sshfs ];
+    script = ''
+      . ${sshAgentSnippet}
+      exec sshfs $(whoami)@whiterun:/home/$(whoami)/${name} /home/$(whoami)/${name} ${sshfsArgs}
+    '';
+    restartIfChanged = true;
+  };
 in
-
 {
   environment.systemPackages = [ pkgs.sshfs ];
 
-  systemd.user.services = {
-    "sshfs-TMP2" = {
-      path = with pkgs; [ sshfs ];
-      script = ''
-        . ${../../../config/.bashrc.d.tmpl/30-integrations-ssh-agent.sh}
-        exec sshfs $(whoami)@whiterun:/home/$(whoami)/TMP2 /home/$(whoami)/TMP2 ${sshfsArgs}
-      '';
-      restartIfChanged = true;
-    };
-
-    "sshfs-WORKSPACE" = {
-      path = with pkgs; [ sshfs ];
-      script = ''
-        . ${../../../config/.bashrc.d.tmpl/30-integrations-ssh-agent.sh}
-        exec sshfs $(whoami)@whiterun:/home/$(whoami)/WORKSPACE /home/$(whoami)/WORKSPACE ${sshfsArgs}
-      '';
-      restartIfChanged = true;
-    };
-  };
+  systemd.user.services = lib.listToAttrs (
+    map (name: {
+      name = "sshfs-${name}";
+      value = mkMount name;
+    }) mounts
+  );
 }

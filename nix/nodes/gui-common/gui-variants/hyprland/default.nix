@@ -37,19 +37,6 @@
     #   patches = (old.patches or []) ++ [ ./sunshine-wayland.patch ];
     # });
 
-    systemd.user.services.nm-applet = {
-      path = with pkgs; [ networkmanagerapplet ];
-      script = "exec nm-applet";
-      restartIfChanged = true;
-    };
-    systemd.user.services.blueberry-tray = {
-      path = with pkgs; [
-        blueman
-      ];
-      script = "blueman-applet; while true; do sleep 3600; done";
-      restartIfChanged = true;
-    };
-
     systemd.user.services.swayidle = {
       partOf = [ "graphical-session.target" ];
       path = with pkgs; [
@@ -111,7 +98,6 @@
 
     security.pam.services.swaylock = { };
     environment.systemPackages = with pkgs; [
-      swaylock
       eog # eye of gnome
       ristretto
       pcmanfm

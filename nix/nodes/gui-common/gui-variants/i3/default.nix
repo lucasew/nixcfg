@@ -1,5 +1,4 @@
 {
-  global,
   config,
   pkgs,
   lib,
@@ -9,7 +8,6 @@
 {
   imports = [
     ./i3.nix
-    ./lockscreen.nix
     ../optional/flatpak.nix
     ../optional/kdeconnect-indicator.nix
     ../optional/dunst.nix
@@ -35,14 +33,6 @@
           configFile = "/etc/i3config";
         };
       };
-    };
-    systemd.user.services.nm-applet = {
-      path = with pkgs; [ networkmanagerapplet ];
-      script = "nm-applet";
-    };
-    systemd.user.services.blueberry-tray = {
-      path = with pkgs; [ blueman ];
-      script = "blueman-applet; while true; do sleep 3600; done";
     };
 
     services.picom = {

@@ -17,7 +17,6 @@ in
 
 {
   imports = [
-    ./lockscreen.nix
     ../optional/flatpak.nix
     ../optional/kdeconnect-indicator.nix
     ../optional/dunst.nix
@@ -55,16 +54,6 @@ in
     services.displayManager.sessionData.autologinSession = lib.mkDefault "sway";
     services.xserver.displayManager.lightdm.enable = true;
     services.xserver.enable = true;
-
-    # System tray services
-    systemd.user.services.nm-applet = {
-      path = with pkgs; [ networkmanagerapplet ];
-      script = "nm-applet";
-    };
-    systemd.user.services.blueberry-tray = {
-      path = with pkgs; [ blueman ];
-      script = "blueman-applet; while true; do sleep 3600; done";
-    };
 
     services.flatpak.enable = true;
     services.tumbler.enable = true;

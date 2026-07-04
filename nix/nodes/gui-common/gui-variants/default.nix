@@ -6,5 +6,8 @@
     ./hyprland
     ./kodi
     ./dotfiles.nix
+    ./optional/system-tray.nix
+    ./optional/lockscreen.nix
   ];
 }
+
