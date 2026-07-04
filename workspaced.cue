@@ -61,6 +61,11 @@ workspaced: {
 			global: true
 			bins: ["fd"]
 		}
+		difftastic: {
+			ref: "github:Wilfred/difftastic"
+			global: true
+			bins: ["difft"]
+		}
 		opencode: {
 			ref: "github:anomalyco/opencode"
 			global: true
