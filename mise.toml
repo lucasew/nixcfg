@@ -14,6 +14,9 @@ depends = ["lint"]
 [tasks.install]
 depends = ["install:*"]
 
+[tasks."install:tools"]
+run = "mise install"
+
 [tools]
 # "github:lucasew/workspaced" = "0.2.1"
 sops = "3.13.1"
