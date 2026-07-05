@@ -28,8 +28,6 @@ jobs:
 
       - name: Setup Nix cache
         uses: DeterminateSystems/magic-nix-cache-action@565684385bcd71bad329742eefe8d12f2e765b39 # v13
-        with:
-          use-flakehub: false
 
       - name: Install mise
         uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3
@@ -58,13 +56,6 @@ jobs:
           body: "This PR updates generated code based on the latest changes."
           branch: "autorelease/codegen"
           delete-branch: true
-
-      - name: Install workspaced
-        run: |
-          curl -fsSL -o workspaced.tar.gz "https://github.com/lucasew/workspaced/releases/latest/download/workspaced_Linux_x86_64.tar.gz"
-          mkdir -p ~/.local/bin
-          tar -xzf workspaced.tar.gz -C ~/.local/bin workspaced
-          rm workspaced.tar.gz
 
       - name: Run CI
         run: mise run ci
