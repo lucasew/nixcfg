@@ -9,6 +9,9 @@
 	name = "lucasew"
 	signingkey = ~/.ssh/id_ed25519.pub
 
+[pull]
+	rebase = true
+
 [alias]
 	checkpoint = commit -m "checkpoint"
     # Difftastic aliases, so `git dlog -p` is `git log -p`
