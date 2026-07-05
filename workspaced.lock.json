@@ -18,6 +18,13 @@
     },
     {
       "kind": "tool",
+      "ref": "github:Wilfred/difftastic",
+      "depName": "Wilfred/difftastic",
+      "currentValue": "0.69.0",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
       "ref": "github:anomalyco/opencode",
       "depName": "anomalyco/opencode",
       "currentValue": "v1.17.9",

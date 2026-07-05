@@ -11,3 +11,8 @@
 
 [alias]
 	checkpoint = commit -m "checkpoint"
+    # Difftastic aliases, so `git dlog -p` is `git log -p`
+    # with difftastic and likewise for the other subcommands.
+    dlog = -c diff.external=difft log --ext-diff
+    dshow = -c diff.external=difft show --ext-diff
+    ddiff = -c diff.external=difft diff
