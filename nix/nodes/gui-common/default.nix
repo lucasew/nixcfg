@@ -57,6 +57,7 @@ in
   documentation.man.enable = true;
 
   programs.dconf.enable = true;
+  programs.ydotool.enable = true;
   services.dbus.packages = with pkgs; [ dconf ];
   services.gvfs.enable = true;
   services.tumbler.enable = true;
@@ -81,6 +82,7 @@ in
   users.users = {
     ${username} = {
       description = "Lucas Eduardo";
+      extraGroups = [ "ydotool" ];
     };
   };
 
