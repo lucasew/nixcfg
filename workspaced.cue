@@ -558,6 +558,7 @@ workspaced: {
 	}
 	workspaced: {
 		from: "github:lucasew/workspaced"
+		version: "0.9.23"
 	}
 	// Local skills come straight from the workspace tree.
 	// We reference the built-in "self" input directly below instead of

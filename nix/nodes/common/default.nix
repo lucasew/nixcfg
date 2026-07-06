@@ -52,8 +52,8 @@ in
           "~/.wine"
         ];
         ignore = [
-          "/home/lucasew/WORKSPACE"
-          "/home/lucasew/TMP2"
+          "~/WORKSPACE"
+          "~/TMP2"
           "/run/media"
         ];
         extra_homes = [ "/run/media/lucasew/Dados/DADOS/Lucas" ];
