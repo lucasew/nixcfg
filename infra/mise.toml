@@ -3,8 +3,5 @@
 tflint = "0.63.1"
 terraform = "1.15.6"
 
-[tasks.install]
-depends = ["install:*"]
-
 [tasks."install:tools"]
 run = "mise install"
