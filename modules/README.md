@@ -85,7 +85,7 @@ Defined in `modules/base16/module.cue` (`dark_mode` plus hex slots). Values are 
 
 - One file, module owns it: `base16-rofi` -> `theme.rasi.tmpl`, `base16-dunst` -> `dunstrc.tmpl`
 - Splice into a shared file: `base16-tmux`, `base16-shell` (`.d.tmpl`)
-- Several paths: `base16-gtk` (GTK 2/3/4 + qt5ct/qt6ct)
+- Several paths: `base16-gtk` (adw-gtk3 CSS overrides + GTK2 legacy + qt5ct/qt6ct)
 
 ## Modules in this repo
 
