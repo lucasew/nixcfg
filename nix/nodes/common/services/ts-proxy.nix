@@ -19,7 +19,7 @@ in
 
       environmentFile = lib.mkOption {
         description = "Path to environment file for ts-proxy credentials";
-        default = "/run/secrets/ts-proxy";
+        default = config.sops.secrets.ts-proxy.path;
       };
 
       image = lib.mkOption {
