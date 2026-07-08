@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
 export WORKSPACED_NO_PROOT=1
+export TERM=dumb
 exec workspaced home backup run
