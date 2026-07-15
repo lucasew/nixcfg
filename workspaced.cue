@@ -157,6 +157,16 @@ workspaced: {
 			global: true
 			bins: ["typos-lsp"]
 		}
+		refactree: {
+			ref: "github:lucasew/refactree"
+			global: true
+			bins: ["rft"]
+		}
+		contapila: {
+			ref: "github:lucasew/contapila-go"
+			global: true
+			bins: ["contapila"]
+		}
 		// bash_language_server: {
 		// 	ref: "mise:npm:bash-language-server"
 		// 	global: true
