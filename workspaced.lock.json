@@ -232,6 +232,13 @@
     },
     {
       "kind": "tool",
+      "ref": "github:tekumara/typos-lsp",
+      "depName": "tekumara/typos-lsp",
+      "currentValue": "v0.1.52",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
       "ref": "github:terraform-linters/tflint",
       "depName": "terraform-linters/tflint",
       "currentValue": "v0.63.1",

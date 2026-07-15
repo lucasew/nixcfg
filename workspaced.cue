@@ -152,6 +152,11 @@ workspaced: {
 			global: true
 			bins: ["ltex-ls"]
 		}
+		typos_lsp: {
+			ref: "github:tekumara/typos-lsp"
+			global: true
+			bins: ["typos-lsp"]
+		}
 		// bash_language_server: {
 		// 	ref: "mise:npm:bash-language-server"
 		// 	global: true
