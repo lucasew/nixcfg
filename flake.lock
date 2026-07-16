@@ -331,11 +331,11 @@
     "telegram-sendmail": {
       "flake": false,
       "locked": {
-        "lastModified": 1782069929,
-        "narHash": "sha256-xjC7p9XG7glwBRymDKSaK2TvA6CLr1CIxwNl+b/veoo=",
+        "lastModified": 1784240322,
+        "narHash": "sha256-YaXII9+H6inw/gSF3YqouokfRdC7KLxqDsh4dPCrYtY=",
         "owner": "lucasew",
         "repo": "telegram-sendmail",
-        "rev": "d689df6d6bbc880ffcb56b65b791284d6837b551",
+        "rev": "ffbd006b64ef6199750cb6288de589e798842a2e",
         "type": "github"
       },
       "original": {
