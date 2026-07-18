@@ -83,7 +83,7 @@
       "kind": "tool",
       "ref": "github:coder/coder",
       "depName": "coder/coder",
-      "currentValue": "v2.34.5",
+      "currentValue": "v2.35.2",
       "datasource": "github-releases"
     },
     {
