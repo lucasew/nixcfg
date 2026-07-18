@@ -69,7 +69,7 @@
       "kind": "tool",
       "ref": "github:burntsushi/ripgrep",
       "depName": "burntsushi/ripgrep",
-      "currentValue": "15.1.0",
+      "currentValue": "15.2.0",
       "datasource": "github-releases"
     },
     {
