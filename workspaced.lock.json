@@ -255,7 +255,7 @@
       "kind": "tool",
       "ref": "github:terraform-linters/tflint",
       "depName": "terraform-linters/tflint",
-      "currentValue": "v0.63.1",
+      "currentValue": "v0.64.0",
       "datasource": "github-releases"
     },
     {
