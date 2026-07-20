@@ -112,11 +112,6 @@ workspaced: {
 			global: true
 			bins: ["uv", "uvx"]
 		}
-		node: {
-			ref: "nodejs"
-			global: true
-			bins: ["node", "npm", "npx"]
-		}
 		terraform: {
 			ref: "github:hashicorp/terraform"
 			bins: ["terraform"]
