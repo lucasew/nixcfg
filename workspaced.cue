@@ -31,7 +31,7 @@ workspaced: {
 
 
 	drivers: {
-		"workspaced/pkg/driver/terminal.Driver": {
+		"github.com/lucasew/workspaced/pkg/driver/terminal.Driver": {
 			"terminal_kitty": 70
 		}
 	}
