@@ -199,7 +199,7 @@
       "kind": "tool",
       "ref": "github:ogulcancelik/herdr",
       "depName": "ogulcancelik/herdr",
-      "currentValue": "v0.7.1",
+      "currentValue": "v0.7.5",
       "datasource": "github-releases"
     },
     {
