@@ -12,7 +12,7 @@ in
   imports = [ "${self.inputs.telegram-sendmail}/nixos-module.nix" ];
 
   config = mkIf config.services.telegram-sendmail.enable {
-    services.telegram-sendmail.credentialFile = "/var/run/secrets/telegram-sendmail";
+    services.telegram-sendmail.credentialFile = config.sops.secrets.telegram-sendmail.path;
 
     # root-owned: DynamicUser service has no stable system user; systemd reads
     # EnvironmentFile as root before starting the unit.
