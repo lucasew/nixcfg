@@ -41,7 +41,7 @@
       "kind": "tool",
       "ref": "github:astral-sh/ruff",
       "depName": "astral-sh/ruff",
-      "currentValue": "0.15.20",
+      "currentValue": "0.16.0",
       "datasource": "github-releases"
     },
     {
