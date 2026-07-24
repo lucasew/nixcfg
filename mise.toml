@@ -1,0 +1,26 @@
+[tasks.install]
+depends = ["install:*"]
+
+[tasks."install:dummy"]
+run = "echo ok"
+
+[tasks.codegen]
+depends = ["codegen:*"]
+
+[tasks."codegen:dummy"]
+run = "echo ok"
+
+[tasks.ci]
+depends = ["lint", "test"]
+
+[tasks.test]
+depends = ["test:*"]
+
+[tasks."test:dummy"]
+run = "echo ok"
+
+[tasks.lint]
+depends = ["lint:*"]
+
+[tasks."lint:dummy"]
+run = "echo ok"
