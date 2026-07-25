@@ -183,7 +183,7 @@
       "kind": "tool",
       "ref": "github:lucasew/refactree",
       "depName": "lucasew/refactree",
-      "currentValue": "0.5.3",
+      "currentValue": "0.5.4",
       "datasource": "github-releases"
     },
     {
