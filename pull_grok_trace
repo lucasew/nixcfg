@@ -28,7 +28,15 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-if args.jump == args.from_host:
+
+def ssh_host(spec: str | None) -> str | None:
+    """Host part of user@host (or bare host); None if unset."""
+    if not spec:
+        return None
+    return spec.rsplit("@", 1)[-1]
+
+
+if (h := ssh_host(args.jump)) is not None and h == ssh_host(args.from_host):
     args.jump = None
 
 if args.jump and not args.from_host:
