@@ -28,6 +28,9 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
+if args.jump == args.from_host:
+    args.jump = None
+
 if args.jump and not args.from_host:
     parser.error("--jump only makes sense with --from")
 
