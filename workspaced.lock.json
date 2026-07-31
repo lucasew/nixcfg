@@ -176,7 +176,7 @@
       "kind": "tool",
       "ref": "github:lucasew/contapila-go",
       "depName": "lucasew/contapila-go",
-      "currentValue": "0.0.4",
+      "currentValue": "0.1.0",
       "datasource": "github-releases"
     },
     {
