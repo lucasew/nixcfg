@@ -50,8 +50,6 @@ in
     libnotify
     zenity
     nix-output-monitor
-    nbr.wine-apps._7zip
-    devenv
   ];
 
   documentation.man.enable = true;
