@@ -204,6 +204,13 @@
     },
     {
       "kind": "tool",
+      "ref": "github:nix-community/nh",
+      "depName": "nix-community/nh",
+      "currentValue": "v4.4.2",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
       "ref": "github:ogulcancelik/herdr",
       "depName": "ogulcancelik/herdr",
       "currentValue": "v0.7.1",
