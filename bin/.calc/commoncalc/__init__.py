@@ -441,25 +441,21 @@ class IP:
                 return False
         return True
 
-    def mask_number_hosts(self):
+    def _mask_bit_count(self, bit_char):
         if self.is_mask():
             s = self.bin_stream()
             bits = 0
             for c in s:
-                if c == "0":
+                if c == bit_char:
                     bits += 1
-            return (2**bits) - 2
+            return bits
         raise TypeError("%s is not a mask", self.__repr__())
 
+    def mask_number_hosts(self):
+        return (2**self._mask_bit_count("0")) - 2
+
     def mask_number_nets(self):
-        if self.is_mask():
-            s = self.bin_stream()
-            bits = 0
-            for c in s:
-                if c == "1":
-                    bits += 1
-            return 2**bits
-        raise TypeError("%s is not a mask", self.__repr__())
+        return 2**self._mask_bit_count("1")
 
     def get_class(self):
         [a, b, c, d] = self._ip
