@@ -54,6 +54,9 @@ in
 
   documentation.man.enable = true;
 
+  # graphical-desktop enables this by default; pulls ~700M mbrola voices
+  services.speechd.enable = false;
+
   programs.dconf.enable = true;
   programs.ydotool.enable = true;
   services.dbus.packages = with pkgs; [ dconf ];
