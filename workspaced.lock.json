@@ -276,7 +276,7 @@
       "kind": "tool",
       "ref": "github:rtk-ai/rtk",
       "depName": "rtk-ai/rtk",
-      "currentValue": "v0.43.0",
+      "currentValue": "v0.45.0",
       "datasource": "github-releases"
     },
     {
