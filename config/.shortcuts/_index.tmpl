@@ -23,7 +23,7 @@ export DOTFILES_ROOT="{{ dotfiles }}"
 source /data/data/com.termux/files/home/.bashrc
 
 # Execute script directly (no proot needed - proot-exec is only for Go builds)
-exec termux-chroot "$DOTFILES_ROOT/bin/_shortcuts/termux/{{ . }}" "$@"
+exec "$DOTFILES_ROOT/bin/_shortcuts/termux/{{ . }}" "$@"
 
 {{- endfile }}
 {{- end }}
