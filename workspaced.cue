@@ -490,27 +490,28 @@ workspaced: {
 			// 	kind: "termux_packages_snapshot"
 			// 	output: "\(workspaced.runtime.home)/.cache/backup/termux/packages.txt"
 			// },
-			if #is_phone {
-				name: "termux sync home"
-				kind: "rsync"
-				skip_permissions: true
-				src:  "\(workspaced.runtime.home)/.cache/backup/termux/"
-				dst:  "\(#rsyncnet_user):\(#remote_path)/termux/"
-			},
-			if #is_phone {
-				name:      "termux archive"
-				kind:      "archive"
-				input_dir: "\(workspaced.runtime.home)/.cache/backup/termux"
-				output:    "\(workspaced.runtime.home)/.cache/backup/termux.tar"
-				format:    "tar"
-			},
-			if #is_phone {
-				name: "termux archive upload"
-				kind: "rsync"
-				skip_permissions: true
-				src:  "\(workspaced.runtime.home)/.cache/backup/termux.tar"
-				dst:  "\(#rsyncnet_user):\(#remote_path)/termux.tar"
-			},
+			// Producer above is off; ~/.cache/backup/termux does not exist.
+			// if #is_phone {
+			// 	name: "termux sync home"
+			// 	kind: "rsync"
+			// 	skip_permissions: true
+			// 	src:  "\(workspaced.runtime.home)/.cache/backup/termux/"
+			// 	dst:  "\(#rsyncnet_user):\(#remote_path)/termux/"
+			// },
+			// if #is_phone {
+			// 	name:      "termux archive"
+			// 	kind:      "archive"
+			// 	input_dir: "\(workspaced.runtime.home)/.cache/backup/termux"
+			// 	output:    "\(workspaced.runtime.home)/.cache/backup/termux.tar"
+			// 	format:    "tar"
+			// },
+			// if #is_phone {
+			// 	name: "termux archive upload"
+			// 	kind: "rsync"
+			// 	skip_permissions: true
+			// 	src:  "\(workspaced.runtime.home)/.cache/backup/termux.tar"
+			// 	dst:  "\(#rsyncnet_user):\(#remote_path)/termux.tar"
+			// },
 		]
 	}
 }
