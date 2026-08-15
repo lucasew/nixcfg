@@ -283,7 +283,7 @@
       "kind": "tool",
       "ref": "github:tekumara/typos-lsp",
       "depName": "tekumara/typos-lsp",
-      "currentValue": "v0.1.52",
+      "currentValue": "v0.1.55",
       "datasource": "github-releases"
     },
     {
