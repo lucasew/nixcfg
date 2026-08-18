@@ -31,6 +31,7 @@
     services.gammastep.enable = true;
     programs.waybar.enable = true;
     programs.kdeconnect.enable = true;
+    programs.omarchy.enable = true;
 
     # https://github.com/loki-47-6F-64/sunshine/commit/ebf9dbe9318808a5e127d3b6e397b9fa5149f197.patch
     # programs.sunshine.package = pkgs.sunshine.overrideAttrs (old: {
