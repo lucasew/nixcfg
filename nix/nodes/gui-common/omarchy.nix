@@ -70,6 +70,14 @@ in
       };
       script = ''
         export XDG_DATA_DIRS="${pkgs.yaru-theme}/share:${pkgs.adwaita-icon-theme}/share''${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}"
+        if [ -z "''${SWAYSOCK:-}" ]; then
+          for sock in "''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"/sway-ipc.*.sock; do
+            if [ -S "$sock" ]; then
+              export SWAYSOCK="$sock"
+              break
+            fi
+          done
+        fi
         exec ${lib.getExe' cfg.package "omarchy-launch-shell"}
       '';
     };

@@ -33,12 +33,14 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   dontConfigure = true;
   dontBuild = true;
 
-  # Upstream launcher only probes Hyprland. Keep hyprctl, also accept Sway.
+  # Upstream launcher and workspace widget are Hyprland-only. Keep hyprctl,
+  # accept Sway, and drive workspaces through Quickshell.I3 when SWAYSOCK is set.
   postPatch = ''
     substituteInPlace bin/omarchy-launch-shell \
       --replace-fail 'hyprctl -j monitors >/dev/null 2>&1 && return 0' \
       'if command -v hyprctl >/dev/null && hyprctl -j monitors >/dev/null 2>&1; then return 0; fi
         if command -v swaymsg >/dev/null && swaymsg -t get_outputs >/dev/null 2>&1; then return 0; fi'
+    cp ${./omarchy-Workspaces.qml} shell/plugins/bar/widgets/Workspaces.qml
   '';
 
   installPhase = ''
