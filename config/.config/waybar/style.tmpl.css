@@ -31,7 +31,7 @@ window {
     min-height: 32px;
 }
 
-#tray, #mode, #battery, #cpu, #memory, #network, #pulseaudio, #idle_inhibitor, #backlight, #custom-storage, #custom-updates, #custom-weather, #custom-mail, #clock, #temperature {
+#tray, #mode, #battery, #cpu, #memory, #network, #pulseaudio, #idle_inhibitor, #backlight, #custom-storage, #custom-updates, #custom-weather, #custom-mail, #custom-kdeconnect, #clock, #temperature {
     background-color: transparent;
     margin: 0;
     padding: 0;
@@ -44,6 +44,19 @@ window {
 
 #pulseaudio.bluetooth {
     color: @base0C;
+}
+
+#custom-kdeconnect.unpaired,
+#custom-kdeconnect.disconnected {
+    color: @base03;
+}
+
+#custom-kdeconnect.low {
+    color: @base08;
+}
+
+#custom-kdeconnect.charging {
+    color: @base0B;
 }
 #temperature.critical {
     color: @base0F;
