@@ -13,7 +13,6 @@ import subprocess
 import sys
 from argparse import ArgumentParser
 from pathlib import Path
-from tempfile import gettempdir
 
 parser = ArgumentParser(description=__doc__)
 parser.add_argument("session", help="grok session id")
@@ -121,7 +120,7 @@ def run_trace(from_host: str | None) -> Path:
 remote_path = run_trace(args.from_host)
 
 if args.from_host:
-    dest = Path(gettempdir()) / remote_path.name
+    dest = Path("/tmp") / remote_path.name
     print(f"rsync {args.from_host}:{remote_path} → {dest}", file=sys.stderr)
     try:
         subprocess.run(
