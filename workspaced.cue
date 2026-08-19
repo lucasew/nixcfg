@@ -215,7 +215,7 @@ workspaced: {
 	modules: {
 		icons: {
 			input: "core:base16-icons-linux"
-			enable: !workspaced.runtime.is_phone && !(workspaced.runtime.hostname == "ravenrock")
+			enable: workspaced.runtime.hostname == "whiterun" || workspaced.runtime.hostname == "riverwood"
 			config: {
 				input_dir: "papirus:Papirus"
 			}
