@@ -48,7 +48,7 @@
       "kind": "tool",
       "ref": "github:astral-sh/uv",
       "depName": "astral-sh/uv",
-      "currentValue": "0.12.3",
+      "currentValue": "0.12.5",
       "datasource": "github-releases"
     },
     {
