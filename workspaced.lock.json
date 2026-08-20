@@ -139,7 +139,7 @@
       "kind": "tool",
       "ref": "github:hashicorp/terraform",
       "depName": "hashicorp/terraform",
-      "currentValue": "v1.15.7",
+      "currentValue": "v1.15.9",
       "datasource": "github-releases"
     },
     {
