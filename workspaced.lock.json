@@ -174,7 +174,7 @@
       "kind": "tool",
       "ref": "github:junegunn/fzf",
       "depName": "junegunn/fzf",
-      "currentValue": "v0.74.2",
+      "currentValue": "v0.74.3",
       "datasource": "github-releases"
     },
     {
