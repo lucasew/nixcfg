@@ -111,7 +111,7 @@
       "kind": "tool",
       "ref": "github:firecrawl/anydoc",
       "depName": "firecrawl/anydoc",
-      "currentValue": "v0.1.6",
+      "currentValue": "v0.2.3",
       "datasource": "github-releases"
     },
     {
