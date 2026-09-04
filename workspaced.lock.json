@@ -368,7 +368,7 @@
       "kind": "tool",
       "ref": "registry:tirith",
       "depName": "sheeki03/tirith",
-      "currentValue": "v0.3.3",
+      "currentValue": "v0.4.1",
       "datasource": "github-releases",
       "versioning": "semver"
     }
