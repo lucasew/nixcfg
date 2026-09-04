@@ -276,7 +276,7 @@
       "kind": "tool",
       "ref": "github:prefix-dev/pixi",
       "depName": "prefix-dev/pixi",
-      "currentValue": "v0.76.1",
+      "currentValue": "v0.79.0",
       "datasource": "github-releases"
     },
     {
