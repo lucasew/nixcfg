@@ -62,7 +62,7 @@
       "kind": "tool",
       "ref": "github:boyter/scc",
       "depName": "boyter/scc",
-      "currentValue": "v3.7.0",
+      "currentValue": "v4.0.0",
       "datasource": "github-releases"
     },
     {
