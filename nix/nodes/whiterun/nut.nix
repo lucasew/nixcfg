@@ -4,8 +4,8 @@
     enable = true;
     upsmon.enable = false;
     ups.ups = {
-      driver = "usbhid-ups";
-      port = "auto";
+      driver = "sms_ser";
+      port = "/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_DKCRb11CN11-if00-port0";
     };
   };
 
