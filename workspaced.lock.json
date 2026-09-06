@@ -167,7 +167,7 @@
       "kind": "tool",
       "ref": "github:jesseduffield/lazygit",
       "depName": "jesseduffield/lazygit",
-      "currentValue": "v0.64.1",
+      "currentValue": "v0.65.0",
       "datasource": "github-releases"
     },
     {
