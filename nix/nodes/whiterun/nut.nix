@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 {
   power.ups = {
     enable = true;
@@ -7,6 +7,17 @@
       driver = "sms_ser";
       port = "/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_DKCRb11CN11-if00-port0";
     };
+  };
+
+  # nixpkgs starts upsd before the driver and does not restart it when
+  # ups.conf changes, so it keeps the old socket path.
+  systemd.services.upsdrv = {
+    after = lib.mkForce [ "local-fs.target" ];
+    before = [ "upsd.service" ];
+  };
+  systemd.services.upsd = {
+    after = [ "upsdrv.service" ];
+    restartTriggers = [ config.environment.etc."nut/ups.conf".source ];
   };
 
   # upsc is anonymous. A system unit already has the right to poweroff;
