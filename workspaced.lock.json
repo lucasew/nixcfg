@@ -209,7 +209,7 @@
       "kind": "tool",
       "ref": "github:lewtec/rod-mcp",
       "depName": "lewtec/rod-mcp",
-      "currentValue": "0.2.2",
+      "currentValue": "0.2.3",
       "datasource": "github-releases"
     },
     {
