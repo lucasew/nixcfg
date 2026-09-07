@@ -19,7 +19,7 @@ let
     sendmail=/run/wrappers/bin/sendmail
     [ -x "$sendmail" ] || exit 0
     type=''${NOTIFYTYPE:-unknown}
-    ups=''${UPSNAME:-ups}
+    ups=''${UPSNAME:-itaipu2}
     printf 'Subject: NUT %s %s\nFrom: nut@%s\nTo: %s\n\n%s\n' \
       "$type" "$ups" \
       ${lib.escapeShellArg config.networking.hostName} \
@@ -30,7 +30,7 @@ in
 {
   power.ups = {
     enable = true;
-    ups.ups = {
+    ups.itaipu2 = {
       driver = "sms_ser";
       port = "/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_DKCRb11CN11-if00-port0";
     };
@@ -38,7 +38,7 @@ in
       passwordFile = upsmonPasswordFile;
       upsmon = "primary";
     };
-    upsmon.monitor.ups = {
+    upsmon.monitor.itaipu2 = {
       user = "upsmon";
       type = "primary";
     };
