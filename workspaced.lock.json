@@ -20,7 +20,7 @@
       "kind": "tool",
       "ref": "github:Wilfred/difftastic",
       "depName": "Wilfred/difftastic",
-      "currentValue": "0.69.0",
+      "currentValue": "0.70.0",
       "datasource": "github-releases"
     },
     {
