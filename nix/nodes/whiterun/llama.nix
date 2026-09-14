@@ -59,15 +59,18 @@ in
         jinja = "on";
       };
       # Cyber-Tiel 35B-A3B MTP UD-Q4_K_XL (~22.7 GB). 12 GB 3060: ngl 99 +
-      # n-cpu-moe 25 (do not use 41 — that parks the MTP head on CPU).
-      # draft-mtp is required or the grafted head is unused.
+      # n-cpu-moe 27 (do not use 41 — that parks the MTP head on CPU).
+      # draft-mtp is required or the grafted head is unused. mmproj stays
+      # in RAM: at n-cpu-moe 25 the weights already fill the card, then
+      # CLIP's 861 MiB cudaMalloc aborts the child.
       "cyber-tiel-coder-35b" = {
         hf-repo = "peculiar-ragdoll/Cyber-Tiel-Coder-35B-A3B-GGUF-MTP";
         hf-file = "Cyber-Tiel-Coder-35B-A3B-MTP-UD-Q4_K_XL.gguf";
         mmproj-url = "https://huggingface.co/peculiar-ragdoll/Cyber-Tiel-Coder-35B-A3B-GGUF-MTP/resolve/main/mmproj-BF16.gguf";
+        no-mmproj-offload = "on";
         alias = "cyber-tiel-coder-35b";
         ngl = "99";
-        n-cpu-moe = "25";
+        n-cpu-moe = "27";
         ctx-size = "131072";
         flash-attn = "on";
         parallel = "1";
