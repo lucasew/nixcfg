@@ -14,6 +14,7 @@ in
   imports = [
     ../common
     ./gui-variants
+    ./omarchy.nix
     ./audio.nix
     ./gui.nix
     ./networking.nix
