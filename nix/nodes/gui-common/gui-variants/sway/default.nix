@@ -61,6 +61,7 @@ in
     services.gammastep.enable = true;
     programs.waybar.enable = true;
     programs.kdeconnect.enable = true;
+    programs.omarchy.enable = true;
 
     # System packages
     environment.systemPackages = with pkgs; [
