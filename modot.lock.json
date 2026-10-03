@@ -174,7 +174,7 @@
       "kind": "tool",
       "ref": "github:jj-vcs/jj",
       "depName": "jj-vcs/jj",
-      "currentValue": "v0.43.0",
+      "currentValue": "v0.45.1",
       "datasource": "github-releases"
     },
     {
