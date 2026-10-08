@@ -216,7 +216,6 @@ modules: {
 	grok: {input: "self:modules/grok", enable: true}
 	codex: {input: "self:modules/codex", enable: true}
 	opencode: {input: "self:modules/opencode", enable: true}
-	grokbot: {input: "self:modules/grokbot", enable: #is_grokbot}
 }
 
 // ========== Base 16
@@ -460,17 +459,11 @@ backup: {
 			"personal-bookmarks",
 			"personal-decsync",
 			"personal-zettel-org",
-		] if (#is_computer || #is_phone) {
+		] if (#is_computer || #is_phone || (#is_grokbot && repo_name == "personal-beancount")) {
 			name: "git repo \(repo_name)"
 			kind: "git_repo_sync"
 			src:  "\(runtime.home)/.personal/\(repo_name)"
 			dst:  "\(#rsyncnet_user):git-personal/\(repo_name)"
-		},
-		if #is_grokbot {
-			name: "git repo personal-beancount"
-			kind: "git_repo_sync"
-			src:  "\(runtime.home)/.personal/personal-beancount"
-			dst:  "\(#rsyncnet_user):git-personal/personal-beancount"
 		},
 		if (#is_whiterun || #is_riverwood) {
 			name: "cantgit"
