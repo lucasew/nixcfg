@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-[[ "${1:-}" == "-G" ]] || "$HOME/.local/bin/ledger-proxy-up" || { echo "rsyncnet-ssh: proxy indisponível" >&2; exit 255; }
-exec ssh -i "$HOME/.ssh/id_ed25519_rsyncnet" -o IdentitiesOnly=yes \
-  -o "UserKnownHostsFile=$HOME/.local/share/rsyncnet/known_hosts" \
-  -o StrictHostKeyChecking=yes \
-  -o "ProxyCommand=$HOME/.local/bin/socks-connect %h %p" "$@"

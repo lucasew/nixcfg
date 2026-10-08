@@ -40,7 +40,7 @@ lazy_tools: {
 	codex: {
 		ref: "github:openai/codex"
 		bins: ["codex"]
-		global: !#is_grokbot
+		global: true
 	}
 	bun: {
 		ref: "github:oven-sh/bun"
@@ -48,37 +48,37 @@ lazy_tools: {
 	}
 	docker_compose: {
 		ref: "github:docker/compose"
-		global: !#is_grokbot
+		global: true
 		bins: ["docker-compose"]
 	}
 	fd: {
 		ref: "github:sharkdp/fd"
-		global: !#is_grokbot
+		global: true
 		bins: ["fd"]
 	}
 	difftastic: {
 		ref: "github:Wilfred/difftastic"
-		global: !#is_grokbot
+		global: true
 		bins: ["difft"]
 	}
 	opencode: {
 		ref: "github:anomalyco/opencode"
-		global: !#is_grokbot
+		global: true
 		bins: ["opencode"]
 	}
 	rclone: {
 		ref: "github:rclone/rclone"
-		global: !#is_grokbot
+		global: true
 		bins: ["rclone"]
 	}
 	ripgrep: {
 		ref: "github:burntsushi/ripgrep"
-		global: !#is_grokbot
+		global: true
 		bins: ["rg"]
 	}
 	fzf: {
 		ref: "github:junegunn/fzf"
-		global: !#is_grokbot
+		global: true
 		bins: ["fzf", "fzf-tmux"]
 	}
 	ruff: {
@@ -99,22 +99,22 @@ lazy_tools: {
 	}
 	uv: {
 		ref: "github:astral-sh/uv"
-		global: !#is_grokbot
+		global: true
 		bins: ["uv", "uvx"]
 	}
 	ffmpeg: {
 		ref: "github:ffbinaries/ffbinaries-prebuilt"
 		bins: ["ffmpeg", "ffprobe"]
-		global: !#is_grokbot
+		global: true
 	}
 	helix: {
 		ref: "github:helix-editor/helix"
-		global: !#is_grokbot
+		global: true
 		bins: ["hx"]
 	}
 	refactree: {
 		ref: "github:lucasew/refactree"
-		global: !#is_grokbot
+		global: true
 		bins: ["rft"]
 	}
 	contapila: {
@@ -124,72 +124,72 @@ lazy_tools: {
 	}
 	jless: {
 		ref: "github:PaulJuliusMartinez/jless"
-		global: !#is_grokbot
+		global: true
 		bins: ["jless"]
 	}
 	gh: {
 		ref: "github:cli/cli"
-		global: !#is_grokbot
+		global: true
 		bins: ["gh"]
 	}
 	scc: {
 		ref: "github:boyter/scc"
-		global: !#is_grokbot
+		global: true
 		bins: ["scc"]
 	}
 	tirith: {
 		ref: "tirith"
-		global: !#is_grokbot
+		global: true
 		bins: ["tirith"]
 	}
 	lazygit: {
 		ref: "github:jesseduffield/lazygit"
-		global: !#is_grokbot
+		global: true
 		bins: ["lazygit"]
 	}
 	herdr: {
 		ref: "github:ogulcancelik/herdr"
-		global: !#is_grokbot
+		global: true
 		bins: ["herdr"]
 	}
 	herdr_reflow: {
 		ref: "github:lewtec/herdr-reflow"
-		global: !#is_grokbot
+		global: true
 		bins: ["herdr-reflow"]
 	}
 	beans: {
 		ref: "github:hmans/beans"
-		global: !#is_grokbot
+		global: true
 		bins: ["beans"]
 	}
 	nh: {
 		ref: "github:nix-community/nh"
-		global: !#is_grokbot
+		global: true
 		bins: ["nh"]
 	}
 	asciinema: {
 		ref: "github:gvcgo/asciinema"
-		global: !#is_grokbot
+		global: true
 		bins: ["acast"]
 	}
 	anydoc: {
 		ref: "github:firecrawl/anydoc"
-		global: !#is_grokbot
+		global: true
 		bins: ["anydoc"]
 	}
 	pixi: {
 		ref: "github:prefix-dev/pixi"
-		global: !#is_grokbot
+		global: true
 		bins: ["pixi"]
 	}
 	goftpd: {
 		ref: "github:lewtec/goftpd"
-		global: !#is_grokbot
+		global: true
 		bins: ["goftpd"]
 	}
 	direnv: {
 		ref: "github:direnv/direnv"
-		global: !#is_grokbot
+		global: true
 		bins: ["direnv"]
 	}
 }
@@ -197,7 +197,7 @@ lazy_tools: {
 modules: {
 	fontconfig: {
 		input: "self:modules/fontconfig"
-		enable:      !#is_grokbot
+		enable:      true
 		config: {
 			serif:       "Fira Code"
 			sans_serif:  "Fira Code"
@@ -206,16 +206,16 @@ modules: {
 		}
 	}
 	
-	"script-directory": {input: "self:modules/script-directory", enable: !#is_grokbot}
-	mise: {input: "self:modules/mise", enable: !#is_grokbot}
-	hermes: {input: "self:modules/hermes", enable: !#is_grokbot}
-	nix: {input: "self:modules/nix", enable: !#is_grokbot}
-	gammastep: {input: "self:modules/gammastep", enable: !#is_grokbot}
-	herdr: {input: "self:modules/herdr", enable: !#is_grokbot}
-	helix: {input: "self:modules/helix", enable: !#is_grokbot}
-	grok: {input: "self:modules/grok", enable: !#is_grokbot}
-	codex: {input: "self:modules/codex", enable: !#is_grokbot}
-	opencode: {input: "self:modules/opencode", enable: !#is_grokbot}
+	"script-directory": {input: "self:modules/script-directory", enable: true}
+	mise: {input: "self:modules/mise", enable: true}
+	hermes: {input: "self:modules/hermes", enable: true}
+	nix: {input: "self:modules/nix", enable: true}
+	gammastep: {input: "self:modules/gammastep", enable: true}
+	herdr: {input: "self:modules/herdr", enable: true}
+	helix: {input: "self:modules/helix", enable: true}
+	grok: {input: "self:modules/grok", enable: true}
+	codex: {input: "self:modules/codex", enable: true}
+	opencode: {input: "self:modules/opencode", enable: true}
 	grokbot: {input: "self:modules/grokbot", enable: #is_grokbot}
 }
 
@@ -237,7 +237,7 @@ modules: {
 
 	base16: {
 		input: "self:modules/base16"
-		enable: !#is_grokbot
+		enable: true
 		config: {
 			// From: modot utils palette generate assets/wallpapers/bliss.jpg --driver materialyou --polarity dark
 			base00: "131313"
@@ -259,17 +259,17 @@ modules: {
 		}
 	}
 
-	"base16-shell":     {input: "self:modules/base16-shell", enable: !#is_grokbot}
-	"base16-helix":     {input: "self:modules/base16-helix", enable: !#is_grokbot}
-	"base16-alacritty": {input: "self:modules/base16-alacritty", enable: !#is_grokbot}
-	"base16-vscode":  {input: "self:modules/base16-vscode", enable: !#is_grokbot}
-	"base16-sway":    {input: "self:modules/base16-sway", enable: !#is_grokbot}
-	"base16-gtk":     {input: "self:modules/base16-gtk", enable: !#is_grokbot}
-	"base16-rofi":    {input: "self:modules/base16-rofi", enable: !#is_grokbot}
-	"base16-dunst":   {input: "self:modules/base16-dunst", enable: !#is_grokbot}
-	"base16-tmux":    {input: "self:modules/base16-tmux", enable: !#is_grokbot}
-	"base16-opencode": {input: "self:modules/base16-opencode", enable: !#is_grokbot}
-	"base16-swaylock": {input: "self:modules/base16-swaylock", enable: !#is_grokbot}
+	"base16-shell":     {input: "self:modules/base16-shell", enable: true}
+	"base16-helix":     {input: "self:modules/base16-helix", enable: true}
+	"base16-alacritty": {input: "self:modules/base16-alacritty", enable: true}
+	"base16-vscode":  {input: "self:modules/base16-vscode", enable: true}
+	"base16-sway":    {input: "self:modules/base16-sway", enable: true}
+	"base16-gtk":     {input: "self:modules/base16-gtk", enable: true}
+	"base16-rofi":    {input: "self:modules/base16-rofi", enable: true}
+	"base16-dunst":   {input: "self:modules/base16-dunst", enable: true}
+	"base16-tmux":    {input: "self:modules/base16-tmux", enable: true}
+	"base16-opencode": {input: "self:modules/base16-opencode", enable: true}
+	"base16-swaylock": {input: "self:modules/base16-swaylock", enable: true}
 }
 
 // Webapps
@@ -282,19 +282,19 @@ browser: {
 lazy_tools: {
 	helium_browser: {
 		ref: "helium-browser"
-		global: !#is_grokbot
+		global: true
 		bins: ["helium"]
 	}
 	rod_mcp: {
 		ref: "github:lewtec/rod-mcp"
-		global: !#is_grokbot
+		global: true
 		bins: ["rod-mcp"]
 	}
 }
 modules: {
 	webapp: {
 		input: "self:modules/webapp"
-		enable: !#is_grokbot
+		enable: true
 		config: {
 			apps: {
 				main: {
@@ -549,16 +549,14 @@ backup: {
 			version: "a475a4310f39efdb4125079bb5dd27dcfcc92799"
 		}
 	}
-	if !#is_grokbot {
-		modot: {
-			from: "github:lewtec/modot"
-		}
-		// Local skills come straight from the workspace tree.
-		// We reference the built-in "self" input directly below instead of
-		// creating a pointless named alias like "skills_local_skills".
-		local_skills: {
-			from: "self:skills"
-		}
+	modot: {
+		from: "github:lewtec/modot"
+	}
+	// Local skills come straight from the workspace tree.
+	// We reference the built-in "self" input directly below instead of
+	// creating a pointless named alias like "skills_local_skills".
+	local_skills: {
+		from: "self:skills"
 	}
 }
 
@@ -638,12 +636,10 @@ file: home: {
 }
 
 file: home: {
-	if !#is_grokbot {
-		".config/herdr/config.toml": {
-			values: {
-				if runtime.goos == "darwin" {
-					terminal: default_shell: "/opt/homebrew/bin/bash"
-				}
+	".config/herdr/config.toml": {
+		values: {
+			if runtime.goos == "darwin" {
+				terminal: default_shell: "/opt/homebrew/bin/bash"
 			}
 		}
 	}
