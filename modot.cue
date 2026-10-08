@@ -40,7 +40,7 @@ lazy_tools: {
 	codex: {
 		ref: "github:openai/codex"
 		bins: ["codex"]
-		global: true
+		global: !#is_grokbot
 	}
 	bun: {
 		ref: "github:oven-sh/bun"
@@ -48,37 +48,37 @@ lazy_tools: {
 	}
 	docker_compose: {
 		ref: "github:docker/compose"
-		global: true
+		global: !#is_grokbot
 		bins: ["docker-compose"]
 	}
 	fd: {
 		ref: "github:sharkdp/fd"
-		global: true
+		global: !#is_grokbot
 		bins: ["fd"]
 	}
 	difftastic: {
 		ref: "github:Wilfred/difftastic"
-		global: true
+		global: !#is_grokbot
 		bins: ["difft"]
 	}
 	opencode: {
 		ref: "github:anomalyco/opencode"
-		global: true
+		global: !#is_grokbot
 		bins: ["opencode"]
 	}
 	rclone: {
 		ref: "github:rclone/rclone"
-		global: true
+		global: !#is_grokbot
 		bins: ["rclone"]
 	}
 	ripgrep: {
 		ref: "github:burntsushi/ripgrep"
-		global: true
+		global: !#is_grokbot
 		bins: ["rg"]
 	}
 	fzf: {
 		ref: "github:junegunn/fzf"
-		global: true
+		global: !#is_grokbot
 		bins: ["fzf", "fzf-tmux"]
 	}
 	ruff: {
@@ -99,22 +99,22 @@ lazy_tools: {
 	}
 	uv: {
 		ref: "github:astral-sh/uv"
-		global: true
+		global: !#is_grokbot
 		bins: ["uv", "uvx"]
 	}
 	ffmpeg: {
 		ref: "github:ffbinaries/ffbinaries-prebuilt"
 		bins: ["ffmpeg", "ffprobe"]
-		global: true
+		global: !#is_grokbot
 	}
 	helix: {
 		ref: "github:helix-editor/helix"
-		global: true
+		global: !#is_grokbot
 		bins: ["hx"]
 	}
 	refactree: {
 		ref: "github:lucasew/refactree"
-		global: true
+		global: !#is_grokbot
 		bins: ["rft"]
 	}
 	contapila: {
@@ -124,72 +124,72 @@ lazy_tools: {
 	}
 	jless: {
 		ref: "github:PaulJuliusMartinez/jless"
-		global: true
+		global: !#is_grokbot
 		bins: ["jless"]
 	}
 	gh: {
 		ref: "github:cli/cli"
-		global: true
+		global: !#is_grokbot
 		bins: ["gh"]
 	}
 	scc: {
 		ref: "github:boyter/scc"
-		global: true
+		global: !#is_grokbot
 		bins: ["scc"]
 	}
 	tirith: {
 		ref: "tirith"
-		global: true
+		global: !#is_grokbot
 		bins: ["tirith"]
 	}
 	lazygit: {
 		ref: "github:jesseduffield/lazygit"
-		global: true
+		global: !#is_grokbot
 		bins: ["lazygit"]
 	}
 	herdr: {
 		ref: "github:ogulcancelik/herdr"
-		global: true
+		global: !#is_grokbot
 		bins: ["herdr"]
 	}
 	herdr_reflow: {
 		ref: "github:lewtec/herdr-reflow"
-		global: true
+		global: !#is_grokbot
 		bins: ["herdr-reflow"]
 	}
 	beans: {
 		ref: "github:hmans/beans"
-		global: true
+		global: !#is_grokbot
 		bins: ["beans"]
 	}
 	nh: {
 		ref: "github:nix-community/nh"
-		global: true
+		global: !#is_grokbot
 		bins: ["nh"]
 	}
 	asciinema: {
 		ref: "github:gvcgo/asciinema"
-		global: true
+		global: !#is_grokbot
 		bins: ["acast"]
 	}
 	anydoc: {
 		ref: "github:firecrawl/anydoc"
-		global: true
+		global: !#is_grokbot
 		bins: ["anydoc"]
 	}
 	pixi: {
 		ref: "github:prefix-dev/pixi"
-		global: true
+		global: !#is_grokbot
 		bins: ["pixi"]
 	}
 	goftpd: {
 		ref: "github:lewtec/goftpd"
-		global: true
+		global: !#is_grokbot
 		bins: ["goftpd"]
 	}
 	direnv: {
 		ref: "github:direnv/direnv"
-		global: true
+		global: !#is_grokbot
 		bins: ["direnv"]
 	}
 }
@@ -197,7 +197,7 @@ lazy_tools: {
 modules: {
 	fontconfig: {
 		input: "self:modules/fontconfig"
-		enable:      true
+		enable:      !#is_grokbot
 		config: {
 			serif:       "Fira Code"
 			sans_serif:  "Fira Code"
@@ -206,16 +206,17 @@ modules: {
 		}
 	}
 	
-	"script-directory": {input: "self:modules/script-directory", enable: true}
-	mise: {input: "self:modules/mise", enable: true}
-	hermes: {input: "self:modules/hermes", enable: true}
-	nix: {input: "self:modules/nix", enable: true}
-	gammastep: {input: "self:modules/gammastep", enable: true}
-	herdr: {input: "self:modules/herdr", enable: true}
-	helix: {input: "self:modules/helix", enable: true}
-	grok: {input: "self:modules/grok", enable: true}
-	codex: {input: "self:modules/codex", enable: true}
-	opencode: {input: "self:modules/opencode", enable: true}
+	"script-directory": {input: "self:modules/script-directory", enable: !#is_grokbot}
+	mise: {input: "self:modules/mise", enable: !#is_grokbot}
+	hermes: {input: "self:modules/hermes", enable: !#is_grokbot}
+	nix: {input: "self:modules/nix", enable: !#is_grokbot}
+	gammastep: {input: "self:modules/gammastep", enable: !#is_grokbot}
+	herdr: {input: "self:modules/herdr", enable: !#is_grokbot}
+	helix: {input: "self:modules/helix", enable: !#is_grokbot}
+	grok: {input: "self:modules/grok", enable: !#is_grokbot}
+	codex: {input: "self:modules/codex", enable: !#is_grokbot}
+	opencode: {input: "self:modules/opencode", enable: !#is_grokbot}
+	grokbot: {input: "self:modules/grokbot", enable: #is_grokbot}
 }
 
 // ========== Base 16
@@ -236,7 +237,7 @@ modules: {
 
 	base16: {
 		input: "self:modules/base16"
-		enable: true
+		enable: !#is_grokbot
 		config: {
 			// From: modot utils palette generate assets/wallpapers/bliss.jpg --driver materialyou --polarity dark
 			base00: "131313"
@@ -258,17 +259,17 @@ modules: {
 		}
 	}
 
-	"base16-shell":     {input: "self:modules/base16-shell", enable: true}
-	"base16-helix":     {input: "self:modules/base16-helix", enable: true}
-	"base16-alacritty": {input: "self:modules/base16-alacritty", enable: true}
-	"base16-vscode":  {input: "self:modules/base16-vscode", enable: true}
-	"base16-sway":    {input: "self:modules/base16-sway", enable: true}
-	"base16-gtk":     {input: "self:modules/base16-gtk", enable: true}
-	"base16-rofi":    {input: "self:modules/base16-rofi", enable: true}
-	"base16-dunst":   {input: "self:modules/base16-dunst", enable: true}
-	"base16-tmux":    {input: "self:modules/base16-tmux", enable: true}
-	"base16-opencode": {input: "self:modules/base16-opencode", enable: true}
-	"base16-swaylock": {input: "self:modules/base16-swaylock", enable: true}
+	"base16-shell":     {input: "self:modules/base16-shell", enable: !#is_grokbot}
+	"base16-helix":     {input: "self:modules/base16-helix", enable: !#is_grokbot}
+	"base16-alacritty": {input: "self:modules/base16-alacritty", enable: !#is_grokbot}
+	"base16-vscode":  {input: "self:modules/base16-vscode", enable: !#is_grokbot}
+	"base16-sway":    {input: "self:modules/base16-sway", enable: !#is_grokbot}
+	"base16-gtk":     {input: "self:modules/base16-gtk", enable: !#is_grokbot}
+	"base16-rofi":    {input: "self:modules/base16-rofi", enable: !#is_grokbot}
+	"base16-dunst":   {input: "self:modules/base16-dunst", enable: !#is_grokbot}
+	"base16-tmux":    {input: "self:modules/base16-tmux", enable: !#is_grokbot}
+	"base16-opencode": {input: "self:modules/base16-opencode", enable: !#is_grokbot}
+	"base16-swaylock": {input: "self:modules/base16-swaylock", enable: !#is_grokbot}
 }
 
 // Webapps
@@ -281,19 +282,19 @@ browser: {
 lazy_tools: {
 	helium_browser: {
 		ref: "helium-browser"
-		global: true
+		global: !#is_grokbot
 		bins: ["helium"]
 	}
 	rod_mcp: {
 		ref: "github:lewtec/rod-mcp"
-		global: true
+		global: !#is_grokbot
 		bins: ["rod-mcp"]
 	}
 }
 modules: {
 	webapp: {
 		input: "self:modules/webapp"
-		enable: true
+		enable: !#is_grokbot
 		config: {
 			apps: {
 				main: {
@@ -442,6 +443,7 @@ modules: {
 #is_riverwood: runtime.hostname == "riverwood"
 #is_massan: runtime.hostname == "MacBook-Air-de-Lucas.local"
 #is_ravenrock: runtime.hostname == "ravenrock"
+#is_grokbot: strings.HasPrefix(runtime.hostname, "grok-bot-vm-")
 #is_computer: #is_whiterun || #is_riverwood || #is_massan
 // github:lewtec/skills is private. Leave this off so a new machine can
 // home apply before anyone logs in or copies a token.
@@ -463,6 +465,12 @@ backup: {
 			kind: "git_repo_sync"
 			src:  "\(runtime.home)/.personal/\(repo_name)"
 			dst:  "\(#rsyncnet_user):git-personal/\(repo_name)"
+		},
+		if #is_grokbot {
+			name: "git repo personal-beancount"
+			kind: "git_repo_sync"
+			src:  "\(runtime.home)/.personal/personal-beancount"
+			dst:  "\(#rsyncnet_user):git-personal/personal-beancount"
 		},
 		if (#is_whiterun || #is_riverwood) {
 			name: "cantgit"
@@ -541,14 +549,16 @@ backup: {
 			version: "a475a4310f39efdb4125079bb5dd27dcfcc92799"
 		}
 	}
-	modot: {
-		from: "github:lewtec/modot"
-	}
-	// Local skills come straight from the workspace tree.
-	// We reference the built-in "self" input directly below instead of
-	// creating a pointless named alias like "skills_local_skills".
-	local_skills: {
-		from: "self:skills"
+	if !#is_grokbot {
+		modot: {
+			from: "github:lewtec/modot"
+		}
+		// Local skills come straight from the workspace tree.
+		// We reference the built-in "self" input directly below instead of
+		// creating a pointless named alias like "skills_local_skills".
+		local_skills: {
+			from: "self:skills"
+		}
 	}
 }
 
@@ -628,10 +638,12 @@ file: home: {
 }
 
 file: home: {
-	".config/herdr/config.toml": {
-		values: {
-			if runtime.goos == "darwin" {
-				terminal: default_shell: "/opt/homebrew/bin/bash"
+	if !#is_grokbot {
+		".config/herdr/config.toml": {
+			values: {
+				if runtime.goos == "darwin" {
+					terminal: default_shell: "/opt/homebrew/bin/bash"
+				}
 			}
 		}
 	}
