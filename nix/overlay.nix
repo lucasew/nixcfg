@@ -114,6 +114,8 @@ in
     inherit (flake) colors;
   };
 
+  omarchy = final.callPackage ./pkgs/omarchy.nix { };
+
   script-directory-wrapper = final.writeShellScriptBin "sdw" ''
     set -eu
     export SD_CMD=
