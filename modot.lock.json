@@ -90,7 +90,7 @@
       "kind": "tool",
       "ref": "github:direnv/direnv",
       "depName": "direnv/direnv",
-      "currentValue": "v2.37.1",
+      "currentValue": "v2.38.1",
       "datasource": "github-releases"
     },
     {
