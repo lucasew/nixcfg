@@ -368,7 +368,7 @@
       "kind": "tool",
       "ref": "registry:mise",
       "depName": "jdx/mise",
-      "currentValue": "2026.7.14",
+      "currentValue": "2026.10.7",
       "datasource": "github-releases"
     },
     {
