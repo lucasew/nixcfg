@@ -455,17 +455,23 @@ modules: {
 #is_phone: runtime.is_phone
 #remote_path: "backup/lucasew"
 
+#personal_repos: [
+	"personal-zettel-obsidian",
+	"personal-beancount",
+	"personal-keepass",
+	"personal-bookmarks",
+	"personal-decsync",
+	"personal-zettel-org",
+	"personal-memes",
+]
+#grokbot_personal_repos: ["personal-beancount", "personal-memes"]
+#backup_personal_repos: *[] | [...string]
+if #is_computer || #is_phone {#backup_personal_repos: #personal_repos}
+if #is_grokbot {#backup_personal_repos: #grokbot_personal_repos}
+
 backup: {
 	actions: [
-		for repo_name in [
-			"personal-zettel-obsidian",
-			"personal-beancount",
-			"personal-keepass",
-			"personal-bookmarks",
-			"personal-decsync",
-			"personal-zettel-org",
-			"personal-memes",
-		] if (#is_computer || #is_phone || (#is_grokbot && (repo_name == "personal-beancount" || repo_name == "personal-memes"))) {
+		for repo_name in #backup_personal_repos {
 			name: "git repo \(repo_name)"
 			kind: "git_repo_sync"
 			src:  "\(runtime.home)/.personal/\(repo_name)"
