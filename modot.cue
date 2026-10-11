@@ -464,7 +464,8 @@ backup: {
 			"personal-bookmarks",
 			"personal-decsync",
 			"personal-zettel-org",
-		] if (#is_computer || #is_phone || (#is_grokbot && repo_name == "personal-beancount")) {
+			"personal-memes",
+		] if (#is_computer || #is_phone || (#is_grokbot && (repo_name == "personal-beancount" || repo_name == "personal-memes"))) {
 			name: "git repo \(repo_name)"
 			kind: "git_repo_sync"
 			src:  "\(runtime.home)/.personal/\(repo_name)"
