@@ -457,13 +457,13 @@ modules: {
 
 #backup_personal_repos: [string]: bool
 #backup_personal_repos: {
-	"personal-zettel-obsidian": *(#is_computer || #is_phone) | bool
-	"personal-beancount":       *(#is_computer || #is_phone || #is_grokbot) | bool
-	"personal-keepass":         *(#is_computer || #is_phone) | bool
-	"personal-bookmarks":       *(#is_computer || #is_phone) | bool
-	"personal-decsync":         *(#is_computer || #is_phone) | bool
-	"personal-zettel-org":      *(#is_computer || #is_phone) | bool
-	"personal-memes":           *(#is_computer || #is_phone || #is_grokbot) | bool
+	"personal-zettel-obsidian": #is_computer || #is_phone
+	"personal-beancount":       #is_computer || #is_phone || #is_grokbot
+	"personal-keepass":         #is_computer || #is_phone
+	"personal-bookmarks":       #is_computer || #is_phone
+	"personal-decsync":         #is_computer || #is_phone
+	"personal-zettel-org":      #is_computer || #is_phone
+	"personal-memes":           #is_computer || #is_phone || #is_grokbot
 }
 
 backup: {
