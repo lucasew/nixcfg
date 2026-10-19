@@ -8,29 +8,30 @@ package module
 
 modules: "base16-herdr": config: {}
 
-// Herdr 0.8.0 Palette fields. Roles match modules/README.md.
-// There is no built-in base16 theme name; these overrides sit on theme.name.
+// Herdr 0.8.0 draws the active tab as panel_bg text on an accent fill.
+// Material You puts the contrasting primary in base0B. base0C–base0F are
+// containers and match the surface, so they wash the tab out.
 file: home: {
 	".config/herdr/config.toml": {
 		type: "toml"
 		values: {
 			theme: custom: {
-				accent:      #hex.base0D
+				accent:      #hex.base0B
 				panel_bg:    #hex.base00
 				surface0:    #hex.base02
 				surface1:    #hex.base03
 				surface_dim: #hex.base01
-				overlay0:    #hex.base04
-				overlay1:    #hex.base06
+				overlay0:    #hex.base06
+				overlay1:    #hex.base05
 				text:        #hex.base05
-				subtext0:    #hex.base04
-				mauve:       #hex.base0E
+				subtext0:    #hex.base06
+				mauve:       #hex.base09
 				green:       #hex.base0B
 				yellow:      #hex.base0A
 				red:         #hex.base08
-				blue:        #hex.base0D
-				teal:        #hex.base0C
-				peach:       #hex.base09
+				blue:        #hex.base07
+				teal:        #hex.base09
+				peach:       #hex.base08
 			}
 		}
 	}
