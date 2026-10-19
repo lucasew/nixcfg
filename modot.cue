@@ -273,6 +273,7 @@ modules: {
 	"base16-tmux":    {input: "self:modules/base16-tmux", enable: true}
 	"base16-opencode": {input: "self:modules/base16-opencode", enable: true}
 	"base16-swaylock": {input: "self:modules/base16-swaylock", enable: true}
+	"base16-herdr":    {input: "self:modules/base16-herdr", enable: true}
 }
 
 // Webapps
