@@ -21,5 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
+      - name: Link checkout as the dotfiles root
+        run: ln -sfn "$GITHUB_WORKSPACE" "$HOME/.dotfiles"
+
+      - name: Install dconf
+        run: sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y dconf-cli
+
       - name: Apply home
-        run: ./setup home apply
+        run: dbus-run-session -- ./setup home apply
