@@ -6,7 +6,7 @@
 let
   cfg = config.hardware.gpu-unlock;
   # Same kernel as nvidia. Firmware is shared across kernel versions.
-  gpuUnlock = config.boot.kernelPackages.callPackage ../../pkgs/gpu-unlock { };
+  gpuUnlock = config.boot.kernelPackages.gpu-unlock;
 in
 {
   options.hardware.gpu-unlock = {
