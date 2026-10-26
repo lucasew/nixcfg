@@ -100,9 +100,12 @@ stdenv.mkDerivation {
     "pic"
   ];
 
-  # MODULE_FIRMWARE() lives in .modinfo. Stripping or patchelf drops it from the initrd.
-  dontStrip = true;
+  # patchelf rejects a relocatable .ko. MODULE_FIRMWARE stays in .modinfo.
   dontPatchELF = true;
+
+  # DWARF names kernel headers under kernel.dev, and that output depends on
+  # rustc, gcc, and python. strip -S drops the DWARF and keeps .modinfo.
+  disallowedRequisites = [ kernel.dev ];
 
   makeFlags = kernelModuleMakeFlags ++ [
     "KDIR=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"
