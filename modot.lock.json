@@ -390,7 +390,7 @@
       "kind": "tool",
       "ref": "registry:resvg",
       "depName": "linebender/resvg",
-      "currentValue": "0.48.1",
+      "currentValue": "0.49.0",
       "datasource": "github-releases"
     },
     {
