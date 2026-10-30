@@ -1,3 +1,2 @@
 [settings]
-# Repos and work dirs are trusted: the box's /workspace and ~/WORKSPACE on Lucão's machines.
 trusted_config_paths = ["/workspace", "~/WORKSPACE"]
