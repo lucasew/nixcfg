@@ -1,0 +1,3 @@
+[settings]
+# Repos cloned on the box (base clones and worktrees) are trusted.
+trusted_config_paths = ["/workspace/src", "/workspace/wt"]
