@@ -1,9 +1,15 @@
 name: Ciborg Turbo
+run-name: ${{ (github.event_name == 'schedule' || inputs.worker) && format('Ciborg Turbo slot {0}', inputs.slot || 0) || 'Ciborg Turbo' }}
 
 # Enqueue dispatches N worker runs. Each worker takes one of 15 slots
 # (ciborg-turbo-0 .. ciborg-turbo-14). Extra runs sit pending (no runner)
 # and drain FIFO — same queue:max trick as fdroid-revanced/build-fdroid.yml.
 # Do not cancel a running worker: in-flight docker workers are not restart-safe.
+#
+# Hosted jobs are killed at 6h. To keep a slot busy past that, a worker run
+# dispatches its own successor (same slot) after RELAY_AFTER minutes, then
+# drains: workers finish their current task and are not restarted. The
+# successor waits on the slot's concurrency group, so runs never overlap.
 on:
   workflow_dispatch:
     inputs:
@@ -55,6 +61,9 @@ jobs:
     name: "Work"
     if: github.event_name == 'schedule' || inputs.worker
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
     concurrency:
       group: ciborg-turbo-${{ inputs.slot || 0 }}
       cancel-in-progress: false
@@ -63,35 +72,79 @@ jobs:
     steps:
     - uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3
     - name: "Run worker"
+      timeout-minutes: 350
       env:
         MISE_CI_TOKEN: ${{ secrets.MISE_CI_TOKEN }}
         MISE_CI_CALLBACK: ${{ secrets.MISE_CI_CALLBACK }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SLOT: ${{ inputs.slot || 0 }}
+        # Minutes since step start: dispatch successor / stop taking tasks / force stop.
+        RELAY_AFTER: 300
+        DRAIN_AFTER: 320
+        STOP_AFTER: 345
       run: |
         version=$(curl -fsSL "$MISE_CI_CALLBACK/version.txt" | sed 's;\([^-]*\).*;\1;')
         image="ghcr.io/lewtec/ciborg:$version"
         docker pull $image
 
+        # Each container handles one task and exits 0; loop until drained, stop on error.
+        drain_flag=/run/miseci-drain
+        sudo rm -f "$drain_flag"
+        cat > /tmp/miseci-worker.sh <<EOF
+        #!/usr/bin/env bash
+        while [ ! -e "$drain_flag" ]; do
+          docker run --rm -e MISE_CI_TOKEN -e MISE_CI_CALLBACK "$image" worker || exit \$?
+        done
+        EOF
+        chmod +x /tmp/miseci-worker.sh
+
         for i in $(seq 4); do
           sudo systemd-run \
             --unit="miseci-$i" \
-            --property=Restart=on-success \
-            --property=RestartSec=0s \
-            docker run --rm \
-              -e "MISE_CI_TOKEN=$MISE_CI_TOKEN" \
-              -e "MISE_CI_CALLBACK=$MISE_CI_CALLBACK" \
-              $image worker
+            --setenv=MISE_CI_TOKEN="$MISE_CI_TOKEN" \
+            --setenv=MISE_CI_CALLBACK="$MISE_CI_CALLBACK" \
+            /tmp/miseci-worker.sh
         done
 
         sudo journalctl -f -u "miseci-*" &
 
+        relay() {
+          title="Ciborg Turbo slot $SLOT"
+          others=$(gh run list -R "$GITHUB_REPOSITORY" -w ciborg-turbo.yml -L 100 \
+            --json databaseId,status,displayTitle \
+            --jq "[.[] | select(.status != \"completed\" and .databaseId != $GITHUB_RUN_ID and .displayTitle == \"$title\")] | length") || {
+            echo "::warning::Could not list runs, not relaying"; return 0; }
+          if [ "$others" -gt 0 ]; then
+            echo "Another run for slot $SLOT is already pending, not relaying."
+            return 0
+          fi
+          echo "Dispatching successor run for slot $SLOT"
+          gh workflow run ciborg-turbo.yml -R "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME" \
+            -f worker=true -f slot="$SLOT" || echo "::warning::Relay dispatch failed"
+        }
+
+        relayed=false
+        draining=false
         echo "Workers started. Waiting for them to finish (they stop on error)..."
         while true; do
-          if ! systemctl is-active --quiet "miseci-1" "miseci-2" "miseci-3" "miseci-4"; then
-            # Se alguma não está ativa, verificamos se TODAS pararam
-            active_count=$(systemctl is-active "miseci-1" "miseci-2" "miseci-3" "miseci-4" | grep -c "^active" || true)
-            if [ "$active_count" -eq 0 ]; then
-              break
-            fi
+          active_count=$(systemctl is-active "miseci-1" "miseci-2" "miseci-3" "miseci-4" | grep -c "^active" || true)
+          if [ "$active_count" -eq 0 ]; then
+            break
+          fi
+          elapsed=$((SECONDS / 60))
+          if ! $relayed && [ "$elapsed" -ge "$RELAY_AFTER" ]; then
+            relayed=true
+            relay
+          fi
+          if ! $draining && [ "$elapsed" -ge "$DRAIN_AFTER" ]; then
+            draining=true
+            echo "Time budget reached, letting current tasks finish."
+            sudo touch "$drain_flag"
+          fi
+          if [ "$elapsed" -ge "$STOP_AFTER" ]; then
+            echo "::warning::Workers still busy near the 6h limit, stopping them."
+            sudo systemctl stop "miseci-*"
+            break
           fi
           sleep 10
         done
