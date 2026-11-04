@@ -1,0 +1,156 @@
+#!/usr/bin/env bash
+# Phone status for Waybar via KDE Connect D-Bus. Not Omarchy/Quickshell.
+
+set -euo pipefail
+PATH="/run/current-system/sw/bin:${PATH}"
+
+DEST=org.kde.kdeconnect
+DAEMON_PATH=/modules/kdeconnect
+IFACE_DEV=org.kde.kdeconnect.device
+IFACE_BAT=org.kde.kdeconnect.device.battery
+
+json_escape() {
+	local s=$1
+	s=${s//\\/\\\\}
+	s=${s//\"/\\\"}
+	s=${s//$'\n'/\\n}
+	s=${s//$'\t'/\\t}
+	printf '%s' "$s"
+}
+
+json() {
+	printf '{"text":"%s","tooltip":"%s","class":"%s"}\n' \
+		"$(json_escape "$1")" "$(json_escape "$2")" "$(json_escape "$3")"
+}
+
+empty() {
+	json "" "$1" "${2:-missing}"
+	exit 0
+}
+
+# busctl: `s "name"` / `b false` / `i 41`
+parse_variant() {
+	local out=$1
+	case "$out" in
+	b\ * | i\ * | u\ * | n\ * | x\ * | t\ *)
+		printf '%s\n' "${out#* }"
+		;;
+	s\ \"*\")
+		out=${out#s \"}
+		printf '%s\n' "${out%\"}"
+		;;
+	*)
+		printf '%s\n' "$out"
+		;;
+	esac
+}
+
+prop() {
+	local out
+	out="$(busctl --user get-property "$DEST" \
+		"${DAEMON_PATH}/devices/${1}" "$2" "$3")" || return 1
+	parse_variant "$out"
+}
+
+bat_prop() {
+	local out
+	out="$(busctl --user get-property "$DEST" \
+		"${DAEMON_PATH}/devices/${1}/battery" "$IFACE_BAT" "$2")" || return 1
+	parse_variant "$out"
+}
+
+list_ids() {
+	local out
+	out="$(busctl --user call "$DEST" "$DAEMON_PATH" \
+		org.kde.kdeconnect.daemon devices)" || return 1
+	grep -oE '"[^"]+"' <<<"$out" | tr -d '"'
+}
+
+pick_phone() {
+	local id typ reachable paired best="" best_score=-1 score
+	while IFS= read -r id; do
+		[[ -n "$id" ]] || continue
+		typ="$(prop "$id" "$IFACE_DEV" type || true)"
+		[[ "$typ" == phone ]] || continue
+		reachable="$(prop "$id" "$IFACE_DEV" isReachable || echo false)"
+		paired="$(prop "$id" "$IFACE_DEV" isPaired || echo false)"
+		score=0
+		[[ "$reachable" == true ]] && score=$((score + 2))
+		[[ "$paired" == true ]] && score=$((score + 1))
+		if ((score > best_score)); then
+			best="$id"
+			best_score=$score
+		fi
+	done < <(list_ids || true)
+	[[ -n "$best" ]] || return 1
+	printf '%s\n' "$best"
+}
+
+phone_id="$(pick_phone || true)"
+
+case "${1:-status}" in
+open)
+	exec kdeconnect-app
+	;;
+ring)
+	[[ -n "$phone_id" ]] || exit 1
+	exec kdeconnect-cli -d "$phone_id" --ring
+	;;
+refresh)
+	exec kdeconnect-cli --refresh
+	;;
+status) ;;
+*)
+	echo "usage: $0 [status|open|ring|refresh]" >&2
+	exit 2
+	;;
+esac
+
+if ! busctl --user status "$DEST" >/dev/null 2>&1; then
+	empty "KDE Connect: daemon not running"
+fi
+
+if [[ -z "$phone_id" ]]; then
+	empty "KDE Connect: no phone" none
+fi
+
+name="$(prop "$phone_id" "$IFACE_DEV" name || echo phone)"
+reachable="$(prop "$phone_id" "$IFACE_DEV" isReachable || echo false)"
+paired="$(prop "$phone_id" "$IFACE_DEV" isPaired || echo false)"
+
+tooltip="${name}"
+tooltip+=$'\n'"id: ${phone_id}"
+tooltip+=$'\n'"paired: ${paired}"
+tooltip+=$'\n'"reachable: ${reachable}"
+
+if [[ "$paired" != true ]]; then
+	if [[ "$reachable" == true ]]; then
+		json "📱?" "${tooltip}"$'\n'"reachable, not paired" unpaired
+	else
+		json "📱✕" "${tooltip}" disconnected
+	fi
+	exit 0
+fi
+
+if [[ "$reachable" != true ]]; then
+	json "📱✕" "${tooltip}" disconnected
+	exit 0
+fi
+
+charge="$(bat_prop "$phone_id" charge || echo "")"
+charging="$(bat_prop "$phone_id" isCharging || echo false)"
+
+class=ok
+text="📱"
+if [[ "$charge" =~ ^[0-9]+$ ]]; then
+	text="📱${charge}%"
+	tooltip+=$'\n'"battery: ${charge}%"
+	((charge <= 20)) && class=low
+fi
+if [[ "$charging" == true ]]; then
+	text="${text}⚡"
+	tooltip+=$'\n'"charging"
+	[[ "$class" == low ]] || class=charging
+fi
+
+json "$text" "$tooltip" "$class"
