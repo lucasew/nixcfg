@@ -304,7 +304,7 @@
       "kind": "tool",
       "ref": "github:sharkdp/fd",
       "depName": "sharkdp/fd",
-      "currentValue": "v10.5.0",
+      "currentValue": "v10.5.1",
       "datasource": "github-releases"
     },
     {
