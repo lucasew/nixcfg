@@ -290,7 +290,7 @@
       "kind": "tool",
       "ref": "github:rclone/rclone",
       "depName": "rclone/rclone",
-      "currentValue": "v1.75.2",
+      "currentValue": "v1.76.0",
       "datasource": "github-releases"
     },
     {
