@@ -214,6 +214,11 @@ modules: {
 	herdr: {input: "self:modules/herdr", enable: true}
 	helix: {input: "self:modules/helix", enable: true}
 	grok: {input: "self:modules/grok", enable: true}
+	// personal-bots vigia loop — grokbot box only
+	pbots_vigia: {
+		input:  "self:modules/pbots-vigia"
+		enable: strings.HasPrefix(runtime.hostname, "grok-bot-vm-")
+	}
 	codex: {input: "self:modules/codex", enable: true}
 	opencode: {input: "self:modules/opencode", enable: true}
 }
