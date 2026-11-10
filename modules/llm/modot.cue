@@ -3,7 +3,7 @@ package module
 options: {}
 
 // simonw/llm talking to the aperture OpenAI-compatible gateway.
-// The shim (bin/shim/llm) runs the CLI via uvx; these files only configure it.
+// The shim (bin/shim/llm) runs the CLI via uv; these files only configure it.
 file: home: {
 	".config/io.datasette.llm/extra-openai-models.yaml": {
 		type: "text"
