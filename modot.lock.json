@@ -316,6 +316,13 @@
     },
     {
       "kind": "tool",
+      "ref": "github:superradcompany/microsandbox",
+      "depName": "superradcompany/microsandbox",
+      "currentValue": "v0.7.14",
+      "datasource": "github-releases"
+    },
+    {
+      "kind": "tool",
       "ref": "github:tekumara/typos-lsp",
       "depName": "tekumara/typos-lsp",
       "currentValue": "v0.1.57",

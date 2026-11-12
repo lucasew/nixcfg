@@ -40,6 +40,11 @@ drivers: {
 
 
 lazy_tools: {
+	microsandbox: {
+		ref: "github:superradcompany/microsandbox"
+		bins: ["msb"]
+		global: true
+	}
 	codex: {
 		ref: "github:openai/codex"
 		bins: ["codex"]
