@@ -126,7 +126,7 @@ lazy_tools: {
 		bins: ["hx"]
 	}
 	refactree: {
-		ref: "github:lucasew/refactree"
+		ref: "github:lewtec/refactree-rs"
 		global: true
 		bins: ["rft"]
 	}
