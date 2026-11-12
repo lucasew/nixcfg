@@ -97,7 +97,7 @@
       "kind": "tool",
       "ref": "github:docker/compose",
       "depName": "docker/compose",
-      "currentValue": "v5.7.0",
+      "currentValue": "v5.7.1",
       "datasource": "github-releases"
     },
     {
