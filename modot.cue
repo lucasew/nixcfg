@@ -435,7 +435,9 @@ options: webapp: {
 }
 
 // =========== Backup
-#rsyncnet_user: "de3163@de3163.rsync.net"
+// #rsyncnet_user: "de3163@de3163.rsync.net"
+#rsyncnet_user: "de3163@rsyncnet"
+
 #is_whiterun: runtime.hostname == "whiterun"
 #is_riverwood: runtime.hostname == "riverwood"
 #is_massan: runtime.hostname == "MacBook-Air-de-Lucas.local"
