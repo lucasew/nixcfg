@@ -353,7 +353,7 @@
       "kind": "tool",
       "ref": "github:zed-industries/zed",
       "depName": "zed-industries/zed",
-      "currentValue": "v1.25.3",
+      "currentValue": "v1.28.1",
       "datasource": "github-releases"
     },
     {
