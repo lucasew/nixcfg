@@ -104,7 +104,7 @@
       "kind": "tool",
       "ref": "github:docker/docker-language-server",
       "depName": "docker/docker-language-server",
-      "currentValue": "v0.20.1",
+      "currentValue": "v0.20.2",
       "datasource": "github-releases"
     },
     {
