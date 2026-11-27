@@ -9,10 +9,10 @@ in
 {
   # Bring the NUT exporter up wherever NUT is enabled. Deliberately leaves
   # openFirewall off: the exporter listens on 0.0.0.0 but exposing it is up to
-  # whoever scrapes it.
+  # whoever scrapes it. Netclient hosts have no local upsd to scrape.
   config = mkIf config.power.ups.enable {
     services.prometheus.exporters.nut = {
-      enable = true;
+      enable = config.power.ups.mode != "netclient";
       port = exporterPort;
       nutServer = "127.0.0.1";
     };
