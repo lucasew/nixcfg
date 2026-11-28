@@ -209,7 +209,7 @@
       "kind": "tool",
       "ref": "github:lewtec/herdr-reflow",
       "depName": "lewtec/herdr-reflow",
-      "currentValue": "0.0.3",
+      "currentValue": "0.1.0",
       "datasource": "github-releases"
     },
     {
